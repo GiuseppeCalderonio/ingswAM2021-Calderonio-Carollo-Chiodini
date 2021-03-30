@@ -9,7 +9,7 @@
   <version>1.0-SNAPSHOT</version>
 
   <name>AM30</name>
-  
+
   <url>https://github.com/gabrielecarollo/ingswAM2021-Calderonio-Carollo-Chiodini</url>
 
   <properties>
@@ -23,7 +23,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>RELEASE</version>
+      <version>5.8.0-M1</version>
       <scope>test</scope>
     </dependency>
 
