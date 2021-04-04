@@ -231,4 +231,61 @@ public class CollectionResourcesTest {
         assertEquals(collection, collection2);
     }
 
+    /**
+     * this test verify that adding 4 resources manually or use the
+     * for each is the same
+     */
+    @Test
+    void testIterator1(){
+        collection = new CollectionResources();
+        collection.add(new Coin());
+        collection.add(new Servant());
+        collection.add(new Shield());
+        collection.add(new Stone());
+        int counter = 0;
+        CollectionResources collection2 = new CollectionResources();
+        for(Resource r: collection){
+            counter++;
+            collection2.add(r);
+        }
+        assertEquals(4, counter);
+        assertEquals(collection , collection2);
+    }
+
+    /**
+     * this test verify that an iterator in an empty collectionResources
+     * do anything
+     */
+    @Test
+    void testIterator2(){
+        collection = new CollectionResources();
+        CollectionResources collection2 = new CollectionResources();
+        int counter = 0;
+        for (Resource r : collection2){
+            counter++;
+            collection2.add(r);
+        }
+        assertEquals(0, counter);
+        assertEquals(collection2, collection);
+    }
+
+    /**
+     * this test verify that an iterator works when have to iterate in
+     * a collectionResources that contains just one type of resource
+     */
+    @Test
+    void testIterator3(){
+        collection = new CollectionResources();
+        collection.add(new Coin());
+        collection.add(new Coin());
+        collection.add(new Coin());
+        int counter = 0;
+        CollectionResources collection2 = new CollectionResources();
+        for(Resource r: collection){
+            counter++;
+            collection2.add(r);
+        }
+        assertEquals(3, counter);
+        assertEquals(collection , collection2);
+    }
 }

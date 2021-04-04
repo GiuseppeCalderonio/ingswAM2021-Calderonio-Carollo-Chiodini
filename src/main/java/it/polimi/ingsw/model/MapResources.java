@@ -1,9 +1,13 @@
 package it.polimi.ingsw.model;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Iterator;
+
 /**
  * this class simulate a map of resources
  */
-public class MapResources {
+public class MapResources implements Iterable<Resource>{
 
     /**
      * this attribute is the resource contained in the map
@@ -83,4 +87,14 @@ public class MapResources {
         return cardinality <= 0;
     }
 
+    /**
+     * Returns an iterator over elements of type {@code T}.
+     *
+     * @return an Iterator.
+     */
+    @NotNull
+    @Override
+    public Iterator<Resource> iterator() {
+        return new MapResourcesIterator(this.cardinality, this.resource);
+    }
 }

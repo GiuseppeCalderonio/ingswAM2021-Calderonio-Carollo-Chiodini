@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 import java.util.stream.*;
 
@@ -7,7 +9,7 @@ import java.util.stream.*;
  * this class represent a generic set of resources
  */
 
-public class CollectionResources {
+public class CollectionResources implements Iterable<Resource>{
     /**
      * this attribute is the list in which are stored all the resources as a Map
      */
@@ -26,11 +28,9 @@ public class CollectionResources {
      * @param resources this is the list of resources to initialise
      */
     public CollectionResources(List<Resource> resources) {
-        this.resources = new ArrayList<>();
-        for (Resource toAdd : resources){
-            this.add(toAdd);
-        }
 
+        this.resources = new ArrayList<>();
+        resources.forEach( this::add);
     }
 
     /**
@@ -70,10 +70,11 @@ public class CollectionResources {
      * @return true if the resource is in the set, false otherwise
      */
     public boolean contains(Resource toCheck){
-        for (MapResources map : resources){
+        return resources.stream().anyMatch(x -> x.getResource().equals(toCheck));
+       /* for (MapResources map : resources){
             if (map.getResource().equals(toCheck)) return true;
         }
-        return false;
+        return false;*/
     }
 
     /**
@@ -104,9 +105,10 @@ public class CollectionResources {
     public boolean add(Resource toAdd){
         if (!this.contains(toAdd)) resources.add(new MapResources(toAdd , 1));
         else {
-            for (MapResources map : resources){
+            resources.stream().filter(x -> x.getResource().equals(toAdd)).forEach(x ->x.add(1));
+           /* for (MapResources map : resources){
                 if (map.getResource().equals(toAdd)) map.add(1);
-            }
+            }*/
         }
         return true;
     }
@@ -118,9 +120,10 @@ public class CollectionResources {
      */
     public boolean remove(Resource toRemove) {
         if (!this.contains(toRemove)) return false;
-        for (MapResources map : resources) {
+        resources.stream().filter(x -> x.getResource().equals(toRemove)).forEach(x ->x.remove(1));
+        /*for (MapResources map : resources) {
             if (map.getResource().equals(toRemove)) map.remove(1);
-        }
+        }*/
         resources = resources.stream().filter( x -> !x.isEmpty()).collect(Collectors.toList());
         return true;
     }
@@ -131,9 +134,7 @@ public class CollectionResources {
      * @return true
      */
     public boolean sum(CollectionResources toSum){
-        for (MapResources map : toSum.resources) {
-            for (int i = 0; i < map.getCardinality(); i++) add(map.getResource());
-        }
+        toSum.forEach(this::add);
         return true;
     }
 
@@ -144,13 +145,7 @@ public class CollectionResources {
      */
     public boolean sub(CollectionResources toSub){
         if(!this.containsAll(toSub)) return false;
-        for (MapResources map : toSub.resources){
-            // local variable that contains the map of resources associated with "map"
-            MapResources thisResources = this.getMap(map.getResource());
-            int cardinality = thisResources.getCardinality();
-            resources.remove(thisResources);
-            resources.add(new MapResources(map.getResource(), cardinality - map.getCardinality()));
-        }
+        toSub.forEach(this::remove);
         resources = resources.stream().filter( x -> !x.isEmpty()).collect(Collectors.toList());
         return true;
     }
@@ -161,9 +156,6 @@ public class CollectionResources {
      * @return true if all the resources stored in the set toSub are contained in the set that calls the method, false if they aren't
      */
     public boolean containsAll(CollectionResources toCompare){
-        // this statement verify that every resource of toCompare is contained in this
-        //if (!resources.containsAll(toCompare.resources)) return false;
-        // this statement verify for each resource in toCompare that his cardinality is minor that the cardinality of the same resource of this
         for (MapResources map : toCompare.resources){
             if (this.getMap(map.getResource()).isEmpty()) return false;
             if (this.getMap(map.getResource()).getCardinality() < map.getCardinality()) return false;
@@ -181,7 +173,20 @@ public class CollectionResources {
         if(toCompare == this) return true;
         if(!(toCompare instanceof CollectionResources)) return false;
         CollectionResources collectionToCompare = (CollectionResources) toCompare;
-        return (containsAll( collectionToCompare) && collectionToCompare.containsAll(this));
+        return (this.containsAll( collectionToCompare) && collectionToCompare.containsAll(this));
+    }
+
+    /**
+     * Returns an iterator over elements of type {@code Resource}.
+     *
+     * @return an Iterator.
+     */
+    @NotNull
+    @Override
+    public Iterator<Resource> iterator() {
+        CollectionResources toPass = new CollectionResources();
+        for (MapResources map : resources) map.forEach(toPass::add);
+        return new ResourceIterator(toPass);
     }
 }
 

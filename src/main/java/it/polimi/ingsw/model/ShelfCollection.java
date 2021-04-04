@@ -46,20 +46,27 @@ public class ShelfCollection extends CollectionResources {
      */
     @Override
     public boolean isCompatible(Resource toVerify){
+        try{
+            return type.equals(toVerify.getType());
+        } catch (NullPointerException e){
+            return true;
+        }
 
-        return type.equals(toVerify.getType());
     }
 
     /**
-     * this method verify if every resource of the set in input has the same type of the ShelfCollection that calls this method
+     * this method verify if every resource of the set in input has
+     * the same type of the ShelfCollection that calls this method
      * @param toVerify this is the CollectionResource to verify
-     * @return true if the ShelfCollection has the same type of every resource of the set in input, false if not
+     * @return true if the ShelfCollection has the same type of every resource
+     * of the set in input, false if not
      */
     public boolean isCompatible(CollectionResources toVerify){
-        for (MapResources map : toVerify.getMaps()){
+        return toVerify.getMaps().stream().allMatch(x -> type.equals(x.getResource().getType()));
+        /*for (MapResources map : toVerify.getMaps()){
             if (!type.equals(map.getResource().getType())) return false;
         }
-        return true;
+        return true;*/
     }
     /**
      * this method add a resource to the set

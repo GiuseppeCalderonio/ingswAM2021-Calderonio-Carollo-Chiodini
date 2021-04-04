@@ -67,4 +67,40 @@ class MapResourcesTest {
         map1.remove(1);
         assertTrue(map1.isEmpty());
     }
+
+    /**
+     * this test verify that an iterator doesn't change a collection when
+     * have to iterate to an empty mapResources
+     */
+    @Test
+    public void testIterator(){
+        MapResources map1 = new MapResources(new Stone(), 0);
+        MapResources map2 = new MapResources(new Stone(), 0);
+        int counter = 0;
+        for( Resource resource : map1){
+            map2.add(1);
+            counter++;
+        }
+        assertEquals(map1, map2);
+        assertEquals(0 , map1.getCardinality());
+        assertEquals(0 , map2.getCardinality());
+    }
+
+    /**
+     * this test verify that the iterator works correctly in normal conditions
+     */
+    @Test
+    public void testIterator2(){
+        MapResources map1 = new MapResources(new Stone(), 4);
+        MapResources map2 = new MapResources(new Stone(), 0);
+        int counter = 0;
+        for( Resource resource : map1){
+            map2.add(1);
+            counter++;
+        }
+        assertEquals(map1, map2);
+        assertEquals(4 , map1.getCardinality());
+        assertEquals(4 , map2.getCardinality());
+    }
+
 }

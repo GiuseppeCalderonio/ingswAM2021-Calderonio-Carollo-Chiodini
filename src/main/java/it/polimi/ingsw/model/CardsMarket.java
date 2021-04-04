@@ -7,7 +7,7 @@ import java.util.*;
  */
 public class CardsMarket {
     /**
-     * this attribute represent the market as a matrix of stacks of cards
+     * this attribute represent the market as a matrix of lists of cards,but used as a matrix of stacks
      */
     private final List<DevelopmentCard>[][] cardMatrix;
 
@@ -393,10 +393,10 @@ public class CardsMarket {
 
     /**
      * this method get and remove the card specified by the parameters,
-     * it requires that the deck of cards isn't empty
-     * @param level this is the level of the card
-     * @param color this is the color of the card
-     * @return the card with the level and colour specified
+     * it requires that the deck of cards isn't empty and the inputs are correct
+     * @param level this is the level of the card, it should be a number between 1 and 3
+     * @param color this is the color of the card, it shouldn't be null
+     * @return the card with the level and color specified
      */
     public DevelopmentCard popCard(int level, CardColor color){
         int row = 2-(level-1);
@@ -408,7 +408,8 @@ public class CardsMarket {
     }
 
     /**
-     * this method verify if a column of the market is empty
+     * this method verify if all the cards of one color are not available anymore,
+     * in particular if column of the market is empty
      * @return true if a column is empty, false if it isn't
      */
     public boolean checkMissColumn() {
@@ -428,29 +429,32 @@ public class CardsMarket {
 
     /**
      * this method get the card with the color and level specified by the parameters,
-     * it returns null if the deck of cards is empty
-     * @param level this is the level of the card
-     * @param color this is the color of the card
-     * @return the card with the level and colour specified
+     * it returns null if the deck of cards is empty or if the parameters aren't correct
+     * @param level this is the level of the card, it should be between 1 and 3
+     * @param color this is the color of the card, it shouldn't be null
+     * @return the card with the level and color specified, null if the inputs aren't correct or if the deck selected is empty
      */
     public DevelopmentCard getCard(int level, CardColor color){
+        if (!checkCard(level, color)) return null;
         int row = 2-(level-1);
         int column = color.getIndex();
         int index = cardMatrix[row][column].size()-1;
-        if (cardMatrix[row][column].isEmpty()) return null;
         return  cardMatrix[row][column].get(index);
     }
 
     /**
      * this method check if a deck of card is empty
-     * @param level this is the level of the card to check
-     * @param color this is the color of the card to check
+     * @param level this is the level of the card to check, it should be between 1 and 3
+     * @param color this is the color of the card to check, it shouldn't be null
      * @return true if there is a card in the deck with the level and color specified
-     * in the parameters in the market, false otherwise
+     * in the parameters in the market, false if not or if the inputs aren't correct
      */
     public boolean checkCard(int level , CardColor color){
-
-        return !(getCard(level , color) == null);
+        if (level <1 || level > 3) return false;
+        if (color == null) return false;
+        int row = 2-(level-1);
+        int column = color.getIndex();
+        return (!cardMatrix[row][column].isEmpty());
     }
 
 }

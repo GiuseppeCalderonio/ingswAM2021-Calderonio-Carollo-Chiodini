@@ -24,6 +24,46 @@ class CardsMarketTest {
         assertNotNull(market);
     }
 
+
+    /**
+     *this test verifies the random disposition of the cards in the matrix, indeed it is very unlikely to find two
+     * equals matrix declared consecutively, the method counts the number of equal cards and assert that this number
+     * is minor of the total cards
+     */
+    @Test
+    void testShuffleMarket() {
+        market = new CardsMarket();
+        CardsMarket market2 = new CardsMarket();
+        int counter =0;
+        int i,j;
+        for (i = 1; i < 4; i++) {
+            for (j = 0; j<4; j++) {
+                if(market2.popCard(i,CardColor.BLUE).equals(market.popCard(i,CardColor.BLUE)))
+                    counter++;
+            }
+        }
+        for (i = 1; i < 4; i++) {
+            for (j = 0; j<4; j++) {
+                if(market2.popCard(i,CardColor.GREEN).equals(market.popCard(i,CardColor.GREEN)))
+                    counter++;
+            }
+        }
+        for (i = 1; i < 4; i++) {
+            for (j = 0; j<4; j++) {
+                if(market2.popCard(i,CardColor.YELLOW).equals(market.popCard(i,CardColor.YELLOW)))
+                    counter++;
+            }
+        }
+        for (i = 1; i < 4; i++) {
+            for (j = 0; j<4; j++) {
+                if(market2.popCard(i,CardColor.PURPLE).equals(market.popCard(i,CardColor.PURPLE)))
+                    counter++;
+            }
+        }
+        assertTrue(0<=counter&& counter<48);
+
+    }
+
     /**
      * this test verify that the method pop get the card with the right requirements requested
      */
@@ -119,9 +159,30 @@ class CardsMarketTest {
         market.popCard(3,CardColor.GREEN);
 
     }
+
+    /**
+     * this test verify that the get card method return null when the inputs are incorrect
+     * this method calls the method checkCard, so this test verify also that method
+     */
+    @Test
+    void testGetNull(){
+        market = new CardsMarket();
+
+        assertNull(market.getCard( 1, null));
+        assertNull(market.getCard( 3, null));
+        assertNull(market.getCard( 0, CardColor.BLUE));
+        assertNull(market.getCard( 4, CardColor.BLUE));
+        assertNull(market.getCard( -2, CardColor.PURPLE));
+        assertNull(market.getCard( 6, CardColor.GREEN));
+    }
+
+    /**
+     * this test verify that the method checkCard return the right value when given the right inputs
+     */
     @Test
     void testCheckCard(){
         market = new CardsMarket();
+
         assertTrue(market.checkCard(2, CardColor.BLUE));
         market.popCard(2, CardColor.BLUE);
         assertTrue(market.checkCard(2, CardColor.BLUE));

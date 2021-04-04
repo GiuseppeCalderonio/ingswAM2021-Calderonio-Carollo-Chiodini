@@ -87,9 +87,10 @@ public class MarbleMarket {
      * when the first position is filled by the lonely marble, and the lonely marble position is filled by
      * the marble at the last position
      * @param column this is the column chosen to get and shift
-     * @return all the marbles contained in the selected column
+     * @return all the marbles contained in the selected column, null if the input is not between 0 and 3
      */
     public List<Marble> selectColumn(int column){
+        if (column < 0 || column > 3) return null;
         List<Marble> selectedColumn = new ArrayList<>();
         Marble temp;
         for(int r = rowDimension-1 ; r >= 0 ; r--)
@@ -107,9 +108,10 @@ public class MarbleMarket {
      * when the first position is filled by the lonely marble, and the lonely marble position is filled by
      * the marble at the last position
      * @param row this is the row chosen to get and shift
-     * @return all the marbles contained in the selected row
+     * @return all the marbles contained in the selected row, null if the input is not between 0 and 3
      */
     public List<Marble> selectRow (int row){
+        if (row < 0 || row > 2) return null;
         List<Marble> selectedRow = new ArrayList<>();
         Marble temp;
         for (int c = columnDimension-1 ; c >= 0; c--)

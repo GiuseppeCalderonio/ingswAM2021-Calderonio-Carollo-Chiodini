@@ -242,4 +242,29 @@ class MarbleMarketTest {
         assertEquals(marble4, market.getMarble(2, 3));
     }
 
+    /**
+     * this test verify that the method selectRow return null if the input is not between 0 and 2
+     */
+    @Test
+    public void testNullRow(){
+        MarbleMarket market = new MarbleMarket();
+        assertNull(market.selectRow(-2));
+        assertNull(market.selectRow(-1));
+        assertNull(market.selectRow(6));
+        assertNull(market.selectRow(3));
+        assertNotNull(market.selectRow(2));
+    }
+
+    /**
+     * this test verify that the method selectColumn return null if the input is not between 0 and 3
+     */
+    @Test
+    public void testNullColumn(){
+        MarbleMarket market = new MarbleMarket();
+        assertNull(market.selectColumn(-2));
+        assertNull(market.selectColumn(-1));
+        assertNull(market.selectColumn(6));
+        assertNull(market.selectColumn(4));
+        assertNotNull(market.selectColumn(3));
+    }
 }
