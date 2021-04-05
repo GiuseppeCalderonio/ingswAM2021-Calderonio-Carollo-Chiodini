@@ -1,17 +1,17 @@
 package it.polimi.ingsw.model;
 
 /**
- * this class represent whe warehouse with the 3 shelfs
+ * this class represent whe warehouse with the 3 shelves
  */
 public class Warehouse {
 
     /**
-     * this attribute represent the 3 shelfs as a static vector
+     * this attribute represent the 3 shelves as a static vector
      */
     private final Shelf[] shelf;
 
     /**
-     * this constructor create 3 empty shelfs, the first with cardinality = 1,
+     * this constructor create 3 empty shelves, the first with cardinality = 1,
      * the second with cardinality = 2, the third with cardinality = 3
      */
     public Warehouse() {
@@ -84,8 +84,8 @@ public class Warehouse {
     }
 
     /**
-     * this method remove the resources from the shelf selected,
-     * it requires that the resources to remove are contained in the shelf selected
+     * this method remove the resources from the warehouse,
+     * it requires that the resources to remove are contained in the warehouse
      * @param toRemove these are the resources to remove
      */
     public void removeResources(CollectionResources toRemove){
@@ -98,7 +98,7 @@ public class Warehouse {
     }
 
     /**
-     * this method shift two shelfs, and return the number of resources that have to be discarded
+     * this method shift two shelves, and return the number of resources that have to be discarded
      * @param source this is the index of the first shelf between 1 and 3
      * @param destination this is the index of the second shelf between 1 and 3
      * @return the number of discarded resources, that actually are faith points for the other players
@@ -108,7 +108,6 @@ public class Warehouse {
         int faithPoints = 0;
 
 
-        //SOLUZIONE DI GABRI SOTTO
         Shelf temp= new Shelf(3);
 
         if(!(shelf[source-1].isEmpty())){
@@ -132,8 +131,8 @@ public class Warehouse {
     }
 
     /**
-     * this method get all the resources contained in all the shelfs
-     * @return all the resources contained in all the shelfs
+     * this method get all the resources contained in all the shelves
+     * @return all the resources contained in all the shelves
      */
     public CollectionResources getTotalResources(){
         int i;
@@ -145,8 +144,8 @@ public class Warehouse {
     }
 
     /**
-     * this method get the number of all the resources contained in all the shelfs
-     * @return the number of all the resources contained in all the shelfs
+     * this method get the number of all the resources contained in all the shelves
+     * @return the number of all the resources contained in all the shelves
      */
     public int getNumberOfResources(){
         int i;

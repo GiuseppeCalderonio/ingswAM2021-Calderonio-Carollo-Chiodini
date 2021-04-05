@@ -71,7 +71,7 @@ public class ProductionPower {
      * the card in input has a level one and the deck of cards specified in input is empty, false if not, or if the position is not between 1 and 3
      */
     public boolean checkPlacement(DevelopmentCard toCheck, int position){
-        if (position < 0 || position > 3) return false;
+        if (position < 1 || position > 3) return false;
         if (toCheck.getLevel() > 3 || toCheck.getLevel() < 1) return false;
         if ((this.getCard(position) == null)) return toCheck.getLevel() == 1;
         return (this.getCard(position).getLevel() == toCheck.getLevel() - 1);

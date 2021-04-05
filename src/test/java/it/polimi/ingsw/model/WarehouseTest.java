@@ -370,7 +370,7 @@ class WarehouseTest {
     }
 
     /**
-     * this test verify that shifting two empty shelfs does not change the state of the warehouse
+     * this test verify that shifting two empty shelves does not change the state of the warehouse
      */
     @Test
     void testShiftResources2(){
