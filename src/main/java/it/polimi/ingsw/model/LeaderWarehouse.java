@@ -88,7 +88,7 @@ public class LeaderWarehouse extends Warehouse {
                             leaderShelf[i].removeResource(r);
                             temp.remove(r);
                         }
-                } catch(NullPointerException e){}
+                } catch(NullPointerException ignored){}
             }
         }
         if (!temp.getMaps().isEmpty())
@@ -108,7 +108,7 @@ public class LeaderWarehouse extends Warehouse {
         for (i = 0; i < 2; i++) {
             try{
                 leaderShelf[i].getResources().forEach(temp::add);
-            }catch (NullPointerException e){}
+            }catch (NullPointerException ignored){}
         }
         return temp;
     }
