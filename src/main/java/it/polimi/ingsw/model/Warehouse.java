@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+import java.util.Arrays;
+import java.util.stream.IntStream;
+
 /**
  * this class represent whe warehouse with the 3 shelves
  */
@@ -70,12 +73,17 @@ public class Warehouse {
                 return toAdd.getSize();
         }
         // if does not exist a shelf of that type
-        for (Shelf s: shelf) {
+        boolean shelfNotCompatible = Arrays.stream(shelf).
+                filter(s -> !s.isEmpty()).
+                filter(s -> !s.equals(shelf[numShelf - 1])).
+                anyMatch(s -> toAdd.isCompatible(s.getResources()));
+        if(shelfNotCompatible) return toAdd.getSize();
+        /*for (Shelf s: shelf) {
             if (!s.isEmpty() && !s.equals(shelf[numShelf - 1])) {
                 if (toAdd.isCompatible(s.getResources()))
                     return toAdd.getSize();
             }
-        }
+        }*/
         for (Resource r: toAdd) {
             if(shelf[numShelf - 1].addResource(r))
                 faithPoints++;
@@ -89,12 +97,17 @@ public class Warehouse {
      * @param toRemove these are the resources to remove
      */
     public void removeResources(CollectionResources toRemove){
-        for (Resource r: toRemove) {
+
+        toRemove.forEach(x -> Arrays.stream(shelf).
+                filter(y ->x.getType().equals(y.getResourceType())).
+                forEach(y -> y.removeResource(x)));
+
+       /* for (Resource r: toRemove) {
             for (int i = 0; i < 3; i++){
                 if (r.getType().equals(shelf[i].getResourceType()))
                     shelf[i].removeResource(r);
             }
-        }
+        }*/
     }
 
     /**
@@ -135,11 +148,12 @@ public class Warehouse {
      * @return all the resources contained in all the shelves
      */
     public CollectionResources getTotalResources(){
-        int i;
+        //int i;
         CollectionResources temp = new CollectionResources();
-        for(i=0;i<3;i++){
+        Arrays.stream(shelf).forEach(s -> s.getResources().forEach(temp::add));
+        /*for(i=0;i<3;i++){
             shelf[i].getResources().forEach(temp::add);
-        }
+        }*/
         return temp;
     }
 
@@ -148,12 +162,15 @@ public class Warehouse {
      * @return the number of all the resources contained in all the shelves
      */
     public int getNumberOfResources(){
-        int i;
-        int counter = 0;
-        for(i=0;i<3;i++) {
+        //int i;
+        //int counter = 0;
+        return Arrays.stream(shelf).
+                flatMapToInt(x -> IntStream.of(x.getResources().getSize())).
+                sum();
+        /*for(i=0;i<3;i++) {
             counter = counter + shelf[i].getResources().getSize();
         }
-        return counter;
+        return counter;*/
     }
 
     /**

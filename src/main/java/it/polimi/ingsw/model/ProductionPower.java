@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import java.util.Arrays;
 import java.util.Stack;
 import java.util.stream.IntStream;
 
@@ -82,10 +83,15 @@ public class ProductionPower {
      * @return the total number of cards in the array of stacks
      */
     public int getNumOfCards(){
-        int toReturn = 0;
-        for (int i = 0; i < 3; i++)
+        //int toReturn = 0;
+        return Arrays.stream(personalCards).
+                flatMapToInt(x -> IntStream.of(x.stream().
+                        flatMapToInt(y -> IntStream.of(1)).
+                        sum())).
+                sum();
+       /* for (int i = 0; i < 3; i++)
             toReturn = toReturn + personalCards[i].stream().flatMapToInt(x -> IntStream.of(1)).sum();
-        return toReturn;
+        return toReturn;*/
     }
 
     /**
@@ -93,10 +99,15 @@ public class ProductionPower {
      * @return the sum of all the victory points referred to every card contained in the array
      */
     public int getVictoryPoints(){
-        int toReturn = 0;
-        for (int i = 0; i < 3; i++)
+        //int toReturn = 0;
+        return Arrays.stream(personalCards).
+                flatMapToInt(x -> IntStream.of(x.stream().
+                        flatMapToInt(y -> IntStream.of(y.getVictoryPoints())).
+                        sum())).
+                sum();
+        /*for (int i = 0; i < 3; i++)
             toReturn = toReturn + personalCards[i].stream().flatMapToInt(x -> IntStream.of(x.getVictoryPoints())).sum();
-        return toReturn;
+        return toReturn; */
     }
 
     /**

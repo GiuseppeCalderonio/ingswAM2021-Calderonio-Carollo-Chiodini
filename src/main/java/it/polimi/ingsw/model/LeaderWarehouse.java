@@ -1,5 +1,9 @@
 package it.polimi.ingsw.model;
 
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.IntStream;
+
 public class LeaderWarehouse extends Warehouse {
     private final Shelf[] leaderShelf;
 
@@ -80,7 +84,16 @@ public class LeaderWarehouse extends Warehouse {
     public void removeResources(CollectionResources toRemove) {
         CollectionResources temp = new CollectionResources();
         temp.sum(toRemove);
-        for (Resource r : temp) {
+
+        temp.forEach(x -> Arrays.stream(leaderShelf).
+                filter(Objects::nonNull).
+                filter(y -> x.getType().equals(y.getResourceType())).
+                filter(y -> !y.isEmpty()).
+                map(y -> y.removeResource(x)).
+                forEach(y -> temp.remove(x)));
+
+
+        /*for (Resource r : temp) {
             for (int i = 0; i < 2; i++) {
                 try {
                     if (r.getType().equals(leaderShelf[i].getResourceType()))
@@ -90,7 +103,7 @@ public class LeaderWarehouse extends Warehouse {
                         }
                 } catch(NullPointerException ignored){}
             }
-        }
+        }*/
         if (!temp.getMaps().isEmpty())
             super.removeResources(temp);
     }
@@ -102,14 +115,19 @@ public class LeaderWarehouse extends Warehouse {
     @Override
     public CollectionResources getTotalResources() {
         CollectionResources temp;
-        int i;
+        //int i;
 
         temp = super.getTotalResources();
-        for (i = 0; i < 2; i++) {
+
+        Arrays.stream(leaderShelf).
+                filter(Objects::nonNull).
+                forEach(x -> x.getResources().forEach(temp::add));
+
+        /*for (i = 0; i < 2; i++) {
             try{
                 leaderShelf[i].getResources().forEach(temp::add);
             }catch (NullPointerException ignored){}
-        }
+        }*/
         return temp;
     }
 
@@ -119,13 +137,18 @@ public class LeaderWarehouse extends Warehouse {
      */
     @Override
     public int getNumberOfResources() {
-        int i;
+        //int i;
         int counter = super.getNumberOfResources();
 
-        for (i = 0; i < 2; i++) {
+        counter = counter + Arrays.stream(leaderShelf).
+                filter(Objects::nonNull).
+                flatMapToInt(x -> IntStream.of(x.getResources().getSize())).
+                sum();
+
+        /*for (i = 0; i < 2; i++) {
             if (leaderShelf[i] != null)
                 counter = counter + leaderShelf[i].getResources().getSize();
-        }
+        }*/
         return counter;
     }
 

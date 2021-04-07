@@ -185,7 +185,8 @@ public class CollectionResources implements Iterable<Resource>{
     @Override
     public Iterator<Resource> iterator() {
         CollectionResources toPass = new CollectionResources();
-        for (MapResources map : resources) map.forEach(toPass::add);
+        resources.forEach( x -> x.forEach(toPass::add));
+        //for (MapResources map : resources) map.forEach(toPass::add);
         return new ResourceIterator(toPass);
     }
 }

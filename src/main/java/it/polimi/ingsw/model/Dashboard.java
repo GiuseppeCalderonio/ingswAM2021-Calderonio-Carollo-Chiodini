@@ -91,9 +91,9 @@ public class Dashboard {
     public int shiftShelfResources(int source , int destination){
         return personalWarehouse.shiftResources(source , destination);
     }
+
     /**
      * this method is used to locate a card in one of the three position in dashboard.
-     * If a player select an index out of bound this method throws an "indexOutOfBound exception".
      * @param position is =1 or =2 or =3; is the position where the card is locate in dashboard
      * @param toPlace contains the developmentCard that the player wants to insert in dashboard
      * @return true if the card has been correctly inserted, else false
@@ -112,8 +112,8 @@ public class Dashboard {
     }
 
     /**
-     * this method is used to remove resources from strongBox, if there aren't enough resources we throw an exception and return
-     * the number -1
+     * this method is used to remove resources from strongBox, if there aren't enough resources
+     * the method return false
      * @param toRemove contains the resources that a player wants to take from strongbox
      * @return true if this operation is a success else false
      */
@@ -124,8 +124,8 @@ public class Dashboard {
     }
 
     /**
-     *this method is used to remove resources from Warehouse, if there aren't enough resources we throw an
-     * exception "notEnoughResources" and return false
+     *this method is used to remove resources from Warehouse, if there aren't enough resources
+     * the method return false
      * @param toRemove contains the resources that a player wants to take from warehouse
      * @return true if this operation is a success else false
      */
@@ -167,10 +167,9 @@ public class Dashboard {
     }
 
     /**
-     * this method is called when the player activate a discount leader card, and if
-     * it is the first time, it create a new dashboard, if
-     * it is the second time, just add the new resource to the dashboard
-     * @param toCreate this is the resource discounted associated with the leader card
+     * this method is called when the player activate a shelf leader card,
+     * and it create a new leader shelf
+     * @param toCreate this is the resource of the leader shelf associated with the leader card
      */
     public void activateLeaderWarehouse (Resource toCreate){
         if(!(personalWarehouse instanceof LeaderWarehouse)){
