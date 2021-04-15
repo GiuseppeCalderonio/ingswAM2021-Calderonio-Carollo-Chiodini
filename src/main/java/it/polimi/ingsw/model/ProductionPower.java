@@ -66,10 +66,11 @@ public class ProductionPower {
 
     /**
      * this method verify if a placement of a card is legit or not
-     * @param toCheck this is the card to check
+     * @param toCheck this is the card to check, it requires that is not null
      * @param position this is the position of the array of card in which the method have to check, it should go from 1 to 3
      * @return true if the level of the card in input is a level up compared to the card in the position in input or
-     * the card in input has a level one and the deck of cards specified in input is empty, false if not, or if the position is not between 1 and 3
+     *         the card in input has a level one and the deck of cards specified in input is empty, false if not,
+     *         or if the position is not between 1 and 3
      */
     public boolean checkPlacement(DevelopmentCard toCheck, int position){
         if (position < 1 || position > 3) return false;

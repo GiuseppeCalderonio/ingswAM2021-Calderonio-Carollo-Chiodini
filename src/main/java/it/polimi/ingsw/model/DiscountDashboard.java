@@ -37,8 +37,10 @@ public class DiscountDashboard extends Dashboard{
     }
 
     /** this method is a getter, when a player activate a leader card that generate a discount
-     * we save the discount resource in CollectionResource and this method is used to see the state of this collection
-     * @return the list of discounted resources
+     * we save the discount resource in CollectionResource
+     * and this method is used to see the state of this collection
+     *
+     * @return the list of the total resources minus the discount
      */
     public CollectionResources getTotalDiscountResource(){
         CollectionResources toReturn = new CollectionResources();

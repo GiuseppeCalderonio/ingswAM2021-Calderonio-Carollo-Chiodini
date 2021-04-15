@@ -18,6 +18,13 @@ public class NewShelf extends LeaderCard{
         super(requirements, victoryPoints, resource);
     }
 
+    /**
+     * this method add a new shelf at the player in input when he
+     * has all the requirements of the leader card
+     * @param toChange this is the player that activate the card
+     * @return true if the player in input meet the requirements,
+     *         false otherwise
+     */
     @Override
     public boolean activateCard(RealPlayer toChange) {
         if(!(getRequirements().containsRequirements(toChange))) return false;

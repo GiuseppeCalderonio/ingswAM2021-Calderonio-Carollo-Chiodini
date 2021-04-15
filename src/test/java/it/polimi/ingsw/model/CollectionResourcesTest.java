@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -287,5 +288,34 @@ public class CollectionResourcesTest {
         }
         assertEquals(3, counter);
         assertEquals(collection , collection2);
+    }
+
+    /**
+     * this test verify that an empty collectionResources return
+     * an empty list
+     */
+    @Test
+    void testAsList1(){
+        collection = new CollectionResources();
+        assertTrue(collection.asList().isEmpty());
+    }
+
+    /**
+     * this test create a non empty collectionResources and
+     * verify that return the right list associated
+     */
+    @Test
+    void testAsList2(){
+        collection = new CollectionResources();
+        List<Resource> list= new ArrayList<>();
+        collection.add(new Coin());
+        collection.add(new Coin());
+        collection.add(new Shield());
+        collection.add(new Servant());
+        list.add(new Coin());
+        list.add(new Coin());
+        list.add(new Shield());
+        list.add(new Servant());
+        assertEquals(list, collection.asList());
     }
 }

@@ -548,21 +548,21 @@ class LeaderWarehouseTest {
      */
     @Test
     void testShiftResources1(){
-        leaderWarehouse = new LeaderWarehouse(new Servant(), new Warehouse());
-        leaderWarehouse.addShelf(new Coin());
-        leaderWarehouse.shiftResources(4, 5);
+        leaderWarehouse = new LeaderWarehouse(new Servant(), new Warehouse()); // create the 4° shelf
+        leaderWarehouse.addShelf(new Coin()); // create the 5° shelf
+        leaderWarehouse.shiftResources(4, 5); // shift two empty shelves
         CollectionResources coins = new ShelfCollection(ResourceType.COIN);
         coins.add(new Coin());
-        coins.add(new Coin());
-        leaderWarehouse.addResources(coins, 2);
+        coins.add(new Coin()); // add 2 coins
+        leaderWarehouse.addResources(coins, 2); // 2° shelf: [coin, coin]
         assertTrue(leaderWarehouse.getShelf(4).isEmpty());
         assertTrue(leaderWarehouse.getShelf(5).isEmpty());
-        assertEquals(coins, leaderWarehouse.getTotalResources());
+        assertEquals(coins, leaderWarehouse.getTotalResources()); // warehouse contains only 2 coins
     }
 
     /**
-     * this test shift two leader shelves not empty and verify that all the
-     * resources get discarded
+     * this test shift two leader shelves not empty and verify that
+     * return -1
      */
     @Test
     void testShiftResources2(){
@@ -571,11 +571,11 @@ class LeaderWarehouseTest {
         CollectionResources coins = new ShelfCollection(ResourceType.COIN);
         CollectionResources servants = new ShelfCollection(ResourceType.SERVANT);
         coins.add(new Coin());
-        coins.add(new Coin());
-        servants.add(new Servant());
-        leaderWarehouse.addResources(coins, 5);
-        leaderWarehouse.addResources(servants, 4);
-        assertEquals(3, leaderWarehouse.shiftResources(4, 5));
+        coins.add(new Coin()); //add 2 coins
+        servants.add(new Servant()); //adds 1 servant
+        leaderWarehouse.addResources(coins, 5); // 5° shelf: [coin,coin]
+        leaderWarehouse.addResources(servants, 4); // 4° shelf: [servant,EMPTY]
+        assertEquals(-1, leaderWarehouse.shiftResources(4, 5));
     }
 
     /**
@@ -588,10 +588,10 @@ class LeaderWarehouseTest {
         leaderWarehouse = new LeaderWarehouse(new Servant(), new Warehouse());
         CollectionResources coins = new ShelfCollection(ResourceType.COIN);
         coins.add(new Coin());
-        coins.add(new Coin());
-        leaderWarehouse.addResources(coins, 3);
-        assertEquals(0, leaderWarehouse.shiftResources(4, 2));
-        assertEquals(coins, leaderWarehouse.getTotalResources());
+        coins.add(new Coin()); // add 2 coins
+        leaderWarehouse.addResources(coins, 3); // 3° shelf: [coin,coin,coin]
+        assertEquals(-1, leaderWarehouse.shiftResources(4, 2));
+        assertEquals(coins, leaderWarehouse.getTotalResources()); // warehouse contains only 2 coins
     }
 
     /**
@@ -604,10 +604,12 @@ class LeaderWarehouseTest {
         leaderWarehouse = new LeaderWarehouse(new Servant(), new Warehouse());
         CollectionResources coins = new ShelfCollection(ResourceType.COIN);
         coins.add(new Coin());
-        coins.add(new Coin());
-        leaderWarehouse.addResources(coins, 3);
-        assertEquals(coins.getSize(), leaderWarehouse.shiftResources(4, 3));
-        assertEquals(0, leaderWarehouse.getNumberOfResources());
+        coins.add(new Coin()); // add 2 coins
+        leaderWarehouse.addResources(coins, 3); // 3° shelf: [coin,coin,EMPTY]
+        assertEquals(-1, leaderWarehouse.shiftResources(4, 3));
+        assertEquals(coins.getSize(), leaderWarehouse.getNumberOfResources()); // warehouse contains only 2 coins
+        assertEquals(-1, leaderWarehouse.shiftResources(3, 4));
+        assertEquals(coins.getSize(), leaderWarehouse.getNumberOfResources()); // warehouse contains only 2 coins
     }
 
     /**
@@ -619,53 +621,57 @@ class LeaderWarehouseTest {
         leaderWarehouse = new LeaderWarehouse(new Coin(), new Warehouse());
         CollectionResources coins = new ShelfCollection(ResourceType.COIN);
         coins.add(new Coin());
-        coins.add(new Coin());
-        leaderWarehouse.addResources(coins, 4);
+        coins.add(new Coin()); // add 2 coins
+        leaderWarehouse.addResources(coins, 4); // 4° shelf: [coin,coin]
         assertEquals(0 , leaderWarehouse.shiftResources(4, 4));
-        assertEquals(coins, leaderWarehouse.getTotalResources());
+        assertEquals(coins, leaderWarehouse.getTotalResources()); // warehouse contains only 2 coins
     }
 
     /**
-     * this test shift a full leader shelf with a normal empty shelf
+     * this test shift a resource from a full leader shelf to a normal empty shelf
      * with capacity > 1,when the resources in the leader shelf are not contained in
-     * the normal shelves, and verify that all the resources
-     * got shifted correctly
+     * the normal shelves, and verify that the resource get shifted correctly
      */
     @Test
     void testShiftResources6(){
         leaderWarehouse = new LeaderWarehouse(new Coin(), new Warehouse());
         CollectionResources coins = new ShelfCollection(ResourceType.COIN);
         coins.add(new Coin());
-        coins.add(new Coin());
-        leaderWarehouse.addResources(coins, 4);
+        coins.add(new Coin()); // add 2 coins
+        leaderWarehouse.addResources(coins, 4); // 4° shelf: [coin,coin]
+        assertEquals(0, leaderWarehouse.shiftResources(4,3));
+        coins.remove(new Coin()); // contains 1 coin
+        assertEquals(coins, leaderWarehouse.getShelf(3).getResources()); // 3° shelf: [coin,EMPTY,EMPTY]
+        assertEquals(coins, leaderWarehouse.getShelf(4).getResources()); // 4° shelf: [coin,EMPTY]
         assertEquals(0, leaderWarehouse.shiftResources(3,4));
-        assertEquals(coins, leaderWarehouse.getTotalResources());
-
+        coins.add(new Coin()); // contains 2 coins
+        assertTrue( leaderWarehouse.getShelf(3).isEmpty()); // 3° shelf: [EMPTY,EMPTY,EMPTY]
+        assertEquals(coins, leaderWarehouse.getShelf(4).getResources()); // 4° shelf: [coin,coin]
     }
 
     /**
-     * this test shift resources from a full leader shelf and an empty
-     * normal shelf with capacity 1, when the resources in the leader shelf are
-     * not contained in the normal shelves, and verify that one resource got discarded
+     * this test shift a resource from a full leader shelf to a normal empty shelf
+     * with capacity = 1,when the resources in the leader shelf are not contained in
+     * the normal shelves, and verify that the resource get shifted correctly
      */
     @Test
     void testShiftResources7(){
         leaderWarehouse = new LeaderWarehouse(new Coin(), new Warehouse());
         CollectionResources coins = new ShelfCollection(ResourceType.COIN);
         coins.add(new Coin());
-        coins.add(new Coin());
-        leaderWarehouse.addResources(coins, 4);
-        assertEquals(1, leaderWarehouse.shiftResources(4,1));
-        coins.remove(new Coin());
-        assertEquals(coins, leaderWarehouse.getTotalResources());
+        coins.add(new Coin()); // contains 2 coins
+        leaderWarehouse.addResources(coins, 4); // 4° shelf: [coin,coin]
+        assertEquals(0, leaderWarehouse.shiftResources(4,1));
+        coins.remove(new Coin()); // contain 1 coin
+        assertEquals(coins, leaderWarehouse.getShelf(1).getResources()); // 4° shelf: [coin,EMPTY]
+        assertEquals(coins, leaderWarehouse.getShelf(4).getResources()); // 4° shelf: [coin,EMPTY]
     }
 
     /**
-     * this test shift resources from a full leader shelf and a not empty
+     * this test shift a resource from a full leader shelf to a not empty
      * normal shelf with capacity 1, when the resources in the leader shelf are
-     * not contained in the normal shelves, and verify that got discarded 2
-     * resources, one contained in the normal shelf, and one contained in the
-     * leader shelf
+     * not contained in the normal shelves, and verify that return -1,
+     * without changing the state of the warehouse
      */
     @Test
     void testShiftResources8(){
@@ -673,121 +679,115 @@ class LeaderWarehouseTest {
         leaderWarehouse.addShelf(new Coin());
         CollectionResources coins = new ShelfCollection(ResourceType.COIN);
         coins.add(new Coin());
-        coins.add(new Coin());
+        coins.add(new Coin()); //contains 2 coins
         CollectionResources shield = new ShelfCollection(ResourceType.SHIELD);
-        shield.add(new Shield());
-        leaderWarehouse.addResources(coins, 5);
-        leaderWarehouse.addResources(shield, 1);
-        assertEquals(2, leaderWarehouse.shiftResources(5,1));
-        coins.remove(new Coin());
-        assertEquals(coins, leaderWarehouse.getTotalResources());
+        shield.add(new Shield()); // contains 1 shield
+        leaderWarehouse.addResources(coins, 5);  // 5° shelf: [coin,coin]
+        leaderWarehouse.addResources(shield, 1); // 1° shelf: [shield]
+        assertEquals(-1, leaderWarehouse.shiftResources(5,1));
+        assertEquals(-1, leaderWarehouse.shiftResources(1,5));
+        assertEquals(coins, leaderWarehouse.getShelf(5).getResources()); //5° shelf has 2 coins
+        assertEquals(shield, leaderWarehouse.getShelf(1).getResources()); //1° shelf has 1 shield
     }
 
     /**
-     * this test shift a leader shelf not empty with a normal shelf empty,
+     * this test shift a resource from a leader shelf not empty to a normal shelf empty,
      * when the resources in the leader shelf are contained in the normal shelves
-     * but not in the one selected, and verify that all the shifted resources
-     * got discarded
+     * but not in the one selected, and verify that the method return -1
+     * without changing the state of the warehouse
      */
     @Test
     void testShiftResources9(){
         leaderWarehouse = new LeaderWarehouse(new Coin(), new Warehouse());
         CollectionResources coins = new ShelfCollection(ResourceType.COIN);
-        coins.add(new Coin());
-        leaderWarehouse.addResources(coins, 4);
-        leaderWarehouse.addResources(coins, 2);
-        assertEquals(1, leaderWarehouse.shiftResources(4, 3));
-        assertEquals(coins, leaderWarehouse.getTotalResources());
+        coins.add(new Coin()); // contains 1 coin
+        leaderWarehouse.addResources(coins, 4); // 4° shelf: [coin,EMPTY]
+        leaderWarehouse.addResources(coins, 2); // 2° shelf: [coin,EMPTY]
+        assertEquals(-1, leaderWarehouse.shiftResources(4, 3));
+        assertEquals(coins, leaderWarehouse.getShelf(4).getResources()); // 4° shelf: [coin,EMPTY]
+        assertEquals(coins, leaderWarehouse.getShelf(2).getResources()); // 2° shelf: [coin,EMPTY]
     }
 
     /**
-     * this test shift a leader shelf not empty with a normal shelf not empty,
+     * this test shift a resource from a leader shelf not empty to a normal shelf not empty,
      * when the resources in the leader shelf are contained in the normal shelves
-     * but not in the one selected, and verify that all the shifted resources
-     * got discarded
+     * but not in the one selected, and verify that the method return -1
+     * without changing the state of the warehouse
      */
     @Test
     void testShiftResources10(){
         leaderWarehouse = new LeaderWarehouse(new Coin(), new Warehouse());
         CollectionResources coins = new ShelfCollection(ResourceType.COIN);
         coins.add(new Coin());
-        coins.add(new Coin());
-        leaderWarehouse.addResources(coins, 4);
-        leaderWarehouse.addResources(coins, 2);
+        coins.add(new Coin()); // contains 2 coins
+        leaderWarehouse.addResources(coins, 4); // 4° shelf: [coin,coin]
+        leaderWarehouse.addResources(coins, 2); // 2° shelf: [coin,coin]
         CollectionResources stones = new ShelfCollection(ResourceType.STONE);
         stones.add(new Stone());
         stones.add(new Stone());
-        stones.add(new Stone());
-        leaderWarehouse.addResources(stones, 3);
-        assertEquals(5, leaderWarehouse.shiftResources(4, 3));
-        assertEquals(coins, leaderWarehouse.getTotalResources());
+        stones.add(new Stone()); // contains 3 stones
+        leaderWarehouse.addResources(stones, 3); // 3° shelf: [stone, stone, stone]
+        assertEquals(-1, leaderWarehouse.shiftResources(4, 3));
+        assertEquals(-1, leaderWarehouse.shiftResources(3, 4));
+        assertEquals(stones, leaderWarehouse.getShelf(3).getResources()); // 3° shelf: [stone, stone, stone]
+        assertEquals(coins, leaderWarehouse.getShelf(2).getResources()); // 2° shelf: [coin,coin]
+        assertEquals(coins, leaderWarehouse.getShelf(4).getResources()); // 4° shelf: [coin,coin]
     }
 
     /**
-     * this test shift a leader shelf empty with a normal shelf not empty with
-     * capacity 2, when the resources in the leader shelf are contained
-     * in the normal shelf selected, and verify that
-     * shift all the resources cyclical
+     * this test shift a resource from a normal shelf not empty to a leader shelf empty with
+     * capacity 2 then roll-back, when the resources in the leader shelf are contained
+     * in the normal shelf selected, and verify that shift the resource cyclical
      */
     @Test
     void testShiftResources11(){
         leaderWarehouse = new LeaderWarehouse(new Stone(), new Warehouse());
         leaderWarehouse.addShelf(new Coin());
         CollectionResources coins = new ShelfCollection(ResourceType.COIN);
-        coins.add(new Coin());
-        leaderWarehouse.addResources(coins, 2);
+        coins.add(new Coin()); // contain 1 coin
+        leaderWarehouse.addResources(coins, 2); // 2° shelf: [coin,EMPTY]
         assertEquals(0, leaderWarehouse.shiftResources(2, 5));
-        assertEquals(coins, leaderWarehouse.getShelf(5).getResources());
-        assertTrue(leaderWarehouse.getShelf(2).isEmpty());
+        assertEquals(coins, leaderWarehouse.getShelf(5).getResources()); // 5° shelf: [coin,EMPTY]
+        assertTrue(leaderWarehouse.getShelf(2).isEmpty()); // 2° shelf: [EMPTY,EMPTY]
+        assertEquals(0, leaderWarehouse.shiftResources(5, 2));
+        assertEquals(coins, leaderWarehouse.getShelf(2).getResources()); // 2° shelf: [coin,EMPTY]
+        assertTrue(leaderWarehouse.getShelf(5).isEmpty()); // 5° shelf: [EMPTY,EMPTY]
+
+        leaderWarehouse.addResources(coins, 2); // 2° shelf: [coin,coin]
         assertEquals(0, leaderWarehouse.shiftResources(2, 5));
-        assertEquals(coins, leaderWarehouse.getShelf(2).getResources());
-        assertTrue(leaderWarehouse.getShelf(5).isEmpty());
-        coins.add(new Coin());
-        leaderWarehouse.addResources(coins, 2);
-        assertEquals(0, leaderWarehouse.shiftResources(2, 5));
-        assertTrue(leaderWarehouse.getShelf(2).isEmpty());
-        assertEquals(coins, leaderWarehouse.getShelf(5).getResources());
-        assertEquals(0, leaderWarehouse.shiftResources(2, 5));
-        assertEquals(coins, leaderWarehouse.getShelf(2).getResources());
-        assertTrue(leaderWarehouse.getShelf(5).isEmpty());
+        assertEquals(coins, leaderWarehouse.getShelf(2).getResources()); // 2° shelf: [coin,EMPTY]
+        assertEquals(coins, leaderWarehouse.getShelf(5).getResources()); // 5° shelf: [coin,EMPTY]
+        assertEquals(0, leaderWarehouse.shiftResources(5, 2));
+        coins.add(new Coin()); // contains 2 coins
+        assertEquals(coins, leaderWarehouse.getShelf(2).getResources()); // 2° shelf: [coin,coin]
+        assertTrue(leaderWarehouse.getShelf(5).isEmpty()); // 5° shelf: [EMPTY,EMPTY]
     }
 
     /**
-     * this test shift a leader shelf not empty with a normal shelf not empty with
-     * capacity 2, when the resources in the leader shelf are contained
-     * in the normal shelf selected, and verify that
-     * shift all the resources cyclical
+     * this test shift a resource from a leader shelf not empty to a normal shelf not empty with
+     * capacity 1, when the resources in the leader shelf are contained
+     * in the normal shelf selected, and verify that the method return -1,
+     * without changing the warehouse state
      */
     @Test
     void testShiftResources12(){
-        leaderWarehouse = new LeaderWarehouse(new Stone(), new Warehouse());
-        leaderWarehouse.addShelf(new Coin());
-        CollectionResources coins = new ShelfCollection(ResourceType.COIN);
-        CollectionResources singleCoin = new ShelfCollection(ResourceType.COIN);
-        singleCoin.add(new Coin());
-        coins.add(new Coin());
-        leaderWarehouse.addResources(coins, 2);
-        leaderWarehouse.addResources(coins, 5);
-        assertEquals(0, leaderWarehouse.shiftResources(2, 5));
-        assertEquals(coins, leaderWarehouse.getShelf(5).getResources());
-        assertEquals(coins, leaderWarehouse.getShelf(2).getResources());
-        assertEquals(0, leaderWarehouse.shiftResources(2, 5));
-        assertEquals(coins, leaderWarehouse.getShelf(5).getResources());
-        assertEquals(coins, leaderWarehouse.getShelf(2).getResources());
-        coins.add(new Coin());
-        leaderWarehouse.addResources(coins, 2);
-        assertEquals(0, leaderWarehouse.shiftResources(2, 5));
-        assertEquals(coins, leaderWarehouse.getShelf(5).getResources());
-        assertEquals(singleCoin, leaderWarehouse.getShelf(2).getResources());
-        assertEquals(0, leaderWarehouse.shiftResources(2, 5));
-        assertEquals(coins, leaderWarehouse.getShelf(2).getResources());
-        assertEquals(singleCoin, leaderWarehouse.getShelf(5).getResources());
+        leaderWarehouse = new LeaderWarehouse(new Shield(), new Warehouse());
+        CollectionResources shields = new ShelfCollection(ResourceType.SHIELD);
+        shields.add(new Shield());
+        shields.add(new Shield()); // contains 2 shields
+        leaderWarehouse.addResources(shields, 4); // 4° shelf: [shield,shield]
+        leaderWarehouse.addResources(shields, 1); // 1° shelf: [shield]
+        assertEquals(-1, leaderWarehouse.shiftResources(1, 4));
+        assertEquals(shields, leaderWarehouse.getShelf(4).getResources()); // 4° shelf: [shield,shield]
+        shields.remove(new Shield());
+        assertEquals(shields, leaderWarehouse.getShelf(1).getResources()); // 1° shelf: [shield]
     }
 
     /**
-     * this test shift a leader shelf not empty with a normal shelf not empty with
-     * capacity 1, when the resources in the leader shelf are contained
-     * in the normal shelf selected, and verify that discard one resource
+     * this test shift a resource from a leader shelf not empty to a normal shelf not empty with
+     * capacity 3, when the resources in the leader shelf are contained
+     * in the normal shelf selected, and verify that the method return -1,
+     * without changing the warehouse state
      */
     @Test
     void testShiftResources13(){
@@ -795,31 +795,27 @@ class LeaderWarehouseTest {
         CollectionResources shields = new ShelfCollection(ResourceType.SHIELD);
         shields.add(new Shield());
         shields.add(new Shield());
-        leaderWarehouse.addResources(shields, 4);
-        leaderWarehouse.addResources(shields, 1);
-        assertEquals(1, leaderWarehouse.shiftResources(1, 4));
-        shields.remove(new Shield());
-        assertEquals(shields, leaderWarehouse.getShelf(1).getResources());
-        assertEquals(shields, leaderWarehouse.getShelf(4).getResources());
+        shields.add(new Shield()); // contains 3 shields
+        leaderWarehouse.addResources(shields, 4); // 4° shelf: [shield,shield]
+        leaderWarehouse.addResources(shields, 3); // 3° shelf: [shield,shield,shield]
+        assertEquals(-1, leaderWarehouse.shiftResources(3, 4));
+        assertEquals(-1, leaderWarehouse.shiftResources(4, 3));
+        assertEquals(shields, leaderWarehouse.getShelf(3).getResources()); // 3° shelf: [shield,shield,shield]
+        shields.remove(new Shield()); // contains 2 shields
+        assertEquals(shields, leaderWarehouse.getShelf(4).getResources()); // 4° shelf: [shield,shield]
     }
 
     /**
-     * this test shift a leader shelf not empty with a normal shelf not empty with
-     * capacity 3, when the resources in the leader shelf are contained
-     * in the normal shelf selected, and verify that discard one resource
+     * this method verify that the method getNumOfShelves
+     * return 4 when create only one leader shelf
+     * return 5 when create the second leader shelf
      */
     @Test
-    void testShiftResources14(){
+    void getNumOfShelves(){
         leaderWarehouse = new LeaderWarehouse(new Shield(), new Warehouse());
-        CollectionResources shields = new ShelfCollection(ResourceType.SHIELD);
-        shields.add(new Shield());
-        shields.add(new Shield());
-        shields.add(new Shield());
-        leaderWarehouse.addResources(shields, 4);
-        leaderWarehouse.addResources(shields, 3);
-        assertEquals(1, leaderWarehouse.shiftResources(3, 4));
-        shields.remove(new Shield());
-        assertEquals(shields, leaderWarehouse.getShelf(3).getResources());
-        assertEquals(shields, leaderWarehouse.getShelf(4).getResources());
+        assertEquals(4, leaderWarehouse.getNumOfShelves());
+        leaderWarehouse.addShelf(new Coin());
+        assertEquals(5, leaderWarehouse.getNumOfShelves());
     }
+
 }

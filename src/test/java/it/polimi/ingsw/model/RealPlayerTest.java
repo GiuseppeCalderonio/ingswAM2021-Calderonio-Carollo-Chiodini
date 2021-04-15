@@ -3,6 +3,8 @@ package it.polimi.ingsw.model;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -79,7 +81,7 @@ public class RealPlayerTest {
         player.fillStrongboxWithBuffer();
         player.addResourcesToWarehouse(coins,3);
         player.addResourcesToWarehouse(shields, 2);
-        player.ActivateProduction(empty,empty,empty);
+        player.activateProduction(empty,empty,empty);
         assertEquals(shields, player.getPersonalDashboard().getPersonalWarehouse().getShelf(2).getResources());
         assertEquals(coins, player.getPersonalDashboard().getPersonalWarehouse().getShelf(3).getResources());
         assertEquals(coins, player.getPersonalDashboard().getPersonalStrongbox().getStrongboxResources());
@@ -103,7 +105,7 @@ public class RealPlayerTest {
         player.getPersonalDashboard().addToBuffer(coins);
         player.fillStrongboxWithBuffer();
         player.addResourcesToWarehouse(coins,3);
-        assertFalse(player.ActivateProduction(shields, coins, coins));
+        assertFalse(player.activateProduction(shields, coins, coins));
         assertEquals(coins, player.getPersonalDashboard().getPersonalWarehouse().getShelf(3).getResources());
         assertEquals(coins, player.getPersonalDashboard().getPersonalStrongbox().getStrongboxResources());
 
@@ -126,7 +128,7 @@ public class RealPlayerTest {
         player.getPersonalDashboard().addToBuffer(coins);
         player.fillStrongboxWithBuffer();
         player.addResourcesToWarehouse(coins,3);
-        assertFalse(player.ActivateProduction(coins, shields, coins));
+        assertFalse(player.activateProduction(coins, shields, coins));
         assertEquals(coins, player.getPersonalDashboard().getPersonalWarehouse().getShelf(3).getResources());
         assertEquals(coins, player.getPersonalDashboard().getPersonalStrongbox().getStrongboxResources());
     }
@@ -148,7 +150,7 @@ public class RealPlayerTest {
         player.getPersonalDashboard().addToBuffer(coins);
         player.fillStrongboxWithBuffer();
         player.addResourcesToWarehouse(coins,3);
-        assertTrue(player.ActivateProduction(coins, coins, coins));
+        assertTrue(player.activateProduction(coins, coins, coins));
         assertEquals(empty, player.getPersonalDashboard().getPersonalWarehouse().getShelf(3).getResources());
         assertEquals(empty, player.getPersonalDashboard().getPersonalStrongbox().getStrongboxResources());
     }
@@ -170,31 +172,6 @@ public class RealPlayerTest {
         for(i=1; i<=3; i++)
             assertEquals(empty, player.getPersonalDashboard().getPersonalWarehouse().getShelf(i).getResources());
     }
-
-    /*
-     * this test verifies that when a discounted resources is added then buyDevelopmentCard takes one less resource of
-     * the same type of the input of addDiscount from Dashboard
-     */
-
-   /* @Test
-    void testAddDiscount2 () {
-        player = new RealPlayer("pippo", leaderCards);
-        CollectionResources coins = new ShelfCollection(ResourceType.COIN);
-        CollectionResources actual = new CollectionResources();
-        coins.add(new Coin());
-        coins.add(new Coin());
-        player.getPersonalDashboard().addToBuffer(coins);
-        player.fillStrongboxWithBuffer();
-        player.addResourcesToWarehouse(coins,3);
-        player.addDiscount(new Coin());
-        assertTrue(player.buyDevelopmentCard(coins,coins));
-        coins.remove(new Coin());
-        assertEquals(coins, player.getPersonalDashboard().getTotalResources());
-
-        //player.addDiscount(new Shield());
-    }
-*/
-
 
     /**
      *this test verifies that when a player is instantiated then it has 0 victoryPoints

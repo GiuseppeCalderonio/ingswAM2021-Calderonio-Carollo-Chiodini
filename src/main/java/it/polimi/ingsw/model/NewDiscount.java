@@ -18,6 +18,14 @@ public class NewDiscount extends LeaderCard{
         super(requirements, victoryPoints, resource);
     }
 
+    /**
+     * this method add a new resource to use as discount
+     * when the player in input buy a card,but only if he
+     * has all the requirements of the leader card
+     * @param toChange this is the player that activate the card
+     * @return true if the player in input meet the requirements,
+     *         false otherwise
+     */
     @Override
     public boolean activateCard(RealPlayer toChange) {
         if(!this.getRequirements().containsRequirements(toChange)) return false;

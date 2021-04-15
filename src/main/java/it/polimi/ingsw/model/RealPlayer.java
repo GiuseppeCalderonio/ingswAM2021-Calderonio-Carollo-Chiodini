@@ -210,7 +210,7 @@ public class RealPlayer extends Player{
      * @param toPlaceInBuffer these are the output resources to add in the buffer
      * @return true if this operation is a success else false
      */
-    public boolean ActivateProduction(CollectionResources toPayFromWarehouse, CollectionResources toPayFromStrongbox, CollectionResources toPlaceInBuffer){
+    public boolean activateProduction(CollectionResources toPayFromWarehouse, CollectionResources toPayFromStrongbox, CollectionResources toPlaceInBuffer){
         if(!(personalDashboard.getPersonalStrongbox().getStrongboxResources().containsAll(toPayFromStrongbox) &&
                 personalDashboard.getPersonalWarehouse().getTotalResources().containsAll(toPayFromWarehouse))) return false;
         personalDashboard.removeFromWarehouse(toPayFromWarehouse);
@@ -242,7 +242,7 @@ public class RealPlayer extends Player{
      * this method discard the leader card specified by the
      * parameter (it can be the first one or the second one)
      * if the card has already been activated, it does not discard it
-     * if not, the method return true and add a faith point to the player
+     * if not, the method return true
      * @param toDiscard this is the index of the owned leader card to discard
      *                  it should be from 1 to personalLeaderCards.getSize()
      * @return true if the card got discarded correctly, false otherwise
@@ -302,7 +302,9 @@ public class RealPlayer extends Player{
     public int getVictoryPoints(){
         return personalDashboard.getVictoryPoints() +
                 super.getPersonalTrack().getVictoryPoints() +
-                personalLeaderCards.stream().filter(LeaderCard::isActive).flatMapToInt(x -> IntStream.of(x.getVictoryPoints())).sum();
+                personalLeaderCards.stream().
+                        filter(LeaderCard::isActive).
+                        flatMapToInt(x -> IntStream.of(x.getVictoryPoints())).sum();
         /*int victoryPoints = 0;
         victoryPoints = victoryPoints + personalDashboard.getVictoryPoints();
         victoryPoints = victoryPoints + super.getPersonalTrack().getVictoryPoints();

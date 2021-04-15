@@ -401,15 +401,20 @@ public class CardsMarket {
     public DevelopmentCard popCard(int level, CardColor color){
         int row = 2-(level-1);
         int column = color.getIndex();
-        int index = cardMatrix[row][column].size()-1;
-        DevelopmentCard toReturn = cardMatrix[row][column].get(index);
-        cardMatrix[row][column].remove(index);
-        return toReturn;
+        try{
+            int index = cardMatrix[row][column].size()-1;
+            DevelopmentCard toReturn = cardMatrix[row][column].get(index);
+            cardMatrix[row][column].remove(index);
+            return toReturn;
+        } catch (NullPointerException e){
+            return null;
+        }
+
     }
 
     /**
      * this method verify if all the cards of one color are not available anymore,
-     * in particular if column of the market is empty
+     * in particular if a column of the market is empty
      * @return true if a column is empty, false if it isn't
      */
     public boolean checkMissColumn() {

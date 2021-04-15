@@ -53,13 +53,10 @@ public class LeaderWarehouse extends Warehouse {
      */
     @Override
     public int addResources(CollectionResources toAdd, int numShelf) {
-        int leaderFaithPoints = 0;
+        int leaderFaithPoints;
 
         if (numShelf >= 1 && numShelf <= 3)
             return super.addResources(toAdd, numShelf);
-
-        if (leaderShelf[numShelf - 4] == null)
-            return toAdd.getSize();
 
         if (!(toAdd instanceof ShelfCollection))
             return toAdd.getSize();
@@ -67,10 +64,13 @@ public class LeaderWarehouse extends Warehouse {
         if (!toAdd.isCompatible(leaderShelf[numShelf -4].getResources()))
             return toAdd.getSize();
 
-        for (Resource r : toAdd) {
+        leaderFaithPoints = (int)toAdd.asList().stream().
+                filter(leaderShelf[numShelf - 4]::addResource).
+                count();
+        /*for (Resource r : toAdd) {
             if (leaderShelf[numShelf - 4].addResource(r))
                 leaderFaithPoints++;
-        }
+        }*/
         return leaderFaithPoints;
     }
 
@@ -170,55 +170,73 @@ public class LeaderWarehouse extends Warehouse {
         Shelf tempSource = new Shelf(3);
 
 
-        if (source <= 3) {
-            if (!(super.getShelf(source).isEmpty())) {
-                super.getShelf(source).getResources().forEach(tempSource::addResource);
-                super.removeResources(super.getShelf(source).getResources());
-            }
-        } else {
-            if (leaderShelf[source - 4] != null) {
-                if (!(leaderShelf[source - 4].isEmpty())) {
-                    leaderShelf[source - 4].getResources().forEach(tempSource::addResource);
-                    leaderShelf[source - 4].removeAll();
-                }
-            }
-        }
+        if (source <= 3) { //source is a regular shelf while destination is a leaderShelf
 
-        if (destination <= 3) {
-            if (!(super.getShelf(destination).isEmpty())) {
-                for (Resource r : super.getShelf(destination).getResources()) {
-                    if (leaderShelf[source - 4].addResource(r))
-                        faithPoints++;
-                }
+            if (super.getShelf(source).isEmpty())
+                return -1; //source doesn't contain any elements
+
+            if (leaderShelf[destination - 4]!= null) { //a leaderShelf of destination index exists
+                if (leaderShelf[destination - 4].getResourceType().equals(super.getShelf(source).getResourceType())) { //source and destination have same type
+                    if (leaderShelf[destination - 4].getFreeSlots() > 0) {//there is free space in destination
+                        leaderShelf[destination - 4].addResource(super.getShelf(source).getResources().getMaps().get(0).getResource());//add to destination
+                        super.getShelf(source).removeResource(super.getShelf(source).getResources().getMaps().get(0).getResource()); //remove from source
+                    }
+                    else return -1; //there isn't free space in destination
+                } else return -1; //source and destination have different types
+            } else return -1; // a LeaderShelf of destination index doesn't exist
+
+        }
+        else { //source leaderShelf
+
+            if (leaderShelf[source - 4] == null || leaderShelf[source-4].isEmpty()) {
+                return -1; // a LeaderShelf of source destination doesn't exist or it doesn't contain elements
             }
-            super.removeResources(super.getShelf(destination).getResources());
-        } else {
-            if (leaderShelf[destination - 4] != null) {
-                if (!(leaderShelf[destination - 4].isEmpty())) {
-                    if (source <= 3) {
-                        faithPoints = faithPoints + super.addResources(leaderShelf[destination - 4].getResources(), source);
-                    } else {
-                        for (Resource r : leaderShelf[destination - 4].getResources()) {
-                            if (leaderShelf[source - 4].addResource(r))
-                                faithPoints++;
+
+            if (destination <= 3) { // source is a leaderShelf and destination is a regular shelf
+                if (!super.getShelf(destination).isEmpty()) { //destination (regular) isn't empty
+                    if (super.getShelf(destination).getResourceType().equals(leaderShelf[source - 4].getResourceType())) {//source and destination have same type
+                        if (super.getShelf(destination).getFreeSlots()>0) { //there is free space in destination
+                            super.getShelf(destination).addResource(super.getShelf(destination).getResources().getMaps().get(0).getResource()); //add to destination
+                            leaderShelf[source - 4].removeResource(leaderShelf[source - 4].getResources().getMaps().get(0).getResource()); //remove from source
+                        } else return -1; //there isn't free space in destination
+                    } else return -1; //source and destination have different types
+                } else { // destination (regular) is empty
+                    for(i=1; i<=3; i++) {
+                        if (!super.getShelf(i).isEmpty()){
+                            if (super.getShelf(i).getResourceType().equals(leaderShelf[source -4].getResourceType()))
+                                return -1; // a regular shelf, which index is different from destination and contains resources of the same type of those contained in source, exists
                         }
                     }
+                    super.getShelf(destination).addResource(leaderShelf[source - 4].getResources().getMaps().get(0).getResource()); // add to destination
+                    leaderShelf[source - 4].removeResource(leaderShelf[source - 4].getResources().getMaps().get(0).getResource());  // remove from source
+                    }
+                } else { //source and destination are leader shelves
+
+                    if (leaderShelf[destination - 4] == null)
+                        return -1; // a leaderShelf of destination index doesn't exist
+                    if (leaderShelf[destination-4].getResourceType().equals(leaderShelf[source - 4].getResourceType())){ // //source and destination have same type
+                        if (leaderShelf[destination - 4].getFreeSlots() > 0) { //there is free space in destination
+                            leaderShelf[destination - 4].addResource(leaderShelf[source - 4].getResources().getMaps().get(0).getResource()); //add to destination
+                            leaderShelf[source - 4].removeResource(leaderShelf[source - 4].getResources().getMaps().get(0).getResource()); // remove from source
+                        } else return -1; //there isn't free space in destination
+                    } else return -1; // //source and destination have different types
                 }
             }
-            leaderShelf[destination - 4].removeAll();
-        }
-
-
-        if (!(tempSource.isEmpty())) {
-            if (destination <= 3) {
-                faithPoints = faithPoints + super.addResources(tempSource.getResources(), destination);
-            } else {
-                for (Resource r : tempSource.getResources()) {
-                    if (leaderShelf[destination - 4].addResource(r))
-                        faithPoints++;
-                }
-            }
-        }
-        return faithPoints;
+        return 0;
     }
+
+    /**
+     * this method get the number of shelves, in this
+     * case always return 4 or 5, depending
+     * on the number of leader shelves
+     *
+     * @return 4 if there is only one leader shelf 5 otherwise
+     */
+    @Override
+    public int getNumOfShelves() {
+        if (leaderShelf[1] == null) return 4;
+        return 5;
+    }
+
+
 }

@@ -510,4 +510,13 @@ class WarehouseTest {
         warehouse.addResources(shields, 3);
         assertEquals(6, warehouse.getNumberOfResources());
     }
+
+    /**
+     * this method verify that the method getNumOfShelves always return 3
+     */
+    @Test
+    void getNumOfShelves(){
+        warehouse = new Warehouse();
+        assertEquals(3, warehouse.getNumOfShelves());
+    }
 }

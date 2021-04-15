@@ -121,7 +121,7 @@ class DashboardTest {
     }
 
     /**
-     * this test verify that is possible to remove from the strongbox
+     * this test verify that is possible to remove from the warehouse
      * an empty collection of resources and does not change the state
      */
     @Test

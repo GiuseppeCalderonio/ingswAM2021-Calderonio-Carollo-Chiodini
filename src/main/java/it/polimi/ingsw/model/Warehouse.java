@@ -65,13 +65,20 @@ public class Warehouse {
     public int addResources(CollectionResources toAdd, int numShelf){
         int faithPoints=0;
         //is a shelfCollection
+
         if(!(toAdd instanceof ShelfCollection))
             return toAdd.getSize();
+
         //the shelf selected isn't compatible with the resources in input
-        if(!(shelf[numShelf-1].isEmpty())) {
-            if (!(toAdd.isCompatible(shelf[numShelf - 1].getResources())))
-                return toAdd.getSize();
-        }
+        if (!(toAdd.isCompatible(shelf[numShelf - 1].getResources())))
+            return toAdd.getSize();
+
+
+        /*
+        if (!(shelf[numShelf - 1].getResources().isCompatible(toAdd)))
+            return toAdd.getSize();
+        */
+
         // if does not exist a shelf of that type
         boolean shelfNotCompatible = Arrays.stream(shelf).
                 filter(s -> !s.isEmpty()).
@@ -84,10 +91,12 @@ public class Warehouse {
                     return toAdd.getSize();
             }
         }*/
-        for (Resource r: toAdd) {
+        faithPoints = faithPoints + (int) toAdd.asList().stream().
+                        filter(shelf[numShelf - 1]::addResource).count();
+        /*for (Resource r: toAdd) {
             if(shelf[numShelf - 1].addResource(r))
                 faithPoints++;
-        }
+        }*/
         return faithPoints;
     }
 
@@ -98,9 +107,9 @@ public class Warehouse {
      */
     public void removeResources(CollectionResources toRemove){
 
-        toRemove.forEach(x -> Arrays.stream(shelf).
-                filter(y ->x.getType().equals(y.getResourceType())).
-                forEach(y -> y.removeResource(x)));
+        toRemove.forEach(r -> Arrays.stream(shelf).
+                filter(shelf ->r.getType().equals(shelf.getResourceType())).
+                forEach(shelf -> shelf.removeResource(r)));
 
        /* for (Resource r: toRemove) {
             for (int i = 0; i < 3; i++){
@@ -120,26 +129,29 @@ public class Warehouse {
         if(source == destination) return 0;
         int faithPoints = 0;
 
-
         Shelf temp= new Shelf(3);
 
-        if(!(shelf[source-1].isEmpty())){
-            shelf[source-1].getResources().forEach(temp::addResource);
-            shelf[source-1].removeAll();
-        }
-        if (!(shelf[destination-1].isEmpty())) {
-            for (Resource r : shelf[destination - 1].getResources()) {
-                if (shelf[source - 1].addResource(r))
-                    faithPoints++;
-            }
-        }
+        shelf[source-1].getResources().forEach(temp::addResource);
+        shelf[source-1].removeAll();
+
+        faithPoints = faithPoints + (int) shelf[destination - 1].getResources().asList().stream().
+                filter(shelf[source - 1]::addResource).
+                count();
+        /*for (Resource r : shelf[destination - 1].getResources()) {
+            if (shelf[source - 1].addResource(r))
+                faithPoints++;
+        }*/
+
         shelf[destination - 1].removeAll();
-        if (!(temp.isEmpty())) {
-            for (Resource r : temp.getResources()) {
-                if (shelf[destination - 1].addResource(r))
-                    faithPoints++;
-            }
-        }
+
+        faithPoints = faithPoints + (int) temp.getResources().asList().stream().
+                filter(shelf[destination -1]::addResource).
+                count();
+        /*for (Resource r : temp.getResources()) {
+            if (shelf[destination - 1].addResource(r))
+                faithPoints++;
+        }*/
+
         return faithPoints;
     }
 
@@ -150,7 +162,7 @@ public class Warehouse {
     public CollectionResources getTotalResources(){
         //int i;
         CollectionResources temp = new CollectionResources();
-        Arrays.stream(shelf).forEach(s -> s.getResources().forEach(temp::add));
+        Arrays.stream(shelf).forEach(shelf -> temp.sum(shelf.getResources()));
         /*for(i=0;i<3;i++){
             shelf[i].getResources().forEach(temp::add);
         }*/
@@ -165,7 +177,7 @@ public class Warehouse {
         //int i;
         //int counter = 0;
         return Arrays.stream(shelf).
-                flatMapToInt(x -> IntStream.of(x.getResources().getSize())).
+                flatMapToInt(shelf -> IntStream.of(shelf.getResources().getSize())).
                 sum();
         /*for(i=0;i<3;i++) {
             counter = counter + shelf[i].getResources().getSize();
@@ -180,5 +192,13 @@ public class Warehouse {
     protected void addShelf(Resource input){
     }
 
+    /**
+     * this method get the number of shelves, in this
+     * case always return 3, but could not if
+     * it is called from leader warehouse
+     * @return 3
+     */
+    public int getNumOfShelves(){
+        return 3;
+    }
 }
-
