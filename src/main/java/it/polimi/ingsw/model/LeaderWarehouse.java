@@ -161,13 +161,12 @@ public class LeaderWarehouse extends Warehouse {
      */
     @Override
     public int shiftResources(int source, int destination) {
+
         if (source <= 3 && destination <= 3)
             return super.shiftResources(source, destination);
 
         if (source == destination) return 0;
-
-        int faithPoints = 0;
-        Shelf tempSource = new Shelf(3);
+        int i;
 
 
         if (source <= 3) { //source is a regular shelf while destination is a leaderShelf
