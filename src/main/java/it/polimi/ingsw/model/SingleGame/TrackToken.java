@@ -14,10 +14,10 @@ public class TrackToken implements SoloToken {
     }
 
     /**
-     *
-     * @param inTrackCase
-     * @param inCardsCase
-     * @return
+     *this method add faithPoints in the number as in the attribute to Lorenzo il magnifico
+     * @param inTrackCase contains the game
+     * @param inCardsCase contains the CardsMarket
+     * @return true if shuffle is true false otherwise
      */
     @Override
     public boolean action(Game inTrackCase, CardsMarket inCardsCase) {

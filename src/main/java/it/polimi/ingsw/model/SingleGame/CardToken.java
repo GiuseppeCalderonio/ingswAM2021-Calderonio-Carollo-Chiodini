@@ -13,9 +13,10 @@ public class CardToken implements SoloToken {
     }
 
     /**
-     * @param inTrackCase
-     * @param inCardsCase
-     * @return
+     * this method deletes two cards of the color in the attribute from the CardsMarket starting from the lowest levels
+     * @param inTrackCase contains the game
+     * @param inCardsCase contains the CardsMarket
+     * @return always false
      */
     @Override
     public boolean action(Game inTrackCase, CardsMarket inCardsCase) {
@@ -24,14 +25,16 @@ public class CardToken implements SoloToken {
                     return false;
                 if (inCardsCase.popCard(2, color) != null)
                     return false;
-                inCardsCase.popCard(3, color);
-                return  false;
+                if (inCardsCase.popCard(3, color)!=null)
+                    return  false;
+                inTrackCase.checkEndGame(); //miss column
             }
         if(inCardsCase.popCard(2,color)!=null) {
             if (inCardsCase.popCard(2, color) != null)
                 return false;
-            inCardsCase.popCard(3, color);
-            return false;
+            if (inCardsCase.popCard(3, color)!=null)
+                return false;
+            inTrackCase.checkEndGame(); //miss column
         }
         inCardsCase.popCard(3,color);
         if(inCardsCase.popCard(3,color) != null)
