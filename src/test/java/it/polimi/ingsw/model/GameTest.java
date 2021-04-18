@@ -3022,4 +3022,259 @@ class GameTest {
     }
 
 
+    /**
+     * this test verifies that if we have 2 LeaderCard of WhiteMarble type, they can be activated only if the
+     * requirement is respected and then in this case the corresponding whiteMarble is contained in the Player
+     */
+    @Test
+    void testActivateLeaderCard1() {
+        List<String> nicknames = new ArrayList<>(Collections.singletonList("first"));
+        game = new Game(nicknames);
+        game.initialiseGame(game.getPlayers().get(0).getNickname(), new CollectionResources(), 1, 3);
+        game.getActualPlayer().getPersonalLeaderCards().add(new NewWhiteMarble(new ResourcesRequired(new Coin()),2, new Coin()));
+        game.getActualPlayer().getPersonalLeaderCards().add(new NewWhiteMarble(new ResourcesRequired(new Coin()),2, new Shield()));
+        CollectionResources coins = new CollectionResources();
+        assertFalse(game.activateLeaderCard(3));
+        assertFalse(game.activateLeaderCard(4));
+        coins.add(new Coin());
+        coins.add(new Coin());
+        coins.add(new Coin());
+        coins.add(new Coin());
+        coins.add(new Coin());
+        game.getActualPlayer().getPersonalDashboard().getPersonalStrongbox().addResources(coins);
+        assertTrue(game.activateLeaderCard(3));
+        assertEquals(game.getActualPlayer().getLeaderWhiteMarble(1), new YellowMarble());
+        assertTrue(game.activateLeaderCard(4));
+        assertEquals(game.getActualPlayer().getLeaderWhiteMarble(2), new BlueMarble());
+    }
+
+    /**
+     *this test verifies that if we have 2 LeaderCard of NewShelf type, they can be activated only if the
+     *requirement is respected and then in this case a NewShelf is added to the Warehouse for each card
+     */
+    @Test
+    void testActivateLeaderCard2() {
+        List<String> nicknames = new ArrayList<>(Collections.singletonList("first"));
+        game = new Game(nicknames);
+        game.initialiseGame(game.getPlayers().get(0).getNickname(), new CollectionResources(), 1, 3);
+        game.getActualPlayer().getPersonalLeaderCards().add(new NewShelf(new ResourcesRequired(new Coin()),2, new Coin()));
+        game.getActualPlayer().getPersonalLeaderCards().add(new NewShelf(new ResourcesRequired(new Coin()),2, new Shield()));
+        CollectionResources coins = new CollectionResources();
+        assertFalse(game.activateLeaderCard(3));
+        assertFalse(game.activateLeaderCard(4));
+        coins.add(new Coin());
+        coins.add(new Coin());
+        coins.add(new Coin());
+        coins.add(new Coin());
+        coins.add(new Coin());
+        game.getActualPlayer().getPersonalDashboard().getPersonalStrongbox().addResources(coins);
+        assertTrue(game.activateLeaderCard(3));
+        assertEquals(game.getActualPlayer().getPersonalDashboard().getPersonalWarehouse().getShelf(4).getResourceType(), ResourceType.COIN);
+        assertTrue(game.activateLeaderCard(4));
+        assertEquals(game.getActualPlayer().getPersonalDashboard().getPersonalWarehouse().getShelf(5).getResourceType(), ResourceType.SHIELD);
+    }
+
+    /**
+     *this test verifies that if we have 2 LeaderCard of NewProduction type, they can be activated only if the
+     * requirement is respected and then in this case a new production is added to PersonalProductionPower for each card
+     */
+    @Test
+    void testActivateLeaderCard3() {
+        List<String> nicknames = new ArrayList<>(Collections.singletonList("first"));
+        game = new Game(nicknames);
+        game.initialiseGame(game.getPlayers().get(0).getNickname(), new CollectionResources(), 1, 3);
+        game.getActualPlayer().getPersonalLeaderCards().add(new NewProduction(new ResourcesRequired(new Coin()),2, new Coin()));
+        game.getActualPlayer().getPersonalLeaderCards().add(new NewProduction(new ResourcesRequired(new Coin()),2, new Shield()));
+        CollectionResources coins = new CollectionResources();
+        assertFalse(game.activateLeaderCard(3));
+        assertFalse(game.activateLeaderCard(4));
+        coins.add(new Coin());
+        coins.add(new Coin());
+        coins.add(new Coin());
+        coins.add(new Coin());
+        coins.add(new Coin());
+        game.getActualPlayer().getPersonalDashboard().getPersonalStrongbox().addResources(coins);
+        assertTrue(game.activateLeaderCard(3));
+        assertEquals(game.getActualPlayer().getPersonalDashboard().getPersonalProductionPower().getInput(1).getType(), ResourceType.COIN);
+        assertTrue(game.activateLeaderCard(4));
+        assertEquals(game.getActualPlayer().getPersonalDashboard().getPersonalProductionPower().getInput(2).getType(), ResourceType.SHIELD);
+    }
+
+    /**
+     *this test verifies that if we have 2 LeaderCard of NewDiscount type, they can be activated only if the requirement is
+     * respected and then in this case a new discount is added to the Dashboard
+     */
+    @Test
+    void testActivateLeaderCard4() {
+        List<String> nicknames = new ArrayList<>(Collections.singletonList("first"));
+        game = new Game(nicknames);
+        game.initialiseGame(game.getPlayers().get(0).getNickname(), new CollectionResources(), 1, 3);
+        game.getActualPlayer().getPersonalLeaderCards().add(new NewDiscount(new ResourcesRequired(new Coin()),2, new Coin()));
+        game.getActualPlayer().getPersonalLeaderCards().add(new NewDiscount(new ResourcesRequired(new Coin()),2, new Shield()));
+        CollectionResources coins = new CollectionResources();
+        assertFalse(game.activateLeaderCard(3));
+        assertFalse(game.activateLeaderCard(4));
+        coins.add(new Coin());
+        coins.add(new Coin());
+        coins.add(new Coin());
+        coins.add(new Coin());
+        coins.add(new Coin());
+        game.getActualPlayer().getPersonalDashboard().getPersonalStrongbox().addResources(coins);
+        assertTrue(game.activateLeaderCard(3));
+        assertEquals(game.getActualPlayer().getPersonalDashboard().getDiscount().asList().get(0), new Coin());
+        assertTrue(game.activateLeaderCard(4));
+        assertEquals(game.getActualPlayer().getPersonalDashboard().getDiscount().asList().get(1), new Shield());
+
+    }
+
+    // ste
+
+    /**
+
+     * this test check if a leader card is discarded correctly by a player, we discard the second leader card then
+     * we verify that the player obtain one faith points and that the second leader card position is false
+     */
+    @Test
+    public void TestDiscardLeaderCard1(){
+        List<String> nicknames = new ArrayList<>(Collections.singletonList("first"));
+        game = new Game(nicknames);
+        CollectionResources toInitialise = new CollectionResources();
+        game.initialiseGame(game.getPlayers().get(0).getNickname(), toInitialise, 1, 3);
+
+        CollectionResources collection = new CollectionResources();
+        collection.add(new Stone()); collection.add(new Stone()); collection.add(new Stone()); collection.add(new Stone()); collection.add(new Stone());
+        collection.add(new Coin());  collection.add(new Coin()); collection.add(new Coin()); collection.add(new Coin()); collection.add(new Coin());
+        game.getActualPlayer().getPersonalDashboard().getPersonalStrongbox().addResources(collection);
+
+        game.getActualPlayer().getPersonalLeaderCards().remove(0);
+        game.getActualPlayer().getPersonalLeaderCards().remove(0);
+
+        LeaderCard card = new NewShelf( new ResourcesRequired(new Stone()) , 1 , new Stone());
+        game.getActualPlayer().getPersonalLeaderCards().add(card);
+
+        LeaderCard card1 = new NewShelf(new ResourcesRequired(new Coin()) , 1 , new Coin());
+        game.getActualPlayer().getPersonalLeaderCards().add(card1);
+
+        assertEquals(0, game.getActualPlayer().getPersonalTrack().getPosition());
+
+        game.discardLeaderCard(2);
+        assertFalse(game.checkLeaderCard(2));
+        assertEquals(1, game.getActualPlayer().getPersonalTrack().getPosition());
+
+        game.discardLeaderCard(1);
+        assertFalse(game.checkLeaderCard(1));
+        assertEquals(2, game.getActualPlayer().getPersonalTrack().getPosition());
+    }
+
+    /**
+     * this test check if a leader card is discarded correctly by a player, we activate the first leader card then
+     * we try to discard it and we check that we can't discard the card and t
+     */
+    @Test
+    public void TestDiscardLeaderCard2(){
+        List<String> nicknames = new ArrayList<>(Collections.singletonList("first"));
+        game = new Game(nicknames);
+        CollectionResources collection = new CollectionResources();
+        collection.add(new Stone()); collection.add(new Stone()); collection.add(new Stone()); collection.add(new Stone()); collection.add(new Stone());
+        game.getActualPlayer().getPersonalDashboard().getPersonalStrongbox().addResources(collection);
+        CollectionResources toInitialise = new CollectionResources();
+        game.initialiseGame(game.getPlayers().get(0).getNickname(), toInitialise, 1, 3);
+        LeaderCard card = new NewShelf( new ResourcesRequired(new Stone()) , 1 , new Stone());
+        game.getActualPlayer().getPersonalLeaderCards().add(0,card);
+        game.getActualPlayer().activateLeaderCard(1);
+        assertFalse(game.getActualPlayer().discardLeaderCard(1));
+        assertEquals(0 , game.getActualPlayer().getPersonalTrack().getPosition());
+    }
+
+
+
+    // end ste
+
+    /**
+     * this method check if the game terminate correctly, there isn't a player in end position and this check not
+     * throws an and game exception; then a player reach the final position end the method throws an and game exception
+     */
+    @Test
+    public void testEndGameFinalPosition(){
+        // initialize the game
+        List<String> nicknames = new ArrayList<>(Arrays.asList("first", "second", "third", "fourth"));
+        game = new Game(nicknames);
+        CollectionResources toInitialise = new CollectionResources();
+        game.initialiseGame(game.getPlayers().get(0).getNickname(), toInitialise, 1, 3);
+        toInitialise.add(new Servant());
+        game.initialiseGame(game.getPlayers().get(1).getNickname(), toInitialise, 1, 3);
+        game.initialiseGame(game.getPlayers().get(2).getNickname(), toInitialise, 1, 3);
+        toInitialise.add(new Coin());
+        game.initialiseGame(game.getPlayers().get(3).getNickname(), toInitialise, 1, 3);
+
+        assertDoesNotThrow(()-> game.checkEndGame());
+        assertDoesNotThrow(()-> game.endTurn());
+
+        game.addFaithPointsTo(game.getPlayers().get(0), 8);
+        game.addFaithPointsTo(game.getPlayers().get(0), 8);
+        game.addFaithPointsTo(game.getPlayers().get(0), 7);
+
+        assertDoesNotThrow(()-> game.checkEndGame());
+        assertDoesNotThrow(()-> game.endTurn());
+
+        game.addFaithPointsTo(game.getPlayers().get(1), 8);
+        game.addFaithPointsTo(game.getPlayers().get(1), 8);
+        game.addFaithPointsTo(game.getPlayers().get(1), 7);
+
+        assertDoesNotThrow(()-> game.checkEndGame());
+        assertDoesNotThrow(()-> game.endTurn());
+
+        game.addFaithPointsTo(game.getPlayers().get(2), 8);
+        game.addFaithPointsTo(game.getPlayers().get(2), 8);
+        game.addFaithPointsTo(game.getPlayers().get(2), 8);
+
+        assertThrows(EndGameException.class, ()-> game.checkEndGame());
+        assertThrows(EndGameException.class, ()-> game.endTurn());
+    }
+
+    /**
+     * this method check if the game terminate correctly, there is a player with five card in dashboard and this check not
+     * throws an and game exception. Then we ad two card and this check throw an endGameException, then we add another card
+     * and this check throw an endGameException
+     */
+    @Test
+    public void testEndGame7Cards(){
+        DevelopmentCard card1 = new DevelopmentCard(CardColor.GREEN,1,10,null,null,null,0);
+        DevelopmentCard card2 = new DevelopmentCard(CardColor.GREEN,2,10,null,null,null,0);
+        DevelopmentCard card3 = new DevelopmentCard(CardColor.GREEN,3,10,null,null,null,0);
+        DevelopmentCard card4 = new DevelopmentCard(CardColor.GREEN,1,10,null,null,null,0);
+        DevelopmentCard card5 = new DevelopmentCard(CardColor.GREEN,2,10,null,null,null,0);
+        DevelopmentCard card6 = new DevelopmentCard(CardColor.GREEN,3,10,null,null,null,0);
+        DevelopmentCard card7 = new DevelopmentCard(CardColor.GREEN,1,10,null,null,null,0);
+        DevelopmentCard card8 = new DevelopmentCard(CardColor.GREEN,2,10,null,null,null,0);
+        List<String> nicknames = new ArrayList<>(Arrays.asList("first", "second", "third", "fourth"));
+        game = new Game(nicknames);
+        CollectionResources toInitialise = new CollectionResources();
+        game.initialiseGame(game.getPlayers().get(0).getNickname(), toInitialise, 1, 3);
+        toInitialise.add(new Servant());
+        game.initialiseGame(game.getPlayers().get(1).getNickname(), toInitialise, 1, 3);
+        game.initialiseGame(game.getPlayers().get(2).getNickname(), toInitialise, 1, 3);
+        toInitialise.add(new Coin());
+        game.initialiseGame(game.getPlayers().get(3).getNickname(), toInitialise, 1, 3);
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card1 , 1);
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card2 , 1);
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card3 , 1);
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card4 , 2);
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card5 , 2);
+        assertDoesNotThrow(()-> game.checkEndGame());
+        assertDoesNotThrow(()-> game.endTurn());
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card6 , 2);
+        assertDoesNotThrow(()-> game.checkEndGame());
+        assertDoesNotThrow(()-> game.endTurn());
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card7 , 3);
+        assertThrows(EndGameException.class, ()-> game.checkEndGame());
+        assertDoesNotThrow(()-> game.endTurn());
+        assertThrows(EndGameException.class, ()-> game.endTurn());
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card8 , 3);
+        assertThrows(EndGameException.class, ()-> game.checkEndGame());
+        assertDoesNotThrow(()-> game.endTurn());
+        assertDoesNotThrow(()-> game.endTurn());
+        assertDoesNotThrow(()-> game.endTurn());
+        assertThrows(EndGameException.class, ()-> game.endTurn());
+    }
 }

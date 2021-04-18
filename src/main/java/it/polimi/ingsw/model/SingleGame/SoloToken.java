@@ -11,4 +11,6 @@ public interface SoloToken {
      * @return true if the deck of token needs to be shuffled false otherwise
      */
     boolean action (Game inTrackCase, CardsMarket inCardsCase);
+
+    boolean equals(Object o);
 }

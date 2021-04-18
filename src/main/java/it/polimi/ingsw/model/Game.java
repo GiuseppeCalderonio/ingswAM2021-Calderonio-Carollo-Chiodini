@@ -8,8 +8,10 @@ import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.Marble.MarbleMarket;
 import it.polimi.ingsw.model.Marble.RedMarble;
 import it.polimi.ingsw.model.Marble.WhiteMarble;
+import it.polimi.ingsw.model.PlayerAndComponents.Player;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.model.Resources.*;
+import it.polimi.ingsw.model.SingleGame.SoloToken;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -107,6 +109,10 @@ public class Game {
     public synchronized boolean[] getVaticanReports() {
         return vaticanReports;
     }
+
+    public synchronized Player getLorenzoIlMagnifico(){ return null; }
+
+    public synchronized List<SoloToken> getSoloTokens(){ return null; }
 
     /**
      * this method is used to set vaticanReports vector
@@ -248,6 +254,8 @@ public class Game {
      * @param destination this is the index of the destination shelf
      * @return false if one of the two shelves is a leader one
      *        and is not possible to move a resource, false otherwise
+     * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
+     *                         or when a column of the cardsMarket is empty, only in a single game
      */
     public synchronized boolean shiftResources(int source, int destination) throws EndGameException {
         int faithPoints = getActualPlayer().shiftResources(source, destination);
@@ -296,6 +304,8 @@ public class Game {
      * giving to the actual player a faith point if the array contains a red marble
      * @param marbles these are the marbles to convert
      * @return the collectionResources associated with the marbles
+     * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
+     *                         or when a column of the cardsMarket is empty, only in a single game
      */
     public synchronized CollectionResources convert(List<Marble> marbles) throws EndGameException {
         List<Marble> temp = marbles.stream().
@@ -344,6 +354,8 @@ public class Game {
      * @param marblesConverted these are the resources that have to be filtered
      *                         they are associated with the marbles already got
      *                         from the market
+     * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
+     *                         or when a column of the cardsMarket is empty, only in a single game
      */
     public synchronized void insertInWarehouse(int shelf, Resource typeRequired, CollectionResources marblesConverted) throws EndGameException {
         CollectionResources toAdd = new ShelfCollection(typeRequired.getType());
@@ -439,13 +451,15 @@ public class Game {
      * in particular, it get and remove the card selected by the level and the color
      * from the market, it place the card in the dashboard at the position selected,
      * it infer the resources to pay from the strongbox as the resources to pay
-     * from warehouse given in input minus the cosT (eventually discounted) of the card,
+     * from warehouse given in input minus the cost (eventually discounted) of the card,
      * and pay the resources from the warehouse and the dashboard
      * NB: it requires that the inputs are all correct
      * @param level this is the level of the card to buy
      * @param color this is the color of the card to buy
      * @param position this is the position in which place the card in the dashboard
      * @param toPayFromWarehouse these are the resources to pay from warehouse
+     * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
+     *                         or when a column of the cardsMarket is empty, only in a single game
      */
     public synchronized void buyCard(int level, CardColor color,int position, CollectionResources toPayFromWarehouse) throws EndGameException {
 
@@ -565,6 +579,8 @@ public class Game {
      *                 it requires that the card exist
      * @param toPayFromWarehouse these are the resources to pay from warehouse
      *                           them require that the method checkActivateProduction(position, toPayFromWarehouse ) == true
+     * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
+     *                         or when a column of the cardsMarket is empty, only in a single game
      */
     public synchronized void activateProduction(int position, CollectionResources toPayFromWarehouse ) throws EndGameException {
         DevelopmentCard card = getActualPlayer().
@@ -660,6 +676,8 @@ public class Game {
      * @param output this is the resource to get as output of the production
      * @param fromWarehouse this is the flag that verify if the payment of the resource
      *                     should be done in the warehouse or in the strongbox
+     *@throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
+     *                         or when a column of the cardsMarket is empty, only in a single game
      */
     public synchronized void activateLeaderProduction(int toActivate, Resource output, boolean fromWarehouse) throws EndGameException {
 
@@ -729,6 +747,7 @@ public class Game {
      * @param toDiscard this is the index of the owned leader card to discard
      *                  it should be from 1 to personalLeaderCards.getSize()
      * @return true if the card got discarded correctly, false otherwise
+     * @throws EndGameException when a player reach the final vatican report, only in a single game
      */
     public synchronized boolean discardLeaderCard(int toDiscard) throws EndGameException {
         if (getActualPlayer().discardLeaderCard(toDiscard)){
@@ -743,11 +762,11 @@ public class Game {
      * in particular, increment the turnManager and
      * if the round is finished, it returns true if the game
      * must finish, false otherwise
-     * @return true if the game must finish, false otherwise
+     * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
      */
     public synchronized void endTurn() throws EndGameException {
         turnManager++; //increase the turn
-        if (turnManager % 4 == 0) checkEndGame(); //if the round is ended, check if the game must finish
+        if (turnManager % players.size() == 0) checkEndGame(); //if the round is ended, check if the game must finish
     }
 
     /**
@@ -755,8 +774,7 @@ public class Game {
      * in particular, it get the number of cards in dashboard for every player,
      * take the max value, and check if the last vatican report is true or if
      * a player bought more than 6 cards
-     * @return ture if the last vatican report is true or if
-     *         a player bought more than 6 cards, false otherwise
+     * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
      */
     public synchronized void checkEndGame() throws EndGameException {
         int cards = players.stream().
@@ -771,6 +789,7 @@ public class Game {
     /**
      * this method is use to handle every vaticanReport; this method is called every time to check if we
      * must activate a popeFavorTile card in track
+     * @throws EndGameException when a player reach the final vatican report, only in a single game
      */
     protected synchronized void handleVaticanReport() throws EndGameException {
         int i=0;
@@ -791,6 +810,7 @@ public class Game {
      * this method is used to add faithPoints at only one player
      * @param actualPlayer is the player who can advance on the faith track
      * @param toAdd is the number of faithTrack position to add to the actual player
+     * @throws EndGameException when a player reach the final vatican report, only in a single game
      */
     protected synchronized void addFaithPointsTo(RealPlayer actualPlayer , int toAdd) throws EndGameException {
         actualPlayer.addFaithPoints(toAdd);
@@ -801,6 +821,7 @@ public class Game {
      * this method is used to add faithPoints to all players except one, this one is the actualPlayer
      * @param actualPlayer is the player who remains in the same position;
      * @param toAdd is the number of faithTrack position to add to all players except one, the actualPlayer
+     * @throws EndGameException when a player reach the final vatican report, only in a single game
      */
     public synchronized void addFaithPointsExceptTo(RealPlayer actualPlayer, int toAdd) throws EndGameException {
         players.stream().

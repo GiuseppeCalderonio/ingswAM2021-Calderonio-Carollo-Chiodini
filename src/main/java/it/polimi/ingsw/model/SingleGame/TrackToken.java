@@ -3,10 +3,12 @@ package it.polimi.ingsw.model.SingleGame;
 import it.polimi.ingsw.model.DevelopmentCards.CardsMarket;
 import it.polimi.ingsw.model.Game;
 
+import java.util.Objects;
+
 public class TrackToken implements SoloToken {
 
-    private boolean shuffle;
-    private int faithPoints;
+    private final boolean shuffle;
+    private final int faithPoints;
 
     public TrackToken(int faithPoints, boolean shuffle) {
         this.faithPoints = faithPoints;
@@ -23,5 +25,13 @@ public class TrackToken implements SoloToken {
     public boolean action(Game inTrackCase, CardsMarket inCardsCase) {
         inTrackCase.addFaithPointsExceptTo(inTrackCase.getActualPlayer(), faithPoints);
         return shuffle;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TrackToken that = (TrackToken) o;
+        return shuffle == that.shuffle && faithPoints == that.faithPoints;
     }
 }

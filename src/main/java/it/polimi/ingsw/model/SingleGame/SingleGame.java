@@ -1,7 +1,8 @@
 package it.polimi.ingsw.model.SingleGame;
 
-import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.DevelopmentCards.CardColor;
+import it.polimi.ingsw.model.EndGameException;
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.PlayerAndComponents.Player;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.model.Resources.CollectionResources;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class SingleGame extends Game {
 
-    private ArrayList<SoloToken> soloTokens;
+    private final List<SoloToken> soloTokens;
     private final Player lorenzoIlMagnifico;
 
 
@@ -21,11 +22,12 @@ public class SingleGame extends Game {
      * at false; set the nickname of players; initialize randomly MarbleMarket and CardsMarket, create all leaderCards and assign four
      * of them at the player, then initialize lorenzoIlMagnifico and all the soloTokens (7) in random order
      *
-     * @param nicknames
+     * @param nicknames this is the nickname of the single player
      */
     public SingleGame(List<String> nicknames) {
         super(nicknames);
         lorenzoIlMagnifico = new Player();
+        soloTokens = new ArrayList<>();
         soloTokens.add(new TrackToken(2, false));
         soloTokens.add(new TrackToken(2, false));
         soloTokens.add(new TrackToken(1, true));
@@ -36,13 +38,23 @@ public class SingleGame extends Game {
         Collections.shuffle(soloTokens);
     }
 
+    public Player getLorenzoIlMagnifico() {
+        return lorenzoIlMagnifico;
+    }
+
+    @Override
+    public List<SoloToken> getSoloTokens() {
+        return soloTokens;
+    }
+
     /**
      * this method call the method action of the last token in the deck, if this return true it shuffles the deck else
      * it inserts the token caught in the first position of the deck
-     * @return always false
+     * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
+     *                          or when a column of the cardsMarket is empty
      */
     @Override
-    public void endTurn() {
+    public void endTurn() throws EndGameException{
         SoloToken temp;
         if (soloTokens.get(7).action(this, super.getSetOfCard()))
             Collections.shuffle(soloTokens);
@@ -50,12 +62,14 @@ public class SingleGame extends Game {
             temp = soloTokens.remove(7);
             soloTokens.add(0, temp);
         }
+        checkEndGame();
     }
 
     /**
      *this method verifies if the there are the conditions to end the game: it checks the conditions of the superclass
      * and furthermore and if there is a empty column in CardsMarket
-     * @return
+     * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
+     *                          or when a column of the cardsMarket is empty
      */
     @Override
     public void checkEndGame() throws EndGameException{
@@ -67,10 +81,11 @@ public class SingleGame extends Game {
      * this method is used to add faithPoints to LorenzoIlMagnifico
      * @param actualPlayer is the single player
      * @param toAdd is the number of faithTrack position to add to lorenzoIlMagnifico
+     * @throws EndGameException when a player reach the final vatican report
      */
     public void addFaithPointsExceptTo (RealPlayer actualPlayer, int toAdd) throws EndGameException{
         lorenzoIlMagnifico.addFaithPoints(toAdd);
-        checkEndGame();
+        handleVaticanReport();
     }
 
     /**
@@ -79,6 +94,7 @@ public class SingleGame extends Game {
      * @param color this is the color of the card to buy
      * @param position this is the position in which place the card in the dashboard
      * @param toPayFromWarehouse these are the resources to pay from warehouse
+     * @throws EndGameException when a player buy more than 6 development cards
      */
     @Override
     public synchronized void buyCard(int level, CardColor color, int position, CollectionResources toPayFromWarehouse) throws EndGameException{
@@ -89,6 +105,7 @@ public class SingleGame extends Game {
     /**
      *this method handle the vatican reports like in the superclass but for only the single player and
      * lorenzoIlMagnifico. At the end it calls checkEndGame to end the game immediately if it needs to be ended
+     * @throws EndGameException when a player reach the final vatican report
      */
     @Override
     protected synchronized void handleVaticanReport() throws EndGameException{
@@ -96,6 +113,7 @@ public class SingleGame extends Game {
         int i=0;
         while((singleVaticanReports[i]) && (i < 3)) i++;
         if (i > 2) return;
+        i++;
         if (getActualPlayer().checkVaticanReport(i) || lorenzoIlMagnifico.checkVaticanReport(i)) {
             setVaticanReports(i);
             getActualPlayer().vaticanReport(i);
