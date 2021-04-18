@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 import static org.junit.jupiter.api.Assertions.*;
+
+import it.polimi.ingsw.model.PlayerAndComponents.StrongBox;
+import it.polimi.ingsw.model.Resources.*;
 import org.junit.jupiter.api.Test;
 
 /**

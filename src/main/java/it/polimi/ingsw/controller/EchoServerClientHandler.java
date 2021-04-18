@@ -1,18 +1,21 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.Marble.Marble;
+import it.polimi.ingsw.model.Marble.WhiteMarble;
+import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
+import it.polimi.ingsw.model.PlayerAndComponents.Warehouse;
+import it.polimi.ingsw.model.Resources.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EchoServerClientHandler implements Runnable {
     private final Socket socket;
+    private static ArrayList<Game> games;
     private static Game game;
     private static List<String> nicknames = new ArrayList<>();
     private static boolean start = false;
@@ -26,7 +29,6 @@ public class EchoServerClientHandler implements Runnable {
         try {
             Scanner in = new Scanner(socket.getInputStream());
             PrintWriter out = new PrintWriter(socket.getOutputStream());
-
             synchronized (this){
                 if (numberOfPlayers == 4) {
                     numberOfPlayers = 5;
@@ -303,9 +305,13 @@ public class EchoServerClientHandler implements Runnable {
                                     break;
                             }
                             if ( !(game.checkShelfSelected(source) || !game.checkShelfSelected(destination))){
-                                out.println("ERROR!!");
+                                out.println("ERRORE, non possiedi uno degli shelf selezionati");
                                 out.flush();
                                 break;
+                            }
+                            if (!game.shiftResources(source, destination)){
+                                out.println("ERRORE, non puoi eseguire questo spostamento");
+                                out.flush();
                             }
 
                             game.shiftResources(source, destination);
@@ -407,6 +413,7 @@ public class EchoServerClientHandler implements Runnable {
 
                             List<Resource> typesOfResource = new ArrayList<>(
                                     new HashSet<>(marbleConverted.asList()));
+                            Map<Resource, Integer> map= new HashMap<>();
                             for (Resource resource : typesOfResource){
                                 out.println("Selezionare indice del magazzino in cui mettere ["+resource.getType().getName()+"] [1,3/4/5]: ");
                                 out.flush();
@@ -442,10 +449,15 @@ public class EchoServerClientHandler implements Runnable {
                                 }
                                 out.println("Manca pocou");
                                 out.flush();
-                                game.insertInWarehouse(indice, resource, marbleConverted);
+                                map.put(resource, indice);
+                               // game.insertInWarehouse(indice, resource, marbleConverted);
                                 out.println("Andare avanti");
                                 out.flush();
                             }
+                            synchronized (this){
+                                for (Resource resource : typesOfResource) game.insertInWarehouse(map.get(resource), resource, marbleConverted);
+                            }
+
 
 
                             break;
@@ -485,6 +497,12 @@ public class EchoServerClientHandler implements Runnable {
             socket.close();
         } catch(IOException e){
             System.err.println(e.getMessage());
+        }
+    }
+
+    public void update(Game game){
+        if(EchoServerClientHandler.game.equals(game)){
+            //game.getState();
         }
     }
 }

@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.PlayerAndComponents.LeaderWarehouse;
+import it.polimi.ingsw.model.PlayerAndComponents.Warehouse;
+import it.polimi.ingsw.model.Resources.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

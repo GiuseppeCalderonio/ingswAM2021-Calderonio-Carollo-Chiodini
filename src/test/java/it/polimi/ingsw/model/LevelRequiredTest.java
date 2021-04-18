@@ -1,5 +1,10 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.DevelopmentCards.CardColor;
+import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
+import it.polimi.ingsw.model.LeaderCard.LeaderCardRequirements;
+import it.polimi.ingsw.model.LeaderCard.LevelRequired;
+import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

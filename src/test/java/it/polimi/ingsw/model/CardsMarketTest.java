@@ -1,5 +1,9 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.DevelopmentCards.CardColor;
+import it.polimi.ingsw.model.DevelopmentCards.CardsMarket;
+import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
+import it.polimi.ingsw.model.Resources.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -38,7 +42,7 @@ class CardsMarketTest {
         int i,j;
         for (i = 1; i < 4; i++) {
             for (j = 0; j<4; j++) {
-                if(market2.popCard(i,CardColor.BLUE).equals(market.popCard(i,CardColor.BLUE)))
+                if(market2.popCard(i, CardColor.BLUE).equals(market.popCard(i,CardColor.BLUE)))
                     counter++;
             }
         }

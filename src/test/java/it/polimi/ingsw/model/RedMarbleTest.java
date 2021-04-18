@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.Marble.Marble;
+import it.polimi.ingsw.model.Marble.RedMarble;
+import it.polimi.ingsw.model.Marble.YellowMarble;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

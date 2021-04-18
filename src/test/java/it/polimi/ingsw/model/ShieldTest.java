@@ -1,5 +1,10 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.Marble.BlueMarble;
+import it.polimi.ingsw.model.Resources.Resource;
+import it.polimi.ingsw.model.Resources.ResourceType;
+import it.polimi.ingsw.model.Resources.Shield;
+import it.polimi.ingsw.model.Resources.Stone;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

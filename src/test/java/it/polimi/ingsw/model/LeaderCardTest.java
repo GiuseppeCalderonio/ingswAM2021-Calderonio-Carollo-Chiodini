@@ -1,5 +1,10 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.DevelopmentCards.CardColor;
+import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
+import it.polimi.ingsw.model.LeaderCard.*;
+import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
+import it.polimi.ingsw.model.Resources.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

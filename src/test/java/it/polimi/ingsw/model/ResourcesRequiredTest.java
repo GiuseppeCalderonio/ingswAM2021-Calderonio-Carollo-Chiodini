@@ -1,5 +1,9 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.LeaderCard.LeaderCardRequirements;
+import it.polimi.ingsw.model.LeaderCard.ResourcesRequired;
+import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
+import it.polimi.ingsw.model.Resources.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

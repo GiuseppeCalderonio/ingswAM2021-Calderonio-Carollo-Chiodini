@@ -1,5 +1,16 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.DevelopmentCards.CardColor;
+import it.polimi.ingsw.model.DevelopmentCards.CardsMarket;
+import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
+import it.polimi.ingsw.model.LeaderCard.*;
+import it.polimi.ingsw.model.Marble.Marble;
+import it.polimi.ingsw.model.Marble.MarbleMarket;
+import it.polimi.ingsw.model.Marble.RedMarble;
+import it.polimi.ingsw.model.Marble.WhiteMarble;
+import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
+import it.polimi.ingsw.model.Resources.*;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -102,7 +113,7 @@ public class Game {
      * @param index is the index of the vector
      */
     protected synchronized void setVaticanReports(int index){
-        vaticanReports[index] = true;
+        vaticanReports[index - 1] = true;
     }
 
     /**
@@ -205,6 +216,7 @@ public class Game {
         if(i >= 2 && temp != null) temp.addFaithPoints(1);
         //increasing the turn
         turnManager++;
+
     }
 // shift check and methods--------------------------------------------------------------------------------------------
 
@@ -237,7 +249,7 @@ public class Game {
      * @return false if one of the two shelves is a leader one
      *        and is not possible to move a resource, false otherwise
      */
-    public synchronized boolean shiftResources(int source, int destination){
+    public synchronized boolean shiftResources(int source, int destination) throws EndGameException {
         int faithPoints = getActualPlayer().shiftResources(source, destination);
         if (faithPoints == -1) return false;
         addFaithPointsExceptTo(getActualPlayer(), faithPoints);
@@ -247,13 +259,13 @@ public class Game {
     // buy resources to the market ------------------------------------------------------------------------
 
     /**
-     * this method substitute the first white marble of the
+     * this method substitute one of the white marbles of the
      * array given in input with the marble selected from the parameter
      * leaderWhiteMarble in the actual player
      * @param marbles this is the list of white marbles
      * @param leaderWhiteMarble this is the index associated with the
      *                          marble to substitute
-     * @return false if the player does not contain any white marble,
+     * @return false if the leaderWhiteMarbles do not contain any white marble,
      *         or if the marbles are null,
      *         or if the parameter leaderWhiteMarble is not between 1 and 2
      *         or if the leaderWhiteMarble selected doesn't exist
@@ -269,7 +281,7 @@ public class Game {
         if(leaderWhiteMarble < 1 || leaderWhiteMarble > 2)
             return false; // the index of the leader marble is wrong
         try {
-            Marble toSubstitute = getActualPlayer().getLeaderWhiteMarbles().get(leaderWhiteMarble);
+            Marble toSubstitute = getActualPlayer().getLeaderWhiteMarbles().get(leaderWhiteMarble - 1);
             marbles.remove(new WhiteMarble());
             marbles.add(toSubstitute);
             return true;
@@ -285,11 +297,18 @@ public class Game {
      * @param marbles these are the marbles to convert
      * @return the collectionResources associated with the marbles
      */
-    public synchronized CollectionResources convert(List<Marble> marbles){
+    public synchronized CollectionResources convert(List<Marble> marbles) throws EndGameException {
         List<Marble> temp = marbles.stream().
                 filter( marble -> !marble.equals(new WhiteMarble())). //remove all the white marbles
                 collect(Collectors.toList());
+        int faithPoints = temp.stream().mapToInt(Marble::faithPoints).sum();
+        addFaithPointsTo(getActualPlayer(), faithPoints); //add a faith point when contains the red marble
+        temp.remove(new RedMarble());
+
+        /*
         if(marbles.remove(new RedMarble())) addFaithPointsTo(getActualPlayer(), 1); //add a faith point when contains the red marble
+        */
+
         CollectionResources toReturn = new CollectionResources();
         temp.forEach(marble -> toReturn.add(marble.convert())); // create a collectionResources from the marbles converted
         return toReturn;
@@ -326,12 +345,12 @@ public class Game {
      *                         they are associated with the marbles already got
      *                         from the market
      */
-    public synchronized void insertInWarehouse(int shelf, Resource typeRequired, CollectionResources marblesConverted){
+    public synchronized void insertInWarehouse(int shelf, Resource typeRequired, CollectionResources marblesConverted) throws EndGameException {
         CollectionResources toAdd = new ShelfCollection(typeRequired.getType());
         marblesConverted.asList().stream().
                 filter(resource -> resource.equals(typeRequired)). //remove all the resources without the type required
                 forEach(toAdd::add); //add them to the collection toAdd
-        int faithPoints = getActualPlayer().getPersonalDashboard().addResourcesToWarehouse(toAdd, shelf);
+        int faithPoints = getActualPlayer().addResourcesToWarehouse(toAdd, shelf);
         addFaithPointsExceptTo(getActualPlayer(), faithPoints);
     }
 
@@ -428,7 +447,7 @@ public class Game {
      * @param position this is the position in which place the card in the dashboard
      * @param toPayFromWarehouse these are the resources to pay from warehouse
      */
-    public synchronized void buyCard(int level, CardColor color,int position, CollectionResources toPayFromWarehouse){
+    public synchronized void buyCard(int level, CardColor color,int position, CollectionResources toPayFromWarehouse) throws EndGameException {
 
         // get and remove the card from the market with level and color selected
         DevelopmentCard toBuy = setOfCards.popCard(level, color);
@@ -469,7 +488,7 @@ public class Game {
      * @return true if the conditions to activate a production are respected,
      *         false otherwise
      */
-    public synchronized boolean checkActivateCard(int position){
+    public synchronized boolean checkProduction(int position){
         if (position < 0 || position > 5) return false;
 
         if (position == 0) return true; //basic production case
@@ -547,7 +566,7 @@ public class Game {
      * @param toPayFromWarehouse these are the resources to pay from warehouse
      *                           them require that the method checkActivateProduction(position, toPayFromWarehouse ) == true
      */
-    public synchronized void activateProduction(int position, CollectionResources toPayFromWarehouse ){
+    public synchronized void activateProduction(int position, CollectionResources toPayFromWarehouse ) throws EndGameException {
         DevelopmentCard card = getActualPlayer().
                 getPersonalDashboard().
                 getPersonalProductionPower().
@@ -566,8 +585,36 @@ public class Game {
     }
 
     /**
+     * this method verify if the actual player can activate a basic production.
+     * in particular, if:
+     * 1) the resources to pay from warehouse are actually all contained into it
+     * 2) the resources to pay from strongbox are actually all contained into it
+     * 3) the size of the resources to pay fro warehouse plus the resources to pay from
+     *    strongbox is not 2
+     * @param toPayFromWarehouse these are the resources to pay from warehouse
+     * @param toPayFromStrongbox these are the resources to pay from strongbox
+     * @param output this is the resource to get in output
+     * @return true if the production can be activated, false otherwise
+     */
+    public synchronized boolean checkActivateBasicProduction(CollectionResources toPayFromWarehouse, CollectionResources toPayFromStrongbox, Resource output){
+        if (toPayFromStrongbox == null) return false;
+        if (toPayFromWarehouse == null) return false;
+        if (output == null) return false;
+
+        if (!containsInStrongbox(toPayFromStrongbox)) return false; //resources not contained in the strongbox
+        if (!containsInWarehouse(toPayFromWarehouse)) return false; //resources not contained in the warehouse
+
+        CollectionResources toPay = new CollectionResources();
+        toPay.sum(toPayFromStrongbox);
+        toPay.sum(toPayFromWarehouse);
+        return toPay.getSize() == 2; //not 2 resources to pay
+    }
+
+    /**
      * this method activate the basic production, paying the resources from the warehouse
      * and from the strongbox, getting as output the resource output
+     * it requires that the method checkActivateBasicProduction with the
+     * same inputs return true
      * @param toPayFromWarehouse these are the resources to pay from warehouse
      *                           them require that are contained in the warehouse
      * @param toPayFromStrongbox these are the resources to pay from strongbox
@@ -585,6 +632,7 @@ public class Game {
      * in input is contained in the warehouse of the actual player when fromWarehouse == true,
      * if it is contained in the strongbox of the actual player when fromWarehouse == false
      * @param toCheck this is the index of the resource to check
+     *                it requires that the resource exist
      * @param fromWarehouse this is the flag that verify if the check should be done
      *                      in the warehouse or in the strongbox
      * @return true if the player contains the resource selected correctly, false otherwise
@@ -613,7 +661,7 @@ public class Game {
      * @param fromWarehouse this is the flag that verify if the payment of the resource
      *                     should be done in the warehouse or in the strongbox
      */
-    public synchronized void activateLeaderProduction(int toActivate, Resource output, boolean fromWarehouse){
+    public synchronized void activateLeaderProduction(int toActivate, Resource output, boolean fromWarehouse) throws EndGameException {
 
         Resource toPay = getActualPlayer().
                 getPersonalDashboard().
@@ -645,14 +693,14 @@ public class Game {
     }
 
     /**
-     * this method verify if the actual player own
+     * this method verify if the actual player own the
      * leader card selected by the parameter in input
      * @param toCheck this is the index of the leader card to check
      * @return true if the player own a leader card in that position, false otherwise
      */
     public synchronized boolean checkLeaderCard(int toCheck){
         try {
-            LeaderCard useless = getActualPlayer().getPersonalLeaderCards().get(toCheck - 1);
+            getActualPlayer().getPersonalLeaderCards().get(toCheck - 1);
             return true;
         }catch (IndexOutOfBoundsException | NullPointerException e){
             return false;
@@ -682,7 +730,7 @@ public class Game {
      *                  it should be from 1 to personalLeaderCards.getSize()
      * @return true if the card got discarded correctly, false otherwise
      */
-    public synchronized  boolean discardLeaderCard(int toDiscard){
+    public synchronized boolean discardLeaderCard(int toDiscard) throws EndGameException {
         if (getActualPlayer().discardLeaderCard(toDiscard)){
             addFaithPointsTo(getActualPlayer(), 1);
             return true;
@@ -690,10 +738,16 @@ public class Game {
         return false;
     }
 
-    public synchronized boolean endTurn(){
+    /**
+     * this method end the turn.
+     * in particular, increment the turnManager and
+     * if the round is finished, it returns true if the game
+     * must finish, false otherwise
+     * @return true if the game must finish, false otherwise
+     */
+    public synchronized void endTurn() throws EndGameException {
         turnManager++; //increase the turn
-        if (turnManager % 4 == 0) return checkEndGame(); //if the round is ended, check if the game must finish
-        return false;
+        if (turnManager % 4 == 0) checkEndGame(); //if the round is ended, check if the game must finish
     }
 
     /**
@@ -704,21 +758,21 @@ public class Game {
      * @return ture if the last vatican report is true or if
      *         a player bought more than 6 cards, false otherwise
      */
-    protected synchronized boolean checkEndGame(){
+    public synchronized void checkEndGame() throws EndGameException {
         int cards = players.stream().
                 mapToInt(player -> player.
                         getPersonalDashboard().
                         getPersonalProductionPower().
                         getNumOfCards()).
                 max().orElse(0); //get the max number of cards of every player
-        return vaticanReports[2] || cards >= 7; // check if the conditions to end a game are met
+        if (vaticanReports[2] || cards >= 7) throw new EndGameException("Game Finished"); // check if the conditions to end a game are met
     }
 
     /**
      * this method is use to handle every vaticanReport; this method is called every time to check if we
      * must activate a popeFavorTile card in track
      */
-    protected synchronized void handleVaticanReport(){
+    protected synchronized void handleVaticanReport() throws EndGameException {
         int i=0;
         while((vaticanReports[i]) && (i < 3)) i++;
         if (i > 2) return;
@@ -738,7 +792,7 @@ public class Game {
      * @param actualPlayer is the player who can advance on the faith track
      * @param toAdd is the number of faithTrack position to add to the actual player
      */
-    protected synchronized void addFaithPointsTo(RealPlayer actualPlayer , int toAdd){
+    protected synchronized void addFaithPointsTo(RealPlayer actualPlayer , int toAdd) throws EndGameException {
         actualPlayer.addFaithPoints(toAdd);
         handleVaticanReport();
     }
@@ -748,7 +802,7 @@ public class Game {
      * @param actualPlayer is the player who remains in the same position;
      * @param toAdd is the number of faithTrack position to add to all players except one, the actualPlayer
      */
-    protected synchronized void addFaithPointsExceptTo(RealPlayer actualPlayer , int toAdd){
+    public synchronized void addFaithPointsExceptTo(RealPlayer actualPlayer, int toAdd) throws EndGameException {
         players.stream().
                 filter(player->!(actualPlayer.equals(player))).
                 forEach(player -> player.addFaithPoints(toAdd));

@@ -1,5 +1,12 @@
 package it.polimi.ingsw.model;
 import static org.junit.jupiter.api.Assertions.*;
+
+import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
+import it.polimi.ingsw.model.PlayerAndComponents.LeaderProduction;
+import it.polimi.ingsw.model.PlayerAndComponents.ProductionPower;
+import it.polimi.ingsw.model.Resources.Coin;
+import it.polimi.ingsw.model.Resources.Servant;
+import it.polimi.ingsw.model.Resources.Shield;
 import org.junit.jupiter.api.Test;
 
 /**
