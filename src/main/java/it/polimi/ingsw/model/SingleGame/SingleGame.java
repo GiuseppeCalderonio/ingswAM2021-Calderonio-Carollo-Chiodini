@@ -56,10 +56,10 @@ public class SingleGame extends Game {
     @Override
     public void endTurn() throws EndGameException{
         SoloToken temp;
-        if (soloTokens.get(7).action(this, super.getSetOfCard()))
+        if (soloTokens.get(6).action(this, super.getSetOfCard()))
             Collections.shuffle(soloTokens);
         else {
-            temp = soloTokens.remove(7);
+            temp = soloTokens.remove(6);
             soloTokens.add(0, temp);
         }
         checkEndGame();

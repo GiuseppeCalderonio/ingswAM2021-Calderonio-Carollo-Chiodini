@@ -22,26 +22,39 @@ public class CardToken implements SoloToken {
      */
     @Override
     public boolean action(Game inTrackCase, CardsMarket inCardsCase) {
-        if(inCardsCase.popCard(1,color)!=null) {
-                if (inCardsCase.popCard(1, color) != null)
-                    return false;
-                if (inCardsCase.popCard(2, color) != null)
-                    return false;
-                if (inCardsCase.popCard(3, color)!=null)
-                    return  false;
-                inTrackCase.checkEndGame(); //miss column
-            }
-        if(inCardsCase.popCard(2,color)!=null) {
-            if (inCardsCase.popCard(2, color) != null)
-                return false;
-            if (inCardsCase.popCard(3, color)!=null)
-                return false;
+        if (inCardsCase.checkCard(1,color)) {
+            inCardsCase.popCard(1,color);
             inTrackCase.checkEndGame(); //miss column
+            if (inCardsCase.checkCard(1,color)) {
+                inCardsCase.popCard(1,color);
+                inTrackCase.checkEndGame(); //miss column
+                return false;
+            }
+            if (inCardsCase.checkCard(2,color)) {
+                inCardsCase.popCard(2,color);
+                inTrackCase.checkEndGame(); //miss column
+                return false;
+            }
+            inCardsCase.popCard(3,color);
+            inTrackCase.checkEndGame(); //miss column
+            return false;
+        }
+        if(inCardsCase.checkCard(2,color)) {
+            inCardsCase.popCard(2,color);
+            inTrackCase.checkEndGame(); //miss column
+            if(inCardsCase.checkCard(2,color)) {
+                inCardsCase.popCard(2,color);
+                inTrackCase.checkEndGame(); //miss column
+                return false;
+            }
+            inCardsCase.popCard(3,color);
+            inTrackCase.checkEndGame(); //miss column
+            return false;
         }
         inCardsCase.popCard(3,color);
-        if(inCardsCase.popCard(3,color) != null)
-            return false;
-        inTrackCase.checkEndGame();
+        inTrackCase.checkEndGame(); //miss column7
+        inCardsCase.popCard(3,color);
+        inTrackCase.checkEndGame(); //miss column7
         return false;
     }
 
