@@ -34,9 +34,11 @@ public class MultiEchoServer {
                 executor.submit(new EchoServerClientHandler(socket));
 
             } catch(IOException e) {
+
                 break; // Entrerei qui se serverSocket venisse chiuso
             }
         }
+        System.out.println("Problem");
         executor.shutdown();
     }
     public static void main(String[] args) {

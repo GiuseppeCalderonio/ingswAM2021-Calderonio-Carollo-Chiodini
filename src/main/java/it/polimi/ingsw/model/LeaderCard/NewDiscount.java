@@ -27,11 +27,12 @@ public class NewDiscount extends LeaderCard {
      * has all the requirements of the leader card
      * @param toChange this is the player that activate the card
      * @return true if the player in input meet the requirements,
-     *         false otherwise
+     *         false otherwise, or if the card selected is already active
      */
     @Override
     public boolean activateCard(RealPlayer toChange) {
         if(!this.getRequirements().containsRequirements(toChange)) return false;
+        if (this.isActive()) return false;
         toChange.addDiscount(getResource());
         setActive();
         return true;

@@ -157,6 +157,17 @@ public class Game {
     }
 
     /**
+     * this method verify if the player that have the nickname in input
+     * is the player that have to play the turn
+     * @param nickname this is the nickname of the player to check
+     * @return true if is the turn of this player, false otherwise
+     */
+    public boolean isYourTurn(String nickname){
+        if (turnManager < 0) return false;
+        return Objects.equals(findPlayer(nickname), getActualPlayer());
+    }
+
+    /**
      * this method is called for each player, and it
      * gives him some resources and some faith point
      * depending on the position of the inkwell
@@ -710,6 +721,8 @@ public class Game {
         getActualPlayer().fillStrongboxWithBuffer();
     }
 
+//------------LEADER CARDS----------------------------------------------------------------
+
     /**
      * this method verify if the actual player own the
      * leader card selected by the parameter in input
@@ -731,6 +744,8 @@ public class Game {
      *  of the actual player,
      * the method verify if the player have all the requirements to
      * activate the card, and in case activating it
+     * if the card selected is already active does not activate it
+     * and return false
      * @param toActivate this is the index of the owned leader card to activate
      * @return true if the card got activated correctly, false otherwise
      */
@@ -756,6 +771,8 @@ public class Game {
         }
         return false;
     }
+
+    //---------------------------MANAGEMENT METHODS----------------------------------------------------
 
     /**
      * this method end the turn.
@@ -838,6 +855,8 @@ public class Game {
     public synchronized RealPlayer getActualPlayer(){
         return players.get(turnManager % players.size()); // the get goes from 0 to players.size()
     }
+
+    //-----------------------CHECKING RESOURCES-------------------------------------------------
 
     /**
      * this method verify if the resources of the

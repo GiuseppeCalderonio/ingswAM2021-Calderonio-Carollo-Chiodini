@@ -240,7 +240,9 @@ public class RealPlayer extends Player {
      * this method activate the leader card specified by the
      * parameter (it can be the first one or the second one)
      * the method verify if the player have all the requirements to
-     * activate the card, and in case activating it
+     * activate the card, and in case activating it,
+     * if the card selected is already active does not activate it
+     * and return false
      * @param toActivate this is the index of the owned leader card to activate
      * @return true if the card got activated correctly, false otherwise
      */
