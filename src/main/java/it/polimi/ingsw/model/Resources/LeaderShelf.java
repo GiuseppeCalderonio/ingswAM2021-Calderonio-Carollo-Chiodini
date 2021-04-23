@@ -1,8 +1,4 @@
-package it.polimi.ingsw.model.PlayerAndComponents;
-
-import it.polimi.ingsw.model.Resources.Resource;
-import it.polimi.ingsw.model.Resources.ResourceType;
-import it.polimi.ingsw.model.Resources.Shelf;
+package it.polimi.ingsw.model.Resources;
 
 /**
  * this class represent the shelf of a leader card when activated
@@ -41,5 +37,10 @@ public class LeaderShelf extends Shelf {
         if (!(toAdd.getType().equals(getResourceType())))
             return true;
         return super.addResource(toAdd);
+    }
+
+    @Override
+    public String toString() {
+        return "type = "+ type +" " + getResources().toString();
     }
 }

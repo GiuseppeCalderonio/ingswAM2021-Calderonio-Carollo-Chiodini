@@ -20,4 +20,6 @@ public interface Marble {
 
     boolean equals(Object toCompare);
 
+    String toString();
+
 }

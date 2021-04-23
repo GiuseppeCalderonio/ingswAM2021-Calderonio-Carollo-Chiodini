@@ -87,6 +87,14 @@ public class MapResources implements Iterable<Resource>{
         return cardinality <= 0;
     }
 
+    @Override
+    public String toString() {
+        return "<"
+                 + resource +
+                "," + cardinality +
+                '>';
+    }
+
     /**
      * Returns an iterator over elements of type {@code T}.
      *

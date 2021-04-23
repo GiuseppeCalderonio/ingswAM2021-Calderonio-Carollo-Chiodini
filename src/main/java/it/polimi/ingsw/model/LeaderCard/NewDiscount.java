@@ -37,4 +37,11 @@ public class NewDiscount extends LeaderCard {
         setActive();
         return true;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "\n" +
+                "New discount : " + getResource()
+                ;
+    }
 }

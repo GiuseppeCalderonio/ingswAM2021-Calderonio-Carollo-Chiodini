@@ -48,4 +48,17 @@ public class LeaderProduction extends ProductionPower {
     public void addLeaderProduction(Resource toAdd){
         inputs.add(toAdd);
     }
+
+    @Override
+    public String toString() {
+
+        List<String> leaderProductions = new ArrayList<>();
+        inputs.
+                forEach(resource -> leaderProductions.
+                        add("input :" +resource.toString() + ", output : (?) + 1 faithPoint"));
+
+        return super.toString() + "\n" +
+                "LeaderProductions :" + "\n" +
+                leaderProductions ;
+    }
 }

@@ -1,5 +1,12 @@
 package it.polimi.ingsw.controller;
 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class SetSizeInterpreter implements CommandInterpreter{
 
 
@@ -15,9 +22,11 @@ public class SetSizeInterpreter implements CommandInterpreter{
      */
     @Override
     public String executeCommand(Command command, EchoServerClientHandler handler) {
-        if (!command.cmd.equals("set_players")) return "this command is not available in this phase of the game";
-        if (command.size < 1 || command.size > 4) return "the size is not between 1 and 4";
-        handler.setNumberOfPlayers(command.size);
-        return "ok, start with the login";
+        if (!command.cmd.equals("set_players"))
+            return "{ \"message\" : \"this command is not available in this phase of the game\", \"possibleCommands\" : " + new ArrayList<String>(Collections.singletonList("set_players")) + "}";
+        if (command.size < 1 || command.size > 4)
+            return "{ \"message\" : \"the size is not between 1 and 4\", \"possibleCommands\" : " + new ArrayList<String>(Collections.singletonList("set_players")) + "}";
+        handler.setNumberOfPlayers(new AtomicInteger(command.size));
+        return "{ \"message\" : \"ok, start with the login\", \"possibleCommands\" : " + new ArrayList<String>(Collections.singletonList("login")) + "}";
     }
 }

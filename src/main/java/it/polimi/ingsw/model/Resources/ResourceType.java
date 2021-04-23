@@ -5,10 +5,12 @@ package it.polimi.ingsw.model.Resources;
  */
 
 public enum ResourceType {
+
     /**
      * this are the four types of resource with their personal abbreviation associated
      */
     COIN("coin", new Coin()),STONE("stone", new Stone()),SERVANT("servant", new Servant()),SHIELD("shield", new Shield());
+
     /**
      * this attribute is the personal abbreviation associated with a type
      */
@@ -19,7 +21,6 @@ public enum ResourceType {
      * this constructor create the enumeration
      * @param name is the abbreviation to associate with the type
      */
-
     ResourceType(String name, Resource resource) {
 
         this.name = name;

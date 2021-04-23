@@ -129,4 +129,8 @@ public class ShelfCollection extends CollectionResources {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return super.asList().toString();
+    }
 }

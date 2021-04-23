@@ -131,4 +131,16 @@ public class DevelopmentCard {
         );
 
     }
+
+    @Override
+    public String toString() {
+        return "DevelopmentCard :" +"\n" +
+                "color=" + color + "\n" +
+                ", level=" + level + "\n" +
+                ", victoryPoints=" + victoryPoints + "\n" +
+                ", cost=" + cost + "\n" +
+                ", productionPowerInput=" + productionPowerInput + "\n" +
+                ", productionPowerOutput=" + productionPowerOutput + "\n" +
+                ", productionPowerFaithPoints=" + productionPowerFaithPoints + "\n";
+    }
 }

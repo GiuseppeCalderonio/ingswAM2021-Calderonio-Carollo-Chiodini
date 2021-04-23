@@ -33,4 +33,13 @@ public class Coin implements Resource {
     public boolean equals(Object toCompare) {
         return toCompare instanceof Coin;
     }
+
+    /**
+     * this method get the string "coin"
+     * @return the string "coin"
+     */
+    @Override
+    public String toString() {
+        return getType().getName();
+    }
 }

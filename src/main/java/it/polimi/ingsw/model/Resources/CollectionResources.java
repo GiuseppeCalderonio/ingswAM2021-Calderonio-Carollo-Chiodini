@@ -198,5 +198,10 @@ public class CollectionResources implements Iterable<Resource>{
         this.forEach(toReturn::add);
         return toReturn;
     }
+
+    @Override
+    public String toString() {
+        return resources.toString();
+    }
 }
 

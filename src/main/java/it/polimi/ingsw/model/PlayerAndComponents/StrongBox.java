@@ -62,4 +62,9 @@ public class StrongBox {
     public int getNumberOfResources(){
         return strongboxResources.getSize();
     }
+
+    @Override
+    public String toString() {
+        return "Strongbox = " + strongboxResources;
+    }
 }

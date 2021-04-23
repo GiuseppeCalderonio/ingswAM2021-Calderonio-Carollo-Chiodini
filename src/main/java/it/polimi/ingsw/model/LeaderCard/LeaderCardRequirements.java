@@ -16,4 +16,6 @@ public interface LeaderCardRequirements {
      *         false otherwise
      */
     boolean containsRequirements(RealPlayer toVerify);
+
+    String toString();
 }

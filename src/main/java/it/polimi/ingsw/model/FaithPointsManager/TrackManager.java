@@ -102,4 +102,17 @@ public class TrackManager {
     public PopeFavorTile getPopeFavorTiles(int index) {
         return popeFavorTiles[index - 1];
     }
+
+    @Override
+    public String toString() {
+        int actual = 0;
+        String toPrint1 = "[ ,  ,  , 1,  ,  , 2,  ,  , 4,  ,  , 6,  ,  , 9,  ,  , 12,   ,   , 16,   ,   , 20]";
+
+        return "PersonalTrack :" + "\n" +
+                "position=" + position + "\n" +
+                "faithPointsPerPosition" + "\n" +
+                toPrint1 + "\n" +
+                "track=" + "\n" +
+                Arrays.toString(track);
+    }
 }

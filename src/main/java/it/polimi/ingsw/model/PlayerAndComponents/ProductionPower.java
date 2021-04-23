@@ -128,4 +128,11 @@ public class ProductionPower {
      * @param toAdd this is the resource to add
      */
     public void addLeaderProduction(Resource toAdd){ }
+
+    @Override
+    public String toString() {
+        return "ProductionPower :" + "\n" +
+                "basic : (?) + (?) = (?)" + "\n" +
+                "personalCards=" + Arrays.toString(personalCards);
+    }
 }

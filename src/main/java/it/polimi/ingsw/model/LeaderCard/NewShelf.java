@@ -36,4 +36,11 @@ public class NewShelf extends LeaderCard {
         setActive();
         return true;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "\n" +
+                "New shelf : " + getResource()
+                ;
+    }
 }

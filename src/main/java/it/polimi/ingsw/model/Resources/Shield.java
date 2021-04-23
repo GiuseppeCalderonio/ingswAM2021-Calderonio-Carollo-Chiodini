@@ -33,4 +33,13 @@ public class Shield implements Resource {
     public boolean equals(Object toCompare) {
         return toCompare instanceof Shield;
     }
+
+    /**
+     * this method get the string "shield"
+     * @return the string "shield"
+     */
+    @Override
+    public String toString() {
+        return getType().getName();
+    }
 }

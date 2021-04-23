@@ -471,4 +471,18 @@ public class CardsMarket {
     public List<DevelopmentCard>[][] getCardMatrix() {
         return cardMatrix;
     }
+
+    @Override
+    public String toString() {
+        List<DevelopmentCard> cards = new ArrayList<>();
+
+        for (int column = 0; column < 4; column++) {
+            for (int row = 0; row < 3; row++) {
+                cards.add(cardMatrix[row][column].get(cardMatrix[row][column].size() - 1));
+            }
+        }
+
+        return "CardsMarket :" + "\n"
+                + cards;
+    }
 }

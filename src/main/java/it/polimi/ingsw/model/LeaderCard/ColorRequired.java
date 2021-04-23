@@ -40,23 +40,14 @@ public class ColorRequired implements LeaderCardRequirements {
         Stack<DevelopmentCard>[] cards = toVerify.getPersonalDashboard().getPersonalProductionPower().getPersonalCards();
         List<CardColor> colors = new ArrayList<>();
         Arrays.stream(cards).forEach(x -> x.forEach( y -> colors.add(y.getColor())));
-        /*for (int i = 0; i < 3; i++) {
-            cards[i].forEach(x -> colors.add(x.getColor()));
-        } */
 
         return this.colors.stream().allMatch(colors::remove);
-        /*
-        for ( CardColor color : this.colors){
-            if( !colors.remove(color) ) return false;
-        }
-        return true;*/
-        /*for ( CardColor color : this.colors){
-            if(colors.contains(color)) colors.remove(color);
-        }
 
-        return true;*/
-        //return colors.stream().filter(x -> x.equals());
-        //return colors.containsAll(this.colors);
 
+    }
+
+    @Override
+    public String toString() {
+        return "CardColorsRequired :" + colors ;
     }
 }

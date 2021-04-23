@@ -47,4 +47,9 @@ public class LevelRequired implements LeaderCardRequirements {
         return requirements.contains(requirement);
 
     }
+
+    @Override
+    public String toString() {
+        return "CardColorRequired :" + color + ", LevelRequired : 2" ;
+    }
 }

@@ -43,4 +43,9 @@ public class ResourcesRequired implements LeaderCardRequirements {
     public boolean containsRequirements(RealPlayer toVerify) {
         return toVerify.getTotalResources().containsAll(resources);
     }
+
+    @Override
+    public String toString() {
+        return "ResourcesRequired :" + resources ;
+    }
 }

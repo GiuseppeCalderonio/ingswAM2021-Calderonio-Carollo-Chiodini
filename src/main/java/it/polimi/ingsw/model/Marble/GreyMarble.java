@@ -33,4 +33,9 @@ public class GreyMarble implements Marble {
     public boolean equals(Object toCompare) {
         return (toCompare instanceof GreyMarble);
     }
+
+    @Override
+    public String toString() {
+        return "Grey";
+    }
 }

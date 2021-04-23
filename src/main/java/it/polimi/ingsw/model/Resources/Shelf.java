@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.model.Resources.ResourceType;
 import it.polimi.ingsw.model.Resources.ShelfCollection;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * this class represent a single shelf of the dashboard
  */
@@ -116,6 +119,20 @@ public class Shelf {
         } catch (NullPointerException e){
             return capacity;
         }
+    }
+
+    @Override
+    public String toString() {
+        List<String> toReturn = new ArrayList<>();
+
+        for (int i = 0; i < capacity; i++) {
+            toReturn.add("EMPTY");
+        }
+        for (Resource resource : getResources()){
+            toReturn.remove(capacity - 1);
+            toReturn.add(0, resource.toString());
+        }
+        return toReturn.toString();
     }
 }
 

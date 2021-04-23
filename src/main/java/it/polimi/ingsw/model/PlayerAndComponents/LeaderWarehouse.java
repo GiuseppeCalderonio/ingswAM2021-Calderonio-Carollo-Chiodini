@@ -1,9 +1,6 @@
 package it.polimi.ingsw.model.PlayerAndComponents;
 
-import it.polimi.ingsw.model.Resources.CollectionResources;
-import it.polimi.ingsw.model.Resources.Resource;
-import it.polimi.ingsw.model.Resources.Shelf;
-import it.polimi.ingsw.model.Resources.ShelfCollection;
+import it.polimi.ingsw.model.Resources.*;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -242,5 +239,10 @@ public class LeaderWarehouse extends Warehouse {
         return 5;
     }
 
-
+    @Override
+    public String toString() {
+        return super.toString() +
+                "fourth shelf=" + leaderShelf[0].toString() + "\n" +
+                "fifth shelf=" + leaderShelf[1].toString();
+    }
 }

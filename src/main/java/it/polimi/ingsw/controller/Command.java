@@ -2,6 +2,9 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.Resources.CollectionResources;
 import it.polimi.ingsw.model.Resources.Resource;
+import it.polimi.ingsw.model.Resources.ResourceType;
+
+import java.util.List;
 
 public class Command {
     String cmd; //this is the command, [set_players, login, initialise_leaderCards , initialise_resources, shift_resources, choose_marbles, choose_leaderCard, insert_in_warehouse, choose_card, select position, production, basic_production, normal_production, leader_production, end_production, leader_action, leader_action_activate, leader_action_discard]
@@ -13,8 +16,8 @@ public class Command {
     int firstCard; // should be from 1 to 4
     int secondCard; // should be from 1 to 4
     // initialise_resources / basic_production
-    Resource firstResource;
-    Resource secondResource;
+    ResourceType firstResource;
+    ResourceType secondResource;
     // shift_resources
     int source; //should be from 1 t 5
     int destination; // should be from 1 to 5
@@ -30,11 +33,11 @@ public class Command {
     // select_position
     int dashboardPosition; // should be from 1 to 3
     // select_resources_from_warehouse / normal_production
-    CollectionResources toPayFromWarehouse;
+    List<ResourceType> toPayFromWarehouse;
     // basic_production
     boolean toPayFirstFromWarehouse;
     boolean toPaySecondFromWarehouse;
-    Resource output;
+    ResourceType output;
     // normal_production / leader_production
     int position; // should be from 1 to 3 / should be from 1 to 2
     boolean fromWarehouse;

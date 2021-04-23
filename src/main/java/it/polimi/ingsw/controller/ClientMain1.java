@@ -1,53 +1,57 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.model.Resources.ResourceType;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * this class represent the main
  */
-public class ClientMain1 {
-    public static void main(String[] args) throws IOException {
+public class ClientMain1 implements Runnable {
 
-        String hostName = "127.0.0.1";
-        int portNumber = 1234;
+    private static boolean end = true;
+    private final String hostName;
+    private final int portNumber;
+    private final Socket echoSocket;
+    private List<String> firstShelf;
+    private List<String> secondShelf;
+    private List<String> thirdShelf;
+    private List<String> fourthShelf;
+    private List<String> fifthShelf;
+
+
+    public static void main(String[] args) throws IOException{
+        ClientMain1 client = new ClientMain1("127.0.0.1", 1234);
+        client.start();
+    }
+
+    public ClientMain1(String hostName, int portNumber) throws IOException {
+        this.hostName = hostName;
+        this.portNumber = portNumber;
+        this.echoSocket = new Socket(hostName, portNumber);
+    }
+
+
+    private void start() {
+
+        Thread t = new Thread(this);
+        t.start();
+
         try (
-                Socket echoSocket = new Socket(hostName, portNumber);
                 PrintWriter out =
                         new PrintWriter(echoSocket.getOutputStream(), true);
-                BufferedReader in =
-                        new BufferedReader(
-                                new InputStreamReader(echoSocket.getInputStream()));
                 BufferedReader stdIn =
                         new BufferedReader(
                                 new InputStreamReader(System.in))
         ) {
 
-            while (true) {
-
-                try {
-                    String sentFromServer = in.readLine();
-                    System.out.println(sentFromServer);
-
-                    if (sentFromServer.contains("exit")){
-                        break;
-                    }
-                }catch (IOException e) {
-                    System.err.println("Error buttanazza di chidda buttanazza " +
-                            hostName);
-                    System.exit(1);
-                }
-
-                String command = stdIn.readLine();
-
-
+            String command;
+            while ((command = stdIn.readLine()) != null) {
                 switch (command){
 
                     case "set_players" :
@@ -70,9 +74,9 @@ public class ClientMain1 {
 
                     case "initialise_leaderCards":
                         System.out.println("Scrivere la prima leader card da voler scartare");
-                        int firstCard = convert(stdIn.readLine());
+                        String firstCard = stdIn.readLine();
                         System.out.println("Scrivere la seconda leader card da voler scartare");
-                        int secondCard = convert(stdIn.readLine());
+                        String secondCard = stdIn.readLine();
 
                         json = "{\"cmd\" : \"initialise_leaderCards\", \"firstCard\" : " + firstCard + ", \"secondCard\" : " + secondCard + "}";
                         out.println(json);
@@ -81,11 +85,18 @@ public class ClientMain1 {
 
                     case "initialise_resources":
                         System.out.println("Scrivere la prima risorsa da voler ottenere[in caso non hai diritto ad alcuna risorsa, premi invio]");
-                        String firstResource = stdIn.readLine();
+                        String firstResource = stdIn.readLine().toUpperCase();
+                        if(!isValidResource(firstResource)){
+                            System.out.println("Risorsa non valida");
+                            break;
+                        }
                         System.out.println("Scrivere la seconda risorsa da voler ottenere[in caso non hai diritto ad alcuna risorsa, premi invio]");
                         String secondResource = stdIn.readLine();
-
-                        json = "{\"cmd\" : \"initialise_resources\", \"firstResource\" : " + ResourceType.valueOf(ResourceType.class,firstResource.toUpperCase()).getResource() + ", \"secondResource\" : " + ResourceType.valueOf(ResourceType.class,secondResource.toUpperCase()).getResource() + "}";
+                        if(!isValidResource(secondResource)){
+                            System.out.println("Risorsa non valida");
+                            break;
+                        }
+                        json = "{\"cmd\" : \"initialise_resources\", \"firstResource\" : " + firstResource + ", \"secondResource\" : " + secondResource + "}";
                         out.println(json);
                         out.flush();
                         break;
@@ -105,30 +116,62 @@ public class ClientMain1 {
                         break;
                 }
             }
+
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
             System.exit(1);
         } catch (IOException e) {
-            System.err.println("Couldn't get I/O for the connection to " +
-                    hostName);
+            System.out.println("Someone left, the game finish, we are sorry...");
             System.exit(1);
         }
     }
 
-    private static int convert(String toConvert){
-        switch (toConvert){
-            case "1":
-                return 1;
-            case "2":
-                return 2;
-            case "3":
-                return 3;
-            case "4":
-                return 4;
-            case "5":
-                return 5;
-            default:
-                return 0;
+    /**
+     * When an object implementing interface {@code Runnable} is used
+     * to create a thread, starting the thread causes the object's
+     * {@code run} method to be called in that separately executing
+     * thread.
+     * <p>
+     * The general contract of the method {@code run} is that it may
+     * take any action whatsoever.
+     *
+     * @see Thread#run()
+     */
+
+    @Override
+    public void run() {
+        BufferedReader in =
+                null;
+        try {
+            in = new BufferedReader(
+                    new InputStreamReader(echoSocket.getInputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        String recived;
+
+        try {
+            while ((recived = in.readLine()) != null){
+                System.out.println(recived);
+            }
+            System.err.println("Disconnessione in corso...");
+            System.exit(1);
+        } catch (IOException e){
+            System.err.println(e.getMessage());
+        }catch (NullPointerException e){
+            System.err.println("Un client si è nullDisconnesso");
+            System.exit(1);
+        }
+    }
+
+    private boolean isValidResource(String toVerify){
+        List<String> resources = new ArrayList<>();
+        resources.add("COIN");
+        resources.add("STONE");
+        resources.add("SHIELD");
+        resources.add("SERVANT");
+        resources.add("");
+        return resources.contains(toVerify);
     }
 }

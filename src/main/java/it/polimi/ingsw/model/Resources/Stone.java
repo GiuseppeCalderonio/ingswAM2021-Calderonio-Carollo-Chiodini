@@ -33,4 +33,13 @@ public class Stone implements Resource {
     public boolean equals(Object toCompare) {
         return toCompare instanceof Stone;
     }
+
+    /**
+     * this method get the string "stone"
+     * @return the string "stone"
+     */
+    @Override
+    public String toString() {
+        return getType().getName();
+    }
 }

@@ -1,5 +1,8 @@
 package it.polimi.ingsw.controller;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class LoginInterpreter implements CommandInterpreter {
 
     /**
@@ -19,6 +22,6 @@ public class LoginInterpreter implements CommandInterpreter {
         if (handler.getNicknames().contains(command.nickname)) return "nickname selected is already taken";
         handler.addNickname(command.nickname);
         handler.setNickname(command.nickname);
-        return "ok, wait for other players to join";
+        return "ok, wait for other players to join" + ", Possible commands: []";
     }
 }

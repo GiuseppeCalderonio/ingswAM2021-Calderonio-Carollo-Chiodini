@@ -107,4 +107,12 @@ public abstract class LeaderCard {
         return (victoryPoints == toVerify.victoryPoints &&
                 resource.equals(toVerify.resource));
     }
+
+    @Override
+    public String toString() {
+        return "LeaderCard: " + "\n" +
+                requirements + "\n" +
+                ", victoryPoints=" + victoryPoints + "\n" +
+                ", isActive=" + isActive ;
+    }
 }

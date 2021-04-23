@@ -3,6 +3,8 @@ package it.polimi.ingsw.model.Resources;
 
 import it.polimi.ingsw.model.Marble.Marble;
 
+import java.io.Serializable;
+
 /**
  * this class represents one single resource
  */
@@ -28,4 +30,10 @@ public interface Resource {
      */
     @Override
     boolean equals(Object toCompare);
+
+    /**
+     * this method return a string that represent the resource
+     * @return a string that represent the resource
+     */
+    String toString();
 }

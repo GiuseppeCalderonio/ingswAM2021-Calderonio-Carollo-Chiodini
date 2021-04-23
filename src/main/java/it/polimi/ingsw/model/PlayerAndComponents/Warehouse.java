@@ -203,4 +203,14 @@ public class Warehouse {
     public int getNumOfShelves(){
         return 3;
     }
+
+
+    @Override
+    public String toString() {
+        return "Warehouse:\n" +
+                "first shelf=" + shelf[0].toString() + "\n" +
+                "second shelf=" + shelf[1].toString() + "\n" +
+                "third shelf=" + shelf[2].toString() + "\n"
+                ;
+    }
 }

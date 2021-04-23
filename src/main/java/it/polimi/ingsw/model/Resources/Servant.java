@@ -33,5 +33,14 @@ public class Servant implements Resource {
     public boolean equals(Object toCompare) {
         return toCompare instanceof Servant;
     }
+
+    /**
+     * this method get the string "servant"
+     * @return the string "servant"
+     */
+    @Override
+    public String toString() {
+        return getType().getName();
+    }
 }
 

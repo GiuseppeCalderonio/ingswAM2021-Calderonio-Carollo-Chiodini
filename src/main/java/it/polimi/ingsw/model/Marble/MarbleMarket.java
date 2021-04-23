@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.Marble;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -192,5 +193,27 @@ public class MarbleMarket {
     public Marble getMarble (int row , int column) {
 
         return marketTray[row][column];
+    }
+
+    @Override
+    public String toString() {
+
+        List<Marble> firstRow = new ArrayList<>();
+        List<Marble> secondRow = new ArrayList<>();
+        List<Marble> thirdRow = new ArrayList<>();
+
+        for (int i = 0; i < columnDimension; i++) {
+            firstRow.add(getMarble(0, i));
+            secondRow.add(getMarble(1, i));
+            thirdRow.add(getMarble(2, i));
+
+        }
+
+        return "MarbleMarket : " +
+                "lonelyMarble = "+ lonelyMarble + "\n" +
+                "marketTray=" + "\n" +
+                firstRow + "\n" +
+                secondRow + "\n" +
+                thirdRow + "\n" ;
     }
 }
