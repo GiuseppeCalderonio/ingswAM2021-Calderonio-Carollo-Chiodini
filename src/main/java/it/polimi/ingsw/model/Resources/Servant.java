@@ -8,6 +8,16 @@ import it.polimi.ingsw.model.Marble.PurpleMarble;
  */
 public class Servant implements Resource {
 
+    ResourceType type = ResourceType.SERVANT;
+
+    public Servant(){
+
+    }
+
+    public Servant(ResourceType type){
+        this.type = type;
+    }
+
     /**
      * this method returns a servant type
      * @return a servant type

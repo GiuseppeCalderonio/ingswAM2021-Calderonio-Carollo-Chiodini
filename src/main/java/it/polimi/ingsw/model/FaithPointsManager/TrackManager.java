@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.FaithPointsManager;
 
-import it.polimi.ingsw.model.FaithPointsManager.PopeFavorTile;
-
 import java.util.Arrays;
 
 /**
@@ -84,14 +82,6 @@ public class TrackManager {
     public int getVictoryPoints(){
         return  track[position] +
                 (int) Arrays.stream(popeFavorTiles).filter(PopeFavorTile::getActive).count();
-        /*
-        int toReturn = track[position];
-
-        for(int i = 0; i < 3; i++){
-            if (popeFavorTiles[i].getActive()) toReturn = toReturn + popeFavorTiles[i].getVictoryPoints();
-        }
-        return toReturn;
-        */
     }
 
     /**
@@ -105,7 +95,6 @@ public class TrackManager {
 
     @Override
     public String toString() {
-        int actual = 0;
         String toPrint1 = "[ ,  ,  , 1,  ,  , 2,  ,  , 4,  ,  , 6,  ,  , 9,  ,  , 12,   ,   , 16,   ,   , 20]";
 
         return "PersonalTrack :" + "\n" +

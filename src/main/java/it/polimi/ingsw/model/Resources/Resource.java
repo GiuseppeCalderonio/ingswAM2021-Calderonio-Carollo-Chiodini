@@ -3,12 +3,10 @@ package it.polimi.ingsw.model.Resources;
 
 import it.polimi.ingsw.model.Marble.Marble;
 
-import java.io.Serializable;
-
 /**
  * this class represents one single resource
  */
-public interface Resource {
+public interface Resource{
 
 
     /**

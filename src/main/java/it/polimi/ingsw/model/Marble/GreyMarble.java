@@ -7,6 +7,9 @@ import it.polimi.ingsw.model.Resources.Stone;
  * this class implements the marble interface and represent the grey marble
  */
 public class GreyMarble implements Marble {
+
+    private final MarbleColor color = MarbleColor.GREY;
+
     /**
      * this method return zero faith point
      * @return zero faith point
@@ -37,5 +40,13 @@ public class GreyMarble implements Marble {
     @Override
     public String toString() {
         return "Grey";
+    }
+
+    /**
+     * this method get the color of the marble
+     * @return grey
+     */
+    public MarbleColor getColor() {
+        return color;
     }
 }

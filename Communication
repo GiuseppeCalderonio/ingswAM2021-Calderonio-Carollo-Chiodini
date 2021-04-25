@@ -49,7 +49,8 @@ send the nickname
             if the login is done from everyone send all the state
             create a game, eventually a single game
             send ALL leader cards, send positions(first player, second, third, fourth), send markets
-  "{"message" : "the game start! decide 2 different leader cards to discard" , "code" : 2}"
+            send leaderCards : SERIALIZE(List<LeaderCards>)
+  "{"message" : "the game start! decide 2 different leader cards to discard" , "position" : x}"
 <------------------------------------------------------------
 
 
@@ -119,6 +120,7 @@ send the resources to choose (based on the position)
 
                  if everyone did the initialization, send all the state
                  send basically everything
+                 SERIALIZE(positions(for all players), )
    "{"message" : "the game start! is the turn of [actualPlayer], decide your action:" , "code" : 5}"
 <-----------------------------------------------------------
 

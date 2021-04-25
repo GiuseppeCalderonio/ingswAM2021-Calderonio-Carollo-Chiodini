@@ -2,10 +2,12 @@ package it.polimi.ingsw.model.LeaderCard;
 
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 
+import java.io.Serializable;
+
 /**
  * this interface represent the leader card requirements
  */
-public interface LeaderCardRequirements {
+public interface LeaderCardRequirements extends Serializable {
 
     /**
      * this method verify if a player can activate a leader

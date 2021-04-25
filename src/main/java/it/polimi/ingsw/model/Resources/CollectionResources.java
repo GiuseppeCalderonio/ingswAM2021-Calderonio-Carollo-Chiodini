@@ -2,14 +2,17 @@ package it.polimi.ingsw.model.Resources;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * this class represent a generic set of resources
  */
 
-public class CollectionResources implements Iterable<Resource>{
+public class CollectionResources implements Iterable<Resource> {
     /**
      * this attribute is the list in which are stored all the resources as a Map
      */
@@ -99,10 +102,12 @@ public class CollectionResources implements Iterable<Resource>{
 
     /**
      * this method add a resource to the set
+     * if the resource is null do anything
      * @param toAdd this is the resources to add
      * @return true
      */
     public boolean add(Resource toAdd){
+        if (toAdd == null) return true;
         if (!this.contains(toAdd)) resources.add(new MapResources(toAdd , 1));
         else {
             resources.stream().filter(x -> x.getResource().equals(toAdd)).forEach(x ->x.add(1));
@@ -203,5 +208,6 @@ public class CollectionResources implements Iterable<Resource>{
     public String toString() {
         return resources.toString();
     }
+
 }
 

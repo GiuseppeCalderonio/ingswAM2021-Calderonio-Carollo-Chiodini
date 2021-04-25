@@ -197,4 +197,70 @@ class CardsMarketTest {
         market.popCard(2, CardColor.BLUE);
         assertFalse(market.checkCard(2, CardColor.BLUE));
     }
+
+    /**
+     * this test verifies that the method show in cardsMarket return a matrix of Development Card of which each element
+     * is contained on the top of the List of the respective position in CardsMarket
+     */
+    @Test
+    void testShow1() {
+        int i, j;
+        market = new CardsMarket();
+        DevelopmentCard[][] toReturn = new DevelopmentCard[3][4];
+        toReturn[0][0] = market.getCard(3, CardColor.GREEN);
+        toReturn[1][0] = market.getCard(2, CardColor.GREEN);
+        toReturn[2][0] = market.getCard(1, CardColor.GREEN);
+        toReturn[0][1] = market.getCard(3, CardColor.BLUE);
+        toReturn[1][1] = market.getCard(2, CardColor.BLUE);
+        toReturn[2][1] = market.getCard(1, CardColor.BLUE);
+        toReturn[0][2] = market.getCard(3, CardColor.YELLOW);
+        toReturn[1][2] = market.getCard(2, CardColor.YELLOW);
+        toReturn[2][2] = market.getCard(1, CardColor.YELLOW);
+        toReturn[0][3] = market.getCard(3, CardColor.PURPLE);
+        toReturn[1][3] = market.getCard(2, CardColor.PURPLE);
+        toReturn[2][3] = market.getCard(1, CardColor.PURPLE);
+
+        for (i = 0; i < 3; i++) {
+            for (j = 0; j < 4; j++)
+                assertEquals(toReturn[i][j], market.show()[i][j]);
+        }
+    }
+    /**
+     * this test verifies that the method show in CardsMarket return a matrix of Development Card of which each element
+     * is contained on the top of the List of the respective position in CardsMarket, if a List is empty then in
+     * the respective position there is a null
+     */
+    @Test
+    void testShow2() {
+        int i,j;
+        market = new CardsMarket();
+
+        for (i=0;i<4;i++) {
+            market.getCardMatrix()[0][0].remove(0);
+        }
+        for (i=0;i<4;i++) {
+            market.getCardMatrix()[1][2].remove(0);
+        }
+
+        DevelopmentCard[][] toReturn = new DevelopmentCard[3][4];
+        toReturn[0][0]=null;
+        toReturn[1][0] = market.getCard(2, CardColor.GREEN);
+        toReturn[2][0] = market.getCard(1, CardColor.GREEN);
+        toReturn[0][1] = market.getCard(3, CardColor.BLUE);
+        toReturn[1][1] = market.getCard(2, CardColor.BLUE);
+        toReturn[1][2]=null;
+        toReturn[2][1] = market.getCard(1, CardColor.BLUE);
+        toReturn[0][2] = market.getCard(3, CardColor.YELLOW);
+        toReturn[2][2] = market.getCard(1, CardColor.YELLOW);
+        toReturn[0][3] = market.getCard(3, CardColor.PURPLE);
+        toReturn[1][3] = market.getCard(2, CardColor.PURPLE);
+        toReturn[2][3] = market.getCard(1, CardColor.PURPLE);
+
+        for (i = 0; i < 3; i++) {
+            for (j = 0; j < 4; j++) {
+                assertEquals(toReturn[i][j], market.show()[i][j]);
+            }
+        }
+    }
+
 }

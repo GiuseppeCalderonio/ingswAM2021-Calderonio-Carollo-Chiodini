@@ -9,6 +9,16 @@ import it.polimi.ingsw.model.Marble.Marble;
 
 public class Shield implements Resource {
 
+    ResourceType type = ResourceType.SHIELD;
+
+    public Shield(){
+
+    }
+
+    public Shield(ResourceType type){
+        this.type = type;
+    }
+
     /**
      * this method returns a shield type
      * @return a shield type

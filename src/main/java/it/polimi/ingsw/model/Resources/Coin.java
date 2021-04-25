@@ -8,6 +8,16 @@ import it.polimi.ingsw.model.Marble.YellowMarble;
  */
 public class Coin implements Resource {
 
+    ResourceType type = ResourceType.COIN;
+
+    public Coin(){
+
+    }
+
+    public Coin(ResourceType type){
+        this.type = type;
+    }
+
     /**
      * this method returns a coin type
      * @return a coin type

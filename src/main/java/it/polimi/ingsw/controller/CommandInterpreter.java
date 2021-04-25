@@ -12,11 +12,14 @@ public interface CommandInterpreter {
      * @param command this is the command to execute
      * @param handler this is the handler to notify in case of
      *                a internal state change
-     * @return a code based on the type of action
+     * @return the response to send to the client\s
      */
-    String executeCommand(Command command, EchoServerClientHandler handler);
+    ResponseToClient executeCommand(Command command, ClientHandler handler);
 
-    default List<String> getPossibleCommands() {
-        return null;
-    }
+    /**
+     * this method get the possible command for a player
+     * according with the rules of the game
+     * @return the possible command for a player according with the rules of the game
+     */
+    List<String> getPossibleCommands();
 }

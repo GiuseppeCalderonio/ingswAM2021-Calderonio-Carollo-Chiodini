@@ -7,6 +7,9 @@ import it.polimi.ingsw.model.Resources.Shield;
  * this class implements the marble interface and represent the blue marble
  */
 public class BlueMarble implements Marble {
+
+    private final MarbleColor color = MarbleColor.BLUE;
+
     /**
      * this method return zero faith point
      * @return zero faith point
@@ -37,5 +40,13 @@ public class BlueMarble implements Marble {
     @Override
     public String toString() {
         return "Blue";
+    }
+
+    /**
+     * this method get the color of the marble
+     * @return blue
+     */
+    public MarbleColor getColor() {
+        return color;
     }
 }

@@ -6,6 +6,9 @@ import it.polimi.ingsw.model.Resources.Resource;
  * this class implements the marble interface and represent the red marble
  */
 public class RedMarble implements Marble {
+
+    private final MarbleColor color = MarbleColor.RED;
+
     /**
      * this method return one faith point
      * @return one faith point
@@ -37,6 +40,16 @@ public class RedMarble implements Marble {
     @Override
     public String toString() {
         return "Red";
+    }
+
+    /**
+     * this method get the color of the marble
+     *
+     * @return red
+     */
+    @Override
+    public MarbleColor getColor() {
+        return color;
     }
 }
 

@@ -3,7 +3,9 @@ package it.polimi.ingsw.model.SingleGame;
 import it.polimi.ingsw.model.DevelopmentCards.CardsMarket;
 import it.polimi.ingsw.model.Game;
 
-public interface SoloToken {
+import java.io.Serializable;
+
+public interface SoloToken extends Serializable {
 
     /**
      *this method invoked by SingleGame and implemented by CardToken and TrackToken defines the behaviour of a token

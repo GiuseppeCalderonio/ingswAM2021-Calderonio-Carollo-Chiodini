@@ -39,8 +39,8 @@ public class NewProduction extends LeaderCard {
 
     @Override
     public String toString() {
-        return super.toString() + "\n" +
-                "New Production : " + getResource()
+        return super.toString()  +
+                "New Production : " + getResource() + "\n"
                 ;
     }
 }

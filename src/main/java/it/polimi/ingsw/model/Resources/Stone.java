@@ -9,6 +9,16 @@ import it.polimi.ingsw.model.Marble.Marble;
 
 public class Stone implements Resource {
 
+    ResourceType type = ResourceType.STONE;
+
+    public Stone(){
+
+    }
+
+    public Stone(ResourceType type){
+        this.type = type;
+    }
+
     /**
      * this method returns a stone type
      * @return a stone type

@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.Resources.Resource;
 /**
  * this interface represent the marble
  */
-public interface Marble {
+public interface Marble{
     /**
      * this method return the faith points associated with the marble
      * @return the faith points associated with the marble
@@ -21,5 +21,11 @@ public interface Marble {
     boolean equals(Object toCompare);
 
     String toString();
+
+    /**
+     * this method get the color of the marble
+     * @return the enum with the color of the marble
+     */
+    MarbleColor getColor();
 
 }

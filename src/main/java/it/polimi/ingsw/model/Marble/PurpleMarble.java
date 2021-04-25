@@ -7,6 +7,9 @@ import it.polimi.ingsw.model.Resources.Servant;
  * this class implements the marble interface and represent the purple marble
  */
 public class PurpleMarble implements Marble {
+
+    private final MarbleColor color = MarbleColor.PURPLE;
+
     /**
      * this method return zero faith point
      * @return zero faith point
@@ -37,5 +40,15 @@ public class PurpleMarble implements Marble {
     @Override
     public String toString() {
         return "Purple";
+    }
+
+    /**
+     * this method get the color of the marble
+     *
+     * @return purple
+     */
+    @Override
+    public MarbleColor getColor() {
+        return color;
     }
 }

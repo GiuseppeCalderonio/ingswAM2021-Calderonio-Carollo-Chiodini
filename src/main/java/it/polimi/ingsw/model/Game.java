@@ -72,6 +72,7 @@ public class Game {
 
         //NewDiscount leaderCards
         leaders.add(new NewDiscount(requirement1,2,new Coin())); leaders.add(new NewDiscount(requirement2,2,new Stone())); leaders.add(new NewDiscount(requirement3,2,new Shield())); leaders.add(new NewDiscount(requirement4,2,new Servant())); //NewDiscount leaderCard
+
         Collections.shuffle(leaders); //shuffle the deck of leader cards
         players = new ArrayList<>();
         Collections.shuffle(nicknames); // shuffle the order of the players
@@ -149,7 +150,7 @@ public class Game {
      * @param nickname this is the nickname to check
      * @return the player if the game contains it, null otherwise
      */
-    private synchronized RealPlayer findPlayer(String nickname){
+    public synchronized RealPlayer findPlayer(String nickname){
         for(RealPlayer p : players){
             if(p.getNickname().equals(nickname)) return p;
         }

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.PlayerAndComponents;
 
-import it.polimi.ingsw.model.PlayerAndComponents.Dashboard;
 import it.polimi.ingsw.model.Resources.CollectionResources;
 import it.polimi.ingsw.model.Resources.Resource;
 

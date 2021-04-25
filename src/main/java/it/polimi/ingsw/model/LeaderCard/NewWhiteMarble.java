@@ -40,8 +40,8 @@ public class NewWhiteMarble extends LeaderCard {
 
     @Override
     public String toString() {
-        return super.toString() + "\n" +
-                "New white marble : " + getResource()
+        return super.toString()  +
+                "New white marble : " + getResource() + "\n"
                 ;
     }
 }

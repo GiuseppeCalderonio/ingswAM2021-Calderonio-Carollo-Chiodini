@@ -2,7 +2,10 @@ package it.polimi.ingsw.model.DevelopmentCards;
 
 import it.polimi.ingsw.model.Resources.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * this class represent the market of cards
@@ -478,11 +481,36 @@ public class CardsMarket {
 
         for (int column = 0; column < 4; column++) {
             for (int row = 0; row < 3; row++) {
-                cards.add(cardMatrix[row][column].get(cardMatrix[row][column].size() - 1));
+                try {
+                    cards.add(cardMatrix[row][column].get(cardMatrix[row][column].size() - 1));
+                } catch (IndexOutOfBoundsException e){
+                    cards.add(null);
+                }
+
             }
         }
 
         return "CardsMarket :" + "\n"
                 + cards;
+    }
+
+    /**
+     * this method get the visible state of the market
+     * in particular, it get the highest card of the market with a get
+     * and adds it to a matrix
+     * @return a matrix with all the highest cards of the market
+     */
+    public DevelopmentCard[][] show(){
+        DevelopmentCard[][] toReturn = new DevelopmentCard[3][4];
+        for (int column = 0; column < 4; column++) {
+            for (int row = 0; row < 3; row++) {
+                try {
+                    toReturn[row][column] = cardMatrix[row][column].get(cardMatrix[row][column].size() - 1);
+                }catch (IndexOutOfBoundsException e){
+                    toReturn[row][column] = null;
+                }
+            }
+        }
+        return toReturn;
     }
 }

@@ -4,8 +4,6 @@ import it.polimi.ingsw.model.DevelopmentCards.CardColor;
 import it.polimi.ingsw.model.DevelopmentCards.CardsMarket;
 import it.polimi.ingsw.model.Game;
 
-import java.util.Objects;
-
 public class CardToken implements SoloToken {
 
     private final CardColor color;

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.model.Resources.CollectionResources;
 import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.model.Resources.ResourceType;
 
@@ -16,8 +15,8 @@ public class Command {
     int firstCard; // should be from 1 to 4
     int secondCard; // should be from 1 to 4
     // initialise_resources / basic_production
-    ResourceType firstResource;
-    ResourceType secondResource;
+    Resource firstResource;
+    Resource secondResource;
     // shift_resources
     int source; //should be from 1 t 5
     int destination; // should be from 1 to 5

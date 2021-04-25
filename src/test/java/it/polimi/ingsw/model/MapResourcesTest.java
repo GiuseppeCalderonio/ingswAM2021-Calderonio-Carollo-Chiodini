@@ -77,10 +77,8 @@ class MapResourcesTest {
     public void testIterator(){
         MapResources map1 = new MapResources(new Stone(), 0);
         MapResources map2 = new MapResources(new Stone(), 0);
-        int counter = 0;
-        for( Resource resource : map1){
+        for( Resource ignored : map1){
             map2.add(1);
-            counter++;
         }
         assertEquals(map1, map2);
         assertEquals(0 , map1.getCardinality());
@@ -94,10 +92,8 @@ class MapResourcesTest {
     public void testIterator2(){
         MapResources map1 = new MapResources(new Stone(), 4);
         MapResources map2 = new MapResources(new Stone(), 0);
-        int counter = 0;
-        for( Resource resource : map1){
+        for( Resource ignored : map1){
             map2.add(1);
-            counter++;
         }
         assertEquals(map1, map2);
         assertEquals(4 , map1.getCardinality());

@@ -1,10 +1,8 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.Resources.CollectionResources;
-import it.polimi.ingsw.model.Resources.Resource;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,6 +18,8 @@ public class InitialisingInterpreter implements CommandInterpreter{
 
     }
 
+    //return "{ \"message\" : \"\", \"possibleCommands\" : " + possibleCommands + "}";
+
     /**
      * this method execute the command given in input, returning a code that will
      * be sent to the client associated with the handler
@@ -29,51 +29,72 @@ public class InitialisingInterpreter implements CommandInterpreter{
      * @param command this is the command to execute
      * @param handler this is the handler to notify in case of
      *                a internal state change
-     * @return a code based on the type of action
+     * @return the response to send to the client\s
      */
     @Override
-    public String executeCommand(Command command, EchoServerClientHandler handler) {
-        if (!possibleCommands.contains(command.cmd)) return "this command is not available in this phase of the game" + ", Possible commands: " + possibleCommands;
+    public ResponseToClient executeCommand(Command command, ClientHandler handler) {
+        ResponseToClient response = new ResponseToClient();
+        if (!possibleCommands.contains(command.cmd)){
+            return buildResponse("this command is not available in this phase of the game");
+            //response.message = "this command is not available in this phase of the game";
+            //response.possibleCommands = possibleCommands;
+            //return response;
+        }
+            //return "{ \"message\" : \"this command is not available in this phase of the game\", \"possibleCommands\" : " + possibleCommands + "}";
         switch (command.cmd){
             case "initialise_leaderCards":
                 if( (command.firstCard < 1 || command.firstCard > 4) ||
-                        (command.secondCard < 1 || command.secondCard > 4))
-                    return "one of the cards index is not between 1 and 4" + ", Possible commands: " + possibleCommands;
-                if(command.firstCard == command.secondCard)
-                    return "the two cards indexes are equals" + ", Possible commands: " + possibleCommands;
+                        (command.secondCard < 1 || command.secondCard > 4)){
+                    return buildResponse("one of the cards index is not between 1 and 4");
+                    //response.message = "one of the cards index is not between 1 and 4";
+                    //response.possibleCommands = possibleCommands;
+                    //return response;
+                }
+                    //return "{ \"message\" : \"one of the cards index is not between 1 and 4\", \"possibleCommands\" : " + possibleCommands + "}";
+                if(command.firstCard == command.secondCard){
+                    return buildResponse("the two cards indexes are equals");
+                    //response.message = "the two cards indexes are equals";
+                    //response.possibleCommands = possibleCommands;
+                    //return response;
+                }
+                    //return "{ \"message\" : \"the two cards indexes are equals\", \"possibleCommands\" : " + possibleCommands + "}";
                 possibleCommands.remove("initialise_leaderCards");
                 possibleCommands.add("initialise_resources");
                 card1 = command.firstCard;
                 card2 = command.secondCard;
-                return "ok, choose your resources" + ", Possible commands: " + possibleCommands;
+                return buildResponse("ok, choose your resources");
+                //response.message = "ok, choose your resources";
+                //response.possibleCommands = possibleCommands;
+                //return response;
+                //return "{ \"message\" : \"ok, choose your resources\", \"possibleCommands\" : " + possibleCommands + "}";
 
             case "initialise_resources":
                 CollectionResources toVerify = new CollectionResources();
-                if (command.firstResource != null)
-                    toVerify.add(command.firstResource.getResource());
-                if (command.secondResource != null)
-                    toVerify.add(command.secondResource.getResource());
-                if (!verifyCompatibility(handler.getNicknames().indexOf(handler.getNickname()), toVerify))
-                    return "you have chosen too much or not anymore resources";
+                toVerify.add(command.firstResource);
+                toVerify.add(command.secondResource);
+                if (!ClientHandler.getGame().checkInitialising(handler.getNickname(), toVerify))
+                    return buildResponse("you have chosen too much or not anymore resources");
+                    //return "{ \"message\" : \"you have chosen too much or not anymore resources\", \"possibleCommands\" : " + possibleCommands + "}";
                 possibleCommands.remove("initialise_resources");
-                handler.getGame().initialiseGame(handler.getNickname(), toVerify, card1, card2);
-                return "ok, wait for other players to decide and the game will start" + ", Possible commands: " + possibleCommands;
+                ClientHandler.getGame().initialiseGame(handler.getNickname(), toVerify, card1, card2);
+                return buildResponse("ok, now wait that everyone initialise his game and the game will start");
+                //return "{ \"message\" : \"ok, now wait that everyone initialise his game and the game will start\", \"possibleCommands\" : " + possibleCommands + "}";
 
             default:
-                return "this command is not available in this phase of the game" + ", Possible commands: " + possibleCommands;
+                return buildResponse("this command is not available in this phase of the game");
+                //return "{ \"message\" : \"this command is not available in this phase of the game\", \"possibleCommands\" : " + possibleCommands + "}";
 
         }
     }
 
-    //position is from 0 to 3
-    private boolean verifyCompatibility(int position, CollectionResources toVerify){
-        if (position == 0 && toVerify.getSize() == 0) return true;
-        if (position == 1 && toVerify.getSize() == 1) return true;
-        if (position == 2 && toVerify.getSize() == 1) return true;
-        return position == 3 && toVerify.getSize() == 2;
-    }
-
     public List<String> getPossibleCommands() {
         return possibleCommands;
+    }
+
+    private ResponseToClient buildResponse(String message){
+        ResponseToClient response = new ResponseToClient();
+        response.message = message;
+        response.possibleCommands = possibleCommands;
+        return response;
     }
 }
