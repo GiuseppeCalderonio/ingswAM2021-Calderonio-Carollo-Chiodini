@@ -21,31 +21,17 @@ public class SetSizeInterpreter implements CommandInterpreter{
      */
     @Override
     public ResponseToClient executeCommand(Command command, ClientHandler handler) {
-        if (!command.cmd.equals("set_players")) {
+        if (!possibleCommands.contains(command.cmd))
             return buildResponse("this command is not available in this phase of the game");
-            //response.message = "this command is not available in this phase of the game";
-            //response.possibleCommands = new ArrayList<String>(Collections.singletonList("set_players"));
-            //return response;
-        }
-            //return "{ \"message\" : \"this command is not available in this phase of the game\", \"possibleCommands\" : " +  + "}";
-        if (command.size < 1 || command.size > 4){
+
+        if (command.size < 1 || command.size > 4)
             return buildResponse("the size is not between 1 and 4");
-            //response.message = "the size is not between 1 and 4";
-            //response.possibleCommands = new ArrayList<String>(Collections.singletonList("set_players"));
-            //return response;
-        }
 
         handler.setNumberOfPlayers(new AtomicInteger(command.size));
         possibleCommands.remove("set_players");
         possibleCommands.add("login");
 
         return buildResponse("ok, start with the login");
-        //response.message = "ok, start with the login";
-        //response.possibleCommands = new ArrayList<String>(Collections.singletonList("login"));
-        //return response;
-            //return "{ \"message\" : \"the size is not between 1 and 4\", \"possibleCommands\" : " + new ArrayList<String>(Collections.singletonList("set_players")) + "}";
-
-        //return "{ \"message\" : \"ok, start with the login\", \"possibleCommands\" : " + new ArrayList<String>(Collections.singletonList("login")) + "}";
     }
 
     public List<String> getPossibleCommands() {

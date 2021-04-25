@@ -6,17 +6,22 @@ he gets kicked off, because there is no any game existing in that moment
 
 CLIENT                                                   SERVER
 send the number of players
-"{"cmd" : "set_players", "size" : x}"
+"{"cmd" : "set_players", "size" : int}"
 ----------------------------------------->
 
 
+              if set_players is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : [set_players]}"
+<----------------------------------------------
+
+
               if size is not between 1 and 4
-         "{"message" : "the size is not between 1 and 4" , "code" : -1}"
+         "{"message" : "the size is not between 1 and 4" , "possibleCommands" : [set_players]}"
 <----------------------------------------------
 
 
                 else
-                "{"message" : "ok, start with the login" , "code" : 0}"
+                "{"message" : "ok, start with the login" , "possibleCommands" : [login]}"
 <----------------------------------------------
 
 LOGIN
@@ -27,30 +32,46 @@ note that if a player try to connect and there are more that (size) connection a
 (the server will store a list of sockets) the player will kicked off
 CLIENT                                                   SERVER
 send the nickname
-"{"cmd" : "login", "nickname" : str}"
+"{"cmd" : "login", "nickname" : String}"
 ---------------------------------------------------->
 
 
+              if login is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : [login]}"
+<----------------------------------------------
+
+
             if str.equals("")
-         "{"message" : "nickname can't be the empty string" , "code" : -2}"
+         "{"message" : " the nickname can't be the empty string" , "possibleCommands" : [login]}"
 <------------------------------------------------------
 
 
             else if str is contained in the list of nicknames
-            "{"message" : "nickname selected is already taken" , "code" : -3}"
+            "{"message" : "nickname selected is already taken" , "possibleCommands" : [login]}"
+<------------------------------------------------------
+
+
+            if number of players == 1
+            "{"message" : "login completed successfully" ,"ignorePossibleCommands" : true}"
 <------------------------------------------------------
 
 
             else
-            "{"message" : "ok, wait for other players to join" , "code" : 1}"
+            "{"message" : "login completed successfully, wait for other players to join" ,"possibleCommands" : []}"
 <------------------------------------------------------
 
 
             if the login is done from everyone send all the state
             create a game, eventually a single game
-            send ALL leader cards, send positions(first player, second, third, fourth), send markets
+            send ALL leader cards, send positions(first player, second, third, fourth)
             send leaderCards : SERIALIZE(List<LeaderCards>)
-  "{"message" : "the game start! decide 2 different leader cards to discard" , "position" : x}"
+  "{"message" : "the game initialization start! decide 2 different leader cards to discard" ,
+        "possibleCommands" : [initialize_leaderCards] ,
+        "position" : x ,
+        "leaderCards" : List<ThinLeaderCard> ,
+        "code" = 1
+        "serialize" = true
+        }"
 <------------------------------------------------------------
 
 
@@ -64,64 +85,64 @@ the resources will be stored in the warehouse automatically, then the player cou
 EVERY TIME ONE OF THESE OPERATION RETURN A CODE < 0, ALL THE DIAGRAM RESTART
 CLIENT                                                   SERVER
 send the two leader cards to discard
-"{"cmd" : "initialise_leaderCards", "firstCard" : x, "secondCard" : y}"
+"{"cmd" : "initialise_leaderCards", "firstCard" : int , "secondCard" : int }"
 ---------------------------------------------------->
 
 
-          if the player didn't do the login
-          "{"message" : "error, you have to do login first" , "code" : -17}"
-<------------------------------------------------------------
+              if initialise_leaderCards is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : [initialise_leaderCards]}"
+<----------------------------------------------
 
 
-             if the player had already discarded his leader cards
-       "{"message" : "you have already discarded the leader cards" , "code" : -4}"
-<------------------------------------------------------------
-
-
-                  if !(1<= x <=4) || !(1<= y <=4)
-       "{"message" : "one of the cards index is not between 1 and 4" , "code" : -5}"
+                  if !(1<= firstCard <=4) || !(1<= secondCard <=4)
+       "{"message" : "one of the cards index is not between 1 and 4" , "possibleCommands" : [initialise_leaderCards]}"
 <------------------------------------------------------------
 
 
             else if ( x == y)
-       "{"message" : "the two cards indexes are equals" , "code" : -6}"
+       "{"message" : "the two cards indexes are equals" , "possibleCommands" : [initialise_leaderCards]}"
 <------------------------------------------------------------
 
 
             else
-            "{"message" : "ok, choose f(position) resource\s" , "code" : 3}"
+            "{"message" : "ok, choose your resources" , "possibleCommands" : [initialise_resources]}"
 <-----------------------------------------------------------
 
 
 send the resources to choose (based on the position)
-"{"cmd" : "initialise_resources", "firstResource" : x, "secondResource" : y}"
+"{"cmd" : "initialise_resources", "firstResource" : Resource, "secondResource" : Resource}"
 ---------------------------------------------------->
 
 
-          if the player didn't do the login
-          "{"message" : "error, you have to do login first" , "code" : -17}"
-<------------------------------------------------------------
-
-
-                    if the player has already done the initialization
-       "{"message" : "you have already chosen the initial resources" , "code" : -8}"
-<------------------------------------------------------------
+              if initialise_resources is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : [initialise_resources]}"
+<----------------------------------------------
 
 
                     if resources are not compatible with the position
-       "{"message" : "you have chosen too much or not anymore resources" , "code" : -9}"
+       "{"message" : "you have chosen too much or not anymore resources" , "possibleCommands" : [initialise_resources]}"
 <------------------------------------------------------------
 
 
             else
-     "{"message" : "ok, wait for other players to decide and the game will start" , "code" : 4}"
+     "{"message" : "ok, now wait that everyone decides his resources and leader cards, and the game will start" , "possibleCommands" : []}"
 <-----------------------------------------------------------
 
 
                  if everyone did the initialization, send all the state
                  send basically everything
+                 send to every player market card, market marble, eventually the soloToken, leader cards, first 2 shelves, faith track position
                  SERIALIZE(positions(for all players), )
-   "{"message" : "the game start! is the turn of [actualPlayer], decide your action:" , "code" : 5}"
+   "{"message" : "the game start! is the turn of [actualPlayer], decide your action:" ,
+        "possibleCommands" : List<String> ,// depending if is the turn of the player or not
+        "cardsMarket" : CardsMarket ,
+        "marbleMarket" : Marble[][] ,
+        "lonelyMarble" : Marble ,
+        "soloToken" : SoloToken ,
+        "actualPlayer" : ThinPlayer ,
+        "opponents" : List<ThinPlayer>
+        "code" : 2 ,
+        "serialize" = true}"
 <-----------------------------------------------------------
 
 
@@ -137,40 +158,48 @@ this operation is the most particular, because there is no limit to it, it can b
 ------------------------------------------------------------>
 
 
-          if the player didn't do the login
-          "{"message" : "error, you have to do login first" , "code" : -17}"
-<------------------------------------------------------------
-
-
-          if the player didn't do the initialisation
-          "{"message" : "error, you have to do initialisation first" , "code" : -18}"
-<------------------------------------------------------------
+              if shift_resources is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String>}"
+<----------------------------------------------
 
 
           if(!checkShelfSelected(source) || !checkShelfSelected(source)) that means that a shelf does not exist
-          "{"message" : "error, one of the shelf selected does not exist" , "code" : -10}"
+          "{"message" : "error, one of the shelf selected does not exist" , "possibleCommands" : List<String> }"
 <------------------------------------------------------------
 
           if(!shiftResources(source, destination)) that means that a shift is not possible
-          "{"message" : "error, ypu can't do this kind of shift" , "code" : -11}"
+          "{"message" : "error, ypu can't do this kind of shift" , "possibleCommands" : List<String> }"
 <------------------------------------------------------------
 
-            else
-          "{"message" : "ok, shift done correctly" , "code" : 6}"
-          send ALL the warehouse changed, and the new faith track
+            else send a message to a player
+          "{"message" : "ok, shift done correctly" , "possibleCommands" : List<String>}"
+          and after send all the warehouse changed, and the new faith track in broadcast
+          broadcast
+          "{
+                "ignorePossibleCommand" : true ,
+                "nickName" : String ,
+                "faithPosition" : int ,
+                "popeFavourTiles" : boolean[] ,
+                "firstShelf" : CollectionResources ,
+                "secondShelf" : CollectionResources ,
+                "thirdShelf" : CollectionResources ,
+                "fourthShelf" : CollectionResources ,
+                "fifthShelf" : CollectionResources ,
+                "code" : 2 ,
+                "serialize" : true
+          }"
+
+
+          send all the warehouse (5 shelves) and the position and the 3 pope favours tiles
 <------------------------------------------------------------
 
-            if(shiftResources(source, destination) throws EndGameException) [ONLY SinglePlayer!]
-            and you won
-          "{"message" : "you won! you gained [getActualPlayer.getVictoryPoints()]" , "code" : 7}"
-          send ALL the warehouse changed, and the new faith track
-<------------------------------------------------------------
 
 
             if(shiftResources(source, destination) throws EndGameException) [ONLY SinglePlayer!]
             and you lost
-          "{"message" : "you lost... you gained [getActualPlayer.getVictoryPoints()]" , "code" : 8}"
+          "{ "message" : "you lost... you gained [getActualPlayer.getVictoryPoints()]", "possibleCommands" : [] }"
           send ALL the warehouse changed, and the new faith track
+          send all the warehouse (5 shelves) and the position and the 3 pope favours tiles
 <------------------------------------------------------------
 
 
@@ -212,17 +241,11 @@ THIS PART IS DONE ONLY IN CASE OF THERE ARE 2 WHITE MARBLE LEADER CARDS
 
                 if actual player own 2 white marbles leader cards
                 and selected a column\row with more than 1 white marble
-        "{"message" : "you own 2 white marble leader cards , choose for each white marble how to convert it" , "code" : 9}"
-<------------------------------------------------------------
-
-
-FOR LOOP(white marbles){
-
-        "{"message" : "select the leader card whit which convert the 1\[whiteMarblesChosen] white marble chosen" , "code" : 10}"
+        "{"message" : "you own 2 white marble leader cards , choose for each white marble how to convert it" , "code" : 9, "marbles" : int (su cui fare il for)}"
 <------------------------------------------------------------
 
 choose leader card to use
-"{"cmd" : "choose_leaderCard", "index" : x}"
+"{"cmd" : "choose_leaderCard", "indexes" : int[]}"
 ------------------------------------------------------------>
 
 
@@ -239,20 +262,19 @@ choose leader card to use
                 if (!changeWhiteMarble(marbles, index)) the index is not between 1 and 2
           "{"message" : "the leader card selected does not exist" , "code" : -15}"
 <------------------------------------------------------------
-               }EXIT FROM LOOP
                                                                                     (server calls convert)
 
-          "{"message" : "you gained [resourceType vector], decide how to place them into the warehouse" , "code" : 11}"
+          "{"message" : "you gained [CollectionResources], decide how to place them into the warehouse" , "code" : 11}"
 <------------------------------------------------------------
 
 
 FOR LOOP(resourceType vector){
 
-        "{"message" : "select the shelf in which place all the the [resourceType] resources" , "code" : 12}"
+        "{"message" : "select the shelf in which place all the the [resourceType] resources" , "code" : 12, "selectForPlacement : List<ResourceType>"}"
 <------------------------------------------------------------
 
 select shelf
-"{"cmd" : "insert_in_warehouse", "shelf" : x}"
+"{"cmd" : "insert_in_warehouse", "shelves" : int[]}"
 ------------------------------------------------------------>
 
 
@@ -266,14 +288,15 @@ select shelf
 <------------------------------------------------------------
 
 
-                if (!checkShelfSelected(shelf)) the shelf selected does not exist
-          "{"message" : "the shelf selected does not exist" , "code" : -16}"
+                if (!checkShelfSelected(shelves[i])) one of the shelves selected does not exist
+          "{"message" : "one of the shelf selected does not exist" , "code" : -16}"
 <------------------------------------------------------------
                         } EXIT FROM LOOP
 
 
             else
           send ALL the warehouse changed, and the new faith track
+          send all the warehouse (5 shelves) and the position and the 3 pope favours tiles, and the market marble
 <------------------------------------------------------------
 
 
@@ -290,13 +313,13 @@ select shelf
 
 
 BUY CARD
-this operation can be done only once during the turn, with thismethod the player select and buy
+this operation can be done only once during the turn, with this method the player select and buy
 one development card present in the market
 EVERY TIME ONE OF THESE OPERATION RETURN A CODE < 0, ALL THE DIAGRAM RESTART
  CLIENT                                                   SERVER
 
 choose card
-"{"cmd" : "choose_card", "color" : str, "level" : x}"
+"{"cmd" : "buy_card", "color" : str, "level" : x}"
 ------------------------------------------------------------>
 
 
@@ -325,12 +348,12 @@ choose card
 <------------------------------------------------------------
 
 
-          if there isn't avaliable card in the selected position
-          "{"message" : "error, you have to select another avaliable card" , "code" : -23}"
+          if there isn't available card in the selected position
+          "{"message" : "error, you have to select another available card" , "code" : -23}"
 <------------------------------------------------------------
 
 
-          if the player hasn't anough resources to buy the selected card
+          if the player hasn't enough resources to buy the selected card
           "{"message" : "error, you don't own enough resources; try to change card" , "code" : -24}"
 <------------------------------------------------------------
 
@@ -368,8 +391,8 @@ select position
 
 
 
-select resouces from warehouse
-"{"cmd" : "select resouces from warehouse" , "resources from warehouse" : x//DA CHIEDERE}"(BISOGNA CAPIRE COME MANDARE UNA COLLECTION RESOURCES)
+select resources from warehouse
+"{"cmd" : "select_resources_from_warehouse" , "toPayFromWarehouse" :  CollectionResources }x//DA CHIEDERE}"(BISOGNA CAPIRE COME MANDARE UNA COLLECTION RESOURCES)
 ------------------------------------------------------------>
 
 
@@ -383,9 +406,17 @@ select resouces from warehouse
 <------------------------------------------------------------
 
 
-	  if the check warehouse resuorces returns false
-          "{"message" : "error,you have seleceted an incorrect number of resources" , "code" : -40}"
+	  if the check warehouse resources returns false
+          "{"message" : "error,you have selected an incorrect number of resources" , "code" : -40}"
 <------------------------------------------------------------
+
+
+	  if it's all ok
+          "{"message" : "card bought and placed correctly" , "code" : -41}"
+          send to all players : new Market card, new prod power, new warehouse
+<------------------------------------------------------------
+
+
 
 
 
@@ -441,6 +472,12 @@ production
 	<------------------------------------------------------------
 
 
+	 if is all ok
+ 	         "{"message" : "basic production activated" , "code" : -347}"
+ 	         send new warehouse, new strongbox
+	<------------------------------------------------------------
+
+
 
 	CASE NORMAL PRODUCTION
 	"{"cmd" : "normal_production" , "position" : x , "ToPayFromWarehouse" : collectionResources}"
@@ -468,9 +505,14 @@ production
 
 
 	  	if the check activate normal production returns false
-          	"{"message" : "error,you have seleceted an incorrect number of resources" , "code" : -44}"
+          	"{"message" : "error,you have selected an incorrect number of resources" , "code" : -44}"
 	<------------------------------------------------------------
 
+
+	 if is all ok
+ 	         "{"message" : "basic production activated" , "code" : -347}"
+ 	         send new warehouse, new strongbox , positions, pope favour tiles
+ 	 <------------------------------------------------------------
 
 
 
@@ -504,6 +546,12 @@ production
 	<------------------------------------------------------------
 
 
+	 if is all ok
+ 	         "{"message" : "basic production activated" , "code" : -347}"
+ 	         send new warehouse, new strongbox , positions, pope favour tiles
+ 	 <------------------------------------------------------------
+
+
 
 	CASE END PRODUCTION
 	"{"cmd" : "end_production"}"
@@ -518,6 +566,12 @@ production
           	if the player didn't do the initialisation
           	"{"message" : "error, you have to do initialisation first" , "code" : -18}"
 	<------------------------------------------------------------
+
+
+
+	 if is all ok
+ 	         "{"message" : "production finished" , "code" : -349}"
+ 	 <------------------------------------------------------------
 
 ACTIVATE LEADER CARD
 
@@ -561,6 +615,11 @@ ACTIVATE LEADER CARD
             "{"message" : "the leader card is already activated or you don't meet the requirements to activate it" , "code" : -52}"
             <------------------------------------------------------------
 
+	        if is all ok
+ 	         "{"message" : "leader card activated" , "code" : 56}"
+ 	         send new leader cards
+ 	        <------------------------------------------------------------
+
             CASE DISCARD
             "{"cmd" : "leader_action_discard", "toDiscard" : int}"
             ------------------------------------------------------------>
@@ -583,4 +642,10 @@ ACTIVATE LEADER CARD
         	if(!discardLeaderCard(toDiscard)) the leader card is already activated
             "{"message" : "the leader card is already activated " , "code" : -53}"
             <------------------------------------------------------------
+
+
+	        if is all ok
+ 	         "{"message" : "leader card discarded" , "code" : 57}"
+ 	         send new leader cards
+ 	        <------------------------------------------------------------
 

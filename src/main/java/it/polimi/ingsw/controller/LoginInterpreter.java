@@ -20,37 +20,25 @@ public class LoginInterpreter implements CommandInterpreter {
      */
     @Override
     public ResponseToClient executeCommand(Command command, ClientHandler handler) {
-        if (!command.cmd.equals("login")){
+        if (!possibleCommands.contains(command.cmd))
             return buildResponse("this command is not available in this phase of the game");
-            //response.message = "this command is not available in this phase of the game";
-            //response.possibleCommands = new ArrayList<String>(Collections.singletonList("login"));
-            //return response;
-        }
-            //return "{ \"message\" : \"this command is not available in this phase of the game\", \"possibleCommands\" : " + new ArrayList<String>(Collections.singletonList("login")) + "}";
-        if (command.nickname.equals("")){
+
+        if (command.nickname.equals(""))
             return buildResponse("the nickname can't be the empty string");
-            //response.message = "the nickname can't be the empty string";
-            //response.possibleCommands = new ArrayList<String>(Collections.singletonList("login"));
-            //return response;
-        }
-            //return "{ \"message\" : \"the nickname can't be the empty string\", \"possibleCommands\" : " + new ArrayList<String>(Collections.singletonList("login")) + "}";
-        if (ClientHandler.getNicknames().contains(command.nickname)){
+
+         if (ClientHandler.getNicknames().contains(command.nickname))
             return buildResponse("nickname selected is already taken");
-            //response.message = "nickname selected is already taken";
-            //response.possibleCommands = new ArrayList<String>(Collections.singletonList("login"));
-            //return response;
-        }
-            //return "{ \"message\" : \"nickname selected is already taken\", \"possibleCommands\" : " + new ArrayList<String>(Collections.singletonList("login")) + "}";
+
         handler.addNickname(command.nickname);
         handler.setNickname(command.nickname);
         possibleCommands.remove("login");
 
-        return buildResponse("ok, wait for other players to join");
-        //response.message = "ok, wait for other players to join";
-        //response.possibleCommands = new ArrayList<String>();
-        //return response;
-        //return "{ \"message\" : \"ok, wait for other players to join\" , \"possibleCommands\" : " + new ArrayList<String>() + "}";
+        if (ClientHandler.getNumberOfPlayers().get() == 1){
+            return buildResponseIgnoringCommands();
+        }
 
+
+        return buildResponse("login completed successfully, wait for other players to join");
     }
 
     public List<String> getPossibleCommands() {
@@ -61,6 +49,13 @@ public class LoginInterpreter implements CommandInterpreter {
         ResponseToClient response = new ResponseToClient();
         response.message = message;
         response.possibleCommands = possibleCommands;
+        return response;
+    }
+
+    private ResponseToClient buildResponseIgnoringCommands(){
+        ResponseToClient response = new ResponseToClient();
+        response.message = "login completed successfully";
+        response.ignorePossibleCommands = true;
         return response;
     }
 }

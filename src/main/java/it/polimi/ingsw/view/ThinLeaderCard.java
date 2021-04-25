@@ -4,9 +4,9 @@ import it.polimi.ingsw.model.Resources.Resource;
 
 public class ThinLeaderCard {
 
-    private final int victoryPoints;
+    private int victoryPoints;
     private final boolean isActive;
-    private final Resource resource;
+    private Resource resource;
 
     public ThinLeaderCard(boolean isActive, int victoryPoints, Resource resource) {
         this.isActive = isActive;
@@ -25,5 +25,10 @@ public class ThinLeaderCard {
 
     public int getVictoryPoints() {
         return victoryPoints;
+    }
+
+    public void hide(){
+        victoryPoints = 0;
+        resource = null;
     }
 }

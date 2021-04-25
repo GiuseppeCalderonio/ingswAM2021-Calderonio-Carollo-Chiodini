@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.Resources.ResourceType;
 import java.util.List;
 
 public class Command {
-    String cmd; //this is the command, [set_players, login, initialise_leaderCards , initialise_resources, shift_resources, choose_marbles, choose_leaderCard, insert_in_warehouse, choose_card, select position, production, basic_production, normal_production, leader_production, end_production, leader_action, leader_action_activate, leader_action_discard]
+    String cmd; //this is the command, [set_players, login, initialise_leaderCards , initialise_resources, shift_resources, choose_marbles, choose_leaderCard, insert_in_warehouse, buy_card, select position, production, basic_production, normal_production, leader_production, end_production, leader_action, leader_action_activate, leader_action_discard]
     // set_players
     int size; // should be from 1 to 4
     //login

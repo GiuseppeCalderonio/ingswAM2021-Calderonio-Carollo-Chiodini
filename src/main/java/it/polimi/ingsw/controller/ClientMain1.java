@@ -3,12 +3,17 @@ package it.polimi.ingsw.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import it.polimi.ingsw.model.DevelopmentCards.CardColor;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.LeaderCard.*;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.Resources.*;
+import it.polimi.ingsw.model.SingleGame.CardToken;
+import it.polimi.ingsw.model.SingleGame.SoloToken;
+import it.polimi.ingsw.model.SingleGame.TrackToken;
 import it.polimi.ingsw.view.ThinLeaderCard;
+import it.polimi.ingsw.view.ThinPlayer;
 
 import java.io.*;
 import java.net.Socket;
@@ -27,17 +32,15 @@ public class ClientMain1 implements Runnable {
     private final Socket echoSocket;
     private final Gson gson;
     private int position = 0;
+    private ThinPlayer myself;
+    private List<ThinPlayer> opponents;
     private List<LeaderCard> leaderCards;
     private List<LeaderCard> allLeaderCards;
-    private CollectionResources firstShelf;
-    private CollectionResources secondShelf;
-    private CollectionResources thirdShelf;
-    private CollectionResources fourthShelf;
-    private CollectionResources fifthShelf;
-    private CollectionResources strongbox;
+    private final DevelopmentCard[] productionPower = new DevelopmentCard[3];
     private DevelopmentCard[][] cardsMarket;
     private Marble[][] marbleMarket;
     private Marble lonelyMarble;
+    private SoloToken solotoken;
 
 
     public static void main(String[] args) throws IOException{
@@ -50,6 +53,11 @@ public class ClientMain1 implements Runnable {
         this.echoSocket = new Socket(hostName, portNumber);
         allLeaderCards = createLeaderCards();
         GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapterFactory(
+                RuntimeTypeAdapterFactory.
+                        of(SoloToken.class, "type").
+                        registerSubtype(TrackToken.class, "trackToken").
+                        registerSubtype(CardToken.class, "cardToken"));
         builder.registerTypeAdapter(Resource.class, new ResourceInterfaceAdapter());
         builder.registerTypeAdapter(Marble.class, new MarbleInterfaceAdapter());
         gson = builder.create();
@@ -160,20 +168,23 @@ public class ClientMain1 implements Runnable {
                 assert in != null;
                 if ((recived = in.readLine()) == null) break;
                 response = gson.fromJson(recived, ResponseToClient.class);
-                if (response.serialize){
+                if (response.serialize){ // if the internal state of the game is changed
                     processObject(response.code, response);
-
-                    // serialize thing
                 }
                 if (response.message != null){
-                    if (response.possibleCommands == null)
+                    if (response.ignorePossibleCommands)
                         System.out.println(response.message);
                     else{
+                        response.possibleCommands.add("quit");
                         System.out.println(response.message + ", Possible commands:" + response.possibleCommands);
                     }
 
-                    if (response.position > 0)
+                    if (response.position > 0){
                         this.position = response.position;
+                        System.out.println("You are the" + position + "° player");
+                    }
+
+
                 }
             }
             in.close();
@@ -229,23 +240,23 @@ public class ClientMain1 implements Runnable {
                 firstResource = stdIn.readLine().toUpperCase();
                 if(isValidResource(firstResource)){
                     System.out.println("Risorsa non valida");
-                    break;
+                    return;
                 }
                 jsonCommand.cmd = "initialise_resources";
                 jsonCommand.firstResource = convert(firstResource);
                 break;
             case 4:
-                System.out.println("Scrivere la prima risorsa da voler ottenere[in caso non hai diritto ad alcuna risorsa, premi invio]");
+                System.out.println("Scrivere la prima risorsa da voler ottenere[coin, stone, shield, servant]");
                 firstResource = stdIn.readLine().toUpperCase();
                 if(isValidResource(firstResource)){
                     System.out.println("Risorsa non valida");
-                    break;
+                    return;
                 }
-                System.out.println("Scrivere la seconda risorsa da voler ottenere[in caso non hai diritto ad alcuna risorsa, premi invio]");
+                System.out.println("Scrivere la seconda risorsa da voler ottenere[coin, stone, shield, servant]");
                 secondResource = stdIn.readLine();
                 if(isValidResource(secondResource)){
                     System.out.println("Risorsa non valida");
-                    break;
+                    return;
                 }
                 jsonCommand.cmd = "initialise_resources";
                 jsonCommand.firstResource = convert(firstResource);
@@ -265,40 +276,20 @@ public class ClientMain1 implements Runnable {
                 System.out.println(leaderCards);
                 break;
             case 2:
-                firstShelf = response.resources;
-                System.out.println(firstShelf.asList());
-                break;
-            case 3:
-                secondShelf = response.resources;
-                System.out.println(secondShelf.asList());
-                break;
-            case 4:
-                thirdShelf = response.resources;
-                System.out.println(thirdShelf.asList());
-                break;
-            case 5:
-                fourthShelf = response.resources;
-                System.out.println(fourthShelf.asList());
-                break;
-            case 6:
-                fifthShelf = response.resources;
-                System.out.println(fifthShelf.asList());
-                break;
-            case 7:
-                strongbox = response.resources;
-                System.out.println(strongbox);
-                break;
-            case 8:
                 cardsMarket = response.cardsMarket;
-                System.out.println(Arrays.deepToString(cardsMarket));
-                break;
-            case 9:
                 marbleMarket = response.marbleMarket;
-                System.out.println(Arrays.deepToString(marbleMarket));
-                break;
-            case 10:
                 lonelyMarble = response.lonelyMarble;
+                solotoken = response.soloToken;
+                myself = response.actualPlayer;
+                opponents = response.opponents;
+                System.out.println(Arrays.deepToString(cardsMarket));
+                System.out.println(Arrays.deepToString(marbleMarket));
                 System.out.println(lonelyMarble);
+                System.out.println(solotoken);
+                System.out.println(myself);
+                System.out.println(opponents);
+                break;
+
         }
     }
 
@@ -349,5 +340,13 @@ public class ClientMain1 implements Runnable {
      */
     private void show(){
 
+    }
+
+    /**
+     * this method get all the leader cards of the game
+     * @return all the leader cards of the game
+     */
+    public List<LeaderCard> getAllLeaderCards() {
+        return allLeaderCards;
     }
 }

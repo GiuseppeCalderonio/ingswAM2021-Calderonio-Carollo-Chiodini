@@ -1,13 +1,17 @@
 package it.polimi.ingsw.controller;
 
 import com.google.gson.*;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.Resources.CollectionResources;
 import it.polimi.ingsw.model.Resources.Resource;
+import it.polimi.ingsw.model.SingleGame.CardToken;
 import it.polimi.ingsw.model.SingleGame.SingleGame;
+import it.polimi.ingsw.model.SingleGame.SoloToken;
+import it.polimi.ingsw.model.SingleGame.TrackToken;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,6 +35,11 @@ public class ClientHandler implements Runnable {
 
         this.socket = socket;
         GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapterFactory(
+                RuntimeTypeAdapterFactory.
+                        of(SoloToken.class, "type").
+                        registerSubtype(TrackToken.class, "trackToken").
+                        registerSubtype(CardToken.class, "cardToken"));
         builder.registerTypeAdapter(Resource.class, new ResourceInterfaceAdapter());
         builder.registerTypeAdapter(Marble.class, new MarbleInterfaceAdapter());
         gson = builder.create();
@@ -147,6 +156,10 @@ public class ClientHandler implements Runnable {
 
     public static void setSockets(List<Socket> sockets) {
         ClientHandler.sockets = sockets;
+    }
+
+    public static void setHandlers(List<ClientHandler> handlers) {
+        ClientHandler.handlers = handlers;
     }
 
     /**

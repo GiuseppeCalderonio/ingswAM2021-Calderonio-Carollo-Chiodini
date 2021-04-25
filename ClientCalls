@@ -211,3 +211,13 @@ production
 "{"cmd" : "leader_action_discard", "toDiscard" : int}"
 ------------------------------------------------------------>
 
+positions(for all players), marbleMarket, CardsMarket, leaderCards
+, int representing the active leaderCards of a player (for all players),
+int representing the total leaderCards (for all players),
+int representing the total cards in dashBoard,
+int representing the total resources of a player,
+pope favour tiles,
+CollectionResources representing the warehouse,
+CollectionResources representing the strongbox
+
+

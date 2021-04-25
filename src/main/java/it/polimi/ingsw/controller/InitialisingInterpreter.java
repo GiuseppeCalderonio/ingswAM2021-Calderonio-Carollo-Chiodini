@@ -11,14 +11,12 @@ public class InitialisingInterpreter implements CommandInterpreter{
     private final List<String> possibleCommands;
 
     private int card1, card2;
-    private CollectionResources toInitialise;
 
     public InitialisingInterpreter(){
         possibleCommands = new ArrayList<>(Collections.singletonList("initialise_leaderCards"));
 
     }
 
-    //return "{ \"message\" : \"\", \"possibleCommands\" : " + possibleCommands + "}";
 
     /**
      * this method execute the command given in input, returning a code that will
@@ -33,56 +31,41 @@ public class InitialisingInterpreter implements CommandInterpreter{
      */
     @Override
     public ResponseToClient executeCommand(Command command, ClientHandler handler) {
-        ResponseToClient response = new ResponseToClient();
-        if (!possibleCommands.contains(command.cmd)){
+        if (!possibleCommands.contains(command.cmd))
             return buildResponse("this command is not available in this phase of the game");
-            //response.message = "this command is not available in this phase of the game";
-            //response.possibleCommands = possibleCommands;
-            //return response;
-        }
-            //return "{ \"message\" : \"this command is not available in this phase of the game\", \"possibleCommands\" : " + possibleCommands + "}";
+
         switch (command.cmd){
             case "initialise_leaderCards":
+
                 if( (command.firstCard < 1 || command.firstCard > 4) ||
-                        (command.secondCard < 1 || command.secondCard > 4)){
+                        (command.secondCard < 1 || command.secondCard > 4))
                     return buildResponse("one of the cards index is not between 1 and 4");
-                    //response.message = "one of the cards index is not between 1 and 4";
-                    //response.possibleCommands = possibleCommands;
-                    //return response;
-                }
-                    //return "{ \"message\" : \"one of the cards index is not between 1 and 4\", \"possibleCommands\" : " + possibleCommands + "}";
-                if(command.firstCard == command.secondCard){
+
+                if(command.firstCard == command.secondCard)
                     return buildResponse("the two cards indexes are equals");
-                    //response.message = "the two cards indexes are equals";
-                    //response.possibleCommands = possibleCommands;
-                    //return response;
-                }
-                    //return "{ \"message\" : \"the two cards indexes are equals\", \"possibleCommands\" : " + possibleCommands + "}";
+
+
                 possibleCommands.remove("initialise_leaderCards");
                 possibleCommands.add("initialise_resources");
                 card1 = command.firstCard;
                 card2 = command.secondCard;
                 return buildResponse("ok, choose your resources");
-                //response.message = "ok, choose your resources";
-                //response.possibleCommands = possibleCommands;
-                //return response;
-                //return "{ \"message\" : \"ok, choose your resources\", \"possibleCommands\" : " + possibleCommands + "}";
 
             case "initialise_resources":
                 CollectionResources toVerify = new CollectionResources();
                 toVerify.add(command.firstResource);
                 toVerify.add(command.secondResource);
+                // if the resources chosen are not compatible with the player position
                 if (!ClientHandler.getGame().checkInitialising(handler.getNickname(), toVerify))
                     return buildResponse("you have chosen too much or not anymore resources");
-                    //return "{ \"message\" : \"you have chosen too much or not anymore resources\", \"possibleCommands\" : " + possibleCommands + "}";
+
                 possibleCommands.remove("initialise_resources");
                 ClientHandler.getGame().initialiseGame(handler.getNickname(), toVerify, card1, card2);
-                return buildResponse("ok, now wait that everyone initialise his game and the game will start");
-                //return "{ \"message\" : \"ok, now wait that everyone initialise his game and the game will start\", \"possibleCommands\" : " + possibleCommands + "}";
-
+                // if the game got created correctly
+                return buildResponse("ok, now wait that everyone decides his resources and leader cards, and the game will start");
+            // in theory unreachable statement, but it can help if something does not work correctly
             default:
                 return buildResponse("this command is not available in this phase of the game");
-                //return "{ \"message\" : \"this command is not available in this phase of the game\", \"possibleCommands\" : " + possibleCommands + "}";
 
         }
     }
