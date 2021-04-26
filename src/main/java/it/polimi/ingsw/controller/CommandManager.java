@@ -2,14 +2,11 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.EndGameException;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
-import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.view.ThinLeaderCard;
 import it.polimi.ingsw.view.ThinPlayer;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -87,6 +84,11 @@ public class CommandManager {
             // send in broadcast the leader cards and the position to every player
             sendBroadcastInitialising();
         }
+        if (response.message.contains("ok, now wait that everyone decides his resources and leader cards, and the game will start")){
+            List<String> possibleCommands = commandManagers.stream().flatMap(commandManager -> commandManager.getCommandInterpreter().getPossibleCommands().stream()).collect(Collectors.toList());
+            String breakpoint = "sono un breakPoint";
+        }
+
         // if every player did correctly the initialisation
         if (response.message.contains("ok, now wait that everyone decides his resources and leader cards, and the game will start") &&
                 commandManagers.stream().map(commandManager -> commandManager.getCommandInterpreter().getPossibleCommands()).
@@ -190,6 +192,12 @@ public class CommandManager {
         }
     }
 
+    /**
+     * this method hide the leader cards of a thin player, in fact the cards
+     * of a player different from the owner, when another player did not activate
+     * a leader card, should not be visible
+     * @param players these are the player with the leader cards to hide
+     */
     private static void hideLeaderCards(List<ThinPlayer> players){
         for (ThinPlayer player : players){
             for (ThinLeaderCard card : player.getThinLeaderCards()){

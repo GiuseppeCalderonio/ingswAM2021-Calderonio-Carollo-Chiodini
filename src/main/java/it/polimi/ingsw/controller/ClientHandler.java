@@ -1,14 +1,13 @@
 package it.polimi.ingsw.controller;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
-import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.EndGameException;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
-import it.polimi.ingsw.model.Resources.CollectionResources;
 import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.model.SingleGame.CardToken;
 import it.polimi.ingsw.model.SingleGame.SingleGame;
@@ -31,7 +30,6 @@ public class ClientHandler implements Runnable {
     private String nickname = "";
     private static List<String> nicknames = new ArrayList<>();
     private final Gson gson;
-    private Command command;
 
     public ClientHandler(Socket socket) {
 
@@ -68,7 +66,7 @@ public class ClientHandler implements Runnable {
                 try {
                     try {
                         line = in.nextLine(); // read the message sent from the client
-                        command = gson.fromJson(line, Command.class); // convert the message in a processable command
+                        Command command = gson.fromJson(line, Command.class); // convert the message in a processable command
 
                         if (command.cmd.equals("quit")) // quit the game if a player wat to exit
                             break;
@@ -94,7 +92,7 @@ public class ClientHandler implements Runnable {
                         response.ignorePossibleCommands = true;
                         sendInBroadcast(response);
                     }else { // singlePlayer
-
+                        // return to the player the winner
                     }
 
                 }
@@ -106,6 +104,7 @@ public class ClientHandler implements Runnable {
             sockets.remove(socket);
             handlers.remove(this);
             nicknames.remove(nickname);
+            CommandManager.getCommandManagers().remove(commandManager);
             System.out.println("Connection closed with " + socket);
             System.out.println("Connection to close: " + sockets);
 
@@ -116,7 +115,7 @@ public class ClientHandler implements Runnable {
 
             System.out.println("Connection remaining: " + sockets);
         } catch (IOException e) {
-            System.err.println("Erroruccio con IOexception");
+            System.err.println("Error with IOException");
             System.err.println(e.getMessage());
         }
     }
@@ -155,8 +154,6 @@ public class ClientHandler implements Runnable {
 
     public void setNickname (String nickname){ this.nickname = nickname; }
 
-    public Gson getGson() { return gson; }
-
     public static void setNicknames(List<String> nicknames) {
         ClientHandler.nicknames = nicknames;
     }
@@ -167,10 +164,6 @@ public class ClientHandler implements Runnable {
 
     public Socket getSocket() {
         return socket;
-    }
-
-    public static void setSockets(List<Socket> sockets) {
-        ClientHandler.sockets = sockets;
     }
 
     public static void setHandlers(List<ClientHandler> handlers) {
@@ -198,8 +191,9 @@ public class ClientHandler implements Runnable {
     private synchronized void resetValues(){
         game = null;
         numberOfPlayers = null;
-        nicknames = new ArrayList<>();
-        handlers = new ArrayList<>();
+        nicknames.clear();
+        handlers.clear();
+        CommandManager.getCommandManagers().clear();
     }
 
     public static void sendInBroadcast (ResponseToClient message) throws IOException {
@@ -219,7 +213,7 @@ public class ClientHandler implements Runnable {
         if (numberOfPlayers == null) return false;
         if (numberOfPlayers.get() < 0) {
             ResponseToClient response = new ResponseToClient();
-            response.message = "Spiacente, il numero di giocatori è ancora da definire";
+            response.message = "Sorry, the number of players is yet to define";
             send(response);
             in.close();
             out.close();
@@ -240,7 +234,7 @@ public class ClientHandler implements Runnable {
     private boolean kickIfGameExist(PrintWriter out, Scanner in) throws IOException {
         if (game == null) return false;
         ResponseToClient response = new ResponseToClient();
-        response.message = "Spiacente, esiste già un gioco in corso, riporvare in seguito";
+        response.message = "Sorry, a game is already running on the server, try later";
         send(response);
         in.close();
         out.close();
@@ -259,12 +253,4 @@ public class ClientHandler implements Runnable {
         out.println(gson.toJson(message, ResponseToClient.class));
         out.flush();
     }
-
-    public static List<Socket> getSockets() {
-        return sockets;
-    }
-
-
-
-
 }
