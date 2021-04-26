@@ -26,10 +26,10 @@ import java.util.stream.Collectors;
 /**
  * this class represent the main
  */
-public class ClientMain1 implements Runnable {
+public class Client implements Runnable {
 
     private final String hostName;
-    private final Socket echoSocket;
+    private Socket echoSocket;
     private final Gson gson;
     private int position = 0;
     private ThinPlayer myself;
@@ -44,14 +44,15 @@ public class ClientMain1 implements Runnable {
     private List<Resource> gainedFromMarbleMarket;
 
 
-    public static void main(String[] args) throws IOException{
-        ClientMain1 client = new ClientMain1("127.0.0.1", 1234);
-        client.start();
-    }
-
-    public ClientMain1(String hostName, int portNumber) throws IOException {
+    public Client(String hostName, int portNumber) {
         this.hostName = hostName;
-        this.echoSocket = new Socket(hostName, portNumber);
+        try {
+            this.echoSocket = new Socket(hostName, portNumber);
+        }catch (IOException e){
+            System.err.println("Error during the connection with the server");
+            System.exit(1);
+        }
+
         allLeaderCards = createLeaderCards();
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapterFactory(
@@ -62,6 +63,7 @@ public class ClientMain1 implements Runnable {
         builder.registerTypeAdapter(Resource.class, new ResourceInterfaceAdapter());
         builder.registerTypeAdapter(Marble.class, new MarbleInterfaceAdapter());
         gson = builder.create();
+        start();
     }
 
 
@@ -169,29 +171,33 @@ public class ClientMain1 implements Runnable {
         }
 
         ResponseToClient response;
-        String recived;
+        String received;
 
         try {
             while (true){
                 assert in != null;
-                if ((recived = in.readLine()) == null) break;
-                response = gson.fromJson(recived, ResponseToClient.class);
+                if ((received = in.readLine()) == null) break;
+                response = gson.fromJson(received, ResponseToClient.class);
                 if (response.serialize){ // if the internal state of the game is changed
                     processObject(response.code, response);
                 }
-                if (response.message != null){
-                    if (response.ignorePossibleCommands)
-                        System.out.println(response.message);
-                    else{
-                        response.possibleCommands.add("quit");
-                        System.out.println(response.message + ", Possible commands:" + response.possibleCommands);
-                    }
 
-                    if (response.position > 0){
-                        this.position = response.position;
-                        System.out.println("You are the" + position + "° player");
+                synchronized (this){
+                    if (response.message != null){
+                        if (response.ignorePossibleCommands)
+                            System.out.println(response.message);
+                        else{
+                            response.possibleCommands.add("quit");
+                            System.out.println(response.message + ", Possible commands:" + response.possibleCommands);
+                        }
+
+                        if (response.position > 0){
+                            this.position = response.position;
+                            System.out.println("You are the" + position + "° player");
+                        }
                     }
                 }
+
             }
             in.close();
             System.err.println("Disconnessione in corso...");
@@ -200,13 +206,12 @@ public class ClientMain1 implements Runnable {
             System.err.println("Qualcosa è andato storto con IOexception...");
             System.err.println(e.getMessage());
         }catch (NullPointerException e){
-            System.err.println("Un client si è NullDisconnesso");
+            System.err.println("Un client si è Disconnesso, errore di NullPointerException");
             System.err.println(e.getMessage());
             System.exit(1);
         }catch (JsonSyntaxException e){
             System.err.println("Disconnessione in corso per json errore...");
             System.err.println(e.getMessage());
-
         }
     }
 
@@ -220,6 +225,12 @@ public class ClientMain1 implements Runnable {
         out.println(gson.toJson(command, Command.class));
     }
 
+    /**
+     * this method verify that a string is associated with a resource,
+     * that happen when the string toVerify is not STONE, SHIELD, SERVANT or COIN
+     * @param toVerify this is the string to verify
+     * @return true if the string is associated with a resource, false otherwise
+     */
     private boolean isValidResource(String toVerify){
         List<String> resources = new ArrayList<>();
         resources.add("COIN");
@@ -229,8 +240,15 @@ public class ClientMain1 implements Runnable {
         return !resources.contains(toVerify);
     }
 
-    private Resource convert(String s){
-        return ResourceType.valueOf(ResourceType.class, s).getResource();
+    /**
+     * this method convert the string passed in input, it requires that
+     * isValidResource(resource) == true
+     * it returns coin, stone, servant or shield depending on the string in input
+     * @param resource this is the string to convert
+     * @return the resource associated with the string
+     */
+    private Resource convert(String resource){
+        return ResourceType.valueOf(ResourceType.class, resource).getResource();
     }
 
     private synchronized void initialiseResources(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
@@ -443,20 +461,5 @@ public class ClientMain1 implements Runnable {
             }
         }
         return null;
-    }
-
-    /**
-     * this method will show the game
-     */
-    private void show(){
-
-    }
-
-    /**
-     * this method get all the leader cards of the game
-     * @return all the leader cards of the game
-     */
-    public List<LeaderCard> getAllLeaderCards() {
-        return allLeaderCards;
     }
 }
