@@ -41,6 +41,7 @@ public class ClientMain1 implements Runnable {
     private Marble[][] marbleMarket;
     private Marble lonelyMarble;
     private SoloToken solotoken;
+    private List<Resource> gainedFromMarbleMarket;
 
 
     public static void main(String[] args) throws IOException{
@@ -101,14 +102,7 @@ public class ClientMain1 implements Runnable {
                         break;
 
                     case "initialise_leaderCards":
-                        System.out.println("Scrivere la prima leader card da voler scartare");
-                        String firstCard = stdIn.readLine();
-                        System.out.println("Scrivere la seconda leader card da voler scartare");
-                        String secondCard = stdIn.readLine();
-                        jsonCommand.cmd = "initialise_leaderCards";
-                        jsonCommand.firstCard = Integer.parseInt(firstCard);
-                        jsonCommand.secondCard = Integer.parseInt(secondCard);
-                        send(out, jsonCommand);
+                        initialiseLeaderCard(out, stdIn, jsonCommand);
                         break;
 
                     case "initialise_resources":
@@ -117,6 +111,20 @@ public class ClientMain1 implements Runnable {
 
                     case "quit":
                         jsonCommand.cmd = "quit";
+                        send(out, jsonCommand);
+                        break;
+                    case "shift_resources":
+                        shiftResources(out, stdIn, jsonCommand);
+                        break;
+
+                    case "choose_marbles":
+                        chooseMarbles(out, stdIn, jsonCommand);
+                        break;
+                    case "insert_in_warehouse":
+                        insertInWarehouse(out, stdIn, jsonCommand);
+                        break;
+                    case "end_turn":
+                        jsonCommand.cmd = "end_turn";
                         send(out, jsonCommand);
                         break;
 
@@ -183,8 +191,6 @@ public class ClientMain1 implements Runnable {
                         this.position = response.position;
                         System.out.println("You are the" + position + "° player");
                     }
-
-
                 }
             }
             in.close();
@@ -267,6 +273,91 @@ public class ClientMain1 implements Runnable {
         send(out, jsonCommand);
     }
 
+    private void initialiseLeaderCard(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+        jsonCommand.cmd = "initialise_leaderCards";
+        System.out.println("Scrivere la prima leader card da voler scartare");
+        String firstCard = stdIn.readLine();
+        try {
+            jsonCommand.firstCard = Integer.parseInt(firstCard);
+        }catch (NumberFormatException e){
+            System.err.println("Devi inserire un numero valido");
+            return;
+        }
+        System.out.println("Scrivere la seconda leader card da voler scartare");
+        String secondCard = stdIn.readLine();
+        try {
+            jsonCommand.secondCard = Integer.parseInt(secondCard);
+        }catch (NumberFormatException e){
+            System.err.println("Devi inserire un numero valido");
+            return;
+        }
+        send(out, jsonCommand);
+    }
+
+    private void shiftResources(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+        jsonCommand.cmd = "shift_resources";
+        System.out.println("Scrivere il primo shelf in cui voler fare lo shift");
+        String shelf = stdIn.readLine();
+        try {
+            jsonCommand.source = Integer.parseInt(shelf);
+        }catch (NumberFormatException e) {
+            System.err.println("Devi inserire un numero valido");
+            return;
+        }
+        System.out.println("Scrivere il secondo shelf in cui voler fare lo shift");
+        shelf = stdIn.readLine();
+        try {
+            jsonCommand.destination = Integer.parseInt(shelf);
+        }catch (NumberFormatException e) {
+            System.err.println("Devi inserire un numero valido");
+            return;
+        }
+        send(out, jsonCommand);
+    }
+
+    private void chooseMarbles(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+        jsonCommand.cmd = "choose_marbles";
+        System.out.println("Scrivere da dove comprare [row/column]");
+        String dimension = stdIn.readLine();
+        if (!dimension.equals("row") && !dimension.equals("column")){
+            System.out.println("Non hai inserito valori validi");
+            return;
+        }
+        jsonCommand.dimension = dimension;
+
+        System.out.println("Scrivere l'indice da cui comprare le biglie nel mercato");
+        String index = stdIn.readLine();
+        try {
+            jsonCommand.index = Integer.parseInt(index);
+        }catch (NumberFormatException e) {
+            System.err.println("Devi inserire un numero valido");
+            return;
+        }
+
+        send(out, jsonCommand);
+    }
+
+    private void insertInWarehouse(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException{
+        jsonCommand.cmd = "insert_in_warehouse";
+        int[] shelves = new int[gainedFromMarbleMarket.size()];
+        int i = 0;
+        for (Resource gained : gainedFromMarbleMarket){
+            System.out.println("Scrivere in quale scaffale inserire "+ gained);
+            String index = stdIn.readLine();
+            try {
+                shelves[i] = Integer.parseInt(index);
+            }catch (NumberFormatException e) {
+                System.err.println("Devi inserire un numero valido");
+                return;
+            }
+            i++;
+        }
+        jsonCommand.shelves = shelves;
+        send(out, jsonCommand);
+    }
+
+
+
     private synchronized void processObject( int code, ResponseToClient response){
         switch (code){
             case 1:
@@ -286,6 +377,25 @@ public class ClientMain1 implements Runnable {
                 System.out.println(Arrays.deepToString(marbleMarket));
                 System.out.println(lonelyMarble);
                 System.out.println(solotoken);
+                System.out.println(myself);
+                System.out.println(opponents);
+                break;
+            case 3:
+                myself = response.actualPlayer;
+                opponents = response.opponents;
+                System.out.println(myself);
+                System.out.println(opponents);
+                break;
+            case 4:
+                gainedFromMarbleMarket = response.resourcesSet;
+                break;
+            case 5:
+                myself = response.actualPlayer;
+                opponents = response.opponents;
+                marbleMarket = response.marbleMarket;
+                lonelyMarble = response.lonelyMarble;
+                System.out.println(lonelyMarble);
+                System.out.println(Arrays.deepToString(marbleMarket));
                 System.out.println(myself);
                 System.out.println(opponents);
                 break;

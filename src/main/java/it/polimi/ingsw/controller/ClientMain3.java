@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * this class represent the main
  */
-public class ClientMain2 implements Runnable {
+public class ClientMain3 implements Runnable {
 
     private final String hostName;
     private final Socket echoSocket;
@@ -45,11 +45,11 @@ public class ClientMain2 implements Runnable {
 
 
     public static void main(String[] args) throws IOException{
-        ClientMain2 client = new ClientMain2("127.0.0.1", 1234);
+        ClientMain3 client = new ClientMain3("127.0.0.1", 1234);
         client.start();
     }
 
-    public ClientMain2(String hostName, int portNumber) throws IOException {
+    public ClientMain3(String hostName, int portNumber) throws IOException {
         this.hostName = hostName;
         this.echoSocket = new Socket(hostName, portNumber);
         allLeaderCards = createLeaderCards();

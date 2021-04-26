@@ -44,4 +44,10 @@ public class Command {
     int toActivate; // should be from 1 to 2
     // leader_action_discard
     int toDiscard; // should be from 1 to 2
+
+    int marbles;
+
+    int[] shelves;
+
+    int[] indexes;
 }

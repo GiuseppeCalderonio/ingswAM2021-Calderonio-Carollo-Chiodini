@@ -1,7 +1,11 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.LeaderCard.NewWhiteMarble;
+import it.polimi.ingsw.model.PlayerAndComponents.Player;
+import it.polimi.ingsw.model.PlayerAndComponents.ProductionPower;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.model.Resources.CollectionResources;
 import it.polimi.ingsw.model.Resources.Resource;
@@ -21,7 +25,7 @@ public class ThinPlayer {
     private CollectionResources strongbox;
     private List<LeaderCard> leaderCards;
     private List<ThinLeaderCard> thinLeaderCards;
-    private final ThinProductionPower[] productionPower = new ThinProductionPower[3];
+    private ThinProductionPower[] productionPower = new ThinProductionPower[3];
     private int position = 0;
     private boolean[] popeFavourTiles ={false, false, false};
 
@@ -29,8 +33,18 @@ public class ThinPlayer {
         this.nickName = player.getNickname();
         this.firstShelf = player.getPersonalDashboard().getPersonalWarehouse().getShelf(1).getResources();
         this.secondShelf = player.getPersonalDashboard().getPersonalWarehouse().getShelf(2).getResources();
+        this.thirdShelf = player.getPersonalDashboard().getPersonalWarehouse().getShelf(3).getResources();
+        try {
+            this.fourthShelf = player.getPersonalDashboard().getPersonalWarehouse().getShelf(4).getResources();
+        }catch (IndexOutOfBoundsException ignored){ }
+        try {
+            this.fifthShelf = player.getPersonalDashboard().getPersonalWarehouse().getShelf(5).getResources();
+        }catch (IndexOutOfBoundsException ignored){ }
+        this.strongbox = player.getPersonalDashboard().getPersonalStrongbox().getStrongboxResources();
         this.thinLeaderCards = player.getPersonalLeaderCards().stream().map(LeaderCard::getThin).collect(Collectors.toList());
+        this.productionPower = getVectorThinProductionPower(player);
         this.position = player.getPersonalTrack().getPosition();
+        this.popeFavourTiles = getVectorPopeFavourTiles(player);
     }
 
     public ThinPlayer(ThinPlayer thinPlayer, List<LeaderCard> allLeaderCards) {
@@ -43,6 +57,12 @@ public class ThinPlayer {
         this.leaderCards = thinPlayer.thinLeaderCards.stream().
                 map(leaderCard -> recreate(allLeaderCards, leaderCard)).
                 collect(Collectors.toList());
+    }
+
+    public ThinPlayer(Player lorenzo){
+        this.nickName = lorenzo.getNickname();
+        this.position = lorenzo.getPersonalTrack().getPosition();
+        this.popeFavourTiles = getVectorPopeFavourTiles(lorenzo);
     }
 
     public CollectionResources getFifthShelf() {
@@ -145,6 +165,27 @@ public class ThinPlayer {
             }
         }
         return new NewWhiteMarble(null , 0 , null);
+    }
+
+    private boolean[] getVectorPopeFavourTiles(Player player){
+        boolean[] toReturn = new boolean[3];
+        for (int i = 1; i <= 3; i++) {
+            toReturn[i - 1] = player.getPersonalTrack().getPopeFavorTiles(i).getActive();
+        }
+        return toReturn;
+    }
+
+    private ThinProductionPower[] getVectorThinProductionPower(RealPlayer player){
+        ThinProductionPower[] toReturn = new ThinProductionPower[3];
+        ProductionPower productionPower = player.getPersonalDashboard().getPersonalProductionPower();
+        for (int i = 1; i <= 3; i++) {
+            toReturn[i - 1] = new ThinProductionPower(productionPower.getCard(i),
+                    productionPower.getPersonalCards()[i - 1].
+                            stream().mapToInt(DevelopmentCard::getVictoryPoints).
+                            sum());
+        }
+
+        return toReturn;
     }
 
     /**

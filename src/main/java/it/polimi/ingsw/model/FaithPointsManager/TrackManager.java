@@ -93,6 +93,14 @@ public class TrackManager {
         return popeFavorTiles[index - 1];
     }
 
+    /**
+     * this method gets the pope favour tiles
+     * @return the pope favour tiles
+     */
+    public PopeFavorTile[] getPopeFavorTiles() {
+        return popeFavorTiles;
+    }
+
     @Override
     public String toString() {
         String toPrint1 = "[ ,  ,  , 1,  ,  , 2,  ,  , 4,  ,  , 6,  ,  , 9,  ,  , 12,   ,   , 16,   ,   , 20]";
@@ -104,4 +112,6 @@ public class TrackManager {
                 "track=" + "\n" +
                 Arrays.toString(track);
     }
+
+
 }

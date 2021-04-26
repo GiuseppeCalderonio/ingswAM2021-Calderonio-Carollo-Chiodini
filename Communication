@@ -171,8 +171,7 @@ this operation is the most particular, because there is no limit to it, it can b
           "{"message" : "error, ypu can't do this kind of shift" , "possibleCommands" : List<String> }"
 <------------------------------------------------------------
 
-            else send a message to a player
-          "{"message" : "ok, shift done correctly" , "possibleCommands" : List<String>}"
+          else send a message to a player
           and after send all the warehouse changed, and the new faith track in broadcast
           broadcast
           "{
@@ -185,14 +184,15 @@ this operation is the most particular, because there is no limit to it, it can b
                 "thirdShelf" : CollectionResources ,
                 "fourthShelf" : CollectionResources ,
                 "fifthShelf" : CollectionResources ,
-                "code" : 2 ,
+                "code" : 3 ,
                 "serialize" : true
           }"
+          then send
+          "{"message" : "ok, shift done correctly" , "possibleCommands" : List<String>}"
 
 
           send all the warehouse (5 shelves) and the position and the 3 pope favours tiles
 <------------------------------------------------------------
-
 
 
             if(shiftResources(source, destination) throws EndGameException) [ONLY SinglePlayer!]
@@ -213,35 +213,28 @@ choose marbles
 ------------------------------------------------------------>
 
 
-          if the player didn't do the login
-          "{"message" : "error, you have to do login first" , "code" : -17}"
-<------------------------------------------------------------
+              if choose_marbles is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
+<-----------------------------------------------------------
 
-
-          if the player didn't do the initialisation
-          "{"message" : "error, you have to do initialisation first" , "code" : -18}"
-<------------------------------------------------------------
-
-
-                if the player already did a normal action
-          "{"message" : "you already did a normal action, do a leader one or end the turn" , "code" : -12}"
-<------------------------------------------------------------
-
-
+                if(!command.dimension.equals("row") && command.dimension.equals("column") )
                 if the dimension is not equals to "row" or "column"
-          "{"message" : "the dimension chosen is not correct, it should be row\column" , "code" : -13}"
+          "{"message" : "the dimension chosen is not correct, it should be \"row\" or \"column\" " , "possibleCommands" : List<String>}"
 <------------------------------------------------------------
 
 
                 if the index is not correct (1,3 from row, 1,4 for column)
-          "{"message" : "the index is not correct" , "code" : -14}"
+          "{"message" : "the index is not correct" , "possibleCommands" : List<String>}"
 <------------------------------------------------------------
+                                                                    server get the list of marbles
 THIS PART IS DONE ONLY IN CASE OF THERE ARE 2 WHITE MARBLE LEADER CARDS
 
 
                 if actual player own 2 white marbles leader cards
                 and selected a column\row with more than 1 white marble
-        "{"message" : "you own 2 white marble leader cards , choose for each white marble how to convert it" , "code" : 9, "marbles" : int (su cui fare il for)}"
+        "{"message" : "you own 2 white marble leader cards , choose for each white marble how to convert it" ,
+         "possibleCommands" : [choose_leaderCard] ,
+         "marbles" : int (su cui fare il for)}"
 <------------------------------------------------------------
 
 choose leader card to use
@@ -249,66 +242,76 @@ choose leader card to use
 ------------------------------------------------------------>
 
 
-          if the player didn't do the login
-          "{"message" : "error, you have to do login first" , "code" : -17}"
-<------------------------------------------------------------
-
-
-          if the player didn't do the initialisation
-          "{"message" : "error, you have to do initialisation first" , "code" : -18}"
-<------------------------------------------------------------
+              if choose_marbles is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
+<-----------------------------------------------------------
 
 
                 if (!changeWhiteMarble(marbles, index)) the index is not between 1 and 2
-          "{"message" : "the leader card selected does not exist" , "code" : -15}"
+          "{"message" : "one of the leader card selected does not exist" , "possibleCommands" : List<String> }"
 <------------------------------------------------------------
                                                                                     (server calls convert)
-
-          "{"message" : "you gained [CollectionResources], decide how to place them into the warehouse" , "code" : 11}"
+            if the player have to insert in warehouse some resources converted
+          "{"message" : "you gained [CollectionResources], decide how to place them into the warehouse" ,
+          "possibleCommands" : [insert_in_warehouse] ,
+          "selectForPlacement" : List<Resource> ,
+          "code" : 4 ,
+          "serialize" : true
+          }"
 <------------------------------------------------------------
 
-
-FOR LOOP(resourceType vector){
-
-        "{"message" : "select the shelf in which place all the the [resourceType] resources" , "code" : 12, "selectForPlacement : List<ResourceType>"}"
-<------------------------------------------------------------
 
 select shelf
 "{"cmd" : "insert_in_warehouse", "shelves" : int[]}"
 ------------------------------------------------------------>
 
 
-          if the player didn't do the login
-          "{"message" : "error, you have to do login first" , "code" : -17}"
-<------------------------------------------------------------
-
-
-          if the player didn't do the initialisation
-          "{"message" : "error, you have to do initialisation first" , "code" : -18}"
-<------------------------------------------------------------
+              if choose_marbles is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : [insert_in_warehouse] }"
+<-----------------------------------------------------------
 
 
                 if (!checkShelfSelected(shelves[i])) one of the shelves selected does not exist
-          "{"message" : "one of the shelf selected does not exist" , "code" : -16}"
+          "{"message" : "one of the shelf selected does not exist" , "possibleCommands" : [insert_in_warehouse]}"
 <------------------------------------------------------------
-                        } EXIT FROM LOOP
 
 
             else
-          send ALL the warehouse changed, and the new faith track
+          send ALL the warehouse changed, and the new faith track, and the marble market
           send all the warehouse (5 shelves) and the position and the 3 pope favours tiles, and the market marble
+          and after send all the warehouse changed, and the new faith track in broadcast
+
+                    broadcast
+                    "{
+                          "ignorePossibleCommand" : true ,
+                          "nickName" : String ,
+                          "faithPosition" : int ,
+                          "popeFavourTiles" : boolean[] ,
+                          "firstShelf" : CollectionResources ,
+                          "secondShelf" : CollectionResources ,
+                          "thirdShelf" : CollectionResources ,
+                          "fourthShelf" : CollectionResources ,
+                          "fifthShelf" : CollectionResources ,
+                          "marbleMarket" : Marble[][] ,
+                          "lonelyMarble" : Marble ,
+                          "code" : 5 ,
+                          "serialize" : true
+                    }"
+
+          finally send
+          {"message" : "resources added correctly" : "possibleCommands" : List<String> }
 <------------------------------------------------------------
 
 
             if(insertInWarehouse(..) throws EndGameException) [ONLY SinglePlayer!]
             and you won
-          "{"message" : "you won! you gained [getActualPlayer.getVictoryPoints()]" , "code" : 7}"
+          "{"message" : "you won! you gained [getActualPlayer.getVictoryPoints()]" , "possibleCommands" : []}"
 <------------------------------------------------------------
 
 
             else if(insertInWarehouse(..) throws EndGameException) [ONLY SinglePlayer!]
             and you lost
-          "{"message" : "you lost... you gained [getActualPlayer.getVictoryPoints()]" , "code" : 8}"
+          "{"message" : "you lost... you gained [getActualPlayer.getVictoryPoints()]" , "possibleCommands" : []}"
 <------------------------------------------------------------
 
 

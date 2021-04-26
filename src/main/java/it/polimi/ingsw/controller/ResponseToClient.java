@@ -3,6 +3,8 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.Resources.CollectionResources;
+import it.polimi.ingsw.model.Resources.Resource;
+import it.polimi.ingsw.model.Resources.ResourceType;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
 import it.polimi.ingsw.view.ThinLeaderCard;
 import it.polimi.ingsw.view.ThinPlayer;
@@ -19,7 +21,7 @@ public class ResponseToClient {
     boolean serialize;
     List<ThinLeaderCard> leaderCards;
     int code; // 1 = leaderCards , 2 = shelf1, 3 = shelf2 , 4 = shelf3, 5 = shelf4, 6 = self5, 7 = strongbox, 8 = cardsMarket, 9 = marbleMarket, 10: lonelyMarble
-    CollectionResources resources;
+    List<Resource> resourcesSet;
     DevelopmentCard[][] cardsMarket;
     Marble[][] marbleMarket;
     Marble lonelyMarble;
@@ -35,5 +37,7 @@ public class ResponseToClient {
     CollectionResources fifthShelf;
     boolean[] popeFavourTiles;
     String nickname;
+    int marbles;
+
 
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface CommandInterpreter {
@@ -14,7 +15,7 @@ public interface CommandInterpreter {
      *                a internal state change
      * @return the response to send to the client\s
      */
-    ResponseToClient executeCommand(Command command, ClientHandler handler);
+    ResponseToClient executeCommand(Command command, ClientHandler handler) throws IOException;
 
     /**
      * this method get the possible command for a player

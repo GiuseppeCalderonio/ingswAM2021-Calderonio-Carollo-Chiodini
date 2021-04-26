@@ -777,9 +777,7 @@ public class Game {
 
     /**
      * this method end the turn.
-     * in particular, increment the turnManager and
-     * if the round is finished, it returns true if the game
-     * must finish, false otherwise
+     * in particular, increment the turnManager
      * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
      */
     public synchronized void endTurn() throws EndGameException {

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.model.EndGameException;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
@@ -14,8 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.controller.ClientHandler.getGame;
-import static it.polimi.ingsw.controller.ClientHandler.getHandlers;
+import static it.polimi.ingsw.controller.ClientHandler.*;
 
 public class CommandManager {
 
@@ -57,7 +57,8 @@ public class CommandManager {
         this.commandInterpreter = commandInterpreter;
     }
 
-    public void processCommand(Command command, ClientHandler handler) throws IOException {
+    public void processCommand(Command command, ClientHandler handler) throws IOException, EndGameException {
+
 
         ResponseToClient response = commandInterpreter.executeCommand(command, handler);
         handler.send(response);
@@ -90,12 +91,31 @@ public class CommandManager {
         if (response.message.contains("ok, now wait that everyone decides his resources and leader cards, and the game will start") &&
                 commandManagers.stream().map(commandManager -> commandManager.getCommandInterpreter().getPossibleCommands()).
                 allMatch(List::isEmpty)){
-            commandManagers.forEach(commandManager -> commandManager.setCommandInterpreter(new TurnsInterpreter()));
+            for (ClientHandler handler1 : getHandlers())
+                commandManagers.stream().
+                        filter(commandManager -> commandManager.handler.equals(handler1)).
+                        forEach(commandManager -> commandManager.setCommandInterpreter(new TurnsInterpreter(handler1)));
             // send for every player, the market of cards, the market of marbles,
             // the position on the faith track of every player, the warehouse of every player,
             // the strongbox of every player, the leader cards of every player,
             // the production power of every players,
             sendBroadcastStartGame();
+        }
+
+        if (response.message.equals("turn finished, is not your turn now")){
+            for (CommandManager manager : commandManagers){
+                if (manager.getHandler().getNickname().equals(getGame().getActualPlayer().getNickname())){
+                    manager.setCommandInterpreter(new TurnsInterpreter(manager.getHandler()));
+                    ResponseToClient notifyTurn = new ResponseToClient();
+                    notifyTurn.message = "now is your turn";
+                    notifyTurn.possibleCommands = manager.getCommandInterpreter().getPossibleCommands();
+                    manager.getHandler().send(notifyTurn);
+                }
+
+            }
+            //commandManagers.stream().
+            //        filter(commandManager -> commandManager.getHandler().getNickname().equals(getGame().getActualPlayer().getNickname())).
+            //        forEach(commandManager -> commandManager.setCommandInterpreter(new TurnsInterpreter(commandManager.getHandler())));
         }
     }
 
@@ -135,13 +155,17 @@ public class CommandManager {
     }
 
     private synchronized void sendBroadcastStartGame() throws IOException {
+        String message;
+        List<String> possibleCommands = new ArrayList<>();
+        ResponseToClient broadcast = new ResponseToClient();
+        //updatePlayers(broadcast);
+        /*
         List<ThinPlayer> players = getGame().getPlayers().stream().map(ThinPlayer::new).collect(Collectors.toList());
         String message;
         List<String> possibleCommands = new ArrayList<>();
+        */
         for (ClientHandler handler : getHandlers()){
-            ThinPlayer actualPlayer = new ThinPlayer(getGame().findPlayer(handler.getNickname()));
-            List<ThinPlayer> opponents = players.stream().filter(thinPlayer -> !actualPlayer.equals(thinPlayer)).collect(Collectors.toList());
-            hideLeaderCards(opponents);
+
             if (handler.getNickname().equals( getGame().getActualPlayer().getNickname())) {
                 message = "the game start! Is your turn";
                 possibleCommands.add("shift_resources");
@@ -154,32 +178,64 @@ public class CommandManager {
                 message = "the game start! Is not your turn, wait...";
             }
 
-            String turnNickname = getGame().getActualPlayer().getNickname();
-            ResponseToClient broadcast = new ResponseToClient();
             broadcast.message = message;
             broadcast.possibleCommands = possibleCommands;
-            broadcast.cardsMarket = getGame().getSetOfCard().show();
-            broadcast.marbleMarket = getGame().getMarketBoard().getMarketTray();
-            broadcast.lonelyMarble = getGame().getMarketBoard().getLonelyMarble();
-            try {
-                broadcast.soloToken = getGame().getSoloTokens().get(getGame().getSoloTokens().size() - 1);
-            } catch (IndexOutOfBoundsException | NullPointerException e){ // when there is a singleGame
-                broadcast.soloToken = null;
-            }
-            broadcast.actualPlayer = actualPlayer;
-            broadcast.opponents = opponents;
+            updateMarbleMarket(broadcast);
+            updateCardsMarket(broadcast);
+            updateSoloTokens(broadcast);
+            updatePlayers(broadcast, handler.getNickname());
             broadcast.code = 2;
             broadcast.serialize = true;
             handler.send(broadcast);
         }
     }
 
-    private void hideLeaderCards(List<ThinPlayer> players){
+    private static void hideLeaderCards(List<ThinPlayer> players){
         for (ThinPlayer player : players){
             for (ThinLeaderCard card : player.getThinLeaderCards()){
                 if (!card.isActive())
                     card.hide();
             }
         }
+    }
+
+    public static void updatePlayers(ResponseToClient response , String nickname){
+        // create the thin single player relative to the player that is playing the turn
+        response.actualPlayer = new ThinPlayer(getGame().findPlayer(nickname));
+        // if the game is a single game
+        if (getNumberOfPlayers().get() == 1){
+            ThinPlayer lorenzo = new ThinPlayer(getGame().getLorenzoIlMagnifico());
+            response.opponents = new ArrayList<>(Collections.singletonList(lorenzo));
+        } // if the game is not a single game
+        else{
+            response.opponents = getGame().getPlayers().stream().
+                    filter(player -> !getGame().findPlayer(nickname).equals(player)).
+                    map(ThinPlayer::new).
+                    collect(Collectors.toList());
+            hideLeaderCards(response.opponents);
+        }
+        response.serialize = true;
+    }
+
+    public static void updateMarbleMarket(ResponseToClient response){
+        //response.ignorePossibleCommands = true;
+        //response.nickname = ClientHandler.getGame().getActualPlayer().getNickname();
+        response.marbleMarket = ClientHandler.getGame().getMarketBoard().getMarketTray();
+        response.lonelyMarble = ClientHandler.getGame().getMarketBoard().getLonelyMarble();
+        response.serialize = true;
+    }
+
+    public static void updateCardsMarket(ResponseToClient response){
+        response.cardsMarket = getGame().getSetOfCard().show();
+        response.serialize = true;
+    }
+
+    public static void updateSoloTokens(ResponseToClient response){
+        try {
+            response.soloToken = getGame().getSoloTokens().get(getGame().getSoloTokens().size() - 1);
+        } catch (IndexOutOfBoundsException | NullPointerException e){ // when there isn't a singleGame
+            response.soloToken = null;
+        }
+        response.serialize = true;
     }
 }

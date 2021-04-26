@@ -3,9 +3,11 @@ package it.polimi.ingsw.controller;
 import com.google.gson.*;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
+import it.polimi.ingsw.model.EndGameException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.Marble.Marble;
+import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.model.Resources.CollectionResources;
 import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.model.SingleGame.CardToken;
@@ -76,12 +78,25 @@ public class ClientHandler implements Runnable {
                         System.err.println("Problem...");
                         break;
                     } catch (Exception e){
+                        System.err.println("Generic error");
                         System.err.println(e.getMessage());
                         break;
                     }
                 } catch (NoSuchElementException e){ // a player is not connected anymore
                     System.out.println("Error with: " + socket);
                     break;
+                }catch (EndGameException e){
+                    // multiPlayer
+                    if (numberOfPlayers.get() != 1){
+                        ResponseToClient response = new ResponseToClient();
+                        int maxVictoryPoints = getGame().getPlayers().stream().mapToInt(RealPlayer::getVictoryPoints).max().orElse(0);
+                        response.message = "The game finish, the winner is" + getGame().getPlayers().stream().filter(player -> player.getVictoryPoints() == maxVictoryPoints).collect(Collectors.toList());
+                        response.ignorePossibleCommands = true;
+                        sendInBroadcast(response);
+                    }else { // singlePlayer
+
+                    }
+
                 }
             }
             // closing stream and sockets, and eventually restart a new game kicking off every player
@@ -188,7 +203,6 @@ public class ClientHandler implements Runnable {
     }
 
     public static void sendInBroadcast (ResponseToClient message) throws IOException {
-        PrintWriter out;// = new PrintWriter(s.getOutputStream());
         for (ClientHandler handler : handlers) {
             handler.send(message);
         }
@@ -250,50 +264,7 @@ public class ClientHandler implements Runnable {
         return sockets;
     }
 
-    /**
-     * this method send the leader cards (thin) to a client, setting
-     * the code to 1 and the boolean serialize = true
-     * @param leaderCards these are the leader cards to send
-     * @throws IOException Signals that an I/O exception of some sort has occurred
-     */
-    public void sendObject(List<LeaderCard> leaderCards) throws IOException {
-        ResponseToClient response = new ResponseToClient();
-        response.code = 1;
-        response.serialize = true;
-        response.leaderCards = leaderCards.stream().map(LeaderCard::getThin).collect(Collectors.toList());
-        send(response);
-    }
 
-    public void sendObject(int code, CollectionResources resources) throws IOException {
-        ResponseToClient response = new ResponseToClient();
-        response.code = code;
-        response.serialize = true;
-        response.resources = resources;
-        send(response);
-    }
 
-    public void sendObject(Marble[][] marbleMarket) throws IOException {
-        ResponseToClient response = new ResponseToClient();
-        response.code = 9;
-        response.serialize = true;
-        response.marbleMarket = marbleMarket;
-        send(response);
-    }
-
-    public void sendObject(Marble lonelyMarble) throws IOException {
-        ResponseToClient response = new ResponseToClient();
-        response.code = 10;
-        response.serialize = true;
-        response.lonelyMarble = lonelyMarble;
-        send(response);
-    }
-
-    public void sendObject(DevelopmentCard[][] cardsMarket) throws IOException {
-        ResponseToClient response = new ResponseToClient();
-        response.code = 8;
-        response.serialize = true;
-        response.cardsMarket = cardsMarket;
-        send(response);
-    }
 
 }
