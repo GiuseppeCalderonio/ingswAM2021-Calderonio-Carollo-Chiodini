@@ -52,4 +52,13 @@ public class PurpleMarble implements Marble {
     public MarbleColor getColor() {
         return color;
     }
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns the BackColor associated to the Marbles
+     */
+    @Override
+    public BackColor getBackColor() {
+        return BackColor.ANSI_BG_PURPLE;
+    }
 }

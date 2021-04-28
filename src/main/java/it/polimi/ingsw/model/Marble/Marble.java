@@ -29,4 +29,10 @@ public interface Marble{
      */
     MarbleColor getColor();
 
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method returns the BackColor associated to the Marble
+     */
+    public BackColor getBackColor();
+
 }

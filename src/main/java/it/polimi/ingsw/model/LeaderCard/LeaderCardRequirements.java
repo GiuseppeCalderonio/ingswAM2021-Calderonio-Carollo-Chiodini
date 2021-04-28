@@ -22,4 +22,16 @@ public interface LeaderCardRequirements extends Serializable {
     boolean containsRequirements(RealPlayer toVerify);
 
     String toString();
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method returns the String that identifies the requirement
+     */
+    public String identifier();
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns the list of BackColor associated to the requirement
+     */
+    public List<BackColor> colors();
 }

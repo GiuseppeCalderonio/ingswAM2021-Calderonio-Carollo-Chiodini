@@ -51,4 +51,30 @@ public class ResourcesRequired implements LeaderCardRequirements {
     public String toString() {
         return "ResourcesRequired :" + resources ;
     }
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns the String that identifies the requirement
+     */
+    public String identifier() {
+        return "res:";
+    }
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns the list of BackColor associated to the requirement in this case the list contains the
+     * BackColor associated to the resource
+     */
+    @Override
+    public List<BackColor> colors() {
+        List<BackColor> list = new ArrayList<>();
+        if (resources.isCompatible(new Coin()))
+            list.add(BackColor.ANSI_BG_YELLOW);
+        else if (resources.isCompatible(new Shield()))
+            list.add(BackColor.ANSI_BRIGHT_BG_BLUE);
+        else if (resources.isCompatible(new Stone()))
+            list.add(BackColor.ANSI_GREY);
+        else list.add(BackColor.ANSI_BG_PURPLE);
+        return list;
+    }
 }

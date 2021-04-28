@@ -125,4 +125,10 @@ public abstract class LeaderCard {
                 ", victoryPoints=" + victoryPoints  + "\n"+
                 ", isActive=" + isActive + "\n" ;
     }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method returns the String that identifies the LeaderCard
+     */
+    public abstract String identifier();
 }

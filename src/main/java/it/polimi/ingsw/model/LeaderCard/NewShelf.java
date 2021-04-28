@@ -43,4 +43,12 @@ public class NewShelf extends LeaderCard {
                 "New shelf : " + getResource() + "\n"
                 ;
     }
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns the String that identifies the LeaderCard
+     */
+    public String identifier() {
+        return "SHELF";
+    }
 }

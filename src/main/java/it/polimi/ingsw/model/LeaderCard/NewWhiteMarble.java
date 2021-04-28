@@ -44,4 +44,12 @@ public class NewWhiteMarble extends LeaderCard {
                 "New white marble : " + getResource() + "\n"
                 ;
     }
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns the String that identifies the LeaderCard
+     */
+    public String identifier() {
+        return "MARBL";
+    }
 }

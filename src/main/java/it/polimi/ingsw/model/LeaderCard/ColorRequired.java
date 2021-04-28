@@ -51,4 +51,39 @@ public class ColorRequired implements LeaderCardRequirements {
     public String toString() {
         return "CardColorsRequired :" + colors ;
     }
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns the String that identifies the requirement
+     */
+    public String identifier() {
+        return "col:";
+    }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method returns the list of BackColor associated to the requirement
+     */
+    @Override
+    public List<BackColor> colors() {
+        List<BackColor> list = new ArrayList<>();
+        if (colors.get(0).equals(CardColor.BLUE))
+            list.add(BackColor.ANSI_BRIGHT_BG_BLUE);
+        else if (colors.get(0).equals(CardColor.GREEN))
+            list.add(BackColor.ANSI_BRIGHT_BG_GREEN);
+        else if(colors.get(0).equals(CardColor.PURPLE))
+            list.add(BackColor.ANSI_BG_PURPLE);
+        else list.add(BackColor.ANSI_BG_YELLOW);
+
+        if (colors.get(1).equals(CardColor.BLUE))
+            list.add(BackColor.ANSI_BRIGHT_BG_BLUE);
+        else if (colors.get(1).equals(CardColor.GREEN))
+            list.add(BackColor.ANSI_BRIGHT_BG_GREEN);
+        else if(colors.get(1).equals(CardColor.PURPLE))
+            list.add(BackColor.ANSI_BG_PURPLE);
+        else list.add(BackColor.ANSI_BG_YELLOW);
+
+        return list;
+
+    }
 }

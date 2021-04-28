@@ -53,4 +53,30 @@ public class LevelRequired implements LeaderCardRequirements {
     public String toString() {
         return "CardColorRequired :" + color + ", LevelRequired : 2" ;
     }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method returns the String that identifies the requirement
+     */
+    public String identifier() {
+        return "lev:";
+    }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method returns the list of BackColor associated to the requirement in this case the list contains the
+     * BackColor associated to the level
+     */
+    @Override
+    public List<BackColor> colors() {
+        List<BackColor> list = new ArrayList<>();
+        if (color.equals(CardColor.BLUE))
+            list.add(BackColor.ANSI_BRIGHT_BG_BLUE);
+        else if (color.equals(CardColor.GREEN))
+            list.add(BackColor.ANSI_BRIGHT_BG_GREEN);
+        else if(color.equals(CardColor.PURPLE))
+            list.add(BackColor.ANSI_BG_PURPLE);
+        else list.add(BackColor.ANSI_BG_YELLOW);
+        return list;
+    }
 }
