@@ -53,5 +53,13 @@ public class Servant implements Resource {
     public String toString() {
         return getType().getName();
     }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method return the color associated to the Servant: purple
+     */
+    public BackColor getColor() {
+        return BackColor.ANSI_BG_PURPLE;
+    }
 }
 

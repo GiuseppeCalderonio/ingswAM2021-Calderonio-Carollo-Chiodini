@@ -53,4 +53,12 @@ public class Shield implements Resource {
     public String toString() {
         return getType().getName();
     }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method return the color associated to the Shield: blue
+     */
+    public BackColor getColor() {
+        return BackColor.ANSI_BG_CYAN;
+    }
 }

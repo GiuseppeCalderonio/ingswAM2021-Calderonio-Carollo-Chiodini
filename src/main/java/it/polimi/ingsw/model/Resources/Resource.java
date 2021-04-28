@@ -35,4 +35,10 @@ public interface Resource{
      * @return a string that represent the resource
      */
     String toString();
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method return the color associated to the Resource
+     */
+    BackColor getColor();
 }

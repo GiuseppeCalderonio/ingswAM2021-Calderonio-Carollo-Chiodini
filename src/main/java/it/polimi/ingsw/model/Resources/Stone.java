@@ -53,4 +53,12 @@ public class Stone implements Resource {
     public String toString() {
         return getType().getName();
     }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method return the color associated to the Stone: grey
+     */
+    public BackColor getColor() {
+        return BackColor.ANSI_GREY;
+    }
 }

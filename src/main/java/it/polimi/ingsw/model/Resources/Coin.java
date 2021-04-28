@@ -53,4 +53,12 @@ public class Coin implements Resource {
     public String toString() {
         return getType().getName();
     }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method return the color associated to the Coin: yellow
+     */
+    public BackColor getColor() {
+        return BackColor.ANSI_BG_YELLOW;
+    }
 }
