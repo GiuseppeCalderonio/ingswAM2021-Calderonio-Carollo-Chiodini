@@ -1,3 +1,5 @@
+
+
 package it.polimi.ingsw.view.utilities.colors;
 
 public enum BackColor {
@@ -36,3 +38,4 @@ public enum BackColor {
         return code;
     }
 }
+

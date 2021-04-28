@@ -7,7 +7,7 @@ import java.util.Iterator;
 /**
  * this class simulate a map of resources
  */
-public class MapResources implements Iterable<Resource>{
+public class MapResources implements Iterable<Resource> {
 
     /**
      * this attribute is the resource contained in the map

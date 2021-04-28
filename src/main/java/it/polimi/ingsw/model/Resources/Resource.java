@@ -2,13 +2,12 @@ package it.polimi.ingsw.model.Resources;
 
 
 import it.polimi.ingsw.model.Marble.Marble;
-
-import java.io.Serializable;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 /**
  * this class represents one single resource
  */
-public interface Resource {
+public interface Resource{
 
 
     /**
@@ -36,4 +35,10 @@ public interface Resource {
      * @return a string that represent the resource
      */
     String toString();
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method return the color associated to the Resource
+     */
+    BackColor getColor();
 }

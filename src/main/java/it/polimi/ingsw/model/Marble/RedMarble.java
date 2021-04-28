@@ -1,11 +1,15 @@
 package it.polimi.ingsw.model.Marble;
 
 import it.polimi.ingsw.model.Resources.Resource;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 /**
  * this class implements the marble interface and represent the red marble
  */
 public class RedMarble implements Marble {
+
+    private final MarbleColor color = MarbleColor.RED;
+
     /**
      * this method return one faith point
      * @return one faith point
@@ -38,5 +42,25 @@ public class RedMarble implements Marble {
     public String toString() {
         return "Red";
     }
+
+    /**
+     * this method get the color of the marble
+     *
+     * @return red
+     */
+    @Override
+    public MarbleColor getColor() {
+        return color;
+    }
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns the BackColor associated to the Marbles
+     */
+    @Override
+    public BackColor getBackColor() {
+        return BackColor.ANSI_BG_RED;
+    }
+
 }
 

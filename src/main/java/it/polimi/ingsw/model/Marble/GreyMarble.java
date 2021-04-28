@@ -2,11 +2,15 @@ package it.polimi.ingsw.model.Marble;
 
 import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.model.Resources.Stone;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 /**
  * this class implements the marble interface and represent the grey marble
  */
 public class GreyMarble implements Marble {
+
+    private final MarbleColor color = MarbleColor.GREY;
+
     /**
      * this method return zero faith point
      * @return zero faith point
@@ -37,5 +41,22 @@ public class GreyMarble implements Marble {
     @Override
     public String toString() {
         return "Grey";
+    }
+
+    /**
+     * this method get the color of the marble
+     * @return grey
+     */
+    public MarbleColor getColor() {
+        return color;
+    }
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns the BackColor associated to the Marbles
+     */
+    @Override
+    public BackColor getBackColor() {
+        return BackColor.ANSI_GREY;
     }
 }

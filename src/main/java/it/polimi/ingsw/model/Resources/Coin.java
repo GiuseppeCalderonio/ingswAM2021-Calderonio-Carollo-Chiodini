@@ -2,11 +2,22 @@ package it.polimi.ingsw.model.Resources;
 
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.Marble.YellowMarble;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 /**
  * this class represent the coin resource
  */
 public class Coin implements Resource {
+
+    ResourceType type = ResourceType.COIN;
+
+    public Coin(){
+
+    }
+
+    public Coin(ResourceType type){
+        this.type = type;
+    }
 
     /**
      * this method returns a coin type
@@ -41,5 +52,13 @@ public class Coin implements Resource {
     @Override
     public String toString() {
         return getType().getName();
+    }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method return the color associated to the Coin: yellow
+     */
+    public BackColor getColor() {
+        return BackColor.ANSI_BG_YELLOW;
     }
 }

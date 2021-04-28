@@ -2,11 +2,22 @@ package it.polimi.ingsw.model.Resources;
 
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.Marble.PurpleMarble;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 /**
  * this class represent the servant resource
  */
 public class Servant implements Resource {
+
+    ResourceType type = ResourceType.SERVANT;
+
+    public Servant(){
+
+    }
+
+    public Servant(ResourceType type){
+        this.type = type;
+    }
 
     /**
      * this method returns a servant type
@@ -41,6 +52,14 @@ public class Servant implements Resource {
     @Override
     public String toString() {
         return getType().getName();
+    }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method return the color associated to the Servant: purple
+     */
+    public BackColor getColor() {
+        return BackColor.ANSI_BG_PURPLE;
     }
 }
 

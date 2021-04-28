@@ -1,3 +1,4 @@
+
 package it.polimi.ingsw.view.utilities.colors;
 
 public enum ForeColor {
@@ -35,3 +36,4 @@ public enum ForeColor {
         return code;
     }
 }
+

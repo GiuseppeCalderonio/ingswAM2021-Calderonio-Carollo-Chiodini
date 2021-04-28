@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.DevelopmentCards;
 
 
 import it.polimi.ingsw.model.Resources.CollectionResources;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 public class DevelopmentCard {
     /**
@@ -134,13 +135,31 @@ public class DevelopmentCard {
 
     @Override
     public String toString() {
-        return "DevelopmentCard :" +"\n" +
-                "color=" + color + "\n" +
-                ", level=" + level + "\n" +
-                ", victoryPoints=" + victoryPoints + "\n" +
-                ", cost=" + cost + "\n" +
-                ", productionPowerInput=" + productionPowerInput + "\n" +
-                ", productionPowerOutput=" + productionPowerOutput + "\n" +
-                ", productionPowerFaithPoints=" + productionPowerFaithPoints + "\n";
+        return "DevelopmentCard :" +
+                "color=" + color +
+                ", level=" + level +
+                ", VPoints=" + victoryPoints +
+                ", cost=" + cost +
+                ", Input=" + productionPowerInput +
+                ", Output=" + productionPowerOutput +
+                ", FPoints=" + productionPowerFaithPoints + "\n";
     }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method return the BackColor associated to the Development Card
+     */
+    public BackColor getBackColor() {
+
+        if (color.equals(CardColor.BLUE))
+            return BackColor.ANSI_BRIGHT_BG_BLUE;
+        else if (color.equals(CardColor.GREEN))
+            return BackColor.ANSI_BRIGHT_BG_GREEN;
+        else if(color.equals(CardColor.PURPLE))
+            return BackColor.ANSI_BG_PURPLE;
+        else return BackColor.ANSI_BG_YELLOW;
+
+    }
+
+
 }

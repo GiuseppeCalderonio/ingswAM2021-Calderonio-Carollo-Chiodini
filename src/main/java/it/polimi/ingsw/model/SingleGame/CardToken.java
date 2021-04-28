@@ -4,8 +4,6 @@ import it.polimi.ingsw.model.DevelopmentCards.CardColor;
 import it.polimi.ingsw.model.DevelopmentCards.CardsMarket;
 import it.polimi.ingsw.model.Game;
 
-import java.util.Objects;
-
 public class CardToken implements SoloToken {
 
     private final CardColor color;
@@ -64,5 +62,11 @@ public class CardToken implements SoloToken {
         if (o == null || getClass() != o.getClass()) return false;
         CardToken cardToken = (CardToken) o;
         return color == cardToken.color;
+    }
+
+    @Override
+    public String toString() {
+        return "CardToken{" +
+                "color=" + color;
     }
 }

@@ -1,11 +1,15 @@
 package it.polimi.ingsw.model.LeaderCard;
 
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * this interface represent the leader card requirements
  */
-public interface LeaderCardRequirements {
+public interface LeaderCardRequirements extends Serializable {
 
     /**
      * this method verify if a player can activate a leader
@@ -18,4 +22,16 @@ public interface LeaderCardRequirements {
     boolean containsRequirements(RealPlayer toVerify);
 
     String toString();
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method returns the String that identifies the requirement
+     */
+    public String identifier();
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns the list of BackColor associated to the requirement
+     */
+    public List<BackColor> colors();
 }

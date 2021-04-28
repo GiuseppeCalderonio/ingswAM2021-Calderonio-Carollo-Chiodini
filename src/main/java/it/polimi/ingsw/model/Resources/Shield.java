@@ -2,12 +2,23 @@ package it.polimi.ingsw.model.Resources;
 
 import it.polimi.ingsw.model.Marble.BlueMarble;
 import it.polimi.ingsw.model.Marble.Marble;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 /**
  * this class represent the shield resource
  */
 
 public class Shield implements Resource {
+
+    ResourceType type = ResourceType.SHIELD;
+
+    public Shield(){
+
+    }
+
+    public Shield(ResourceType type){
+        this.type = type;
+    }
 
     /**
      * this method returns a shield type
@@ -41,5 +52,13 @@ public class Shield implements Resource {
     @Override
     public String toString() {
         return getType().getName();
+    }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method return the color associated to the Shield: blue
+     */
+    public BackColor getColor() {
+        return BackColor.ANSI_BG_CYAN;
     }
 }

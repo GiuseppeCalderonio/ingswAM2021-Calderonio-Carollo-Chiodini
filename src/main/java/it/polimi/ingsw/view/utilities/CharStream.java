@@ -1,3 +1,4 @@
+
 package it.polimi.ingsw.view.utilities;
 
 
@@ -139,7 +140,7 @@ public class CharStream {
      * @param backColor is the color of the background.
      */
     public void addString(int x, int y, String str, BackColor backColor){
-      addString(x, y, str, null, backColor);
+        addString(x, y, str, null, backColor);
     }
 
     /**
@@ -232,7 +233,7 @@ public class CharStream {
      * @param foreColor is the color of the message's boarders.
      * @param backColorWord is the color of the internal background.
      */
-   public void setMessage(String message, int x, int y, ForeColor foreColor, BackColor backColorWord){
+    public void setMessage(String message, int x, int y, ForeColor foreColor, BackColor backColorWord){
         setMessage(message,x, y, foreColor,  backColorWord, null);
     }
 
@@ -280,3 +281,4 @@ public class CharStream {
 
 
 }
+

@@ -2,12 +2,23 @@ package it.polimi.ingsw.model.Resources;
 
 import it.polimi.ingsw.model.Marble.GreyMarble;
 import it.polimi.ingsw.model.Marble.Marble;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 /**
  * this class represent the stone resource
  */
 
 public class Stone implements Resource {
+
+    ResourceType type = ResourceType.STONE;
+
+    public Stone(){
+
+    }
+
+    public Stone(ResourceType type){
+        this.type = type;
+    }
 
     /**
      * this method returns a stone type
@@ -41,5 +52,13 @@ public class Stone implements Resource {
     @Override
     public String toString() {
         return getType().getName();
+    }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method return the color associated to the Stone: grey
+     */
+    public BackColor getColor() {
+        return BackColor.ANSI_GREY;
     }
 }

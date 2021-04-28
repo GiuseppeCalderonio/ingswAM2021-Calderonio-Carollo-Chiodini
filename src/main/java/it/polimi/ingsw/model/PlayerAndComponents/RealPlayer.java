@@ -4,9 +4,6 @@ import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.FaithPointsManager.TrackManager;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.Marble.Marble;
-import it.polimi.ingsw.model.PlayerAndComponents.Dashboard;
-import it.polimi.ingsw.model.PlayerAndComponents.DiscountDashboard;
-import it.polimi.ingsw.model.PlayerAndComponents.Player;
 import it.polimi.ingsw.model.Resources.CollectionResources;
 import it.polimi.ingsw.model.Resources.Resource;
 

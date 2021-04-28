@@ -1,14 +1,13 @@
 package it.polimi.ingsw.controller;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SetSizeInterpreter implements CommandInterpreter{
 
+    List<String> possibleCommands = new ArrayList<>(Collections.singletonList("set_players"));
 
     /**
      * this method execute the command given in input, returning a code that will
@@ -18,15 +17,31 @@ public class SetSizeInterpreter implements CommandInterpreter{
      * @param command this is the command to execute
      * @param handler this is the handler to notify in case of
      *                a internal state change
-     * @return a code based on the type of action
+     * @return the response to send to the client\s
      */
     @Override
-    public String executeCommand(Command command, EchoServerClientHandler handler) {
-        if (!command.cmd.equals("set_players"))
-            return "{ \"message\" : \"this command is not available in this phase of the game\", \"possibleCommands\" : " + new ArrayList<String>(Collections.singletonList("set_players")) + "}";
-        if (command.size < 1 || command.size > 4)
-            return "{ \"message\" : \"the size is not between 1 and 4\", \"possibleCommands\" : " + new ArrayList<String>(Collections.singletonList("set_players")) + "}";
-        handler.setNumberOfPlayers(new AtomicInteger(command.size));
-        return "{ \"message\" : \"ok, start with the login\", \"possibleCommands\" : " + new ArrayList<String>(Collections.singletonList("login")) + "}";
+    public ResponseToClient executeCommand(Command command, ClientHandler handler) {
+        if (!possibleCommands.contains(command.cmd))
+            return buildResponse("this command is not available in this phase of the game");
+
+        if (command.numberOfPlayers < 1 || command.numberOfPlayers > 4)
+            return buildResponse("the size is not between 1 and 4");
+
+        handler.setNumberOfPlayers(new AtomicInteger(command.numberOfPlayers));
+        possibleCommands.remove("set_players");
+        possibleCommands.add("login");
+
+        return buildResponse("ok, start with the login");
+    }
+
+    public List<String> getPossibleCommands() {
+        return possibleCommands;
+    }
+    
+    private ResponseToClient buildResponse(String message){
+        ResponseToClient response = new ResponseToClient();
+        response.message = message;
+        response.possibleCommands = possibleCommands;
+        return response;
     }
 }

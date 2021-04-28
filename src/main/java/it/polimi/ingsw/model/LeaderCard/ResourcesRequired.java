@@ -1,8 +1,11 @@
 package it.polimi.ingsw.model.LeaderCard;
 
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
-import it.polimi.ingsw.model.Resources.CollectionResources;
-import it.polimi.ingsw.model.Resources.Resource;
+import it.polimi.ingsw.model.Resources.*;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * this class represent the resources required for a player
@@ -47,5 +50,31 @@ public class ResourcesRequired implements LeaderCardRequirements {
     @Override
     public String toString() {
         return "ResourcesRequired :" + resources ;
+    }
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns the String that identifies the requirement
+     */
+    public String identifier() {
+        return "res:";
+    }
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns the list of BackColor associated to the requirement in this case the list contains the
+     * BackColor associated to the resource
+     */
+    @Override
+    public List<BackColor> colors() {
+        List<BackColor> list = new ArrayList<>();
+        if (resources.isCompatible(new Coin()))
+            list.add(BackColor.ANSI_BG_YELLOW);
+        else if (resources.isCompatible(new Shield()))
+            list.add(BackColor.ANSI_BRIGHT_BG_BLUE);
+        else if (resources.isCompatible(new Stone()))
+            list.add(BackColor.ANSI_GREY);
+        else list.add(BackColor.ANSI_BG_PURPLE);
+        return list;
     }
 }

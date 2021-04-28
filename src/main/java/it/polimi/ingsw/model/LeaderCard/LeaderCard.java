@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.LeaderCard;
 
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.model.Resources.Resource;
+import it.polimi.ingsw.view.ThinLeaderCard;
 
 /**
  * this class represent the leader card
@@ -108,11 +109,26 @@ public abstract class LeaderCard {
                 resource.equals(toVerify.resource));
     }
 
+    /**
+     * this method convert the leader card to a thin card
+     * in order to send it into the network
+     * @return a thin card
+     */
+    public ThinLeaderCard getThin(){
+        return new ThinLeaderCard(isActive, victoryPoints, resource);
+    }
+
     @Override
     public String toString() {
         return "LeaderCard: " + "\n" +
-                requirements + "\n" +
-                ", victoryPoints=" + victoryPoints + "\n" +
-                ", isActive=" + isActive ;
+                requirements+ "\n"  +
+                ", victoryPoints=" + victoryPoints  + "\n"+
+                ", isActive=" + isActive + "\n" ;
     }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method returns the String that identifies the LeaderCard
+     */
+    public abstract String identifier();
 }

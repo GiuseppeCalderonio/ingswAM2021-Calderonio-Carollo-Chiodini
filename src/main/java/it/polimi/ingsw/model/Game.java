@@ -16,6 +16,8 @@ import it.polimi.ingsw.model.SingleGame.SoloToken;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.controller.ClientHandler.getGame;
+
 /**
  * this is the game class, every check and player action use a game method
  */
@@ -72,6 +74,7 @@ public class Game {
 
         //NewDiscount leaderCards
         leaders.add(new NewDiscount(requirement1,2,new Coin())); leaders.add(new NewDiscount(requirement2,2,new Stone())); leaders.add(new NewDiscount(requirement3,2,new Shield())); leaders.add(new NewDiscount(requirement4,2,new Servant())); //NewDiscount leaderCard
+
         Collections.shuffle(leaders); //shuffle the deck of leader cards
         players = new ArrayList<>();
         Collections.shuffle(nicknames); // shuffle the order of the players
@@ -149,7 +152,7 @@ public class Game {
      * @param nickname this is the nickname to check
      * @return the player if the game contains it, null otherwise
      */
-    private synchronized RealPlayer findPlayer(String nickname){
+    public synchronized RealPlayer findPlayer(String nickname){
         for(RealPlayer p : players){
             if(p.getNickname().equals(nickname)) return p;
         }
@@ -380,18 +383,29 @@ public class Game {
     // buy card----------------------------------------------------------------------------------------------
 
     /**
-     * this method check if a deck of card is empty, or if the inputs are correct
-     * and if the actual player contains all the resources to buy the card
+     * this method check if a deck of card is empty, or if the inputs are correct,
+     * and if the actual player contains all the resources to buy the card,
+     * and if the card selected can be placed in the player dashboard
      * @param level this is the level of the card to check, it should be between 1 and 3
      * @param color this is the color of the card to check, it shouldn't be null
      * @return true if there is a card in the deck with the level and color specified
-     * in the parameters in the market and the player has enough resources to buy the card,
+     * in the parameters in the market and the player has enough resources to buy the card
+     * and the card can be placed in the dashboard,
      * false if the deck selected is empty or if the inputs aren't correct
-     * or if the player can't afford the card selected
+     * or if the player can't afford the card selected or if the card
+     * can't be placed in the dashboard
      */
     public synchronized boolean checkBuyCard(int level, CardColor color){
         if (!setOfCards.checkCard(level, color)) return false;
         DevelopmentCard card = setOfCards.getCard(level, color);
+        boolean checkPlacement = false;
+        for (int i = 1; i <= 3; i++) {
+                checkPlacement = checkPlacement || getActualPlayer().
+                        getPersonalDashboard().
+                        getPersonalProductionPower().
+                        checkPlacement(card, i);
+        }
+        if (!checkPlacement) return false;
         return containsWithDiscount(card.getCost());
     }
 
@@ -472,7 +486,7 @@ public class Game {
      * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
      *                         or when a column of the cardsMarket is empty, only in a single game
      */
-    public synchronized void buyCard(int level, CardColor color,int position, CollectionResources toPayFromWarehouse) throws EndGameException {
+    public synchronized void buyCard(int level, CardColor color, int position, CollectionResources toPayFromWarehouse) throws EndGameException {
 
         // get and remove the card from the market with level and color selected
         DevelopmentCard toBuy = setOfCards.popCard(level, color);
@@ -516,7 +530,9 @@ public class Game {
     public synchronized boolean checkProduction(int position){
         if (position < 0 || position > 5) return false;
 
-        if (position == 0) return true; //basic production case
+        if (position == 0) {
+            return getActualPlayer().getTotalResources().getSize() >= 2; //basic production case
+        }
 
         if ( position > 3){ // leader production case
             Resource toCheck = getActualPlayer().
@@ -776,9 +792,7 @@ public class Game {
 
     /**
      * this method end the turn.
-     * in particular, increment the turnManager and
-     * if the round is finished, it returns true if the game
-     * must finish, false otherwise
+     * in particular, increment the turnManager
      * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
      */
     public synchronized void endTurn() throws EndGameException {

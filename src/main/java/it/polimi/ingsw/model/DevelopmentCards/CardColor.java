@@ -22,5 +22,10 @@ public enum CardColor {
         this.index = index;
     }
 
+    /**
+     * this method return the market index of the card associated
+     * with the color, in order to find it on the matrix of cards
+     * @return the market index associated with the color
+     */
     public int getIndex(){return index;}
 }

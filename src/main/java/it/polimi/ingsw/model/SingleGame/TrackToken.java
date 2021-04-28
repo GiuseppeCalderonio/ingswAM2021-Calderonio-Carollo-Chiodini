@@ -3,8 +3,6 @@ package it.polimi.ingsw.model.SingleGame;
 import it.polimi.ingsw.model.DevelopmentCards.CardsMarket;
 import it.polimi.ingsw.model.Game;
 
-import java.util.Objects;
-
 public class TrackToken implements SoloToken {
 
     private final boolean shuffle;
@@ -33,5 +31,12 @@ public class TrackToken implements SoloToken {
         if (o == null || getClass() != o.getClass()) return false;
         TrackToken that = (TrackToken) o;
         return shuffle == that.shuffle && faithPoints == that.faithPoints;
+    }
+
+    @Override
+    public String toString() {
+        return "TrackToken:" +
+                "shuffle= " + shuffle +
+                ", faithPoints= " + faithPoints ;
     }
 }

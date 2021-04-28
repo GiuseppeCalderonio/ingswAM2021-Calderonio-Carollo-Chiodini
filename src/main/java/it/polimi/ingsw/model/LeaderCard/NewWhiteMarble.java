@@ -32,16 +32,24 @@ public class NewWhiteMarble extends LeaderCard {
     @Override
     public boolean activateCard(RealPlayer toChange) {
         if(!(getRequirements().containsRequirements(toChange))) return false;
-        toChange.addLeaderWhiteMarble(getResource());
         if (this.isActive()) return false;
+        toChange.addLeaderWhiteMarble(getResource());
         setActive();
         return true;
     }
 
     @Override
     public String toString() {
-        return super.toString() + "\n" +
-                "New white marble : " + getResource()
+        return super.toString()  +
+                "New white marble : " + getResource() + "\n"
                 ;
+    }
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns the String that identifies the LeaderCard
+     */
+    public String identifier() {
+        return "MARBL";
     }
 }

@@ -39,8 +39,16 @@ public class NewShelf extends LeaderCard {
 
     @Override
     public String toString() {
-        return super.toString() + "\n" +
-                "New shelf : " + getResource()
+        return super.toString()  +
+                "New shelf : " + getResource() + "\n"
                 ;
+    }
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns the String that identifies the LeaderCard
+     */
+    public String identifier() {
+        return "SHELF";
     }
 }
