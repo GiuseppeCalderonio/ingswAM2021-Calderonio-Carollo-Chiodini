@@ -137,7 +137,7 @@ public class TurnsInterpreter implements CommandInterpreter {
                     response.marbles = marbles.size();
                     return response;
                 }
-            case "choose_leaderCard":
+            case "choose_leaderCards":
                 // create a list with the white marbles contained into the marbles previously selected
                 whiteMarbles = marbles.stream().filter(marble -> marble.equals(new WhiteMarble())).collect(Collectors.toList());
                 // if the white marbles length don't match the indexes length
@@ -173,11 +173,11 @@ public class TurnsInterpreter implements CommandInterpreter {
             case "buy_card":
                 if (!getGame().checkBuyCard(command.level, command.color))
                     return buildResponse("error, one of these things could be the motivation :" +
-                            "1) you have selected a level not between 1 and 3" +
-                            "2) you have selected a color that doesn't exist" +
-                            "3) you have selected an empty deck of cards" +
-                            "4) you can't buy the card because you can't afford it" +
-                            "5) you can't place the card selected into the dashboard");
+                            "(1) you have selected a level not between 1 and 3, " +
+                            "(2) you have selected a color that doesn't exist, " +
+                            "(3) you have selected an empty deck of cards, " +
+                            "(4) you can't buy the card because you can't afford it, " +
+                            "(5) you can't place the card selected into the dashboard");
                 color = command.color;
                 level = command.level;
                 card = getGame().getSetOfCard().getCard(level, color);
@@ -198,10 +198,9 @@ public class TurnsInterpreter implements CommandInterpreter {
 
             case "select_resources_from_warehouse":
                 possibleCommands = previousPossibleCommands;
-                if (!getGame().checkWarehouseResources(card, command.toPayFromWarehouse)){
-
+                if (!getGame().checkWarehouseResources(card, command.toPayFromWarehouse))
                     return buildResponse("error,you have selected an incorrect number of resources");
-                }
+
 
                 getGame().buyCard(level, color, dashboardPosition ,command.toPayFromWarehouse);
                 possibleCommands.removeAll(normalActions);
@@ -231,7 +230,7 @@ public class TurnsInterpreter implements CommandInterpreter {
                 getGame().activateBasicProduction(command.toPayFromWarehouse, command.toPayFromStrongbox, command.output);
                 possibleCommands.remove("basic_production");
                 basicProductionActivated = true;
-                sendBroadcastChangePlayerState();
+                sendBroadcastChangePlayerState(); // code 3
                 return buildResponse("basic production activated correctly, now choose another one or end the production");
             case "normal_production":
                 if (!getGame().checkProduction(command.position))
@@ -243,7 +242,7 @@ public class TurnsInterpreter implements CommandInterpreter {
                 getGame().activateProduction(command.position, command.toPayFromWarehouse);
 
                 checkActivatedNormalProductions(command.position);
-                sendBroadcastChangePlayerState();
+                sendBroadcastChangePlayerState(); // code 3
                 return buildResponse(command.position + "° normal production activated correctly, now choose another one or end the production");
 
             case "leader_production":

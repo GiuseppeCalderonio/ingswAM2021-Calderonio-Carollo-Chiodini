@@ -1,17 +1,18 @@
+
 MATCH CREATION
 the first phase is the creation of a match, it is done from the first player that connect to the server,
-and him decides the player total number of the game
+and him decides the total number of players of the game
 if another player try to connect to the server while the first one is still deciding the total number,
 he gets kicked off, because there is no any game existing in that moment
 
 CLIENT                                                   SERVER
 send the number of players
-"{"cmd" : "set_players", "size" : int}"
+"{"cmd" : "set_players", "number_of_players" : int}"
 ----------------------------------------->
 
 
               if set_players is not a possible command in this phase of game
-         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : [set_players]}"
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String>}"
 <----------------------------------------------
 
 
@@ -24,12 +25,14 @@ send the number of players
                 "{"message" : "ok, start with the login" , "possibleCommands" : [login]}"
 <----------------------------------------------
 
+
 LOGIN
-the second phase is the login, it requires that a match got created, and every player from 1 to size
+the second phase is the login, it requires that a match is been created, and every player from 1 to size
 have to send his nickname, then the game will decide if it is correct or not
 every nickname is ok, it requires that is unique and that is not the empty string
-note that if a player try to connect and there are more that (size) connection active
+note that if a player try to connect and there are more than (size) connection active
 (the server will store a list of sockets) the player will kicked off
+
 CLIENT                                                   SERVER
 send the nickname
 "{"cmd" : "login", "nickname" : String}"
@@ -37,38 +40,37 @@ send the nickname
 
 
               if login is not a possible command in this phase of game
-         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : [login]}"
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String>}"
 <----------------------------------------------
 
 
-            if str.equals("")
+            if nickname.equals("")
          "{"message" : " the nickname can't be the empty string" , "possibleCommands" : [login]}"
 <------------------------------------------------------
 
 
-            else if str is contained in the list of nicknames
+            else if nickname is contained in the list of nicknames
             "{"message" : "nickname selected is already taken" , "possibleCommands" : [login]}"
 <------------------------------------------------------
 
 
-            if number of players == 1
-            "{"message" : "login completed successfully" ,"ignorePossibleCommands" : true}"
+            if number of players (see MATCH CREATION) == 1
+            "{"message" : "login completed successfully" , "ignorePossibleCommands" : true}"
 <------------------------------------------------------
 
 
             else
-            "{"message" : "login completed successfully, wait for other players to join" ,"possibleCommands" : []}"
+            "{"message" : "login completed successfully, wait for other players to join" , "possibleCommands" : []}"
 <------------------------------------------------------
 
 
-            if the login is done from everyone send all the state
+            if the login is done from everyone send all the state (own leader cards of the player and turn position)
             create a game, eventually a single game
-            send ALL leader cards, send positions(first player, second, third, fourth)
-            send leaderCards : SERIALIZE(List<LeaderCards>)
+
   "{"message" : "the game initialization start! decide 2 different leader cards to discard" ,
         "possibleCommands" : [initialize_leaderCards] ,
-        "position" : x ,
-        "leaderCards" : List<ThinLeaderCard> ,
+       "position" : x ,
+        "leaderCards" : List<ThinLeaderCard>,    //a ThinLeaderCard is a class composed by two attributes: int:victoryPoints, Resource:resource. We use it in order to facilitate the                                                                         //communication
         "code" = 1
         "serialize" = true
         }"
@@ -79,10 +81,10 @@ INITIALISATION
 the third phase is the initialisation, in which every player must decide the leader cards that
 he want to discard and the resources that he want to get
 the leader cards will be numerated from 1 to 4, and the player have to send 2 different integers
-in local, based on the position(first, second, third, fourth) will be managed the number of resources
+In local based on the position of the player (first, second, third, fourth) will be managed the number of resources
 that a player can choose (1°= none, 2° and 3° = 1, 4° = 2)
 the resources will be stored in the warehouse automatically, then the player could move them
-EVERY TIME ONE OF THESE OPERATION RETURN A CODE < 0, ALL THE DIAGRAM RESTART
+
 CLIENT                                                   SERVER
 send the two leader cards to discard
 "{"cmd" : "initialise_leaderCards", "firstCard" : int , "secondCard" : int }"
@@ -90,7 +92,7 @@ send the two leader cards to discard
 
 
               if initialise_leaderCards is not a possible command in this phase of game
-         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : [initialise_leaderCards]}"
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String>}"
 <----------------------------------------------
 
 
@@ -115,31 +117,31 @@ send the resources to choose (based on the position)
 
 
               if initialise_resources is not a possible command in this phase of game
-         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : [initialise_resources]}"
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String>}"
 <----------------------------------------------
 
 
-                    if resources are not compatible with the position
+                   if resources are not compatible with the position
        "{"message" : "you have chosen too much or not anymore resources" , "possibleCommands" : [initialise_resources]}"
 <------------------------------------------------------------
 
 
             else
-     "{"message" : "ok, now wait that everyone decides his resources and leader cards, and the game will start" , "possibleCommands" : []}"
+     "{"message" : "ok, now wait that everyone decides his resources and leader cards, then the game will start" , "possibleCommands" : []}"
 <-----------------------------------------------------------
 
 
                  if everyone did the initialization, send all the state
                  send basically everything
-                 send to every player market card, market marble, eventually the soloToken, leader cards, first 2 shelves, faith track position
-                 SERIALIZE(positions(for all players), )
-   "{"message" : "the game start! is the turn of [actualPlayer], decide your action:" ,
+                 send to every player market card, market marble, eventually the soloToken, leader cards, the state of every player
+
+   "{"message" : "the game start! it is the turn of [actualPlayer], decide your action:" ,
         "possibleCommands" : List<String> ,// depending if is the turn of the player or not
-        "cardsMarket" : CardsMarket ,
+        "cardsMarket" : DevelopmentCard[][] ,
         "marbleMarket" : Marble[][] ,
         "lonelyMarble" : Marble ,
         "soloToken" : SoloToken ,
-        "actualPlayer" : ThinPlayer ,
+        "actualPlayer" : ThinPlayer ,   //ThinPlayer is a class that we use in order to facilitate the communication
         "opponents" : List<ThinPlayer>
         "code" : 2 ,
         "serialize" = true}"
@@ -150,11 +152,11 @@ now the real game starts
 
 SHIFT RESOURCES
 this operation is the most particular, because there is no limit to it, it can be done always
- during the turn without limitations
- EVERY TIME ONE OF THESE OPERATION RETURN A CODE < 0, ALL THE DIAGRAM RESTART
- CLIENT                                                   SERVER
- shift resources
-"{"cmd" : "shift_resources", "source" : x, "destination" : y}"
+during the turn without limitations
+
+CLIENT                                                   SERVER
+shift resources
+"{"cmd" : "shift_resources", "source" : int, "destination" : int}"
 ------------------------------------------------------------>
 
 
@@ -163,15 +165,15 @@ this operation is the most particular, because there is no limit to it, it can b
 <----------------------------------------------
 
 
-          if(!checkShelfSelected(source) || !checkShelfSelected(source)) that means that a shelf does not exist
+          if(!checkShelfSelected(source) || !checkShelfSelected(destination)) that means that a shelf does not exist
           "{"message" : "error, one of the shelf selected does not exist" , "possibleCommands" : List<String> }"
 <------------------------------------------------------------
 
           if(!shiftResources(source, destination)) that means that a shift is not possible
-          "{"message" : "error, ypu can't do this kind of shift" , "possibleCommands" : List<String> }"
+          "{"message" : "error, you can't do this kind of shift" , "possibleCommands" : List<String> }"
 <------------------------------------------------------------
 
-          else send a message to a player
+          else send a message to every player
           and after send all the warehouse changed, and the new faith track in broadcast
           broadcast
           "{
@@ -181,29 +183,26 @@ this operation is the most particular, because there is no limit to it, it can b
                 "code" : 3 ,
                 "serialize" : true
           }"
+<------------------------------------------------------------
+
           then send
           "{"message" : "ok, shift done correctly" , "possibleCommands" : List<String>}"
-
-
-          send all the warehouse (5 shelves) and the position and the 3 pope favours tiles
 <------------------------------------------------------------
 
 
             if(shiftResources(source, destination) throws EndGameException) [ONLY SinglePlayer!]
             and you lost
           "{ "message" : "you lost... you gained [getActualPlayer.getVictoryPoints()]", "possibleCommands" : [] }"
-          send ALL the warehouse changed, and the new faith track
-          send all the warehouse (5 shelves) and the position and the 3 pope favours tiles
 <------------------------------------------------------------
 
 
 CHOOSE MARBLES
-this operation can be done only once during the turn, and it can also end his
-dimension can be row or column
-EVERY TIME ONE OF THESE OPERATION RETURN A CODE < 0, ALL THE DIAGRAM RESTART
- CLIENT                                                   SERVER
+this operation can be done only once during the turn, and it can also send his
+dimension that can be row or column
+
+CLIENT                                                   SERVER
 choose marbles
-"{"cmd" : "choose_marbles", "dimension" : str, "index" : x}"
+"{"cmd" : "choose_marbles", "dimension" : String, "index" : int}"   //dimension is "row" or "column"
 ------------------------------------------------------------>
 
 
@@ -211,32 +210,37 @@ choose marbles
          "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
 <-----------------------------------------------------------
 
-                if(!command.dimension.equals("row") && command.dimension.equals("column") )
+                if(!command.dimension.equals("row") && !command.dimension.equals("column") )
                 if the dimension is not equals to "row" or "column"
           "{"message" : "the dimension chosen is not correct, it should be \"row\" or \"column\" " , "possibleCommands" : List<String>}"
 <------------------------------------------------------------
 
-
-                if the index is not correct (1,3 from row, 1,4 for column)
+                if the index is not correct (1,3 for row or 1,4 for column)
           "{"message" : "the index is not correct" , "possibleCommands" : List<String>}"
 <------------------------------------------------------------
-                                                                    server get the list of marbles
-THIS PART IS DONE ONLY IN CASE OF THERE ARE 2 WHITE MARBLE LEADER CARDS
 
-
-                if actual player own 2 white marbles leader cards
-                and selected a column\row with more than 1 white marble
-        "{"message" : "you own 2 white marble leader cards , choose for each white marble how to convert it" ,
-         "possibleCommands" : [choose_leaderCard] ,
-         "marbles" : int (su cui fare il for)}"
+                         if you choose a row or a column that contains only white marbles but you don't own any leaderCards WhiteMarble
+           "{"message" : "action completed, any resource got added" , "possibleCommands" : List<String>}"
 <------------------------------------------------------------
 
-choose leader card to use
-"{"cmd" : "choose_leaderCard", "indexes" : int[]}"
+...server gets the list of marbles...
+
+THIS PART IS DONE ONLY IN CASE THERE ARE 2 WHITE MARBLE LEADER CARDS
+
+                if actual player owns 2 white marbles leader cards
+                and selected a column\row with almost 1 white marble
+        "{"message" : "you own 2 white marble leader cards , choose for each white marble how to convert it" ,
+             "possibleCommands" : [choose_leaderCards] ,
+        "marbles" : int }"  //size of whiteMarbles to convert
+<------------------------------------------------------------
+
+
+choose leader card to use                                                    //CHOOSE LEADER CARDS
+"{"cmd" : "choose_leaderCards", "indexes" : int[]}"
 ------------------------------------------------------------>
 
 
-              if choose_leaderCard is not a possible command in this phase of game
+                         if choose_leaderCards is not a possible command in this phase of game
          "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
 <-----------------------------------------------------------
 
@@ -244,7 +248,10 @@ choose leader card to use
                 if (!changeWhiteMarble(marbles, index)) the index is not between 1 and 2
           "{"message" : "one of the leader card selected does not exist" , "possibleCommands" : List<String> }"
 <------------------------------------------------------------
-                                                                                    (server calls convert)
+
+
+ ...server calls convert...
+
             if the player have to insert in warehouse some resources converted
           "{"message" : "you gained [CollectionResources], decide how to place them into the warehouse" ,
           "possibleCommands" : [insert_in_warehouse] ,
@@ -255,13 +262,13 @@ choose leader card to use
 <------------------------------------------------------------
 
 
-select shelf
+select shelf                                                                                            //INSERT IN WAREHOUSE
 "{"cmd" : "insert_in_warehouse", "shelves" : int[]}"
 ------------------------------------------------------------>
 
 
               if insert_in_warehouse is not a possible command in this phase of game
-         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : [insert_in_warehouse] }"
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
 <-----------------------------------------------------------
 
 
@@ -271,9 +278,6 @@ select shelf
 
 
             else
-          send ALL the warehouse changed, and the new faith track, and the marble market
-          send all the warehouse (5 shelves) and the position and the 3 pope favours tiles, and the market marble
-          and after send all the warehouse changed, and the new faith track in broadcast
 
                     broadcast
                     "{
@@ -306,11 +310,11 @@ select shelf
 BUY CARD
 this operation can be done only once during the turn, with this method the player select and buy
 one development card present in the market
-EVERY TIME ONE OF THESE OPERATION RETURN A CODE < 0, ALL THE DIAGRAM RESTART
- CLIENT                                                   SERVER
+
+CLIENT                                                   SERVER
 
 choose card
-"{"cmd" : "buy_card", "color" : CardColor, "level" : x}"
+"{"cmd" : "buy_card", "color" : CardColor, "level" : int}"
 ------------------------------------------------------------>
 
 
@@ -319,23 +323,13 @@ choose card
 <-----------------------------------------------------------
 
 
-	  if the player selects a level<1 or >3
-          "{"message" : "error, you have to select a correct level" , "possibleCommands" : List<String>}"
-<------------------------------------------------------------
-
-
-          if the player write a color that doesn't exist
-          "{"message" : "error, you have to select an incorrect color" , "possibleCommands" : List<String>}"
-<------------------------------------------------------------
-
-
-          if there isn't available card in the selected position
-          "{"message" : "error, you have to select another available card" , "possibleCommands" : List<String>}"
-<------------------------------------------------------------
-
-
-          if the player hasn't enough resources to buy the selected card
-          "{"message" : "error, you don't own enough resources; try to change card" , "possibleCommands" : List<String>}"
+              if (!CheckBuyCard(level, color))
+"{"message" : "error, one of these things could be the motivation :"
+                            "(1) you have selected a level not between 1 and 3, "
+                            "(2) you have selected a color that doesn't exist, "
+                            "(3) you have selected an empty deck of cards, "
+                            "(4) you can't buy the card because you can't afford it, "
+                            "(5) you can't place the card selected into the dashboard", "possibleCommands" : List<String>}"
 <------------------------------------------------------------
 
 
@@ -345,35 +339,29 @@ choose card
 <------------------------------------------------------------
 
 
-select position
-"{"cmd" : "select_position", "dashboardPosition" : x}"
+select position                                                                                                   //SELECT POSITION
+"{"cmd" : "select_position", "dashboardPosition" : int}"
 ------------------------------------------------------------>
 
-
-              if select_position is not a possible command in this phase of game
+     if select_position is not a possible command in this phase of game
          "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
 <-----------------------------------------------------------
 
 
-	   if the player selects a position <1 or >3
-          "{"message" : "error, you have to select a correct position in dashboard" , "possibleCommands" : List<String>}"
-<------------------------------------------------------------
+                         if (!CheckPlacement(card, dashboardPosition)
+      "{"message" :  "error, one of these things could be the motivation :"
+                            "1) the position selected is not between 1 and 3"
+                            "2) the position selected does not allow the card placement", "possibleCommands" : List<String> }"
+<-----------------------------------------------------------
 
 
-	   if the player selects a correct position but in that position there is a card that has
-            a level bigger than the card selected by the player
-          "{"message" : "error, you have to select another position in dashboard" , "possibleCommands" : List<String>}"
-<------------------------------------------------------------
-
-
-	   else
+                else
           "{"message" : "now select the warehouse resources to pay the card" , "possibleCommands" : List<String>}"
 <------------------------------------------------------------
 
 
-
-select resources from warehouse
-"{"cmd" : "select_resources_from_warehouse" , "toPayFromWarehouse" :  CollectionResources }x//DA CHIEDERE}"(BISOGNA CAPIRE COME MANDARE UNA COLLECTION RESOURCES)
+select resources from warehouse                                       //SELECT RESOURCES FROM WAREHOUSE
+"{"cmd" : "select_resources_from_warehouse" , "toPayFromWarehouse" :  CollectionResources}
 ------------------------------------------------------------>
 
 
@@ -382,14 +370,14 @@ select resources from warehouse
 <-----------------------------------------------------------
 
 
-	  if the check warehouse resources returns false
+               if the check warehouse resources returns false
           "{"message" : "error,you have selected an incorrect amount of resources" , "possibleCommands" : List<String>}"
 <------------------------------------------------------------
 
 
-	  if it's all ok
-	  send to all players : new Market card, new prod power, new warehouse
-	  broadcast
+               else
+
+               broadcast
                    "{
                          "ignorePossibleCommand" : true ,
                          "actualPlayer" : ThinPlayer ,
@@ -400,13 +388,9 @@ select resources from warehouse
                          "serialize" : true
                     }"
 
-	  then send to the actual player
+               then send to the actual player
           "{"message" : "card bought and placed correctly" , "possibleCommands" : List<String>}"
-
 <------------------------------------------------------------
-
-
-
 
 
 CASE PRODUCTION
@@ -426,9 +410,9 @@ production
 
 
 
-	CASE BASIC PRODUCTION
-	"{"cmd" : "basic_production" , "toPayFromWarehouse" : CollectionResources , "toPayFromStrongbox" : CollectionResources , "output" : Resource}"
-	------------------------------------------------------------>
+             CASE BASIC PRODUCTION
+             "{"cmd" : "basic_production" , "toPayFromWarehouse" : CollectionResources , "toPayFromStrongbox" : CollectionResources , "output" : Resource}"
+             ------------------------------------------------------------>
 
 
               if basic_production is not a possible command in this phase of game
@@ -436,110 +420,107 @@ production
     <-----------------------------------------------------------
 
 
-	 	 if the check activate basic production returns false
-         	 "{"message" : "error,you don't have enough resources" , "possibleCommands" : List<String>}"
-	<------------------------------------------------------------
-
-/**********
-	 if the player has already activate the basic production
- 	         "{"message" : "error, you have already activated this type of production" , "possibleCommands" : List<String>}"
-	<------------------------------------------------------------
-	*************/
+                          if the check activate basic production returns false
+             "{"message" : ""error, one of these things could be the motivation :"
+                            "1) you haven't chosen the right amount of resources (you have to choose 2 resources in input and 1 in output)"
+                            "2) you don't own the chosen resources in your storage"" , "possibleCommands" : List<String>}"
+             <------------------------------------------------------------
 
 
-	 if is all ok
-	          send new warehouse, new strongbox
-	          "{
+                         else
+
+                         broadcast
+                       "{
                        "ignorePossibleCommand" : true ,
                        "actualPlayer" : ThinPlayer ,
                        "opponents" : List<ThinPlayer> ,
-                       "code" : 7 ,
+                       "code" : 3 ,
                        "serialize" : true
               }"
- 	         "{"message" : "basic production activated" , "possibleCommands" : List<String>}"
-
-	<------------------------------------------------------------
-
+                     "{"message" : "basic production activated" , "possibleCommands" : List<String>}"
+             <------------------------------------------------------------
 
 
-	CASE NORMAL PRODUCTION
-	"{"cmd" : "normal_production" , "position" : int , "ToPayFromWarehouse" : CollectionResources}"
-	------------------------------------------------------------>
+
+             CASE NORMAL PRODUCTION
+             "{"cmd" : "normal_production" , "position" : int , "ToPayFromWarehouse" : CollectionResources}"
+             ------------------------------------------------------------>
 
 
-              if basic_production is not a possible command in this phase of game
+              if normal_production is not a possible command in this phase of game
          "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
     <-----------------------------------------------------------
 
 
-	 	 if the check production returns false
-         	 "{"message" : "error,you don't have enough resources or the production selected doesn't exist" , "code" : -41,3}"
-	<------------------------------------------------------------
+                  if an error occurs
+                         "{"message" : "error, one of these things could be the motivation :"
+                            "(1) you haven't enough resources, "
+                            "(2) you already have selected this production, "
+                            "(3) the production selected doesn't exist"
+<------------------------------------------------------------
 
 
-	 if the player has already activate the normal production
- 	         "{"message" : "error, you have already activated this type of production" , "code" : -346}"
-	<------------------------------------------------------------
-
-
-	  	if the check activate normal production returns false
-          	"{"message" : "error,you have selected an incorrect number of resources" , "code" : -44}"
-	<------------------------------------------------------------
-
-
-	 if is all ok
- 	         "{"message" : "normal production activated" , "code" : -347}"
- 	         send new warehouse, new strongbox , positions, pope favour tiles
- 	 <------------------------------------------------------------
+                   else
+                     broadcast
+                      "{
+                       "ignorePossibleCommand" : true ,
+                       "actualPlayer" : ThinPlayer ,
+                       "opponents" : List<ThinPlayer> ,
+                       "code" : 3 ,
+                       "serialize" : true
+              }"
+                     "{"message" : "normal production activated" , "possibleCommands" : List<String>}"
+             <------------------------------------------------------------
 
 
 
-	CASE LEADER PRODUCTION
-	"{"cmd" : "leader_production" , "position" : x , "fromWarehouse" boolean}"
-	------------------------------------------------------------>
+             CASE LEADER PRODUCTION
+             "{"cmd" : "leader_production" , "position" : int, "fromWarehouse" boolean}"
+             ------------------------------------------------------------>
 
 
-              if basic_production is not a possible command in this phase of game
+              if leader_production is not a possible command in this phase of game
          "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
     <-----------------------------------------------------------
 
 
-	 	 if the check production returns false
-         	 "{"message" : "error,you don't have enough resources or the production selected doesn't exist" , "code" : -41,3}"
-	<------------------------------------------------------------
+                         if an error occurs
+             "{"message" : "error, one of these things could be the motivation :"
+                            "(1) you haven't enough resources, "
+                            "(2) you already have selected this production, "
+                            "(3) the production selected doesn't exist"
+<------------------------------------------------------------
 
 
-	 if the player has already activate leader production
- 	         "{"message" : "error, you have already activated this type of production" , "code" : -346}"
-	<------------------------------------------------------------
+                    else
 
-
-	  	if the check activate leader production returns false
-          	"{"message" : "error,you have selected an incorrect number of resources" , "code" : -44}"
-	<------------------------------------------------------------
-
-
-	 if is all ok
- 	         "{"message" : "basic production activated" , "code" : -347}"
- 	         send new warehouse, new strongbox , positions, pope favour tiles
- 	 <------------------------------------------------------------
+                      broadcast
+                       "{
+                       "ignorePossibleCommand" : true ,
+                       "actualPlayer" : ThinPlayer ,
+                       "opponents" : List<ThinPlayer> ,
+                       "code" : 3 ,
+                       "serialize" : true
+              }"
+                     "{"message" : "leader production activated" , "possibleCommands" : List<String>}"
+             <------------------------------------------------------------
 
 
 
-	CASE END PRODUCTION
-	"{"cmd" : "end_production"}"
-	------------------------------------------------------------>
+             CASE END PRODUCTION
+             "{"cmd" : "end_production"}"
+             ------------------------------------------------------------>
 
 
-              if basic_production is not a possible command in this phase of game
+              if end_production is not a possible command in this phase of game
          "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
     <-----------------------------------------------------------
 
 
+                     else
+                     "{"message" : "production finished", "possibleCommands" : List<String>}"
+             <------------------------------------------------------------
 
-	 if is all ok
- 	         "{"message" : "production finished" , "code" : -349}"
- 	 <------------------------------------------------------------
 
 ACTIVATE LEADER CARD
 
@@ -567,19 +548,28 @@ ACTIVATE LEADER CARD
             <-----------------------------------------------------------
 
 
-        	if (!checkLeaderCard(toActivate)) the leader card selected does not exist
-          	"{"message" : "error, the leader card selected does not exist" , "possibleCommands" : List<String> }"
-        	<------------------------------------------------------------
+            if (!checkLeaderCard(toActivate)) the leader card selected does not exist
+            "{"message" : "error, the leader card selected does not exist" , "possibleCommands" : List<String> }"
+            <------------------------------------------------------------
 
             if(!activateLeaderCard(toActivate)) the leader card is already activated or
             the player doesn't meet the requirements to activate it
-            "{"message" : "the leader card is already active or you don't meet the requirements to activate it" , "code" : -52}"
+            "{"message" : "the leader card is already active or you don't meet the requirements to activate it" , "possibleCommands" : List<String>}"
             <------------------------------------------------------------
 
-	        if is all ok
- 	         "{"message" : "leader card activated" , "code" : 56}"
- 	         send new leader cards
- 	        <------------------------------------------------------------
+
+                    else
+                       broadcast
+                       "{
+                       "ignorePossibleCommand" : true ,
+                       "actualPlayer" : ThinPlayer ,
+                       "opponents" : List<ThinPlayer> ,
+                       "code" : 3 ,
+                       "serialize" : true
+              }"
+                     "{"message" : "leader card activated" , "possibleCommands" : List<String>}"
+             <------------------------------------------------------------
+
 
             CASE DISCARD
             "{"cmd" : "discard_card", "toDiscard" : int}"
@@ -591,17 +581,50 @@ ACTIVATE LEADER CARD
             <-----------------------------------------------------------
 
 
-        	if (!checkLeaderCard(toDiscard)) the leader card selected does not exist
-          	"{"message" : "error, the leader card selected does not exist" , "code" : -51}"
-        	<------------------------------------------------------------
+            if (!checkLeaderCard(toDiscard)) the leader card selected does not exist
+            "{"message" : "error, the leader card selected does not exist" , "possibleCommands" : List<String>}"
+            <------------------------------------------------------------
 
-        	if(!discardLeaderCard(toDiscard)) the leader card is already activated
-            "{"message" : "the leader card is already activated " , "code" : -53}"
+            if(!discardLeaderCard(toDiscard)) the leader card is already activated
+            "{"message" : "the leader card is already activated " , "possibleCommands" : List<String>}"
             <------------------------------------------------------------
 
 
-	        if is all ok
- 	         "{"message" : "leader card discarded" , "code" : 57}"
- 	         send new leader cards
- 	        <------------------------------------------------------------
+                    else
+                      broadcast
+                       "{
+                       "ignorePossibleCommand" : true ,
+                       "actualPlayer" : ThinPlayer ,
+                       "opponents" : List<ThinPlayer> ,
+                       "code" : 3 ,
+                       "serialize" : true
+              }"
+                     "{"message" : "leader card discarded" , "possibleCommands" : List<String>}"
+             <------------------------------------------------------------
+
+
+END OF TURN
+
+             "{"cmd" : "end_turn"}"
+            ------------------------------------------------------------>
+
+             if it is a Game with multiple players
+                         "{"message" : "your turn is finished, now it's the turn of "nickname" " , "possibleCommands" : []}"
+<------------------------------------------------------------
+
+
+             else //single game
+                         broadcast
+                         "{
+                       "ignorePossibleCommand" : true ,
+                       "actualPlayer" : ThinPlayer ,
+                       "opponents" : List<ThinPlayer> ,
+                                "cardsMarket" : DevelopmentCard[][] ,
+                                "soloToken" : SoloToken
+                       "code" : 7 ,
+                       "serialize" : true
+              }"
+                     "{"message" : "your turn is finished" , "possibleCommands" : List<String>}"
+             <------------------------------------------------------------
+
 

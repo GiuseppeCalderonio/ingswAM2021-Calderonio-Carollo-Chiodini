@@ -213,6 +213,70 @@ class LeaderWarehouseTest {
     }
 
     /**
+
+     * this method is used to test a particular case of warehouse insertion. The player has two coin in the third shelf
+     * and one coin in a leader shelf; we try to insert one coin in the third shelf and another one in the leader shelf
+     */
+    @Test
+    public void testAddResources7(){
+        CollectionResources coins1 = new ShelfCollection(ResourceType.COIN);
+        coins1.add(new Coin());
+        CollectionResources coins2 = new ShelfCollection(ResourceType.COIN);
+        coins2.add(new Coin()); coins2.add(new Coin());
+        CollectionResources coins3 = new ShelfCollection(ResourceType.COIN);
+        coins3.add(new Coin()); coins3.add(new Coin()); coins3.add(new Coin());
+        leaderWarehouse = new LeaderWarehouse(new Coin(), new Warehouse());
+        assertEquals(0 , leaderWarehouse.addResources(coins1,4));
+        assertEquals(0 , leaderWarehouse.addResources(coins2, 3));
+        assertEquals(0 , leaderWarehouse.addResources(coins2,3));
+        assertEquals(leaderWarehouse.getShelf(3).getResources() , coins3);
+        assertEquals(leaderWarehouse.getShelf(4).getResources() , coins2);
+    }
+
+    /**
+     * this method is used to test a particular case of warehouse insertion. The player has two coin in the third shelf
+     * and one coin in a leader shelf; we try to insert one coin in the third shelf and another one in the leader shelf
+     */
+    @Test
+    public void testAddResources8(){
+        CollectionResources coins1 = new ShelfCollection(ResourceType.COIN);
+        coins1.add(new Coin());
+        CollectionResources coins2 = new ShelfCollection(ResourceType.COIN);
+        coins2.add(new Coin()); coins2.add(new Coin());
+        CollectionResources coins3 = new ShelfCollection(ResourceType.COIN);
+        coins3.add(new Coin()); coins3.add(new Coin()); coins3.add(new Coin());
+        leaderWarehouse = new LeaderWarehouse(new Coin(), new Warehouse());
+        assertEquals(0 , leaderWarehouse.addResources(coins1,4));
+        assertEquals(0 , leaderWarehouse.addResources(coins2, 3));
+        assertEquals(1 , leaderWarehouse.addResources(coins3,3));
+        assertEquals(leaderWarehouse.getShelf(3).getResources() , coins3);
+        assertEquals(leaderWarehouse.getShelf(4).getResources() , coins2);
+    }
+
+    /**
+     * this method is used to test a particular case of warehouse insertion. The player has two coin in the third shelf
+     * and one coin in a leader shelf; we try to insert one coin in the third shelf and another one in the leader shelf
+     */
+    @Test
+    public void testAddResources9(){
+        CollectionResources coins1 = new ShelfCollection(ResourceType.COIN);
+        coins1.add(new Coin());
+        CollectionResources coins2 = new ShelfCollection(ResourceType.COIN);
+        coins2.add(new Coin()); coins2.add(new Coin());
+        CollectionResources coins3 = new ShelfCollection(ResourceType.COIN);
+        coins3.add(new Coin()); coins3.add(new Coin()); coins3.add(new Coin());
+        leaderWarehouse = new LeaderWarehouse(new Shield(), new Warehouse());
+        assertEquals(0 , leaderWarehouse.addResources(coins3, 3));
+        assertEquals(2 , leaderWarehouse.addResources(coins2,3));
+        leaderWarehouse.addShelf(new Coin());
+        assertEquals(0 , leaderWarehouse.addResources(coins2,3));
+        assertEquals(leaderWarehouse.getShelf(3).getResources() , coins3);
+        assertEquals(leaderWarehouse.getShelf(5).getResources() , coins2);
+    }
+
+
+
+    /**
      * this test verify that is possible that exist a shelf with one type, and a leader shelf
      * of the same type
      */

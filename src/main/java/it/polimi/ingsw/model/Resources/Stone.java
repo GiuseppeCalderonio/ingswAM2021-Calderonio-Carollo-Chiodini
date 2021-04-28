@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.Resources;
 
 import it.polimi.ingsw.model.Marble.GreyMarble;
 import it.polimi.ingsw.model.Marble.Marble;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 /**
  * this class represent the stone resource

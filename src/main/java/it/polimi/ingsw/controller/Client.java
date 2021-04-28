@@ -96,7 +96,12 @@ public class Client implements Runnable {
                     case "set_players" :
                         System.out.println("Scrivere il numero di giocatori");
                         String numberOfPlayers = stdIn.readLine();
-                        jsonCommand.size = Integer.parseInt(numberOfPlayers);
+                        try {
+                            jsonCommand.numberOfPlayers = Integer.parseInt(numberOfPlayers);
+                        }catch (NumberFormatException e){
+                            System.err.println("Devi scrivere un numero valido");
+                            break;
+                        }
                         send(out, jsonCommand);
                         break;
                     case "login":
@@ -119,7 +124,12 @@ public class Client implements Runnable {
                         chooseMarbles(out, stdIn, jsonCommand);
                         break;
                     case "choose_leaderCards":
-                        chooseLeaderCard(out, stdIn, jsonCommand);
+                        try {
+                            chooseLeaderCard(out, stdIn, jsonCommand);
+                        }catch (NullPointerException e){
+                            System.err.println("you can't do this action");
+                        }
+
                         break;
                     case "insert_in_warehouse":
                         insertInWarehouse(out, stdIn, jsonCommand);

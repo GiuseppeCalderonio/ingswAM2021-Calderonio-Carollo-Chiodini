@@ -86,7 +86,7 @@ public class CommandManager {
         }
 
         // if every player did correctly the initialisation
-        if (response.message.contains("ok, now wait that everyone decides his resources and leader cards, and the game will start") &&
+        if (response.message.equals("ok, now wait that everyone decides his resources and leader cards, then the game will start") &&
                 commandManagers.stream().map(commandManager -> commandManager.getCommandInterpreter().getPossibleCommands()).
                 allMatch(List::isEmpty)){
             for (ClientHandler handler1 : getHandlers())
@@ -102,8 +102,8 @@ public class CommandManager {
 
         if (response.message.equals("turn finished, is not your turn now") ||
                 response.message.equals("Lorenzo did his action!")){
-            for (CommandManager manager : commandManagers){
-                if (manager.getHandler().getNickname().equals(getGame().getActualPlayer().getNickname())){
+            for (CommandManager manager : commandManagers) {
+                if (manager.getHandler().getNickname().equals(getGame().getActualPlayer().getNickname())) {
                     manager.setCommandInterpreter(new TurnsInterpreter(manager.getHandler()));
                     ResponseToClient notifyTurn = new ResponseToClient();
                     notifyTurn.message = "now is your turn";
@@ -112,9 +112,6 @@ public class CommandManager {
                 }
 
             }
-            //commandManagers.stream().
-            //        filter(commandManager -> commandManager.getHandler().getNickname().equals(getGame().getActualPlayer().getNickname())).
-            //        forEach(commandManager -> commandManager.setCommandInterpreter(new TurnsInterpreter(commandManager.getHandler())));
         }
     }
 
@@ -157,12 +154,6 @@ public class CommandManager {
         String message;
         List<String> possibleCommands = new ArrayList<>();
         ResponseToClient broadcast = new ResponseToClient();
-        //updatePlayers(broadcast);
-        /*
-        List<ThinPlayer> players = getGame().getPlayers().stream().map(ThinPlayer::new).collect(Collectors.toList());
-        String message;
-        List<String> possibleCommands = new ArrayList<>();
-        */
         for (ClientHandler handler : getHandlers()){
 
             if (handler.getNickname().equals( getGame().getActualPlayer().getNickname())) {
@@ -223,8 +214,6 @@ public class CommandManager {
     }
 
     public static void updateMarbleMarket(ResponseToClient response){
-        //response.ignorePossibleCommands = true;
-        //response.nickname = ClientHandler.getGame().getActualPlayer().getNickname();
         response.marbleMarket = ClientHandler.getGame().getMarketBoard().getMarketTray();
         response.lonelyMarble = ClientHandler.getGame().getMarketBoard().getLonelyMarble();
         response.serialize = true;

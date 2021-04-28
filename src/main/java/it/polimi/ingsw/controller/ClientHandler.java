@@ -67,28 +67,29 @@ public class ClientHandler implements Runnable {
             if (numberOfPlayers == null)
                 numberOfPlayers = new AtomicInteger(-1);
 
-
+            Command command;
             while (true) {
                 String line;
                 try {
-                    try {
-                        line = in.nextLine(); // read the message sent from the client
-                        Command command = gson.fromJson(line, Command.class); // convert the message in a processable command
+                    line = in.nextLine(); // read the message sent from the client
+                }catch (NoSuchElementException e){
+                    System.err.println("A client disconnected");
+                    System.err.println(e.getMessage());
+                    break;
+                }
+                try {
+                    command = gson.fromJson(line, Command.class); // convert the message in a processable command
+                }catch (JsonSyntaxException e) {
+                    System.err.println("Problem...");
+                    break;
+                }
 
-                        if (command.cmd.equals("quit")) // quit the game if a player wat to exit
-                            break;
-
-                        commandManager.processCommand(command, this); // process the command and send the message or the messages to the players
-                    } catch (JsonSyntaxException e) {
-                        System.err.println("Problem...");
-                        break;
-                    } catch (Exception e){
-                        System.err.println("Generic error");
-                        System.err.println(e.getMessage());
-                        break;
-                    }
-                } catch (NoSuchElementException e){ // a player is not connected anymore
-                    System.out.println("Error with: " + socket);
+                if (command.cmd.equals("quit")) // quit the game if a player wat to exit
+                    break;
+                try {
+                    commandManager.processCommand(command, this); // process the command and send the message or the messages to the players
+                }catch (IOException e){
+                    System.err.println("IO exception" + e.getMessage());
                     break;
                 }catch (EndGameException e){
                     ResponseToClient response = new ResponseToClient();
@@ -139,6 +140,10 @@ public class ClientHandler implements Runnable {
             System.err.println("Error with IOException");
             System.err.println(e.getMessage());
         }
+    }
+
+    public synchronized void addPlayer(ClientHandler handler){
+        handlers.add(handler);
     }
 
     public static synchronized Game getGame() {

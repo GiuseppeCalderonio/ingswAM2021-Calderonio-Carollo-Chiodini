@@ -62,7 +62,7 @@ public class InitialisingInterpreter implements CommandInterpreter{
                 possibleCommands.remove("initialise_resources");
                 ClientHandler.getGame().initialiseGame(handler.getNickname(), toVerify, card1, card2);
                 // if the game got created correctly
-                return buildResponse("ok, now wait that everyone decides his resources and leader cards, and the game will start");
+                return buildResponse("ok, now wait that everyone decides his resources and leader cards, then the game will start");
             // in theory unreachable statement, but it can help if something does not work correctly
             default:
                 return buildResponse("this command is not available in this phase of the game");

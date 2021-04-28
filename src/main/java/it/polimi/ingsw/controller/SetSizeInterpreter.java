@@ -24,10 +24,10 @@ public class SetSizeInterpreter implements CommandInterpreter{
         if (!possibleCommands.contains(command.cmd))
             return buildResponse("this command is not available in this phase of the game");
 
-        if (command.size < 1 || command.size > 4)
+        if (command.numberOfPlayers < 1 || command.numberOfPlayers > 4)
             return buildResponse("the size is not between 1 and 4");
 
-        handler.setNumberOfPlayers(new AtomicInteger(command.size));
+        handler.setNumberOfPlayers(new AtomicInteger(command.numberOfPlayers));
         possibleCommands.remove("set_players");
         possibleCommands.add("login");
 

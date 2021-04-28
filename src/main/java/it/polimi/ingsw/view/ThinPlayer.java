@@ -28,7 +28,7 @@ public class ThinPlayer {
     private List<DevelopmentCard> productionPower2;
     private List<DevelopmentCard> productionPower3;
     private int position = 0;
-    private boolean[] popeFavourTiles ={false, false, false};
+    private boolean[] popeFavourTiles;
 
     public ThinPlayer(RealPlayer player){
         this.nickName = player.getNickname();
