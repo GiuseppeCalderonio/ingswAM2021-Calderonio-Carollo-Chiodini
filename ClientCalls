@@ -220,4 +220,16 @@ pope favour tiles,
 CollectionResources representing the warehouse,
 CollectionResources representing the strongbox
 
+white marble = new coin
 
+[]
+[]
+[coin, coin, coin] coin
+
+[coin,X]
+[]
+
+scelgo 2 white marbles
+
+hai ottenuto 1 coin scegli lo scaffale in cui metterlo (se hai uno scaffale
+leader "coin" la risorsa verrà autoaticamente aggiunta allo scaffale leader)

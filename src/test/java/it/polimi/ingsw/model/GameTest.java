@@ -2256,7 +2256,16 @@ class GameTest {
         game = new Game(nicknames);
         CollectionResources toInitialise = new CollectionResources();
         game.initialiseGame(game.getPlayers().get(0).getNickname(), toInitialise, 1, 3);
-        assertTrue(game.checkProduction(0)); assertFalse(game.checkProduction(1));
+        assertFalse(game.checkProduction(0));
+        CollectionResources toAddInStrongbox = new CollectionResources();
+        toAddInStrongbox.add(new Servant());
+        game.getActualPlayer().getPersonalDashboard().getPersonalStrongbox().addResources(toAddInStrongbox);
+        assertFalse(game.checkProduction(0));
+        game.getActualPlayer().getPersonalDashboard().getPersonalStrongbox().addResources(toAddInStrongbox);
+        assertTrue(game.checkProduction(0));
+        game.getActualPlayer().getPersonalDashboard().getPersonalStrongbox().addResources(toAddInStrongbox);
+        assertTrue(game.checkProduction(0));
+        assertFalse(game.checkProduction(1));
         assertFalse(game.checkProduction(2)); assertFalse(game.checkProduction(3));
         assertFalse(game.checkProduction(4)); assertFalse(game.checkProduction(5));
     }

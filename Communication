@@ -176,14 +176,8 @@ this operation is the most particular, because there is no limit to it, it can b
           broadcast
           "{
                 "ignorePossibleCommand" : true ,
-                "nickName" : String ,
-                "faithPosition" : int ,
-                "popeFavourTiles" : boolean[] ,
-                "firstShelf" : CollectionResources ,
-                "secondShelf" : CollectionResources ,
-                "thirdShelf" : CollectionResources ,
-                "fourthShelf" : CollectionResources ,
-                "fifthShelf" : CollectionResources ,
+                "actualPlayer" : ThinPlayer ,
+                "opponents" : List<ThinPlayer>
                 "code" : 3 ,
                 "serialize" : true
           }"
@@ -242,7 +236,7 @@ choose leader card to use
 ------------------------------------------------------------>
 
 
-              if choose_marbles is not a possible command in this phase of game
+              if choose_leaderCard is not a possible command in this phase of game
          "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
 <-----------------------------------------------------------
 
@@ -266,7 +260,7 @@ select shelf
 ------------------------------------------------------------>
 
 
-              if choose_marbles is not a possible command in this phase of game
+              if insert_in_warehouse is not a possible command in this phase of game
          "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : [insert_in_warehouse] }"
 <-----------------------------------------------------------
 
@@ -284,14 +278,8 @@ select shelf
                     broadcast
                     "{
                           "ignorePossibleCommand" : true ,
-                          "nickName" : String ,
-                          "faithPosition" : int ,
-                          "popeFavourTiles" : boolean[] ,
-                          "firstShelf" : CollectionResources ,
-                          "secondShelf" : CollectionResources ,
-                          "thirdShelf" : CollectionResources ,
-                          "fourthShelf" : CollectionResources ,
-                          "fifthShelf" : CollectionResources ,
+                          "actualPlayer" : ThinPlayer ,
+                          "opponents" : List<ThinPlayer>
                           "marbleMarket" : Marble[][] ,
                           "lonelyMarble" : Marble ,
                           "code" : 5 ,
@@ -322,74 +310,64 @@ EVERY TIME ONE OF THESE OPERATION RETURN A CODE < 0, ALL THE DIAGRAM RESTART
  CLIENT                                                   SERVER
 
 choose card
-"{"cmd" : "buy_card", "color" : str, "level" : x}"
+"{"cmd" : "buy_card", "color" : CardColor, "level" : x}"
 ------------------------------------------------------------>
 
 
- if the player has already done one normal action(select marble from market, activate production and buy card)
-          "{"message" : "error, you have already done ona normal action" , "code" : -17}"
-<------------------------------------------------------------
-
-
-         if the player didn't do the login
-          "{"message" : "error, you have to do login first" , "code" : -17}"
-<------------------------------------------------------------
-
-
-          if the player didn't do the initialisation
-          "{"message" : "error, you have to do initialisation first" , "code" : -18}"
-<------------------------------------------------------------
+              if buy_card is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
+<-----------------------------------------------------------
 
 
 	  if the player selects a level<1 or >3
-          "{"message" : "error, you have to select a correct level" , "code" : -21}"
+          "{"message" : "error, you have to select a correct level" , "possibleCommands" : List<String>}"
 <------------------------------------------------------------
 
 
           if the player write a color that doesn't exist
-          "{"message" : "error, you have to select a correct color" , "code" : -22}"
+          "{"message" : "error, you have to select an incorrect color" , "possibleCommands" : List<String>}"
 <------------------------------------------------------------
 
 
           if there isn't available card in the selected position
-          "{"message" : "error, you have to select another available card" , "code" : -23}"
+          "{"message" : "error, you have to select another available card" , "possibleCommands" : List<String>}"
 <------------------------------------------------------------
 
 
           if the player hasn't enough resources to buy the selected card
-          "{"message" : "error, you don't own enough resources; try to change card" , "code" : -24}"
+          "{"message" : "error, you don't own enough resources; try to change card" , "possibleCommands" : List<String>}"
+<------------------------------------------------------------
+
+
+          else
+          "{"message" : "deck selected is available, now decide where you want to place the card in your dashboard" ,
+           "possibleCommands" : [select_position]}"
 <------------------------------------------------------------
 
 
 select position
-"{"cmd" : "select position", "dashboardPosition" : x}"
+"{"cmd" : "select_position", "dashboardPosition" : x}"
 ------------------------------------------------------------>
 
 
-          if the player didn't do the login
-          "{"message" : "error, you have to do login first" , "code" : -17}"
-<------------------------------------------------------------
-
-
-          if the player didn't do the initialisation
-          "{"message" : "error, you have to do initialisation first" , "code" : -18}"
-<------------------------------------------------------------
+              if select_position is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
+<-----------------------------------------------------------
 
 
 	   if the player selects a position <1 or >3
-          "{"message" : "error, you have to select a correct position in dashboard" , "code" : -25}"
+          "{"message" : "error, you have to select a correct position in dashboard" , "possibleCommands" : List<String>}"
 <------------------------------------------------------------
 
 
 	   if the player selects a correct position but in that position there is a card that has
             a level bigger than the card selected by the player
-          "{"message" : "error, you have to select another position in dashboard" , "code" : -26}"
+          "{"message" : "error, you have to select another position in dashboard" , "possibleCommands" : List<String>}"
 <------------------------------------------------------------
 
 
-	   if the player selects a correct position but that position is empty or there is a card that has
-            a level too smaller than the card selected by the player (for example level 3 card placed on level 1 card)
-          "{"message" : "error, you have to select another position in dashboard" , "code" : -27}"
+	   else
+          "{"message" : "now select the warehouse resources to pay the card" , "possibleCommands" : List<String>}"
 <------------------------------------------------------------
 
 
@@ -399,24 +377,32 @@ select resources from warehouse
 ------------------------------------------------------------>
 
 
-          if the player didn't do the login
-          "{"message" : "error, you have to do login first" , "code" : -17}"
-<------------------------------------------------------------
-
-
-          if the player didn't do the initialisation
-          "{"message" : "error, you have to do initialisation first" , "code" : -18}"
-<------------------------------------------------------------
+              if select_position is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
+<-----------------------------------------------------------
 
 
 	  if the check warehouse resources returns false
-          "{"message" : "error,you have selected an incorrect number of resources" , "code" : -40}"
+          "{"message" : "error,you have selected an incorrect amount of resources" , "possibleCommands" : List<String>}"
 <------------------------------------------------------------
 
 
 	  if it's all ok
-          "{"message" : "card bought and placed correctly" , "code" : -41}"
-          send to all players : new Market card, new prod power, new warehouse
+	  send to all players : new Market card, new prod power, new warehouse
+	  broadcast
+                   "{
+                         "ignorePossibleCommand" : true ,
+                         "actualPlayer" : ThinPlayer ,
+                         "opponents" : List<ThinPlayer> ,
+                         "marbleMarket" : Marble[][] ,
+                         "lonelyMarble" : Marble ,
+                         "code" : 6 ,
+                         "serialize" : true
+                    }"
+
+	  then send to the actual player
+          "{"message" : "card bought and placed correctly" , "possibleCommands" : List<String>}"
+
 <------------------------------------------------------------
 
 
@@ -429,72 +415,61 @@ production
 ------------------------------------------------------------>
 
 
- if the player has already done one normal action(select marble from market, activate production and buy card)
-          "{"message" : "error, you have already done ona normal action" , "code" : -345}"
-<------------------------------------------------------------
-
-
-          if the player didn't do the login
-          "{"message" : "error, you have to do login first" , "code" : -17}"
-<------------------------------------------------------------
-
-
-          if the player didn't do the initialisation
-          "{"message" : "error, you have to do initialisation first" , "code" : -18}"
-<------------------------------------------------------------
+              if production is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
+<-----------------------------------------------------------
 
 
           else write the production type that you want activate
-          "{"message" : "write the production type that you want activate" , "code" : 20}"
+          "{"message" : "write the production type that you want activate" , "possibleCommands" : [basic_production, normal_production, leader_production, end_production]}"
 <------------------------------------------------------------
 
 
 
 	CASE BASIC PRODUCTION
-	"{"cmd" : "basic_production" , "firstResource" : x , "secondResource" : y , "toPayFirstFromWarehouse" : boolean , "toPaySecondFromWarehouse" : boolean , "output" : resource}"
+	"{"cmd" : "basic_production" , "toPayFromWarehouse" : CollectionResources , "toPayFromStrongbox" : CollectionResources , "output" : Resource}"
 	------------------------------------------------------------>
 
 
-        	  if the player didn't do the login
-          	"{"message" : "error, you have to do login first" , "code" : -17}"
-	<------------------------------------------------------------
-
-
-          	if the player didn't do the initialisation
-          	"{"message" : "error, you have to do initialisation first" , "code" : -18}"
-	<------------------------------------------------------------
+              if basic_production is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
+    <-----------------------------------------------------------
 
 
 	 	 if the check activate basic production returns false
-         	 "{"message" : "error,you don't have enough resources" , "code" : -41}"
+         	 "{"message" : "error,you don't have enough resources" , "possibleCommands" : List<String>}"
 	<------------------------------------------------------------
 
-
+/**********
 	 if the player has already activate the basic production
- 	         "{"message" : "error, you have already activated this type of production" , "code" : -346}"
+ 	         "{"message" : "error, you have already activated this type of production" , "possibleCommands" : List<String>}"
 	<------------------------------------------------------------
+	*************/
 
 
 	 if is all ok
- 	         "{"message" : "basic production activated" , "code" : -347}"
- 	         send new warehouse, new strongbox
+	          send new warehouse, new strongbox
+	          "{
+                       "ignorePossibleCommand" : true ,
+                       "actualPlayer" : ThinPlayer ,
+                       "opponents" : List<ThinPlayer> ,
+                       "code" : 7 ,
+                       "serialize" : true
+              }"
+ 	         "{"message" : "basic production activated" , "possibleCommands" : List<String>}"
+
 	<------------------------------------------------------------
 
 
 
 	CASE NORMAL PRODUCTION
-	"{"cmd" : "normal_production" , "position" : x , "ToPayFromWarehouse" : collectionResources}"
+	"{"cmd" : "normal_production" , "position" : int , "ToPayFromWarehouse" : CollectionResources}"
 	------------------------------------------------------------>
 
 
-        	  if the player didn't do the login
-          	"{"message" : "error, you have to do login first" , "code" : -17}"
-	<------------------------------------------------------------
-
-
-          	if the player didn't do the initialisation
-          	"{"message" : "error, you have to do initialisation first" , "code" : -18}"
-	<------------------------------------------------------------
+              if basic_production is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
+    <-----------------------------------------------------------
 
 
 	 	 if the check production returns false
@@ -513,7 +488,7 @@ production
 
 
 	 if is all ok
- 	         "{"message" : "basic production activated" , "code" : -347}"
+ 	         "{"message" : "normal production activated" , "code" : -347}"
  	         send new warehouse, new strongbox , positions, pope favour tiles
  	 <------------------------------------------------------------
 
@@ -524,14 +499,9 @@ production
 	------------------------------------------------------------>
 
 
-        	  if the player didn't do the login
-          	"{"message" : "error, you have to do login first" , "code" : -17}"
-	<------------------------------------------------------------
-
-
-          	if the player didn't do the initialisation
-          	"{"message" : "error, you have to do initialisation first" , "code" : -18}"
-	<------------------------------------------------------------
+              if basic_production is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
+    <-----------------------------------------------------------
 
 
 	 	 if the check production returns false
@@ -561,14 +531,9 @@ production
 	------------------------------------------------------------>
 
 
-        	  if the player didn't do the login
-          	"{"message" : "error, you have to do login first" , "code" : -17}"
-	<------------------------------------------------------------
-
-
-          	if the player didn't do the initialisation
-          	"{"message" : "error, you have to do initialisation first" , "code" : -18}"
-	<------------------------------------------------------------
+              if basic_production is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
+    <-----------------------------------------------------------
 
 
 
@@ -582,40 +547,33 @@ ACTIVATE LEADER CARD
 ------------------------------------------------------------>
 
 
-        	  if the player didn't do the login
-          	"{"message" : "error, you have to do login first" , "code" : -17}"
-<------------------------------------------------------------
+              if leader_action is not a possible command in this phase of game
+         "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
+<-----------------------------------------------------------
 
 
-          	if the player didn't do the initialisation
-          	"{"message" : "error, you have to do initialisation first" , "code" : -18}"
-<------------------------------------------------------------
+              else
+         "{"message" : "choose the leader action to do" , "possibleCommands" : [leader_action_activate, leader_action_discard] }"
+<-----------------------------------------------------------
 
-          if the player already did a leader action
-          "{"message" : "error, you have already done a leader action" , "code" : -50}"
-<------------------------------------------------------------
+
             CASE ACTIVATE
-            "{"cmd" : "leader_action_activate", "toActivate" : int}"
+            "{"cmd" : "activate_card", "toActivate" : int}"
             ------------------------------------------------------------>
 
 
-      	    if the player didn't do the login
-          	"{"message" : "error, you have to do login first" , "code" : -17}"
-            <------------------------------------------------------------
-
-
-          	if the player didn't do the initialisation
-          	"{"message" : "error, you have to do initialisation first" , "code" : -18}"
-        	<------------------------------------------------------------
+              if activate_card is not a possible command in this phase of game
+            "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
+            <-----------------------------------------------------------
 
 
         	if (!checkLeaderCard(toActivate)) the leader card selected does not exist
-          	"{"message" : "error, the leader card selected does not exist" , "code" : -51}"
+          	"{"message" : "error, the leader card selected does not exist" , "possibleCommands" : List<String> }"
         	<------------------------------------------------------------
 
             if(!activateLeaderCard(toActivate)) the leader card is already activated or
             the player doesn't meet the requirements to activate it
-            "{"message" : "the leader card is already activated or you don't meet the requirements to activate it" , "code" : -52}"
+            "{"message" : "the leader card is already active or you don't meet the requirements to activate it" , "code" : -52}"
             <------------------------------------------------------------
 
 	        if is all ok
@@ -624,21 +582,16 @@ ACTIVATE LEADER CARD
  	        <------------------------------------------------------------
 
             CASE DISCARD
-            "{"cmd" : "leader_action_discard", "toDiscard" : int}"
+            "{"cmd" : "discard_card", "toDiscard" : int}"
             ------------------------------------------------------------>
 
 
-      	    if the player didn't do the login
-          	"{"message" : "error, you have to do login first" , "code" : -17}"
-            <------------------------------------------------------------
+              if activate_card is not a possible command in this phase of game
+            "{"message" : "this command is not available in this phase of the game" , "possibleCommands" : List<String> }"
+            <-----------------------------------------------------------
 
 
-          	if the player didn't do the initialisation
-          	"{"message" : "error, you have to do initialisation first" , "code" : -18}"
-        	<------------------------------------------------------------
-
-
-        	if (!checkLeaderCard(toActivate)) the leader card selected does not exist
+        	if (!checkLeaderCard(toDiscard)) the leader card selected does not exist
           	"{"message" : "error, the leader card selected does not exist" , "code" : -51}"
         	<------------------------------------------------------------
 

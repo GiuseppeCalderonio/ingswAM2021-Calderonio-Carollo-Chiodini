@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.controller.ClientHandler;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.LeaderCard.NewWhiteMarble;
@@ -25,7 +24,9 @@ public class ThinPlayer {
     private CollectionResources strongbox;
     private List<LeaderCard> leaderCards;
     private List<ThinLeaderCard> thinLeaderCards;
-    private ThinProductionPower[] productionPower = new ThinProductionPower[3];
+    private List<DevelopmentCard> productionPower1;
+    private List<DevelopmentCard> productionPower2;
+    private List<DevelopmentCard> productionPower3;
     private int position = 0;
     private boolean[] popeFavourTiles ={false, false, false};
 
@@ -36,13 +37,15 @@ public class ThinPlayer {
         this.thirdShelf = player.getPersonalDashboard().getPersonalWarehouse().getShelf(3).getResources();
         try {
             this.fourthShelf = player.getPersonalDashboard().getPersonalWarehouse().getShelf(4).getResources();
-        }catch (IndexOutOfBoundsException ignored){ }
+        }catch (IndexOutOfBoundsException | NullPointerException ignored){ }
         try {
             this.fifthShelf = player.getPersonalDashboard().getPersonalWarehouse().getShelf(5).getResources();
-        }catch (IndexOutOfBoundsException ignored){ }
+        }catch (IndexOutOfBoundsException | NullPointerException ignored){ }
         this.strongbox = player.getPersonalDashboard().getPersonalStrongbox().getStrongboxResources();
         this.thinLeaderCards = player.getPersonalLeaderCards().stream().map(LeaderCard::getThin).collect(Collectors.toList());
-        this.productionPower = getVectorThinProductionPower(player);
+        this.productionPower1 = player.getPersonalDashboard().getPersonalProductionPower().getPersonalCards()[0];
+        this.productionPower2 = player.getPersonalDashboard().getPersonalProductionPower().getPersonalCards()[1];
+        this.productionPower3 = player.getPersonalDashboard().getPersonalProductionPower().getPersonalCards()[2];
         this.position = player.getPersonalTrack().getPosition();
         this.popeFavourTiles = getVectorPopeFavourTiles(player);
     }
@@ -51,12 +54,24 @@ public class ThinPlayer {
         this.nickName = thinPlayer.nickName;
         this.firstShelf = thinPlayer.firstShelf;
         this.secondShelf = thinPlayer.secondShelf;
-        this.thirdShelf = new CollectionResources();
-        this.thinLeaderCards = thinPlayer.thinLeaderCards;
+        this.thirdShelf = thinPlayer.thirdShelf;
+        this.fourthShelf = thinPlayer.fourthShelf;
+        this.fifthShelf = thinPlayer.fifthShelf;
+        this.strongbox = thinPlayer.strongbox;
+        //this.thinLeaderCards = thinPlayer.thinLeaderCards;
+        this.productionPower1 = thinPlayer.productionPower1;
+        this.productionPower2 = thinPlayer.productionPower2;
+        this.productionPower3 = thinPlayer.productionPower3;
         this.position = thinPlayer.position;
-        this.leaderCards = thinPlayer.thinLeaderCards.stream().
-                map(leaderCard -> recreate(allLeaderCards, leaderCard)).
-                collect(Collectors.toList());
+        try{
+            this.leaderCards = thinPlayer.thinLeaderCards.stream().
+                    map(leaderCard -> recreate(allLeaderCards, leaderCard)).
+                    collect(Collectors.toList());
+        } catch (NullPointerException e){
+            this.leaderCards = null;
+        }
+        this.popeFavourTiles = thinPlayer.popeFavourTiles;
+
     }
 
     public ThinPlayer(Player lorenzo){
@@ -133,10 +148,6 @@ public class ThinPlayer {
         this.secondShelf = secondShelf;
     }
 
-    public ThinProductionPower[] getProductionPower() {
-        return productionPower;
-    }
-
     public boolean[] getPopeFavourTiles() {
         return popeFavourTiles;
     }
@@ -203,19 +214,27 @@ public class ThinPlayer {
 
     @Override
     public String toString() {
-        return "ThinPlayer{" +
-                "nickName='" + nickName + '\'' +
-                ", firstShelf=" + firstShelf +
-                ", secondShelf=" + secondShelf +
-                ", thirdShelf=" + thirdShelf +
-                ", fourthShelf=" + fourthShelf +
-                ", fifthShelf=" + fifthShelf +
-                ", strongbox=" + strongbox +
-                ", leaderCards=" + leaderCards +
-                ", thinLeaderCards=" + thinLeaderCards +
-                ", productionPower=" + Arrays.toString(productionPower) +
-                ", position=" + position +
-                ", popeFavourTiles=" + Arrays.toString(popeFavourTiles) +
-                '}';
+        if (leaderCards == null) {
+            return "ThinPlayer{" + "\n" +
+                    "nickName='" + nickName + '\'' +"\n" +
+                    ", position=" + position + "\n" +
+                    ", popeFavourTiles=" + Arrays.toString(popeFavourTiles) + "\n" +
+                    '}' + "\n" ;
+        }
+        return "ThinPlayer{" + "\n" +
+                "nickName='" + nickName + '\'' +"\n" +
+                ", firstShelf=" + firstShelf.asList() + "\n" +
+                ", secondShelf=" + secondShelf.asList() + "\n" +
+                ", thirdShelf=" + thirdShelf.asList() + "\n" +
+                ", fourthShelf=" + fourthShelf + "\n" +
+                ", fifthShelf=" + fifthShelf + "\n" +
+                ", strongbox=" + strongbox + "\n" +
+                ", leaderCards=" + leaderCards + "\n" +
+                ", productionPower1=" + productionPower1 + "\n" +
+                ", productionPower2=" + productionPower2 + "\n" +
+                ", productionPower3=" + productionPower3 + "\n" +
+                ", position=" + position + "\n" +
+                ", popeFavourTiles=" + Arrays.toString(popeFavourTiles) + "\n" +
+                '}' + "\n" ;
     }
 }

@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.Marble;
 
 import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.model.Resources.Stone;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 /**
  * this class implements the marble interface and represent the grey marble

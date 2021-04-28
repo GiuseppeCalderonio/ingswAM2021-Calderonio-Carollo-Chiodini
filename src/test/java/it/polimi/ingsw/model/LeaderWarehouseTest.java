@@ -238,7 +238,7 @@ class LeaderWarehouseTest {
     void RemoveResources1(){
         leaderWarehouse = new LeaderWarehouse(new Servant(), new Warehouse());
         CollectionResources stones = new ShelfCollection(ResourceType.STONE);
-        CollectionResources coins = new ShelfCollection(ResourceType.STONE);
+        CollectionResources coins = new ShelfCollection(ResourceType.COIN);
         CollectionResources servants = new ShelfCollection(ResourceType.SERVANT);
         servants.add(new Servant());
         servants.add(new Servant());

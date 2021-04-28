@@ -32,4 +32,11 @@ public class TrackToken implements SoloToken {
         TrackToken that = (TrackToken) o;
         return shuffle == that.shuffle && faithPoints == that.faithPoints;
     }
+
+    @Override
+    public String toString() {
+        return "TrackToken:" +
+                "shuffle= " + shuffle +
+                ", faithPoints= " + faithPoints ;
+    }
 }

@@ -29,11 +29,14 @@ public class ClientHandler implements Runnable {
     private static AtomicInteger numberOfPlayers = null;
     private String nickname = "";
     private static List<String> nicknames = new ArrayList<>();
-    private final Gson gson;
+    private Gson gson;
+    private CommandManager commandManager;
 
     public ClientHandler(Socket socket) {
 
         this.socket = socket;
+        /*
+
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapterFactory(
                 RuntimeTypeAdapterFactory.
@@ -43,13 +46,15 @@ public class ClientHandler implements Runnable {
         builder.registerTypeAdapter(Resource.class, new ResourceInterfaceAdapter());
         builder.registerTypeAdapter(Marble.class, new MarbleInterfaceAdapter());
         gson = builder.create();
+
+         */
     }
 
     public void run() {
         try {
             Scanner in = new Scanner(socket.getInputStream());
             PrintWriter out = new PrintWriter(socket.getOutputStream());
-            if (kickIfGameExist(out, in) || kickIfPlayersToDefine(out, in)){
+            if (kickIfGameExist(out, in) || kickIfPlayersToDefine(out, in)  || kickIfLobbyFullOfClient(out, in) ){
                 if (sockets.isEmpty()) // if any socket is connected to the server
                     resetValues();
                 return;
@@ -57,9 +62,11 @@ public class ClientHandler implements Runnable {
             sockets.add(socket);
             handlers.add(this);
             System.out.println("New connection with " + socket);
-            CommandManager commandManager = new CommandManager(this);
+            gson = createGson();
+            commandManager = new CommandManager(this);
             if (numberOfPlayers == null)
                 numberOfPlayers = new AtomicInteger(-1);
+
 
             while (true) {
                 String line;
@@ -84,17 +91,31 @@ public class ClientHandler implements Runnable {
                     System.out.println("Error with: " + socket);
                     break;
                 }catch (EndGameException e){
+                    ResponseToClient response = new ResponseToClient();
                     // multiPlayer
                     if (numberOfPlayers.get() != 1){
-                        ResponseToClient response = new ResponseToClient();
-                        int maxVictoryPoints = getGame().getPlayers().stream().mapToInt(RealPlayer::getVictoryPoints).max().orElse(0);
-                        response.message = "The game finish, the winner is" + getGame().getPlayers().stream().filter(player -> player.getVictoryPoints() == maxVictoryPoints).collect(Collectors.toList());
+
+                        int maxVictoryPoints = getGame().getPlayers().stream().
+                                mapToInt(RealPlayer::getVictoryPoints).
+                                max().orElse(0);
+                        response.message = "The game finish, the winner is" + getGame().getPlayers().
+                                stream().filter(player -> player.getVictoryPoints() == maxVictoryPoints).
+                                collect(Collectors.toList());
                         response.ignorePossibleCommands = true;
-                        sendInBroadcast(response);
+
                     }else { // singlePlayer
+                        if (game.getActualPlayer().getPersonalDashboard().getPersonalProductionPower().getNumOfCards() >= 7 ||
+                                (game.getActualPlayer().getPersonalTrack().getPopeFavorTiles()[2].getActive()) ) {
+                            response.message = "You won! victory points gained :"+ game.getActualPlayer().getVictoryPoints();
+                        }
+                        else{
+                            response.message = "You lost... victory points gained :"+ game.getActualPlayer().getVictoryPoints();
+                        }
                         // return to the player the winner
                     }
-
+                    response.ignorePossibleCommands = true;
+                    sendInBroadcast(response);
+                    CommandManager.getCommandManagers().forEach(commandManager1 -> commandManager1.getCommandInterpreter().getPossibleCommands().clear());
                 }
             }
             // closing stream and sockets, and eventually restart a new game kicking off every player
@@ -130,6 +151,10 @@ public class ClientHandler implements Runnable {
 
     public static synchronized void setSingleGame (List<String> nicknames){
         ClientHandler.game = new SingleGame(nicknames);
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
     }
 
     public static synchronized AtomicInteger getNumberOfPlayers () {
@@ -202,6 +227,22 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    private boolean kickIfLobbyFullOfClient(PrintWriter out, Scanner in) throws IOException {
+        if (numberOfPlayers == null) return false;
+        if (numberOfPlayers.get() == handlers.size()){
+            ResponseToClient response = new ResponseToClient();
+            response.message = "Sorry, the lobby is full of people";
+            send(response);
+            in.close();
+            out.close();
+            socket.close();
+            handlers.remove(this);
+            return true;
+        }
+        return false;
+
+    }
+
     /**
      * this private method close the connection if a player have
      * to decide the total number of players
@@ -252,5 +293,17 @@ public class ClientHandler implements Runnable {
         PrintWriter out = new PrintWriter(socket.getOutputStream());
         out.println(gson.toJson(message, ResponseToClient.class));
         out.flush();
+    }
+
+    private Gson createGson(){
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapterFactory(
+                RuntimeTypeAdapterFactory.
+                        of(SoloToken.class, "type").
+                        registerSubtype(TrackToken.class, "trackToken").
+                        registerSubtype(CardToken.class, "cardToken"));
+        builder.registerTypeAdapter(Resource.class, new ResourceInterfaceAdapter());
+        builder.registerTypeAdapter(Marble.class, new MarbleInterfaceAdapter());
+        return builder.create();
     }
 }

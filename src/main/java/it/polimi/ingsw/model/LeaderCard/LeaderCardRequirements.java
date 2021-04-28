@@ -1,8 +1,10 @@
 package it.polimi.ingsw.model.LeaderCard;
 
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * this interface represent the leader card requirements

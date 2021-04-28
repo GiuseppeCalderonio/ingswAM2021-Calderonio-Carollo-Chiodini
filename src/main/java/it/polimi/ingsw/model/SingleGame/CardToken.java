@@ -63,4 +63,10 @@ public class CardToken implements SoloToken {
         CardToken cardToken = (CardToken) o;
         return color == cardToken.color;
     }
+
+    @Override
+    public String toString() {
+        return "CardToken{" +
+                "color=" + color;
+    }
 }

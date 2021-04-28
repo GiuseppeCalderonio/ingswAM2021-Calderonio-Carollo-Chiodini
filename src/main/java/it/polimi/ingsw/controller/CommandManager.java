@@ -84,10 +84,6 @@ public class CommandManager {
             // send in broadcast the leader cards and the position to every player
             sendBroadcastInitialising();
         }
-        if (response.message.contains("ok, now wait that everyone decides his resources and leader cards, and the game will start")){
-            List<String> possibleCommands = commandManagers.stream().flatMap(commandManager -> commandManager.getCommandInterpreter().getPossibleCommands().stream()).collect(Collectors.toList());
-            String breakpoint = "sono un breakPoint";
-        }
 
         // if every player did correctly the initialisation
         if (response.message.contains("ok, now wait that everyone decides his resources and leader cards, and the game will start") &&
@@ -104,7 +100,8 @@ public class CommandManager {
             sendBroadcastStartGame();
         }
 
-        if (response.message.equals("turn finished, is not your turn now")){
+        if (response.message.equals("turn finished, is not your turn now") ||
+                response.message.equals("Lorenzo did his action!")){
             for (CommandManager manager : commandManagers){
                 if (manager.getHandler().getNickname().equals(getGame().getActualPlayer().getNickname())){
                     manager.setCommandInterpreter(new TurnsInterpreter(manager.getHandler()));

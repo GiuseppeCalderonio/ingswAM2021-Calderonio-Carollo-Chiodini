@@ -8,6 +8,7 @@ import it.polimi.ingsw.controller.Client;
 public class ClientMain1 {
 
     public static void main(String[] args) {
-        new Client("127.0.0.1", 1234);
+
+        new Client(args[1], Integer.parseInt(args[0]));
     }
 }

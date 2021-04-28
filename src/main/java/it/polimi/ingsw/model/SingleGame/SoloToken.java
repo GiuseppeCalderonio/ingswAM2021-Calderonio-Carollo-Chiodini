@@ -15,4 +15,6 @@ public interface SoloToken extends Serializable {
     boolean action (Game inTrackCase, CardsMarket inCardsCase);
 
     boolean equals(Object o);
+
+    String toString();
 }

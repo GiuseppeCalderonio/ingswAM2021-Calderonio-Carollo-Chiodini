@@ -32,8 +32,8 @@ public class NewWhiteMarble extends LeaderCard {
     @Override
     public boolean activateCard(RealPlayer toChange) {
         if(!(getRequirements().containsRequirements(toChange))) return false;
-        toChange.addLeaderWhiteMarble(getResource());
         if (this.isActive()) return false;
+        toChange.addLeaderWhiteMarble(getResource());
         setActive();
         return true;
     }

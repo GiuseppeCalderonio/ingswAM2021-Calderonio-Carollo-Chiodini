@@ -57,11 +57,25 @@ public class LeaderWarehouse extends Warehouse {
     public int addResources(CollectionResources toAdd, int numShelf) {
         int leaderFaithPoints;
 
-        if (numShelf >= 1 && numShelf <= 3)
-            return super.addResources(toAdd, numShelf);
-
         if (!(toAdd instanceof ShelfCollection))
             return toAdd.getSize();
+
+        if (numShelf >= 1 && numShelf <= 3){
+            int defaultShelf = 4;
+            leaderFaithPoints = super.addResources(toAdd, numShelf);
+
+            CollectionResources toAddDefault = new ShelfCollection(((ShelfCollection) toAdd).getType());
+            for (int i = 0; i < leaderFaithPoints; i++) {
+                toAddDefault.add( ((ShelfCollection) toAdd).getType().getResource());
+            }
+            //toAdd.getMaps().get(0).add(-leaderFaithPoints);
+            for (int i = 0; i < leaderShelf.length; i++) {
+                if (leaderShelf[i] != null &&
+                        leaderShelf[i].getResourceType().equals(toAdd.getMaps().get(0).getResource().getType()))
+                    defaultShelf = i + 4;
+            }
+            return addResources(toAddDefault, defaultShelf);
+        }
 
         if (!toAdd.isCompatible(leaderShelf[numShelf -4].getResources()))
             return toAdd.getSize();

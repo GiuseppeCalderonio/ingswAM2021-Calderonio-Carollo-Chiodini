@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.DevelopmentCards;
 
 
 import it.polimi.ingsw.model.Resources.CollectionResources;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 public class DevelopmentCard {
     /**
@@ -134,13 +135,13 @@ public class DevelopmentCard {
 
     @Override
     public String toString() {
-        return "DevelopmentCard :" +"\n" +
-                "color=" + color + "\n" +
-                ", level=" + level + "\n" +
-                ", victoryPoints=" + victoryPoints + "\n" +
-                ", cost=" + cost + "\n" +
-                ", productionPowerInput=" + productionPowerInput + "\n" +
-                ", productionPowerOutput=" + productionPowerOutput + "\n" +
-                ", productionPowerFaithPoints=" + productionPowerFaithPoints + "\n";
+        return "DevelopmentCard :" +
+                "color=" + color +
+                ", level=" + level +
+                ", VPoints=" + victoryPoints +
+                ", cost=" + cost +
+                ", Input=" + productionPowerInput +
+                ", Output=" + productionPowerOutput +
+                ", FPoints=" + productionPowerFaithPoints + "\n";
     }
 }

@@ -27,4 +27,12 @@ public class ThinProductionPower {
     public void setCard(DevelopmentCard card) {
         this.card = card;
     }
+
+    @Override
+    public String toString() {
+        return "ThinProductionPower{" +
+                "card=" + card +
+                ", deckVictoryPoints=" + deckVictoryPoints +
+                '}';
+    }
 }

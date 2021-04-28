@@ -1,5 +1,7 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.model.DevelopmentCards.CardColor;
+import it.polimi.ingsw.model.Resources.CollectionResources;
 import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.model.Resources.ResourceType;
 
@@ -27,16 +29,17 @@ public class Command {
     // insert_in_warehouse
     int shelf; // should be from 1 to 5
     // choose_card
-    String color; // should be "green" or "blue" or "purple" or "yellow"
+    CardColor color; // should be "green" or "blue" or "purple" or "yellow"
     int level; // should be from 1 to 3
     // select_position
     int dashboardPosition; // should be from 1 to 3
     // select_resources_from_warehouse / normal_production
-    List<ResourceType> toPayFromWarehouse;
+    CollectionResources toPayFromWarehouse;
+    CollectionResources toPayFromStrongbox;
     // basic_production
     boolean toPayFirstFromWarehouse;
     boolean toPaySecondFromWarehouse;
-    ResourceType output;
+    Resource output;
     // normal_production / leader_production
     int position; // should be from 1 to 3 / should be from 1 to 2
     boolean fromWarehouse;

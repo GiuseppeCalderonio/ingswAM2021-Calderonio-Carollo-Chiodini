@@ -1,8 +1,11 @@
 package it.polimi.ingsw.model.LeaderCard;
 
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
-import it.polimi.ingsw.model.Resources.CollectionResources;
-import it.polimi.ingsw.model.Resources.Resource;
+import it.polimi.ingsw.model.Resources.*;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * this class represent the resources required for a player
