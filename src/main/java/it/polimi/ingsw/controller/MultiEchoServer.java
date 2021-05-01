@@ -32,7 +32,7 @@ public class MultiEchoServer {
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
-                executor.submit(new ClientHandler(socket));
+                executor.submit(new WaitingRoom(socket));
 
             } catch(IOException e) {
 

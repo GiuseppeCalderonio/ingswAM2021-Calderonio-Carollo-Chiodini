@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
+import it.polimi.ingsw.controller.gsonManager.MarbleInterfaceAdapter;
+import it.polimi.ingsw.controller.gsonManager.ResourceInterfaceAdapter;
 import it.polimi.ingsw.model.DevelopmentCards.CardColor;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.LeaderCard.*;
@@ -227,20 +229,25 @@ public class Client implements Runnable {
 
                 synchronized (this){
                     if (response.message != null){
-                        if (response.ignorePossibleCommands)
-                            System.out.println(response.message);
+                        if (response.message.equals("ping"))
+                            pong();
                         else{
-                            response.possibleCommands.add("quit");
-                            response.possibleCommands.add("show");
-                            System.out.println(response.message + ", Possible commands:" + response.possibleCommands);
+                            if (response.ignorePossibleCommands)
+                                System.out.println(response.message);
+                            else{
+                                response.possibleCommands.add("quit");
+                                response.possibleCommands.add("show");
+                                System.out.println(response.message + ", Possible commands:" + response.possibleCommands);
+                            }
+
+                            if (response.position > 0){
+                                this.position = response.position;
+                                System.out.println("You are the " + position + "° player");
+                            }
+                            if (response.marbles != 0)
+                                marbles = response.marbles;
                         }
 
-                        if (response.position > 0){
-                            this.position = response.position;
-                            System.out.println("You are the " + position + "° player");
-                        }
-                        if (response.marbles != 0)
-                            marbles = response.marbles;
                     }
                 }
 
@@ -261,6 +268,12 @@ public class Client implements Runnable {
         }
     }
 
+    private void pong() throws IOException {
+        Command pong = new Command();
+        pong.cmd = "pong";
+        send(new PrintWriter(echoSocket.getOutputStream()), pong);
+    }
+
     /**
      * this method send a message to the server, the message
      * have to be in the format class Command
@@ -269,6 +282,7 @@ public class Client implements Runnable {
      */
     private void send(PrintWriter out, Command command){
         out.println(gson.toJson(command, Command.class));
+        out.flush();
     }
 
     /**
@@ -317,7 +331,7 @@ public class Client implements Runnable {
                     return;
                 }
                 System.out.println("Scrivere la seconda risorsa da voler ottenere[coin, stone, shield, servant]");
-                secondResource = stdIn.readLine();
+                secondResource = stdIn.readLine().toUpperCase();
                 if(invalidResource(secondResource)){
                     System.out.println("Risorsa non valida");
                     return;

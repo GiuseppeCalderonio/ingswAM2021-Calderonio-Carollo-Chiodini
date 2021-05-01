@@ -3286,4 +3286,110 @@ class GameTest {
         assertDoesNotThrow(()-> game.endTurn());
         assertThrows(EndGameException.class, ()-> game.endTurn());
     }
+
+    /**
+
+     * this method is used to test the getWinner() of multiGame and singleGame.
+     * We do some turns of the game and then we check what is the player that is winning
+     * in that moment. This is the multiplayer test
+     */
+    @Test
+    public void testWinnerOfGame1() {
+        DevelopmentCard card1 = new DevelopmentCard(CardColor.GREEN, 1, 2, null, null, null, 0);
+        DevelopmentCard card2 = new DevelopmentCard(CardColor.GREEN, 2, 5, null, null, null, 0);
+        DevelopmentCard card3 = new DevelopmentCard(CardColor.GREEN, 3, 10, null, null, null, 0);
+        DevelopmentCard card4 = new DevelopmentCard(CardColor.GREEN, 1, 3, null, null, null, 0);
+        DevelopmentCard card5 = new DevelopmentCard(CardColor.GREEN, 2, 6, null, null, null, 0);
+        DevelopmentCard card6 = new DevelopmentCard(CardColor.GREEN, 3, 11, null, null, null, 0);
+
+        List<String> nicknames = new ArrayList<>(Arrays.asList("first", "second", "third"));
+        game = new Game(nicknames);
+        CollectionResources toInitialise = new CollectionResources();
+        game.initialiseGame(game.getPlayers().get(0).getNickname(), toInitialise, 1, 3);
+        toInitialise.add(new Servant());
+        game.initialiseGame(game.getPlayers().get(1).getNickname(), toInitialise, 1, 3);
+        game.initialiseGame(game.getPlayers().get(2).getNickname(), toInitialise, 1, 3);
+
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card1, 1);
+        game.getPlayers().get(1).getPersonalDashboard().placeDevelopmentCard(card4, 1);
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card2, 1);
+        game.getPlayers().get(1).getPersonalDashboard().placeDevelopmentCard(card5, 1);
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card3, 1);
+        game.getPlayers().get(1).getPersonalDashboard().placeDevelopmentCard(card6, 1);
+
+        game.addFaithPointsTo(game.getPlayers().get(0), 11);
+        game.addFaithPointsTo(game.getPlayers().get(1), 8);
+        assertEquals(game.getWinner(), game.getPlayers().get(0).getNickname());
+
+        CollectionResources coin = new CollectionResources();
+        coin.add(new Coin());
+        CollectionResources collection0 = new CollectionResources();
+        collection0.add(new Coin());
+        collection0.add(new Coin());
+        collection0.add(new Coin());
+        collection0.add(new Coin());
+        collection0.add(new Coin());
+
+        CollectionResources collections1 = new CollectionResources();
+        collections1.add(new Coin());
+        collections1.add(new Coin());
+        collections1.add(new Coin());
+        collections1.add(new Coin());
+        collections1.add(new Coin());
+        collections1.add(new Shield());
+        collections1.add(new Shield());
+        collections1.add(new Stone());
+        collections1.add(new Stone());
+        collections1.add(new Servant());
+
+        game.getPlayers().get(1).getPersonalDashboard().getPersonalStrongbox().addResources(collections1);
+        assertEquals(game.getWinner(), game.getPlayers().get(1).getNickname());
+        game.getPlayers().get(0).getPersonalDashboard().getPersonalStrongbox().addResources(collection0);
+        assertEquals(game.getWinner(), game.getPlayers().get(1).getNickname());
+        game.getPlayers().get(0).getPersonalDashboard().getPersonalStrongbox().addResources(coin);
+        List<String> winners = new ArrayList<>();
+        winners.add(game.getPlayers().get(0).getNickname());
+        winners.add(game.getPlayers().get(1).getNickname());
+        assertTrue(winners.contains(game.getWinner()));
+    }
+
+    /**
+     * this method is used to test the getWinner() of multiGame and singleGame.
+     * We do some turns of the game and then we check what is the player that is winning
+     * in that moment. This is the multiplayer test
+     */
+    @Test
+    public void testWinnerOfGame2() {
+        DevelopmentCard card1 = new DevelopmentCard(CardColor.GREEN, 1, 2, null, null, null, 0);
+        DevelopmentCard card2 = new DevelopmentCard(CardColor.GREEN, 2, 5, null, null, null, 0);
+        DevelopmentCard card3 = new DevelopmentCard(CardColor.GREEN, 3, 8, null, null, null, 0);
+        DevelopmentCard card4 = new DevelopmentCard(CardColor.GREEN, 1, 2, null, null, null, 0);
+        DevelopmentCard card5 = new DevelopmentCard(CardColor.GREEN, 2, 5, null, null, null, 0);
+        DevelopmentCard card6 = new DevelopmentCard(CardColor.GREEN, 3, 8, null, null, null, 0);
+        DevelopmentCard card7 = new DevelopmentCard(CardColor.GREEN, 1, 12, null, null, null, 0);
+        List<String> nicknames = new ArrayList<>(Arrays.asList("first", "second"));
+        game = new Game(nicknames);
+        CollectionResources toInitialise = new CollectionResources();
+        game.initialiseGame(game.getPlayers().get(0).getNickname(), toInitialise, 1, 3);
+        toInitialise.add(new Servant());
+        game.initialiseGame(game.getPlayers().get(1).getNickname(), toInitialise, 1, 3);
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card1, 1);
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card2, 1);
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card3, 1);
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card4, 2);
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card5, 2);
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card6, 2);
+        game.getPlayers().get(1).getPersonalDashboard().placeDevelopmentCard(card1, 1);
+        game.getPlayers().get(1).getPersonalDashboard().placeDevelopmentCard(card2, 1);
+        game.getPlayers().get(1).getPersonalDashboard().placeDevelopmentCard(card3, 1);
+        game.getPlayers().get(1).getPersonalDashboard().placeDevelopmentCard(card4, 2);
+        game.getPlayers().get(1).getPersonalDashboard().placeDevelopmentCard(card5, 2);
+        game.getPlayers().get(1).getPersonalDashboard().placeDevelopmentCard(card6, 2);
+        assertEquals(game.getWinner(), game.getPlayers().get(1).getNickname());
+        game.addFaithPointsTo(game.getPlayers().get(1), 15);
+        assertEquals(game.getWinner(), game.getPlayers().get(1).getNickname());
+        game.getPlayers().get(0).getPersonalDashboard().placeDevelopmentCard(card7, 3);
+
+        assertEquals(game.getWinner(), game.getPlayers().get(0).getNickname());
+    }
 }

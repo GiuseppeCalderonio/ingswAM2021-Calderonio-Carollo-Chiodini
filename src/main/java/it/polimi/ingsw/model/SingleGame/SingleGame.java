@@ -138,7 +138,7 @@ public class SingleGame extends Game {
     public String getWinner() {
         // if the player has more that 7 cards in his dashboard or if he reached the last vatican report
         if (getActualPlayer().getPersonalDashboard().getPersonalProductionPower().getNumOfCards() >= 7 ||
-                getActualPlayer().getPersonalTrack().getPopeFavorTiles()[2].getActive())
+                getActualPlayer().getPersonalTrack().getPosition() == 24)
         // get the nickname player
         return getActualPlayer().getNickname();
         // else

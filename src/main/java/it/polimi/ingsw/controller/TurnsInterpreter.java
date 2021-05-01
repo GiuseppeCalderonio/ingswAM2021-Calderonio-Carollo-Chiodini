@@ -3,20 +3,20 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.DevelopmentCards.CardColor;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.EndGameException;
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.Marble.RedMarble;
 import it.polimi.ingsw.model.Marble.WhiteMarble;
 import it.polimi.ingsw.model.Resources.CollectionResources;
 import it.polimi.ingsw.model.Resources.Resource;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.controller.ClientHandler.*;
-import static it.polimi.ingsw.controller.CommandManager.*;
-
 public class TurnsInterpreter implements CommandInterpreter {
+
+    private final ClientHandler handler;
+    private final Game game;
 
     private List<String> possibleCommands = new ArrayList<>();
     private List<String> previousPossibleCommands = new ArrayList<>();
@@ -45,7 +45,9 @@ public class TurnsInterpreter implements CommandInterpreter {
 
 
     public TurnsInterpreter(ClientHandler handler) {
-        if (getGame().getActualPlayer().getNickname().equals(handler.getNickname())){
+        this.handler = handler;
+        this.game = handler.getGame();
+        if (game.getActualPlayer().getNickname().equals(handler.getNickname())){
             possibleCommands = new ArrayList<>(
                     Arrays.asList("shift_resources",
                             "choose_marbles",
@@ -67,25 +69,27 @@ public class TurnsInterpreter implements CommandInterpreter {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(Command command, ClientHandler handler) throws IOException, EndGameException {
-        if (!getGame().getActualPlayer().getNickname().equals(handler.getNickname()))
+    public ResponseToClient executeCommand(Command command, ClientHandler handler) throws EndGameException {
+        // if is not your turn
+        if (!getGame().isYourTurn(handler.getNickname()))
             return buildResponse("is not your turn!");
-
+        // if the command is not a possible command in this phase of game
         if (!possibleCommands.contains(command.cmd))
             return buildResponse("this command is not available in this phase of the game");
 
         switch (command.cmd) {
 
             case "shift_resources":
-
+                // if on of the shelves selected doesn't exist
                 if (!(getGame().checkShelfSelected(command.source) &&
                         getGame().checkShelfSelected(command.destination)))
                     return buildResponse("error, one of the shelf selected does not exist");
-
+                // if a shift can't be done
                 if (!(getGame().shiftResources(command.source, command.destination)))
                     return buildResponse("error, you can't do this kind of shift");
-
+                // send to every player the new game state
                 sendBroadcastChangePlayerState();
+                // send that string to the client
                 return buildResponse("ok, shift done correctly");
 
             case "choose_marbles":
@@ -109,13 +113,13 @@ public class TurnsInterpreter implements CommandInterpreter {
                 // from here is sure that the marbles selected contains almost a white marble
 
                 // if the player does not own any leader card
-                if (ClientHandler.getGame().getActualPlayer().getLeaderWhiteMarbles().isEmpty()) {
+                if (getGame().getActualPlayer().getLeaderWhiteMarbles().isEmpty()) {
 
                     // if the marbles selected converted to resources do not contains any resource (4 white marbles or 3 white and 1 red marbles)
                     if (marbles.stream().
                             allMatch(marble -> marble.equals(new WhiteMarble()) || marble.equals(new RedMarble()))){
                         // set the state of the game
-                        marblesConverted = ClientHandler.getGame().convert(marbles);
+                        marblesConverted = getGame().convert(marbles);
                         possibleCommands.removeAll(normalActions);
                         possibleCommands.add("end_turn");
                         sendBroadcastMarbleAction();
@@ -126,8 +130,8 @@ public class TurnsInterpreter implements CommandInterpreter {
 
 
                 } // if the actual player has a leader card of type white marble activated
-                else if (ClientHandler.getGame().getActualPlayer().getLeaderWhiteMarbles().size() == 1){
-                    while (ClientHandler.getGame().changeWhiteMarble(marbles, 1));
+                else if (getGame().getActualPlayer().getLeaderWhiteMarbles().size() == 1){
+                    while (getGame().changeWhiteMarble(marbles, 1));
                     return buildResponseToInsertInWarehouse();
                 } // if the actual player has two leader cards of type white marble activated
                 else {
@@ -148,29 +152,31 @@ public class TurnsInterpreter implements CommandInterpreter {
                     return buildResponse("one of the leader card selected does not exist");
 
                 for (int i = 0; i < whiteMarbles.size(); i++) {
-                    ClientHandler.getGame().changeWhiteMarble(marbles, command.indexes[i]);
+                    getGame().changeWhiteMarble(marbles, command.indexes[i]);
                 }
                 // change the state and send to the player that he have to select the marbles converted in his warehouse
                 return buildResponseToInsertInWarehouseLeader();
 
             case "insert_in_warehouse":
                 // if one of the shelves selected does not exist
-                if (!Arrays.stream(command.shelves).allMatch(shelf -> ClientHandler.getGame().checkShelfSelected(shelf)))
+                if (!Arrays.stream(command.shelves).allMatch(shelf -> getGame().checkShelfSelected(shelf)))
                     return buildResponse("one of the shelf selected does not exist");
                 if (resourcesSet.size() != command.shelves.length)
                     return buildResponse("you have selected too much or not anymore shelves");
                 // insert in warehouse all the resources selected in all the shelves selected
                 for (int i = 0; i < resourcesSet.size(); i++) {
-                    ClientHandler.getGame().insertInWarehouse(command.shelves[i], resourcesSet.get(i), marblesConverted);
+                    getGame().insertInWarehouse(command.shelves[i], resourcesSet.get(i), marblesConverted);
                 }
 
                 // restore the previous command and delete from them all the normal actions
                 possibleCommands = previousPossibleCommands;
                 possibleCommands.removeAll(normalActions);
                 possibleCommands.add("end_turn");
+                // send to every player the new game state
                 sendBroadcastMarbleAction();
                 return buildResponse("action completed, resources got added");
             case "buy_card":
+                // if the client can't buy the specified card
                 if (!getGame().checkBuyCard(command.level, command.color))
                     return buildResponse("error, one of these things could be the motivation :" +
                             "(1) you have selected a level not between 1 and 3, " +
@@ -178,134 +184,186 @@ public class TurnsInterpreter implements CommandInterpreter {
                             "(3) you have selected an empty deck of cards, " +
                             "(4) you can't buy the card because you can't afford it, " +
                             "(5) you can't place the card selected into the dashboard");
+                // set the color of the card into a buffer
                 color = command.color;
+                // set the level of the card into a buffer
                 level = command.level;
+                // store the card selected into a buffer
                 card = getGame().getSetOfCard().getCard(level, color);
+                // set the new possible commands
                 previousPossibleCommands = new ArrayList<>(possibleCommands);
                 possibleCommands = new ArrayList<>(Collections.singletonList("select_position"));
                 return buildResponse("deck selected is available, now decide where you want to place the card in your dashboard");
 
             case "select_position":
+                // if card previously selected can't be placed in the space selected
                 if (!getGame().checkPlacement(card, command.dashboardPosition)) {
+                    // reset the possible commands
                     possibleCommands = previousPossibleCommands;
                     return buildResponse("error, one of these things could be the motivation :" +
                             "1) the position selected is not between 1 and 3" +
                             "2) the position selected does not allow the card placement");
                 }
+                // set the dashboard position in which place the card
                 dashboardPosition = command.dashboardPosition;
                 possibleCommands = new ArrayList<>(Collections.singletonList("select_resources_from_warehouse"));
                 return buildResponse("now select the warehouse resources to pay the card");
 
             case "select_resources_from_warehouse":
                 possibleCommands = previousPossibleCommands;
+                // if the warehouse resources to buy the card are not compatible with the
+                // resources storage state of the player
                 if (!getGame().checkWarehouseResources(card, command.toPayFromWarehouse))
                     return buildResponse("error,you have selected an incorrect number of resources");
 
-
+                // buy the card with the resources chosen
                 getGame().buyCard(level, color, dashboardPosition ,command.toPayFromWarehouse);
+                // delete any normal action from the possible commands
                 possibleCommands.removeAll(normalActions);
+                // add end turn to the possible commands
                 possibleCommands.add("end_turn");
+                // send to every player the new game state
                 sendBroadcastCardAction();
-
                 return buildResponse("card bought correctly");
 
             case "production":
 
                 previousPossibleCommands = new ArrayList<>(possibleCommands);
+                // set the possible commands to the productions
                 possibleCommands = productions;
-
+                // clear production filter only the production that could be activated, returning true if are none
+                // if the client can't activate any kind of production
                 if (clearProductions()){
                     possibleCommands = previousPossibleCommands;
                     return buildResponse("you can't activate any production, choose another action");
                 }
+
                 return buildResponse("write the production type that you want activate");
 
             case "basic_production":
+                // if the production can't be activated
                 if (!getGame().checkProduction(0))
                     return buildResponse("you selected a position that doesn't exist, or you selected a wrong amount of resources");
                 if (!getGame().checkActivateBasicProduction(command.toPayFromWarehouse, command.toPayFromStrongbox, command.output))
                     return buildResponse("error, one of these things could be the motivation :" +
                             "1) you haven't chosen the right amount of resources (you have to choose 2 resources in input and 1 in output)" +
                             "2) you don't own the chosen resources in your storage");
+                // activate the basic production
                 getGame().activateBasicProduction(command.toPayFromWarehouse, command.toPayFromStrongbox, command.output);
+                // filter the possible production after the internal state change
+                clearProductions();
+                // remove the basic production from the possible commands
                 possibleCommands.remove("basic_production");
+                // set to true the activation of the basic production
                 basicProductionActivated = true;
-                sendBroadcastChangePlayerState(); // code 3
+                // send to every player the new game state
+                sendBroadcastChangePlayerState();
                 return buildResponse("basic production activated correctly, now choose another one or end the production");
             case "normal_production":
+                // if the production can't be activated
                 if (!getGame().checkProduction(command.position))
                     return buildResponse("you selected a position that doesn't exist");
                 if (normalProductionsActivated[command.position - 1])
                     return buildResponse("you already selected this production before, choose another one or end the production");
                 if (!getGame().checkActivateProduction(command.position, command.toPayFromWarehouse))
                     return buildResponse("error from check");
+                // activate the production
                 getGame().activateProduction(command.position, command.toPayFromWarehouse);
-
+                // filter the possible production after the internal state change
+                clearProductions();
+                // set to true the activation of the normal production eventually removing it from the possible commands
                 checkActivatedNormalProductions(command.position);
+                // send to every player the new game state
                 sendBroadcastChangePlayerState(); // code 3
                 return buildResponse(command.position + "° normal production activated correctly, now choose another one or end the production");
 
             case "leader_production":
+                // if the production can't be activated
                 if (!getGame().checkProduction(command.position + 3))
                     return buildResponse("error,you don't have enough resources or the production selected doesn't exist");
                 if (leaderProductionsActivated[command.position - 1])
                     return buildResponse("you already selected this production before, choose another one or end the production");
                 if (!getGame().checkActivateLeaderProduction(command.position, command.fromWarehouse))
                     return buildResponse("error,you have selected an incorrect number of resources");
+                // activate the production
                 getGame().activateLeaderProduction(command.position, command.output, command.fromWarehouse);
-                checkActivateLeaderProductions(command.position);
+                // filter the possible production after the internal state change
+                clearProductions();
+                // set to true the activation of the leader production eventually removing it from the possible commands
+                checkActivatedNormalProductions(command.position);
+                // send to every player the new game state
                 sendBroadcastChangePlayerState();
                 return buildResponse(command.position + "° leader production activated correctly, now choose another one or end the production");
             case "end_production":
+                // end the production filling the strongbox with all the resources gained
                 getGame().endProduction();
+                // if the player didn't activate any kind of production
                 if (anyProductionGotActivated()){
                     possibleCommands = previousPossibleCommands;
                     return buildResponse("you didn't activate any production");
                 }
+                // reset the possible commands
                 possibleCommands = previousPossibleCommands;
+                // remove all the normal actions from the possible commands
                 possibleCommands.removeAll(normalActions);
+                // add the end turn to the possible commands
                 possibleCommands.add("end_turn");
                 return buildResponse("the production is finished");
 
             case "leader_action":
                 previousPossibleCommands = new ArrayList<>(possibleCommands);
+                // set the possible commands to the leader actions
                 possibleCommands = leaderActions;
                 return buildResponse("choose the leader action to do");
 
             case "activate_card":
+                // if the card doesn't exist
                 if (!getGame().checkLeaderCard(command.toActivate)){
+                    // reset the previous possible commands
                     possibleCommands = previousPossibleCommands;
                     return buildResponse("the leader cards selected does not exist");
                 }
+                // if the card can't be activated
                 if (!getGame().activateLeaderCard(command.toActivate)){
+                    // reset the possible commands
                     possibleCommands = previousPossibleCommands;
                     return buildResponse("the leader card is already active or you don't meet the requirements to activate it");
                 }
-
+                // reset the possible commands
                 possibleCommands = previousPossibleCommands;
+                // remove leader actions from possible commands
                 possibleCommands.remove("leader_action");
+                // send to every player the new game state
                 sendBroadcastChangePlayerState();
                 return buildResponse("leader card activated");
 
             case "discard_card":
+                // if the card selected doesn't exist
                 if (!getGame().checkLeaderCard(command.toDiscard)){
                     possibleCommands = previousPossibleCommands;
                     return buildResponse("the leader cards selected does not exist");
                 }
+                // if the card can't be discarded
                 if (!getGame().discardLeaderCard(command.toDiscard)){
                     possibleCommands = previousPossibleCommands;
                     return buildResponse("the leader card is already active and you can't discard it");
                 }
-
+                // reset the previous possible commands
                 possibleCommands = previousPossibleCommands;
+                // remove leader actions from possible commands
                 possibleCommands.remove("leader_action");
+                // send to every player the new game state
                 sendBroadcastChangePlayerState();
                 return buildResponse("leader card discarded");
 
             case "end_turn":
+                // end the turn
                 getGame().endTurn();
+                // remove all the possible commands
                 possibleCommands.clear();
-                if (getNumberOfPlayers().get() == 1){
+                // if the client is playing a single player match
+                if (handler.getNumberOfPlayers() == 1){
+                    // send to the client the new game state
                     sendEndSingleGame();
                     return buildSoloResponse();
                 }
@@ -318,6 +376,18 @@ public class TurnsInterpreter implements CommandInterpreter {
     public List<String> getPossibleCommands() {
 
         return possibleCommands;
+    }
+
+    /**
+     * this method return the enum associated with the phase of the game
+     * for loginInterpreter, it returns LOGIN, for initialisingInterpreter, it returns INITIALISING,
+     * for turnsInterpreter, it returns TURNS
+     *
+     * @return the enum associated with the phase of the game
+     */
+    @Override
+    public GamePhase getGamePhase() {
+        return GamePhase.TURNS;
     }
 
     private ResponseToClient buildResponse(String message) {
@@ -362,41 +432,41 @@ public class TurnsInterpreter implements CommandInterpreter {
      */
     private void shiftMarket(Command command) {
         if (command.dimension.equals("row"))
-            marbles = ClientHandler.getGame().selectRow(command.index);
+            marbles = getGame().selectRow(command.index);
         if (command.dimension.equals("column"))
-            marbles = ClientHandler.getGame().selectColumn(command.index);
+            marbles = getGame().selectColumn(command.index);
     }
 
 
-    private void sendBroadcastMarbleAction() throws IOException {
-        for (ClientHandler handler : getHandlers()) {
+    private void sendBroadcastMarbleAction() {
+        for (ClientHandler client : handler.getClients()) {
             ResponseToClient response = new ResponseToClient();
-            updatePlayers(response, handler.getNickname());
-            updateMarbleMarket(response);
+            client.updatePlayers(response, client.getNickname());
+            client.updateMarbleMarket(response);
             response.code = 5;
             response.ignorePossibleCommands = true;
-            handler.send(response);
+            client.send(response);
         }
     }
 
-    private void sendBroadcastCardAction() throws IOException {
-        for (ClientHandler handler : getHandlers()) {
+    private void sendBroadcastCardAction() {
+        for (ClientHandler client : handler.getClients()) {
             ResponseToClient response = new ResponseToClient();
-            updatePlayers(response, handler.getNickname());
-            updateCardsMarket(response);
+            client.updatePlayers(response, client.getNickname());
+            client.updateCardsMarket(response);
             response.code = 6;
             response.ignorePossibleCommands = true;
-            handler.send(response);
+            client.send(response);
         }
     }
 
-    private void sendBroadcastChangePlayerState() throws IOException {
-        for (ClientHandler handler : getHandlers()) {
+    private void sendBroadcastChangePlayerState() {
+        for (ClientHandler client : handler.getClients()) {
             ResponseToClient response = new ResponseToClient();
-            updatePlayers(response, handler.getNickname());
+            client.updatePlayers(response, client.getNickname());
             response.code = 3;
             response.ignorePossibleCommands = true;
-            handler.send(response);
+            client.send(response);
         }
     }
 
@@ -409,7 +479,7 @@ public class TurnsInterpreter implements CommandInterpreter {
 
     private ResponseToClient buildResponseToInsertInWarehouseLeader(){
         possibleCommands = new ArrayList<>(Collections.singletonList("insert_in_warehouse"));
-        marblesConverted = ClientHandler.getGame().convert(marbles);
+        marblesConverted = getGame().convert(marbles);
         ResponseToClient response = buildResponse("you gained " + marblesConverted + ", decide how to place them into the warehouse");
         response.serialize = true;
         response.code = 4;
@@ -462,17 +532,20 @@ public class TurnsInterpreter implements CommandInterpreter {
 
     }
 
-    private void sendEndSingleGame() throws IOException {
-        for (ClientHandler handler : getHandlers()) {
+    private void sendEndSingleGame() {
+        for (ClientHandler client : handler.getClients()) {
             ResponseToClient response = new ResponseToClient();
-            updatePlayers(response, handler.getNickname());
-            updateCardsMarket(response);
-            updateSoloTokens(response);
+            client.updatePlayers(response, client.getNickname());
+            client.updateCardsMarket(response);
+            client.updateSoloTokens(response);
             response.ignorePossibleCommands = true;
             response.code = 7;
             response.serialize = true;
-            handler.send(response);
+            client.send(response);
         }
     }
-}
 
+    private Game getGame(){
+        return game;
+    }
+}

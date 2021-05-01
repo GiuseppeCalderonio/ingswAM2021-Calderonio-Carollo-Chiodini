@@ -49,7 +49,7 @@ public class GraphicalDevelopmentCard implements CharFigure{
      */
     @Override
     public void draw(int relX, int relY) {
-        int midPointHeight = (int) (relX + Math.ceil(height * 1.0 / 2.0));
+        int midPointHeight = (int) (Math.ceil(height * 1.0 / 2.0));
         int midPointWidth = (int) (relX + Math.ceil(width * 1.0 / 2.0));
         int k=0;
         //inizialize the card a the respective color
@@ -69,11 +69,11 @@ public class GraphicalDevelopmentCard implements CharFigure{
         }
         if(developmentCard.getCost().getMaps().size() == 3) {
             stream.addString(relX + midPointWidth + k, relY, String.valueOf(developmentCard.getCost().getMaps().get(2).getCardinality()), ForeColor.ANSI_BLACK, developmentCard.getCost().getMaps().get(2).getResource().getColor());
-            k++;
+            k += 1;
         }
 
         //add the level to the card
-        stream.addString(relX,relY +1, "lev:" + String.valueOf(developmentCard.getLevel()), ForeColor.ANSI_BLACK, developmentCard.getBackColor());
+        stream.addString(relX,relY +1, "lev:" + developmentCard.getLevel(), ForeColor.ANSI_BLACK, developmentCard.getBackColor());
 
         //add the production at the card
         GraphicalProduction cardProduction = new GraphicalProduction(stream, developmentCard.getProductionPowerInput(), developmentCard.getProductionPowerOutput(), developmentCard.getProductionPowerFaithPoints(), 0,5);

@@ -56,11 +56,11 @@ public class InitialisingInterpreter implements CommandInterpreter{
                 toVerify.add(command.firstResource);
                 toVerify.add(command.secondResource);
                 // if the resources chosen are not compatible with the player position
-                if (!ClientHandler.getGame().checkInitialising(handler.getNickname(), toVerify))
+                if (!handler.getGame().checkInitialising(handler.getNickname(), toVerify))
                     return buildResponse("you have chosen too much or not anymore resources");
 
                 possibleCommands.remove("initialise_resources");
-                ClientHandler.getGame().initialiseGame(handler.getNickname(), toVerify, card1, card2);
+                handler.getGame().initialiseGame(handler.getNickname(), toVerify, card1, card2);
                 // if the game got created correctly
                 return buildResponse("ok, now wait that everyone decides his resources and leader cards, then the game will start");
             // in theory unreachable statement, but it can help if something does not work correctly
@@ -72,6 +72,18 @@ public class InitialisingInterpreter implements CommandInterpreter{
 
     public List<String> getPossibleCommands() {
         return possibleCommands;
+    }
+
+    /**
+     * this method return the enum associated with the phase of the game
+     * for loginInterpreter, it returns LOGIN, for initialisingInterpreter, it returns INITIALISING,
+     * for turnsInterpreter, it returns TURNS
+     *
+     * @return the enum associated with the phase of the game
+     */
+    @Override
+    public GamePhase getGamePhase() {
+        return GamePhase.INITIALISING;
     }
 
     private ResponseToClient buildResponse(String message){

@@ -1,181 +1,104 @@
 package it.polimi.ingsw.controller;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import it.polimi.ingsw.model.EndGameException;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Marble.Marble;
-import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
-import it.polimi.ingsw.model.Resources.Resource;
-import it.polimi.ingsw.model.SingleGame.CardToken;
-import it.polimi.ingsw.model.SingleGame.SingleGame;
-import it.polimi.ingsw.model.SingleGame.SoloToken;
-import it.polimi.ingsw.model.SingleGame.TrackToken;
+import it.polimi.ingsw.view.ThinLeaderCard;
+import it.polimi.ingsw.view.ThinPlayer;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class ClientHandler implements Runnable {
-    private static List<ClientHandler> handlers = new ArrayList<>();
+public class ClientHandler implements Runnable{
     private final Socket socket;
-    private static List<Socket> sockets = new ArrayList<>();
-    private static Game game;
-    private static AtomicInteger numberOfPlayers = null;
     private String nickname = "";
-    private static List<String> nicknames = new ArrayList<>();
-    private Gson gson;
+    private final Gson gson;
     private CommandManager commandManager;
+    private final Lobby lobby;
+    private final PrintWriter out;
+    private final Scanner in;
 
-    public ClientHandler(Socket socket) {
+    public ClientHandler(Socket socket, Lobby lobby, PrintWriter out, Scanner in, Gson gson) {
 
         this.socket = socket;
-        /*
-
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapterFactory(
-                RuntimeTypeAdapterFactory.
-                        of(SoloToken.class, "type").
-                        registerSubtype(TrackToken.class, "trackToken").
-                        registerSubtype(CardToken.class, "cardToken"));
-        builder.registerTypeAdapter(Resource.class, new ResourceInterfaceAdapter());
-        builder.registerTypeAdapter(Marble.class, new MarbleInterfaceAdapter());
-        gson = builder.create();
-
-         */
+        this.lobby = lobby;
+        // create the gson parser
+        this.gson = gson;
+        this.in = in;
+        this.out = out;
     }
 
-    public void run() {
+    public void start() {
         try {
-            Scanner in = new Scanner(socket.getInputStream());
-            PrintWriter out = new PrintWriter(socket.getOutputStream());
-            if (kickIfGameExist(out, in) || kickIfPlayersToDefine(out, in)  || kickIfLobbyFullOfClient(out, in) ){
-                if (sockets.isEmpty()) // if any socket is connected to the server
-                    resetValues();
-                return;
-            }
-            sockets.add(socket);
-            handlers.add(this);
             System.out.println("New connection with " + socket);
-            gson = createGson();
+            // create a thread to ping players
+            Thread t = new Thread(this);
+            t.start();
+
+            // create a new command manager
             commandManager = new CommandManager(this);
-            if (numberOfPlayers == null)
-                numberOfPlayers = new AtomicInteger(-1);
 
-            Command command;
-            while (true) {
-                String line;
-                try {
-                    line = in.nextLine(); // read the message sent from the client
-                }catch (NoSuchElementException e){
-                    System.err.println("A client disconnected");
-                    System.err.println(e.getMessage());
-                    break;
-                }
-                try {
-                    command = gson.fromJson(line, Command.class); // convert the message in a processable command
-                }catch (JsonSyntaxException e) {
-                    System.err.println("Problem...");
-                    break;
-                }
-
-                if (command.cmd.equals("quit")) // quit the game if a player wat to exit
-                    break;
-                try {
-                    commandManager.processCommand(command, this); // process the command and send the message or the messages to the players
-                }catch (IOException e){
-                    System.err.println("IO exception" + e.getMessage());
-                    break;
-                }catch (EndGameException e){
-                    ResponseToClient response = new ResponseToClient();
-                    // multiPlayer
-                    if (numberOfPlayers.get() != 1){
-
-                        int maxVictoryPoints = getGame().getPlayers().stream().
-                                mapToInt(RealPlayer::getVictoryPoints).
-                                max().orElse(0);
-                        response.message = "The game finish, the winner is" + getGame().getPlayers().
-                                stream().filter(player -> player.getVictoryPoints() == maxVictoryPoints).
-                                collect(Collectors.toList());
-                        response.ignorePossibleCommands = true;
-
-                    }else { // singlePlayer
-                        if (game.getActualPlayer().getPersonalDashboard().getPersonalProductionPower().getNumOfCards() >= 7 ||
-                                (game.getActualPlayer().getPersonalTrack().getPopeFavorTiles()[2].getActive()) ) {
-                            response.message = "You won! victory points gained :"+ game.getActualPlayer().getVictoryPoints();
-                        }
-                        else{
-                            response.message = "You lost... victory points gained :"+ game.getActualPlayer().getVictoryPoints();
-                        }
-                        // return to the player the winner
+            boolean exit = true;
+            while (exit) {
+                    try {
+                        exit = readMessage();
+                    } catch (Exception e){
+                        System.out.println(e.getMessage());
+                        exit = false;
                     }
-                    response.ignorePossibleCommands = true;
-                    sendInBroadcast(response);
-                    CommandManager.getCommandManagers().forEach(commandManager1 -> commandManager1.getCommandInterpreter().getPossibleCommands().clear());
-                }
             }
+
             // closing stream and sockets, and eventually restart a new game kicking off every player
             in.close();
             out.close();
             socket.close();
-            sockets.remove(socket);
-            handlers.remove(this);
-            nicknames.remove(nickname);
-            CommandManager.getCommandManagers().remove(commandManager);
+            //sockets.remove(socket);
+            lobby.removeClient(this);
+            lobby.getNicknames().remove(nickname);
+            //commandManager.getCommandManagers().remove(commandManager);
             System.out.println("Connection closed with " + socket);
-            System.out.println("Connection to close: " + sockets);
 
-            if (game != null) // if the game isn't in the login phase
-                notifyEnd();
-            if (sockets.isEmpty()) // if any socket is connected to the server
-                resetValues();
+            if (!commandManager.getCommandInterpreter().getGamePhase().equals(GamePhase.LOGIN)) // if the game isn't in the login phase
+                sendBroadcastDisconnection();
 
-            System.out.println("Connection remaining: " + sockets);
-        } catch (IOException e) {
+        } catch(IOException e) {
             System.err.println("Error with IOException");
             System.err.println(e.getMessage());
+        } catch (Exception e){
+            System.err.println("Fatal error");
+            System.out.println(e.getMessage());
         }
     }
 
-    public synchronized void addPlayer(ClientHandler handler){
-        handlers.add(handler);
+    public synchronized Game getGame() {
+        return lobby.getGame();
     }
 
-    public static synchronized Game getGame() {
-        return game;
-    }
-
-    public static synchronized void setGame (List<String> nicknames){
-        ClientHandler.game = new Game(nicknames);
-    }
-
-    public static synchronized void setSingleGame (List<String> nicknames){
-        ClientHandler.game = new SingleGame(nicknames);
+    public synchronized void createGame (){
+        lobby.createGame();
     }
 
     public CommandManager getCommandManager() {
         return commandManager;
     }
 
-    public static synchronized AtomicInteger getNumberOfPlayers () {
-        return numberOfPlayers;
+    public synchronized int getNumberOfPlayers () {
+        return lobby.getNumberOfPlayers();
     }
 
-    public synchronized void setNumberOfPlayers (AtomicInteger numberOfPlayers){
-        ClientHandler.numberOfPlayers = numberOfPlayers;
-    }
 
     public synchronized void addNickname (String nickname){
-        nicknames.add(nickname);
+        lobby.addNickname(nickname);
     }
 
-    public static synchronized List<String> getNicknames () {
-        return nicknames;
+    public synchronized List<String> getNicknames () {
+
+        return lobby.getNicknames();
     }
 
     public String getNickname () {
@@ -184,131 +107,186 @@ public class ClientHandler implements Runnable {
 
     public void setNickname (String nickname){ this.nickname = nickname; }
 
-    public static void setNicknames(List<String> nicknames) {
-        ClientHandler.nicknames = nicknames;
-    }
-
-    public static List<ClientHandler> getHandlers() {
-        return handlers;
+    public List<ClientHandler> getClients() {
+        return lobby.getClients();
     }
 
     public Socket getSocket() {
         return socket;
     }
 
-    public static void setHandlers(List<ClientHandler> handlers) {
-        ClientHandler.handlers = handlers;
+    public boolean isYourTurn(){
+        return lobby.getGame().isYourTurn(nickname);
     }
+
+
 
     /**
      * this method notify every player of the disconnection of the game
      * for any possible reason, and close the connection
      * @throws IOException Signals that an I/O exception of some sort has occurred
      */
-    private void notifyEnd () throws IOException {
-        sockets = sockets.stream().filter(Objects::nonNull).collect(Collectors.toList());
-        for (ClientHandler handler : getHandlers()) {
+    private synchronized void sendBroadcastDisconnection () throws IOException {
+        List<ClientHandler> clients = getClients().stream().filter(Objects::nonNull).collect(Collectors.toList());
+        for (ClientHandler client : clients) {
             ResponseToClient response = new ResponseToClient();
             response.message = "Someone left the game, everyone will be kicked out";
-            handler.send(response);
-            handler.socket.getOutputStream().close();
-            handler.socket.getInputStream().close();
-            handler.socket.close();
+            client.send(response);
+            client.socket.getOutputStream().close();
+            client.socket.getInputStream().close();
+            client.socket.close();
         }
-        sockets.clear();
+        getClients().clear();
+        lobby.setGameFinished();
+
     }
 
-    private synchronized void resetValues(){
-        game = null;
-        numberOfPlayers = null;
-        nicknames.clear();
-        handlers.clear();
-        CommandManager.getCommandManagers().clear();
-    }
-
-    public static void sendInBroadcast (ResponseToClient message) throws IOException {
-        for (ClientHandler handler : handlers) {
+    public synchronized void sendInBroadcast (ResponseToClient message) {
+        for (ClientHandler handler : getClients()) {
             handler.send(message);
         }
-    }
-
-    private boolean kickIfLobbyFullOfClient(PrintWriter out, Scanner in) throws IOException {
-        if (numberOfPlayers == null) return false;
-        if (numberOfPlayers.get() == handlers.size()){
-            ResponseToClient response = new ResponseToClient();
-            response.message = "Sorry, the lobby is full of people";
-            send(response);
-            in.close();
-            out.close();
-            socket.close();
-            handlers.remove(this);
-            return true;
-        }
-        return false;
-
-    }
-
-    /**
-     * this private method close the connection if a player have
-     * to decide the total number of players
-     * @param out this is the PrintWriter associated with the socket
-     * @param in this is the Scanner associated with the socket
-     * @throws IOException Signals that an I/O exception of some sort has occurred
-     */
-    private boolean kickIfPlayersToDefine(PrintWriter out, Scanner in) throws IOException {
-        if (numberOfPlayers == null) return false;
-        if (numberOfPlayers.get() < 0) {
-            ResponseToClient response = new ResponseToClient();
-            response.message = "Sorry, the number of players is yet to define";
-            send(response);
-            in.close();
-            out.close();
-            socket.close();
-            handlers.remove(this);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * this private method close the connection if a game
-     * already exist
-     * @param out this is the PrintWriter associated with the socket
-     * @param in this is the Scanner associated with the socket
-     * @throws IOException Signals that an I/O exception of some sort has occurred
-     */
-    private boolean kickIfGameExist(PrintWriter out, Scanner in) throws IOException {
-        if (game == null) return false;
-        ResponseToClient response = new ResponseToClient();
-        response.message = "Sorry, a game is already running on the server, try later";
-        send(response);
-        in.close();
-        out.close();
-        socket.close();
-        handlers.remove(this);
-        return true;
     }
 
     /**
      * this method send a message to the client associated
      * @param message this is the message to send
-     * @throws IOException Signals that an I/O exception of some sort has occurred
      */
-    public void send(ResponseToClient message) throws IOException {
-        PrintWriter out = new PrintWriter(socket.getOutputStream());
+    public synchronized void send(ResponseToClient message){
         out.println(gson.toJson(message, ResponseToClient.class));
         out.flush();
     }
 
-    private Gson createGson(){
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapterFactory(
-                RuntimeTypeAdapterFactory.
-                        of(SoloToken.class, "type").
-                        registerSubtype(TrackToken.class, "trackToken").
-                        registerSubtype(CardToken.class, "cardToken"));
-        builder.registerTypeAdapter(Resource.class, new ResourceInterfaceAdapter());
-        builder.registerTypeAdapter(Marble.class, new MarbleInterfaceAdapter());
-        return builder.create();
+    public void updatePlayers(ResponseToClient response , String nickname){
+        // create the thin single player relative to the player that is playing the turn
+        response.actualPlayer = new ThinPlayer(getGame().findPlayer(nickname));
+        // if the game is a single game
+        if (getNumberOfPlayers() == 1){
+            ThinPlayer lorenzo = new ThinPlayer(getGame().getLorenzoIlMagnifico());
+            response.opponents = new ArrayList<>(Collections.singletonList(lorenzo));
+        } // if the game is not a single game
+        else{
+            response.opponents = getGame().getPlayers().stream().
+                    filter(player -> !getGame().findPlayer(nickname).equals(player)).
+                    map(ThinPlayer::new).
+                    collect(Collectors.toList());
+            hideLeaderCards(response.opponents);
+        }
+        response.serialize = true;
+    }
+
+    private ResponseToClient buildResponse(String message){
+        ResponseToClient response = new ResponseToClient();
+        response.message = message;
+        response.possibleCommands = commandManager.getCommandInterpreter().getPossibleCommands();
+        return response;
+    }
+
+    private ResponseToClient buildEndGameResponse(){
+        ResponseToClient response = buildResponse("The game finish, the winner is" + lobby.getGame().getWinner());
+        response.ignorePossibleCommands = true;
+        return response;
+    }
+
+    /**
+     * this method hide the leader cards of a thin player, in fact the cards
+     * of a player different from the owner, when another player did not activate
+     * a leader card, should not be visible
+     * @param players these are the player with the leader cards to hide
+     */
+    private void hideLeaderCards(List<ThinPlayer> players){
+        for (ThinPlayer player : players){
+            for (ThinLeaderCard card : player.getThinLeaderCards()){
+                if (!card.isActive())
+                    card.hide();
+            }
+        }
+    }
+
+    public void updateMarbleMarket(ResponseToClient response){
+        response.marbleMarket = getGame().getMarketBoard().getMarketTray();
+        response.lonelyMarble = getGame().getMarketBoard().getLonelyMarble();
+        response.serialize = true;
+    }
+
+    public void updateCardsMarket(ResponseToClient response){
+        response.cardsMarket = getGame().getSetOfCard().show();
+        response.serialize = true;
+    }
+
+    public void updateSoloTokens(ResponseToClient response){
+        try {
+            response.soloToken = getGame().getSoloTokens().get(getGame().getSoloTokens().size() - 1);
+        } catch (IndexOutOfBoundsException | NullPointerException e){ // when there isn't a singleGame
+            response.soloToken = null;
+        }
+        response.serialize = true;
+    }
+
+    private boolean readMessage() throws IOException{
+        String line;
+        // read from the input (eventually throws SocketTimeoutException)
+        line = in.nextLine();
+
+        Command command;
+        try {
+            // translate the string to a command
+            command = gson.fromJson(line, Command.class); // convert the message in a processable command
+        // when the command is not in a json format
+        }catch (JsonSyntaxException e) { // the string received is not in gson format
+            send(buildResponse("you have to insert a json string format"));
+            return true;
+        }
+        try {// if the message is a pong
+            if (command.cmd.equals("pong")) {
+                // reset the socket timeout
+                socket.setSoTimeout(0);
+                return true;
+            }
+            // if the player want to quit
+            if (command.cmd.equals("quit")) // quit the game if a player wat to exit
+                return false;
+            // process the command received
+            commandManager.processCommand(command); // process the command and send the message or the messages to the players
+
+            return true;
+        // if one of the parameters of the command does not respect the preconditions
+        }catch (NullPointerException | IndexOutOfBoundsException e){ // the command sent is not correct
+
+            send(buildResponse("Something gone wrong, you've probably chosen wrong inputs "));
+            return true;
+        // if the game finish
+        }catch (EndGameException e){ // the condition of ending a game are met
+
+            sendInBroadcast(buildEndGameResponse());
+
+            lobby.setGameFinished();
+
+            return true;
+        }
+    }
+
+    /**
+     * When an object implementing interface {@code Runnable} is used
+     * to create a thread, starting the thread causes the object's
+     * {@code run} method to be called in that separately executing
+     * thread.
+     * <p>
+     * The general contract of the method {@code run} is that it may
+     * take any action whatsoever.
+     *
+     * @see Thread#run()
+     */
+    @Override
+    public void run() {
+        while (true){
+            try {
+                lobby.ping();
+                TimeUnit.SECONDS.sleep(5);
+                if (lobby.isGameFinished())
+                    return;
+            } catch (IOException | InterruptedException e){
+                return;
+            }
+        }
     }
 }

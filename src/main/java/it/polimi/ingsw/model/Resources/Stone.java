@@ -59,6 +59,6 @@ public class Stone implements Resource {
      * this method return the color associated to the Stone: grey
      */
     public BackColor getColor() {
-        return BackColor.ANSI_GREY;
+        return BackColor.ANSI_BRIGHT_BG_BLACK;
     }
 }

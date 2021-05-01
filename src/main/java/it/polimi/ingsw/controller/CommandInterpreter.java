@@ -1,8 +1,10 @@
 package it.polimi.ingsw.controller;
 
-import java.io.IOException;
 import java.util.List;
 
+/**
+ * this class is used to execute commands, and create the response to the clients
+ */
 public interface CommandInterpreter {
 
     /**
@@ -15,7 +17,7 @@ public interface CommandInterpreter {
      *                a internal state change
      * @return the response to send to the client\s
      */
-    ResponseToClient executeCommand(Command command, ClientHandler handler) throws IOException;
+    ResponseToClient executeCommand(Command command, ClientHandler handler);
 
     /**
      * this method get the possible command for a player
@@ -23,4 +25,23 @@ public interface CommandInterpreter {
      * @return the possible command for a player according with the rules of the game
      */
     List<String> getPossibleCommands();
+
+    /**
+     * this method return a boolean that represent if a phase of the game is finished,
+     * and the FSA of the game can evolve
+     * @return true if the phase of the game is finished, false otherwise
+     */
+    default boolean IsPhaseFinished(){
+        return getPossibleCommands().isEmpty();
+    }
+
+    /**
+     * this method return the enum associated with the phase of the game
+     * for loginInterpreter, it returns LOGIN, for initialisingInterpreter, it returns INITIALISING,
+     * for turnsInterpreter, it returns TURNS
+     * @return the enum associated with the phase of the game
+     */
+    GamePhase getGamePhase();
+
+
 }
