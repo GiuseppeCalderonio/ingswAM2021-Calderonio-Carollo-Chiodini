@@ -809,7 +809,7 @@ public class Game {
                         getPersonalProductionPower().
                         getNumOfCards()).
                 max().orElse(0); //get the max number of cards of every player
-        if (vaticanReports[2] || cards >= 7) throw new EndGameException("Game Finished"); // check if the conditions to end a game are met
+        if (vaticanReports[2] || cards >= 7) throw new EndGameException(getWinner()); // check if the conditions to end a game are met
     }
 
     /**

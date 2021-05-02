@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class ClientHandler implements Runnable{
@@ -22,6 +23,7 @@ public class ClientHandler implements Runnable{
     private final Lobby lobby;
     private final PrintWriter out;
     private final Scanner in;
+    private final AtomicBoolean play = new AtomicBoolean(true);
 
     public ClientHandler(Socket socket, Lobby lobby, PrintWriter out, Scanner in, Gson gson) {
 
@@ -43,24 +45,22 @@ public class ClientHandler implements Runnable{
             // create a new command manager
             commandManager = new CommandManager(this);
 
-            boolean exit = true;
-            while (exit) {
-                    try {
-                        exit = readMessage();
-                    } catch (Exception e){
-                        System.out.println(e.getMessage());
-                        exit = false;
-                    }
+
+            while (play.get()) {
+                try {
+                    play.set(readMessage());
+                } catch (Exception e){
+                    System.err.println("A generic error occurs :" + e.getMessage());
+                    play.set(false);
+                }
             }
 
             // closing stream and sockets, and eventually restart a new game kicking off every player
             in.close();
             out.close();
             socket.close();
-            //sockets.remove(socket);
             lobby.removeClient(this);
             lobby.getNicknames().remove(nickname);
-            //commandManager.getCommandManagers().remove(commandManager);
             System.out.println("Connection closed with " + socket);
 
             if (!commandManager.getCommandInterpreter().getGamePhase().equals(GamePhase.LOGIN)) // if the game isn't in the login phase
@@ -222,40 +222,40 @@ public class ClientHandler implements Runnable{
         response.serialize = true;
     }
 
-    private boolean readMessage() throws IOException{
+    private boolean readMessage() {
         String line;
-        // read from the input (eventually throws SocketTimeoutException)
-        line = in.nextLine();
+        // read from the input (eventually throws NoSuchElementException)
+        try {
+            line = in.nextLine();
+        } catch (NoSuchElementException e){
+            return false;
+        }
+
 
         Command command;
         try {
             // translate the string to a command
             command = gson.fromJson(line, Command.class); // convert the message in a processable command
-        // when the command is not in a json format
+            // when the command is not in a json format
         }catch (JsonSyntaxException e) { // the string received is not in gson format
             send(buildResponse("you have to insert a json string format"));
             return true;
         }
-        try {// if the message is a pong
-            if (command.cmd.equals("pong")) {
-                // reset the socket timeout
-                socket.setSoTimeout(0);
-                return true;
-            }
-            // if the player want to quit
-            if (command.cmd.equals("quit")) // quit the game if a player wat to exit
+        try {
+            // quit the game if a player wat to exit
+            if (command.cmd.equals("quit"))
                 return false;
-            // process the command received
-            commandManager.processCommand(command); // process the command and send the message or the messages to the players
+            // process the command and send the message or the messages to the players
+            commandManager.processCommand(command);
 
             return true;
-        // if one of the parameters of the command does not respect the preconditions
+            // if one of the parameters of the command does not respect the preconditions
         }catch (NullPointerException | IndexOutOfBoundsException e){ // the command sent is not correct
 
             send(buildResponse("Something gone wrong, you've probably chosen wrong inputs "));
             return true;
-        // if the game finish
-        }catch (EndGameException e){ // the condition of ending a game are met
+        // the condition of ending a game are met
+        }catch (EndGameException e){
 
             sendInBroadcast(buildEndGameResponse());
 
@@ -281,10 +281,13 @@ public class ClientHandler implements Runnable{
         while (true){
             try {
                 lobby.ping();
-                TimeUnit.SECONDS.sleep(5);
+                TimeUnit.SECONDS.sleep(2);
                 if (lobby.isGameFinished())
                     return;
-            } catch (IOException | InterruptedException e){
+            } catch (IOException
+                    | InterruptedException e
+            ){
+                play.set(false);
                 return;
             }
         }

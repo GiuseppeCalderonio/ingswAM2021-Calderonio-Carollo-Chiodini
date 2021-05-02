@@ -59,10 +59,6 @@ public class Lobby {
         return nicknames;
     }
 
-    public void setNicknames(List<String> nicknames) {
-        this.nicknames = nicknames;
-    }
-
     public void addNickname(String nickname){
         nicknames.add(nickname);
     }
@@ -110,11 +106,8 @@ public class Lobby {
 
     public synchronized void ping() throws IOException {
         for (ClientHandler client : clients){
-            ResponseToClient response = new ResponseToClient();
-            response.message = "ping";
-            response.ignorePossibleCommands = true;
-            client.send(response);
-            client.getSocket().setSoTimeout(200);
+            if (!client.getSocket().getInetAddress().isReachable(200))
+                throw new IOException("client not reachable");
         }
     }
 }
