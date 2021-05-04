@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import it.polimi.ingsw.controller.commands.Command;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -76,7 +77,7 @@ public class WaitingRoom implements Runnable{
                 // convert the message in a processable command
                 Command command = gson.fromJson(in.nextLine(), Command.class);
                 // set the number of players of the game
-                numberOfPlayers = command.numberOfPlayers;
+                numberOfPlayers = command.getNumberOfPlayers();
             // if the number of players are between 1 and 4
             if (!(numberOfPlayers < 1 || numberOfPlayers > 4))
                 break;
@@ -88,7 +89,7 @@ public class WaitingRoom implements Runnable{
                 send(out, buildResponse("Insert a valid number"));
             }
             // if the string sent from the client isn't in a gson format
-            catch (JsonSyntaxException e){
+            catch (JsonSyntaxException | NullPointerException e){
                 send(out, buildResponse("Insert a json string please"));
             // if the player disconnect
             }catch (NoSuchElementException e){

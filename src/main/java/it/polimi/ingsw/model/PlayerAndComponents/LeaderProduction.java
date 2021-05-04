@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.PlayerAndComponents;
 import it.polimi.ingsw.model.Resources.Resource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,6 +17,12 @@ public class LeaderProduction extends ProductionPower {
      * this attribute represent the input resources for a leader card
      */
     private final List<Resource> inputs;
+
+    /**
+     * this attribute indicates if one of the two possible leader productions have
+     * been activated during the turn
+     */
+    private final boolean[] leaderProductionActivated = { false, false};
 
     /**
      * this constructor initialise the list of resource with one resource,
@@ -47,6 +54,47 @@ public class LeaderProduction extends ProductionPower {
      */
     public void addLeaderProduction(Resource toAdd){
         inputs.add(toAdd);
+    }
+
+    /**
+     * this method activate the leader production if it exist, do nothing
+     * if the leader production does not exist.
+     * in particular, it simply set to true the attribute leaderProductionActivated
+     * associated with the index specified in input
+     * @param toActivate this is the index associated with the
+     *                  leader production to activate, it should be from 1 to 2
+     */
+    public void activateLeaderProduction(int toActivate){
+
+        try {
+            leaderProductionActivated[toActivate - 1] = true;
+        } catch (IndexOutOfBoundsException ignored){ }
+    }
+
+    /**
+     * this method verify if the leader production associated with the index in input
+     * is active or not.
+     * the method always return false when the card doesn't exist
+     * @param toCheck this is the index associated with the leader production to activate
+     * @return true if the leader production has already been activated during the turn, false otherwise
+     */
+    @Override
+    public boolean isLeaderProductionActivated(int toCheck){
+        try {
+            return leaderProductionActivated[toCheck - 1];
+        } catch (IndexOutOfBoundsException ignored){
+            return false;
+        }
+    }
+
+    /**
+     * this method reset the productions for every card (counting leader ones) of the dashboard and the basic production,
+     * so that the turn after the owner of the card can activate them again
+     */
+    @Override
+    public void resetProductions() {
+            super.resetProductions();
+            Arrays.fill(leaderProductionActivated, false);
     }
 
     @Override

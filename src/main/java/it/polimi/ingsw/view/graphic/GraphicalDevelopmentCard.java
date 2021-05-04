@@ -8,8 +8,8 @@ import it.polimi.ingsw.view.utilities.CharStream;
 import it.polimi.ingsw.view.utilities.colors.ForeColor;
 
 public class GraphicalDevelopmentCard implements CharFigure{
-    private CharStream stream;
-    private DevelopmentCard developmentCard;
+    private final CharStream stream;
+    private final DevelopmentCard developmentCard;
     private final int width;
     private final int height;
 

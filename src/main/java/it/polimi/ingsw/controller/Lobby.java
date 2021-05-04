@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.SingleGame.SingleGame;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -18,8 +19,8 @@ public class Lobby {
     private Game game = new Game(Collections.singletonList(""));
     private List<String> nicknames = new ArrayList<>();
     private final AtomicInteger numberOfPlayers;
-    private boolean gameIsFinished = false;
-    private boolean gameIsStarted = false;
+    private final AtomicBoolean gameIsFinished = new AtomicBoolean(false);
+    private final AtomicBoolean gameIsStarted = new AtomicBoolean(false);
 
     public Lobby(int numberOfPlayers){
         this.numberOfPlayers = new AtomicInteger(numberOfPlayers);
@@ -52,7 +53,7 @@ public class Lobby {
         // sort the clients based on the game nicknames order
         sortClients();
         // start the game
-        gameIsStarted = true;
+        gameIsStarted.set(true);
     }
 
     public List<String> getNicknames() {
@@ -93,15 +94,15 @@ public class Lobby {
     }
 
     public void setGameFinished(){
-        gameIsFinished = true;
+        gameIsFinished.set(true);
     }
 
     public boolean isGameFinished(){
-        return gameIsFinished;
+        return gameIsFinished.get();
     }
 
     public boolean isGameStarted() {
-        return gameIsStarted;
+        return gameIsStarted.get();
     }
 
     public synchronized void ping() throws IOException {
@@ -109,5 +110,9 @@ public class Lobby {
             if (!client.getSocket().getInetAddress().isReachable(200))
                 throw new IOException("client not reachable");
         }
+    }
+
+    public void setPlays(){
+
     }
 }

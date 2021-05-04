@@ -35,6 +35,11 @@ public class DevelopmentCard {
     private final int productionPowerFaithPoints;
 
     /**
+     * this attribute indicates if the production of the card has been activated during the last turn
+     */
+    private boolean productionActivated = false;
+
+    /**
      * this constructor create a card with all the parameters
      * @param color this is the color to set
      * @param level this is the level to set
@@ -111,6 +116,30 @@ public class DevelopmentCard {
     public int getProductionPowerFaithPoints() {
 
         return productionPowerFaithPoints;
+    }
+
+    /**
+     * this method verify if the card production has been activated during the turn of the owner of th card
+     * @return true if the card has been activated during the turn, false otherwise
+     */
+    public boolean isProductionActivated(){
+        return productionActivated;
+    }
+
+    /**
+     * this method set to true the attribute productionActivated.
+     * that's happen when the owner of the card activate the production
+     */
+    public void setProductionActivated() {
+        this.productionActivated = true;
+    }
+
+    /**
+     * this method set to false the attribute productionActivated.
+     * that's happen every time that the owner of the card end the production
+     */
+    public void resetProduction(){
+        this.productionActivated = false;
     }
 
     /**

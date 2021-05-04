@@ -1,12 +1,14 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.controller.commands.Command;
 import it.polimi.ingsw.model.EndGameException;
-import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static it.polimi.ingsw.controller.ResponseToClient.broadCastStartGame;
+import static it.polimi.ingsw.controller.ResponseToClient.broadcastInitialising;
 
 /**
  * this class represent the command manager, it process the commands,
@@ -14,32 +16,20 @@ import java.util.stream.Collectors;
  */
 public class CommandManager {
 
-    private final List<CommandManager> commandManagers= new ArrayList<>();
     private final ClientHandler client;
+
     private CommandInterpreter commandInterpreter;
 
     public CommandManager(ClientHandler client) {
-        ResponseToClient response = new ResponseToClient();
 
         commandInterpreter = new LoginInterpreter();
-
-        response.message = "Welcome to the server! Start with the login";
-        response.possibleCommands = new ArrayList<>(Collections.singletonList("login"));
-        client.send(response);
-        commandManagers.add(this);
         this.client = client;
+
+        client.send(buildLoginResponse());
     }
 
     public CommandInterpreter getCommandInterpreter() {
         return commandInterpreter;
-    }
-
-    public List<CommandManager> getCommandManagers() {
-        return commandManagers;
-    }
-
-    public ClientHandler getClient() {
-        return client;
     }
 
     public void setCommandInterpreter(CommandInterpreter commandInterpreter) {
@@ -67,25 +57,32 @@ public class CommandManager {
     private boolean loginPhaseFinished(){
         return commandInterpreter.getGamePhase().equals(GamePhase.LOGIN) &&
                 client.getNumberOfPlayers() == client.getNicknames().size() &&
-                client.getClients().stream().
-                        allMatch(client ->  client.getCommandManager().getCommandInterpreter().IsPhaseFinished());
+                isPhaseFinished();
     }
 
     private boolean initialisingPhaseFinished(){
         return commandInterpreter.getGamePhase().equals(GamePhase.INITIALISING) &&
-                client.getClients().stream().
-                        allMatch(client -> client.getCommandManager().getCommandInterpreter().IsPhaseFinished());
+                isPhaseFinished();
     }
 
     private boolean turnFinished(){
         return  commandInterpreter.getGamePhase().equals(GamePhase.TURNS) &&
-                commandInterpreter.IsPhaseFinished();
+                isPhaseFinished();
 
+    }
+
+    private boolean isPhaseFinished(){
+        return client.getClients().stream().
+                allMatch(client -> client.
+                        getCommandManager().
+                        getCommandInterpreter().
+                        IsPhaseFinished());
     }
 
     private void startInitialisingPhase(){
         // change the state of the game from "login" to "initialise game"
-        client.getClients().forEach(client1 -> client1.getCommandManager().setCommandInterpreter(new InitialisingInterpreter()));
+        client.getClients().forEach(client -> client.
+                getCommandManager().setCommandInterpreter(new InitialisingInterpreter()));
         // create the game
         client.createGame();
         // send in broadcast the leader cards and the position to every player
@@ -93,9 +90,14 @@ public class CommandManager {
     }
 
     private void startTurnsPhase() {
+        client.getClients().forEach(client -> client.
+                getCommandManager().setCommandInterpreter(new TurnsInterpreter(client)));
+        /*
         for (ClientHandler client1 : client.getClients()){
             client1.getCommandManager().setCommandInterpreter(new TurnsInterpreter(client1));
         }
+
+         */
 
         // send for every player, the market of cards, the market of marbles,
         // the position on the faith track of every player, the warehouse of every player,
@@ -112,18 +114,21 @@ public class CommandManager {
 
             // if the client have to play his turn
             if (client1.isYourTurn()) {
-                // create a new response for the client
-                ResponseToClient notifyTurn = new ResponseToClient();
-                notifyTurn.message = "now is your turn";
+                String message = "now is your turn";
                 // get the possible commands to send
-                notifyTurn.possibleCommands = client1.
-                        getCommandManager().
-                        getCommandInterpreter().
+                List<String> possibleCommands = client1.
+                        getInterpreter().
                         getPossibleCommands();
                 // send the message to the client
-                client1.send(notifyTurn);
+                client1.send(new ResponseToClient(message, possibleCommands));
             }
         }
+    }
+
+
+    private ResponseToClient buildLoginResponse(){
+        return new ResponseToClient("Welcome to the server! Start with the login",
+                new ArrayList<>(Collections.singletonList("login")));
     }
 
 
@@ -131,55 +136,13 @@ public class CommandManager {
     private synchronized void sendBroadcastInitialising()  {
         int i = 1;
         for (ClientHandler client : client.getClients()) {
-            // get the leader cards of the client
-            List<LeaderCard> leaderCards = client.getGame().findPlayer(client.getNickname()).getPersonalLeaderCards();
-            // create a new response to send to the client
-            ResponseToClient message = new ResponseToClient();
-            message.message = "the game initialization start! decide 2 different leader cards to discard";
-            // set the only possible command
-            message.possibleCommands = new ArrayList<>(Collections.singletonList("initialise_leaderCards"));
-            // set the position (that works because the clients are sorted with the game casual order)
-            message.position = i;
-            // send the thin leader cards
-            message.leaderCards = leaderCards.stream().map(LeaderCard::getThin).collect(Collectors.toList());
-            // set the code to 1
-            message.code = 1;
-            // set the message for sending an object
-            message.serialize = true;
-            // send the message
-            client.send(message);
+            client.send(broadcastInitialising(client, i));
             i++;
         }
     }
 
     private synchronized void sendBroadcastStartGame() {
-        String message;
-        List<String> possibleCommands = new ArrayList<>();
-        ResponseToClient broadcast = new ResponseToClient();
-        for (ClientHandler client : client.getClients()){
-
-            if (client.getNickname().equals( client.getGame().getActualPlayer().getNickname())) {
-                message = "the game start! Is your turn";
-                possibleCommands.add("shift_resources");
-                possibleCommands.add("choose_marbles");
-                possibleCommands.add("production");
-                possibleCommands.add("buy_card");
-                possibleCommands.add("leader_action");
-            }
-            else {
-                message = "the game start! Is not your turn, wait...";
-                possibleCommands.clear();
-            }
-
-            broadcast.message = message;
-            broadcast.possibleCommands = possibleCommands;
-            client.updateMarbleMarket(broadcast);
-            client.updateCardsMarket(broadcast);
-            client.updateSoloTokens(broadcast);
-            client.updatePlayers(broadcast, client.getNickname());
-            broadcast.code = 2;
-            broadcast.serialize = true;
-            client.send(broadcast);
-        }
+        client.getClients().forEach(client -> client.
+                send(broadCastStartGame(client.getGame(), client)));
     }
 }

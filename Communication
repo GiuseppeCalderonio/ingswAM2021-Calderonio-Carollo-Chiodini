@@ -443,7 +443,7 @@ production
 
 
              CASE NORMAL PRODUCTION
-             "{"cmd" : "normal_production" , "position" : int , "ToPayFromWarehouse" : CollectionResources}"
+             "{"cmd" : "normal_production" , "position" : int , "toPayFromWarehouse" : CollectionResources}"
              ------------------------------------------------------------>
 
 
@@ -475,7 +475,7 @@ production
 
 
              CASE LEADER PRODUCTION
-             "{"cmd" : "leader_production" , "position" : int, "fromWarehouse" boolean}"
+             "{"cmd" : "leader_production" , "position" : int, "fromWarehouse" : boolean, "output" : Resource}"
              ------------------------------------------------------------>
 
 

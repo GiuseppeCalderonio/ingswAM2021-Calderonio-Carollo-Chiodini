@@ -513,7 +513,8 @@ public class Game {
     /**
      * this method verify if a player can activate the production associated
      * with the position.
-     * In particular, if the position is between 1 and 3, that means a normal production,
+     * In particular, if the production has already been activated in the turn return false,
+     * if the position is between 1 and 3, that means a normal production,
      * the method check if the actual player has a cart in that position, and if he
      * owns the input resources,
      * if the position is between 4 and 5, verify if the player own a leader
@@ -521,6 +522,7 @@ public class Game {
      * owned by the player.
      * the controller have to sum position 3 if it comes from a leader production
      * if the position is not between 1 and 5 return false
+     *
      * @param position this is the position on the dashboard of the production
      *                 that the actual player want to activate
      * @return true if the conditions to activate a production are respected,
@@ -530,10 +532,15 @@ public class Game {
         if (position < 0 || position > 5) return false;
 
         if (position == 0) {
+            if (getActualPlayer().getPersonalDashboard().getPersonalProductionPower().isBasicProductionActivated())
+                return false; // return false if the production has already been activated during the turn
             return getActualPlayer().getTotalResources().getSize() >= 2; //basic production case
         }
 
         if ( position > 3){ // leader production case
+
+            if (getActualPlayer().getPersonalDashboard().getPersonalProductionPower().isLeaderProductionActivated(position - 3))
+                return false; // return false if the production has already been activated during the turn
             Resource toCheck = getActualPlayer().
                     getPersonalDashboard().
                     getPersonalProductionPower().
@@ -548,6 +555,8 @@ public class Game {
                 getPersonalProductionPower().
                 getCard(position); //get the card associated with the position
         if (toCheck == null) return false; // if the card not exist
+        if (toCheck.isProductionActivated() || getActualPlayer().getPersonalDashboard().getPersonalProductionPower().isProductionActivated(position))
+            return false; // return false if the production has already been activated during the turn
         return contains(toCheck.getProductionPowerInput()); //if the player doesn't contain the resources in input
     }
 
@@ -624,6 +633,8 @@ public class Game {
         getActualPlayer().activateProduction(toPayFromWarehouse, toPayFromStrongbox, productionPowerOutput);
 
         addFaithPointsTo(getActualPlayer(), card.getProductionPowerFaithPoints());
+
+        card.setProductionActivated(); // set the card to activated
     }
 
     /**
@@ -665,8 +676,12 @@ public class Game {
      */
     public synchronized void activateBasicProduction(CollectionResources toPayFromWarehouse, CollectionResources toPayFromStrongbox, Resource output){
         CollectionResources productionPowerOutput = new CollectionResources();
+
         productionPowerOutput.add(output); // add the resource chosen as output
+
         getActualPlayer().activateProduction(toPayFromWarehouse, toPayFromStrongbox, productionPowerOutput);
+
+        getActualPlayer().getPersonalDashboard().getPersonalProductionPower().activateBasicProduction(); // set the basic production to activated
     }
 
     /**
@@ -725,6 +740,8 @@ public class Game {
         getActualPlayer().activateProduction(toPayFromWarehouse, toPayFromStrongbox, productionPowerOutput);
 
         addFaithPointsTo(getActualPlayer(), 1); // add 1 faith point
+
+        getActualPlayer().getPersonalDashboard().getPersonalProductionPower().activateLeaderProduction(toActivate); // set the leader production to activated, so that cannot be activated anymore in the same turn
     }
 
     /**
@@ -733,7 +750,10 @@ public class Game {
      * resources stored in the buffer during the productions
      */
     public synchronized void endProduction(){
-        getActualPlayer().fillStrongboxWithBuffer();
+
+        getActualPlayer().fillStrongboxWithBuffer(); // get the strongbox resources gained from the productions
+
+        getActualPlayer().getPersonalDashboard().getPersonalProductionPower().resetProductions(); // reset the productions
     }
 
 //------------LEADER CARDS----------------------------------------------------------------

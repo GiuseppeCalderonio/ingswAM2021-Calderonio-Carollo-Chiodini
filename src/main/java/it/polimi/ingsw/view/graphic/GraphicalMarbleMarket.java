@@ -7,11 +7,11 @@ import it.polimi.ingsw.view.utilities.colors.BackColor;
 import it.polimi.ingsw.view.utilities.colors.ForeColor;
 
 public class GraphicalMarbleMarket implements CharFigure{
-    private CharStream stream;
+    private final CharStream stream;
     private static final int width = 15;
     private static final int height = 8;
-    private Marble[][] marketTray;
-    private Marble lonelyMarble;
+    private final Marble[][] marketTray;
+    private final Marble lonelyMarble;
 
 
     public GraphicalMarbleMarket(CharStream stream, Marble[][] marketTray, Marble lonelyMarble) {
@@ -49,7 +49,7 @@ public class GraphicalMarbleMarket implements CharFigure{
      */
     @Override
     public void draw(int relX, int relY) {
-        //inizialize white matrix
+        //initialize white matrix
         for(int i = 0; i <= width; ++i) {
             for (int j = 0; j <= height; ++j) {
                 stream.addColor(i + relX, j + relY, BackColor.ANSI_BG_GREEN);
@@ -60,7 +60,7 @@ public class GraphicalMarbleMarket implements CharFigure{
         stream.addString(relX, relY, " MARBLES MARKET", ForeColor.ANSI_BRIGHT_CYAN, BackColor.ANSI_BG_GREEN);
 
         // add marbles to the matrix
-        int j=2, z=0;
+        int j, z=0;
         for (int i=2; i<=6; i = i+2) { //rows (y)
             int k=0;
             j=2;
@@ -109,7 +109,6 @@ public class GraphicalMarbleMarket implements CharFigure{
         }
 
         int k=1;
-        j=2;
         for (int i=2; i<=11; i = i+3) {
             stream.addChar('^', relX + i, relY + height - 1, ForeColor.ANSI_BRIGHT_YELLOW, BackColor.ANSI_BG_GREEN);
             stream.addString(relX + i, relY + height, String.valueOf(k), ForeColor.ANSI_BLACK, BackColor.ANSI_BG_GREEN);

@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.SingleGame;
 
 import it.polimi.ingsw.model.DevelopmentCards.CardsMarket;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 import java.io.Serializable;
 

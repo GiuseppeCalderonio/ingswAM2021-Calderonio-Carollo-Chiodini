@@ -1,5 +1,7 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.controller.commands.Command;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,35 +16,32 @@ public class LoginInterpreter implements CommandInterpreter {
      * the method will change the internal model state
      * depending on the dynamic type of the commandInterpreter
      * @param command this is the command to execute
-     * @param handler this is the handler to notify in case of
+     * @param client this is the client to notify in case of
      *                a internal state change
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(Command command, ClientHandler handler) {
-        if (!possibleCommands.contains(command.cmd))
+    public ResponseToClient executeCommand(Command command, ClientHandler client) {
+        if (command.getCmd().equals("quit"))
+            throw new QuitException();
+        if (!possibleCommands.contains(command.getCmd()))
             return buildResponse("this command is not available in this phase of the game");
 
-        if (command.nickname.equals(""))
-            return buildResponse("the nickname can't be the empty string");
-
-         if (handler.getNicknames().contains(command.nickname))
-            return buildResponse("nickname selected is already taken");
-
-        handler.addNickname(command.nickname);
-        handler.setNickname(command.nickname);
-        possibleCommands.remove("login");
-
-        if (handler.getNumberOfPlayers() == 1){
-            return buildResponseIgnoringCommands();
-        }
-
-
-        return buildResponse("login completed successfully, wait for other players to join");
+        return command.executeCommand(possibleCommands, client, new ArrayList<>() );
     }
 
     public List<String> getPossibleCommands() {
         return possibleCommands;
+    }
+
+    /**
+     * this method set the possible commands to the value passed as parameter
+     *
+     * @param possibleCommands this is the new list to set
+     */
+    @Override
+    public void setPossibleCommands(List<String> possibleCommands) {
+        this.possibleCommands = possibleCommands;
     }
 
     /**
