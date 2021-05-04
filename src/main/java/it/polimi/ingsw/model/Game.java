@@ -16,7 +16,6 @@ import it.polimi.ingsw.model.SingleGame.SoloToken;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.controller.ClientHandler.getGame;
 
 /**
  * this is the game class, every check and player action use a game method
@@ -514,7 +513,8 @@ public class Game {
     /**
      * this method verify if a player can activate the production associated
      * with the position.
-     * In particular, if the position is between 1 and 3, that means a normal production,
+     * In particular, if the production has already been activated in the turn return false,
+     * if the position is between 1 and 3, that means a normal production,
      * the method check if the actual player has a cart in that position, and if he
      * owns the input resources,
      * if the position is between 4 and 5, verify if the player own a leader
@@ -522,6 +522,7 @@ public class Game {
      * owned by the player.
      * the controller have to sum position 3 if it comes from a leader production
      * if the position is not between 1 and 5 return false
+     *
      * @param position this is the position on the dashboard of the production
      *                 that the actual player want to activate
      * @return true if the conditions to activate a production are respected,
@@ -531,10 +532,15 @@ public class Game {
         if (position < 0 || position > 5) return false;
 
         if (position == 0) {
+            if (getActualPlayer().getPersonalDashboard().getPersonalProductionPower().isBasicProductionActivated())
+                return false; // return false if the production has already been activated during the turn
             return getActualPlayer().getTotalResources().getSize() >= 2; //basic production case
         }
 
         if ( position > 3){ // leader production case
+
+            if (getActualPlayer().getPersonalDashboard().getPersonalProductionPower().isLeaderProductionActivated(position - 3))
+                return false; // return false if the production has already been activated during the turn
             Resource toCheck = getActualPlayer().
                     getPersonalDashboard().
                     getPersonalProductionPower().
@@ -549,6 +555,8 @@ public class Game {
                 getPersonalProductionPower().
                 getCard(position); //get the card associated with the position
         if (toCheck == null) return false; // if the card not exist
+        if (toCheck.isProductionActivated() || getActualPlayer().getPersonalDashboard().getPersonalProductionPower().isProductionActivated(position))
+            return false; // return false if the production has already been activated during the turn
         return contains(toCheck.getProductionPowerInput()); //if the player doesn't contain the resources in input
     }
 
@@ -625,6 +633,8 @@ public class Game {
         getActualPlayer().activateProduction(toPayFromWarehouse, toPayFromStrongbox, productionPowerOutput);
 
         addFaithPointsTo(getActualPlayer(), card.getProductionPowerFaithPoints());
+
+        card.setProductionActivated(); // set the card to activated
     }
 
     /**
@@ -666,8 +676,12 @@ public class Game {
      */
     public synchronized void activateBasicProduction(CollectionResources toPayFromWarehouse, CollectionResources toPayFromStrongbox, Resource output){
         CollectionResources productionPowerOutput = new CollectionResources();
+
         productionPowerOutput.add(output); // add the resource chosen as output
+
         getActualPlayer().activateProduction(toPayFromWarehouse, toPayFromStrongbox, productionPowerOutput);
+
+        getActualPlayer().getPersonalDashboard().getPersonalProductionPower().activateBasicProduction(); // set the basic production to activated
     }
 
     /**
@@ -726,6 +740,8 @@ public class Game {
         getActualPlayer().activateProduction(toPayFromWarehouse, toPayFromStrongbox, productionPowerOutput);
 
         addFaithPointsTo(getActualPlayer(), 1); // add 1 faith point
+
+        getActualPlayer().getPersonalDashboard().getPersonalProductionPower().activateLeaderProduction(toActivate); // set the leader production to activated, so that cannot be activated anymore in the same turn
     }
 
     /**
@@ -734,7 +750,10 @@ public class Game {
      * resources stored in the buffer during the productions
      */
     public synchronized void endProduction(){
-        getActualPlayer().fillStrongboxWithBuffer();
+
+        getActualPlayer().fillStrongboxWithBuffer(); // get the strongbox resources gained from the productions
+
+        getActualPlayer().getPersonalDashboard().getPersonalProductionPower().resetProductions(); // reset the productions
     }
 
 //------------LEADER CARDS----------------------------------------------------------------
@@ -746,12 +765,8 @@ public class Game {
      * @return true if the player own a leader card in that position, false otherwise
      */
     public synchronized boolean checkLeaderCard(int toCheck){
-        try {
-            getActualPlayer().getPersonalLeaderCards().get(toCheck - 1);
-            return true;
-        }catch (IndexOutOfBoundsException | NullPointerException e){
-            return false;
-        }
+        if (toCheck <= 0) return false;
+        return getActualPlayer().getPersonalLeaderCards().size() >= toCheck;
     }
 
     /**
@@ -814,7 +829,7 @@ public class Game {
                         getPersonalProductionPower().
                         getNumOfCards()).
                 max().orElse(0); //get the max number of cards of every player
-        if (vaticanReports[2] || cards >= 7) throw new EndGameException("Game Finished"); // check if the conditions to end a game are met
+        if (vaticanReports[2] || cards >= 7) throw new EndGameException(getWinner()); // check if the conditions to end a game are met
     }
 
     /**
@@ -870,6 +885,44 @@ public class Game {
         return players.get(turnManager % players.size()); // the get goes from 0 to players.size()
     }
 
+    /**
+     * this method return the nickname of the winner.
+     * in particular, it get the nickname of the player with more victory points,
+     * if there are some players with the same number of victory points, the method return
+     * the player with more victory points and more resources,
+     * if there are some players with the same victory points and amount of resources,
+     * return a random player from them.
+     * if there is a single game, it gets the single player nickname when
+     * his number of cards is >= 7 or if his position reached the last vatican report
+     * @return the nickname of the winner
+     */
+    public String getWinner(){
+        // get the integer list of victory points of every player
+        int maxVictoryPoints = players.stream().
+                mapToInt(RealPlayer::getVictoryPoints).
+                max().orElse(0);
+        // get the list of players with more victory points
+        List<RealPlayer> potentialWinners = players.stream().
+                filter(player -> player.getVictoryPoints() == maxVictoryPoints).
+                collect(Collectors.toList());
+        // if there aren't more than 1 players with the same amount of max victory points
+        if (potentialWinners.size() == 1)
+            return potentialWinners.get(0).getNickname();
+        // else
+
+        // get the maximum number of resources contained in one of the player resources storages
+        int maxResources = players.stream().
+                mapToInt(player -> player.getTotalResources().getSize()).
+                max().orElse(0);
+        // get the first player (from the ones that have the maximum number of victory points) that have the maximum number of resources
+        return potentialWinners.stream().
+                filter(player -> player.getTotalResources().getSize() == maxResources).
+                collect(Collectors.toList()).
+                get(0).
+                getNickname();
+
+
+    }
     //-----------------------CHECKING RESOURCES-------------------------------------------------
 
     /**

@@ -25,7 +25,7 @@ public class GraphicalProduction implements CharFigure{
     }
 
     /**
-     *this method return the width of the GraphicalProduction
+     *this method returns the width of the GraphicalProduction
      */
     public int getWidth() {
         return width;
@@ -39,7 +39,7 @@ public class GraphicalProduction implements CharFigure{
     }
 
     /**
-     *this method draw the GraphicalProduction in the CharStream at the default position
+     *this method draws the GraphicalProduction in the CharStream at the default position
      */
     @Override
     public void draw() {
@@ -47,7 +47,7 @@ public class GraphicalProduction implements CharFigure{
     }
 
     /**
-     *this method draw the GraphicalProduction in the CharStream at X,Y position
+     *this method draws the GraphicalProduction in the CharStream at X,Y position
      * @param relX X position to be considered as X absolute zero when drawing
      * @param relY Y position to be considered as Y absolute zero when drawing
      */
@@ -65,7 +65,7 @@ public class GraphicalProduction implements CharFigure{
             stream.addString(relX + i, relY, String.valueOf(inputResources.getMaps().get(1).getCardinality()), ForeColor.ANSI_BLACK, inputResources.getMaps().get(1).getResource().getColor());
             i++;
         }
-        stream.addChar('>', relX+i, relY, ForeColor.ANSI_BRIGHT_BLACK, BackColor.ANSI_BRIGHT_BG_WHITE);
+        stream.addChar('-', relX+i, relY, ForeColor.ANSI_BRIGHT_BLACK, BackColor.ANSI_BRIGHT_BG_WHITE);
         i++;
         stream.addChar('>', relX+i, relY, ForeColor.ANSI_BRIGHT_BLACK, BackColor.ANSI_BRIGHT_BG_WHITE);
         i++;

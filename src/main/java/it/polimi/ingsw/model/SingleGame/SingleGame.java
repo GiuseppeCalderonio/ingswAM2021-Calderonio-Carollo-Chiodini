@@ -121,4 +121,29 @@ public class SingleGame extends Game {
         }
         checkEndGame();
     }
+
+    /**
+     * this method return the nickname of the winner.
+     * in particular, it get the nickname of the player with more victory points,
+     * if there are some players with the same number of victory points, the method return
+     * the player with more victory points and more resources,
+     * if there are some players with the same amount of resources, return
+     * a random player.
+     * if there is a single game, it gets the single player nickname when
+     * his number of cards is >= 7 or if his position reached the last vatican report
+     *
+     * @return the nickname of the winner
+     */
+    @Override
+    public String getWinner() {
+        // if the player has more that 7 cards in his dashboard or if he reached the last vatican report
+        if (getActualPlayer().getPersonalDashboard().getPersonalProductionPower().getNumOfCards() >= 7 ||
+                getActualPlayer().getPersonalTrack().getPosition() == 24)
+        // get the nickname player
+        return getActualPlayer().getNickname();
+        // else
+
+        // get the nickname of lorenzoIlMagnifico
+        return lorenzoIlMagnifico.getNickname();
+    }
 }

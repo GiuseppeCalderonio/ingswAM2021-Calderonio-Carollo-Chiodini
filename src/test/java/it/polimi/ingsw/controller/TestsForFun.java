@@ -3,6 +3,8 @@ package it.polimi.ingsw.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
+import it.polimi.ingsw.controller.gsonManager.MarbleInterfaceAdapter;
+import it.polimi.ingsw.controller.gsonManager.ResourceInterfaceAdapter;
 import it.polimi.ingsw.model.DevelopmentCards.CardColor;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.Resources.Resource;

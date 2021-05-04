@@ -81,7 +81,9 @@ public class TrackManager {
      */
     public int getVictoryPoints(){
         return  track[position] +
-                (int) Arrays.stream(popeFavorTiles).filter(PopeFavorTile::getActive).count();
+                 Arrays.stream(popeFavorTiles).filter(PopeFavorTile::getActive).
+                        mapToInt(PopeFavorTile::getVictoryPoints).
+                        sum();
     }
 
     /**

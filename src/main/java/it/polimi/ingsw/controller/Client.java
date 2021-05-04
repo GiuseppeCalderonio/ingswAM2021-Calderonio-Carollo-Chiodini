@@ -1,17 +1,14 @@
 package it.polimi.ingsw.controller;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
+import it.polimi.ingsw.controller.commands.*;
 import it.polimi.ingsw.model.DevelopmentCards.CardColor;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.LeaderCard.*;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.Resources.*;
-import it.polimi.ingsw.model.SingleGame.CardToken;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
-import it.polimi.ingsw.model.SingleGame.TrackToken;
 import it.polimi.ingsw.view.ThinLeaderCard;
 import it.polimi.ingsw.view.ThinPlayer;
 
@@ -22,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static it.polimi.ingsw.controller.gsonManager.PersonalGsonBuilder.createPersonalGsonBuilder;
 
 /**
  * this class represent the main
@@ -42,6 +41,7 @@ public class Client implements Runnable {
     private SoloToken solotoken;
     private List<Resource> gainedFromMarbleMarket;
     private int marbles;
+    private List<String> possibleCommands;
 
 
     public Client(String hostName, int portNumber) {
@@ -54,15 +54,7 @@ public class Client implements Runnable {
         }
 
         allLeaderCards = createLeaderCards();
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapterFactory(
-                RuntimeTypeAdapterFactory.
-                        of(SoloToken.class, "type").
-                        registerSubtype(TrackToken.class, "trackToken").
-                        registerSubtype(CardToken.class, "cardToken"));
-        builder.registerTypeAdapter(Resource.class, new ResourceInterfaceAdapter());
-        builder.registerTypeAdapter(Marble.class, new MarbleInterfaceAdapter());
-        gson = builder.create();
+        gson = createPersonalGsonBuilder();
         start();
     }
 
@@ -83,11 +75,9 @@ public class Client implements Runnable {
             String command;
 
             while ((command = stdIn.readLine()) != null) {
+                
 
-                Command jsonCommand = new Command();
-                jsonCommand.cmd = command;
-
-                switch (jsonCommand.cmd){
+                switch (command){
 
                     case "show":
                         show();
@@ -96,87 +86,87 @@ public class Client implements Runnable {
                     case "set_players" :
                         System.out.println("Scrivere il numero di giocatori");
                         String numberOfPlayers = stdIn.readLine();
+                        int numberOfPlayers1;
                         try {
-                            jsonCommand.numberOfPlayers = Integer.parseInt(numberOfPlayers);
+                            numberOfPlayers1 = Integer.parseInt(numberOfPlayers);
                         }catch (NumberFormatException e){
                             System.err.println("Devi scrivere un numero valido");
                             break;
                         }
-                        send(out, jsonCommand);
+                        send(out, new SetSizeCommand(numberOfPlayers1));
                         break;
                     case "login":
                         System.out.println("Scrivere il nickname");
-                        jsonCommand.nickname = stdIn.readLine();
-                        send(out, jsonCommand);
+                        //jsonCommand.nickname = stdIn.readLine();
+                        send(out, new LoginCommand(stdIn.readLine()));
                         break;
                     case "initialise_leaderCards":
-                        initialiseLeaderCard(out, stdIn, jsonCommand);
+                        initialiseLeaderCard(out, stdIn);
                         break;
 
                     case "initialise_resources":
-                        initialiseResources(out, stdIn, jsonCommand);
+                        initialiseResources(out, stdIn);
                         break;
 
                     case "shift_resources":
-                        shiftResources(out, stdIn, jsonCommand);
+                        shiftResources(out, stdIn);
                         break;
                     case "choose_marbles":
-                        chooseMarbles(out, stdIn, jsonCommand);
+                        chooseMarbles(out, stdIn);
                         break;
                     case "choose_leaderCards":
                         try {
-                            chooseLeaderCard(out, stdIn, jsonCommand);
+                            chooseLeaderCard(out, stdIn);
                         }catch (NullPointerException e){
                             System.err.println("you can't do this action");
                         }
 
                         break;
                     case "insert_in_warehouse":
-                        insertInWarehouse(out, stdIn, jsonCommand);
+                        insertInWarehouse(out, stdIn);
                         break;
                     case "buy_card":
-                        buyCard(out, stdIn, jsonCommand);
+                        buyCard(out, stdIn);
                         break;
                     case "select_position":
-                        selectPosition(out, stdIn, jsonCommand);
+                        selectPosition(out, stdIn);
                         break;
                     case "select_resources_from_warehouse":
-                        selectResourcesFromWarehouse(out, stdIn, jsonCommand);
+                        selectResourcesFromWarehouse(out, stdIn);
                         break;
                     case "production":
-                        send(out, jsonCommand);
+                        send(out, new ProductionCommand());
                         break;
                     case "basic_production":
-                        basicProduction(out, stdIn, jsonCommand);
+                        basicProduction(out, stdIn);
                         break;
                     case "normal_production":
-                        normalProduction(out, stdIn, jsonCommand);
+                        normalProduction(out, stdIn);
                         break;
                     case "leader_production":
-                        leaderProduction(out, stdIn, jsonCommand);
+                        leaderProduction(out, stdIn);
                         break;
                     case "end_production":
-                        send(out, jsonCommand);
+                        send(out, new EndProductionCommand());
                         break;
                     case "leader_action":
-                        send(out, jsonCommand);
+                        send(out, new LeaderCommand());
                         break;
                     case "activate_card":
-                        activateCard(out,stdIn , jsonCommand);
+                        activateCard(out,stdIn );
                         break;
                     case "discard_card":
-                        discardCard(out,stdIn , jsonCommand);
+                        discardCard(out,stdIn );
                         break;
                     case "end_turn":
-                        send(out, jsonCommand);
+                        send(out, new EndTurnCommand());
                         break;
                     case "quit":
-                        send(out, jsonCommand);
+                        send(out, new QuitCommand());
                         break;
                     default:
                         System.out.println("Comando non riconosciuto");
-                        jsonCommand.cmd = "";
-                        send(out, jsonCommand);
+                        System.out.println("possible commands" + possibleCommands);
                         break;
                 }
             }
@@ -218,21 +208,27 @@ public class Client implements Runnable {
 
         try {
             while (true){
+
+
+
                 assert in != null;
                 if ((received = in.readLine()) == null) break;
-                response = gson.fromJson(received, ResponseToClient.class);
-                if (response.serialize){ // if the internal state of the game is changed
-                    processObject(response.code, response);
-                }
-
                 synchronized (this){
+                    response = gson.fromJson(received, ResponseToClient.class);
+                    if (response.serialize){ // if the internal state of the game is changed
+                        processObject(response.code, response);
+                     }
+
+
                     if (response.message != null){
+
                         if (response.ignorePossibleCommands)
                             System.out.println(response.message);
                         else{
                             response.possibleCommands.add("quit");
                             response.possibleCommands.add("show");
-                            System.out.println(response.message + ", Possible commands:" + response.possibleCommands);
+                            possibleCommands = new ArrayList<>(response.possibleCommands) ;
+                            System.out.println(response.message + ", Possible commands:" + possibleCommands);
                         }
 
                         if (response.position > 0){
@@ -242,6 +238,8 @@ public class Client implements Runnable {
                         if (response.marbles != 0)
                             marbles = response.marbles;
                     }
+
+
                 }
 
             }
@@ -269,6 +267,7 @@ public class Client implements Runnable {
      */
     private void send(PrintWriter out, Command command){
         out.println(gson.toJson(command, Command.class));
+        out.flush();
     }
 
     /**
@@ -293,9 +292,11 @@ public class Client implements Runnable {
         return ResourceType.valueOf(ResourceType.class, resource).getResource();
     }
 
-    private synchronized void initialiseResources(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+    private void initialiseResources(PrintWriter out, BufferedReader stdIn) throws IOException {
         String firstResource;
         String secondResource;
+        CollectionResources initialisingResources = new CollectionResources();
+        //jsonCommand.initialisingResources = new CollectionResources();
         switch (position){
             case 1:
                 break;
@@ -307,7 +308,7 @@ public class Client implements Runnable {
                     System.out.println("Risorsa non valida");
                     return;
                 }
-                jsonCommand.firstResource = convertResource(firstResource);
+                initialisingResources.add(convertResource(firstResource));
                 break;
             case 4:
                 System.out.println("Scrivere la prima risorsa da voler ottenere[coin, stone, shield, servant]");
@@ -317,24 +318,26 @@ public class Client implements Runnable {
                     return;
                 }
                 System.out.println("Scrivere la seconda risorsa da voler ottenere[coin, stone, shield, servant]");
-                secondResource = stdIn.readLine();
+                secondResource = stdIn.readLine().toUpperCase();
                 if(invalidResource(secondResource)){
                     System.out.println("Risorsa non valida");
                     return;
                 }
-                jsonCommand.firstResource = convertResource(firstResource);
-                jsonCommand.secondResource = convertResource(secondResource);
+                initialisingResources.add(convertResource(firstResource));
+                initialisingResources.add(convertResource(secondResource));
                 break;
         }
 
-        send(out, jsonCommand);
+        send(out, new InitialiseResourcesCommand(initialisingResources));
     }
 
-    private void initialiseLeaderCard(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+    private void initialiseLeaderCard(PrintWriter out, BufferedReader stdIn) throws IOException {
         System.out.println("Scrivere la prima leader card da voler scartare");
         String firstCard = stdIn.readLine();
+        int firstCard1;
+        int secondCard1;
         try {
-            jsonCommand.firstCard = Integer.parseInt(firstCard);
+            firstCard1 = Integer.parseInt(firstCard);
         }catch (NumberFormatException e){
             System.err.println("Devi inserire un numero valido");
             return;
@@ -342,19 +345,20 @@ public class Client implements Runnable {
         System.out.println("Scrivere la seconda leader card da voler scartare");
         String secondCard = stdIn.readLine();
         try {
-            jsonCommand.secondCard = Integer.parseInt(secondCard);
+            secondCard1 = Integer.parseInt(secondCard);
         }catch (NumberFormatException e){
             System.err.println("Devi inserire un numero valido");
             return;
         }
-        send(out, jsonCommand);
+        send(out, new InitialiseLeaderCardsCommand(firstCard1, secondCard1));
     }
 
-    private void shiftResources(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+    private void shiftResources(PrintWriter out, BufferedReader stdIn) throws IOException {
         System.out.println("Scrivere il primo shelf in cui voler fare lo shift");
         String shelf = stdIn.readLine();
+        int source, destination;
         try {
-            jsonCommand.source = Integer.parseInt(shelf);
+            source = Integer.parseInt(shelf);
         }catch (NumberFormatException e) {
             System.err.println("Devi inserire un numero valido");
             return;
@@ -362,36 +366,37 @@ public class Client implements Runnable {
         System.out.println("Scrivere il secondo shelf in cui voler fare lo shift");
         shelf = stdIn.readLine();
         try {
-            jsonCommand.destination = Integer.parseInt(shelf);
+            destination = Integer.parseInt(shelf);
         }catch (NumberFormatException e) {
             System.err.println("Devi inserire un numero valido");
             return;
         }
-        send(out, jsonCommand);
+        send(out, new ShiftResourcesCommand(source, destination));
     }
 
-    private void chooseMarbles(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+    private void chooseMarbles(PrintWriter out, BufferedReader stdIn) throws IOException {
         System.out.println("Scrivere da dove comprare [row/column]");
         String dimension = stdIn.readLine();
         if (!dimension.equals("row") && !dimension.equals("column")){
             System.out.println("Non hai inserito valori validi");
             return;
         }
-        jsonCommand.dimension = dimension;
+
 
         System.out.println("Scrivere l'indice da cui comprare le biglie nel mercato");
         String index = stdIn.readLine();
+        int index1;
         try {
-            jsonCommand.index = Integer.parseInt(index);
+            index1 = Integer.parseInt(index);
         }catch (NumberFormatException e) {
             System.err.println("Devi inserire un numero valido");
             return;
         }
 
-        send(out, jsonCommand);
+        send(out, new ChooseMarblesCommand(dimension, index1));
     }
 
-    private void chooseLeaderCard(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+    private void chooseLeaderCard(PrintWriter out, BufferedReader stdIn) throws IOException {
         int[] indexes = new int[marbles];
         for (int i = 0; i < marbles; i++) {
             System.out.println("Scrivere l'indice della carta leader con cui convertire la " + (i+1) + "° biglia bianca");
@@ -403,11 +408,11 @@ public class Client implements Runnable {
                 return;
             }
         }
-        jsonCommand.indexes = indexes;
-        send(out, jsonCommand);
+
+        send(out, new ChooseLeaderCardsCommand(indexes));
     }
 
-    private void insertInWarehouse(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+    private void insertInWarehouse(PrintWriter out, BufferedReader stdIn) throws IOException {
         int[] shelves = new int[gainedFromMarbleMarket.size()];
         int i = 0;
         for (Resource gained : gainedFromMarbleMarket){
@@ -421,8 +426,7 @@ public class Client implements Runnable {
             }
             i++;
         }
-        jsonCommand.shelves = shelves;
-        send(out, jsonCommand);
+        send(out, new InsertInWarehouseCommand(shelves));
     }
 
     private boolean isValidColor(String color){
@@ -434,35 +438,36 @@ public class Client implements Runnable {
         return ResourceType.valueOf(CardColor.class, color);
     }
 
-    private void buyCard(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+    private void buyCard(PrintWriter out, BufferedReader stdIn) throws IOException {
         System.out.println("Scrivere il colore della carta da comprare");
         String color = stdIn.readLine().toUpperCase();
         if (!isValidColor(color)){
             System.err.println("Colore scelto non valido");
             return;
         }
-        jsonCommand.color = convertColor(color);
         System.out.println("Scrivere il livello della carta da comprare");
         String level = stdIn.readLine();
+        int level1;
         try {
-            jsonCommand.level = Integer.parseInt(level);
+            level1 = Integer.parseInt(level);
         }catch (NumberFormatException e) {
             System.err.println("Devi inserire un numero valido");
             return;
         }
-        send(out, jsonCommand);
+        send(out, new BuyCardAction(convertColor(color), level1));
     }
 
-    private void selectPosition(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+    private void selectPosition(PrintWriter out, BufferedReader stdIn) throws IOException {
         System.out.println("Scrivere in quale spazio voler piazzare la carta [1, 2, 3]");
         String dashboardPosition = stdIn.readLine();
+        int dashboardPosition1;
         try {
-            jsonCommand.dashboardPosition = Integer.parseInt(dashboardPosition);
+            dashboardPosition1 = Integer.parseInt(dashboardPosition);
         }catch (NumberFormatException e) {
             System.err.println("Devi inserire un numero valido");
             return;
         }
-        send(out, jsonCommand);
+        send(out, new SelectPositionCommand(dashboardPosition1));
     }
 
     private CollectionResources createCollectionResources(BufferedReader stdIn, String message) throws IOException {
@@ -483,36 +488,37 @@ public class Client implements Runnable {
         return resources;
     }
 
-    private void selectResourcesFromWarehouse(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
-        jsonCommand.toPayFromWarehouse = createCollectionResources(stdIn, "Scegliere risorsa da prendere dal warehouse");
-        send(out, jsonCommand);
+    private void selectResourcesFromWarehouse(PrintWriter out, BufferedReader stdIn) throws IOException {
+        CollectionResources toPayFromWarehouse = createCollectionResources(stdIn, "Scegliere risorsa da prendere dal warehouse");
+        send(out, new SelectResourcesFromWarehouseCommand(toPayFromWarehouse));
     }
 
-    private void basicProduction(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+    private void basicProduction(PrintWriter out, BufferedReader stdIn) throws IOException {
         String output;
-        jsonCommand.toPayFromWarehouse = createCollectionResources(stdIn, "Scegliere risorsa da prendere dal warehouse");
-        jsonCommand.toPayFromStrongbox = createCollectionResources(stdIn, "Scegliere risorsa da prendere dallo strongbox");
+        CollectionResources toPayFromWarehouse = createCollectionResources(stdIn, "Scegliere risorsa da prendere dal warehouse");
+        CollectionResources toPayFromStrongbox = createCollectionResources(stdIn, "Scegliere risorsa da prendere dallo strongbox");
         System.out.println("Scrivere la risorsa da voler ottenere come output della basic production[coin, stone, shield, servant]");
         output = stdIn.readLine().toUpperCase();
         if(invalidResource(output)){
             System.out.println("Risorsa non valida");
             return;
         }
-        jsonCommand.output = convertResource(output);
-        send(out, jsonCommand);
+        Resource output1 = convertResource(output);
+        send(out, new BasicProductionCommand(toPayFromWarehouse, toPayFromStrongbox, output1));
     }
 
-    private void normalProduction (PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+    private void normalProduction (PrintWriter out, BufferedReader stdIn) throws IOException {
         System.out.println("Scrivere quale tra le produzioni normali possibili scegliere [1, 2, 3]");
         String position = stdIn.readLine();
+        int position1;
         try {
-            jsonCommand.position = Integer.parseInt(position);
+            position1 = Integer.parseInt(position);
         }catch (NumberFormatException e) {
             System.err.println("Devi inserire un numero valido");
             return;
         }
-        jsonCommand.toPayFromWarehouse = createCollectionResources(stdIn, "Scegliere risorsa da prendere dal warehouse");
-        send(out, jsonCommand);
+        CollectionResources toPayFromWarehouse = createCollectionResources(stdIn, "Scegliere risorsa da prendere dal warehouse");
+        send(out, new NormalProductionCommand(position1, toPayFromWarehouse));
     }
 
     private boolean isValidBoolean(String decision){
@@ -523,11 +529,12 @@ public class Client implements Runnable {
         return decision.equals("yes");
     }
 
-    private void leaderProduction (PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+    private void leaderProduction (PrintWriter out, BufferedReader stdIn) throws IOException {
         System.out.println("Scrivere quale tra le produzioni leader possibili scegliere [1, 2]");
         String position = stdIn.readLine();
+        int position1;
         try {
-            jsonCommand.position = Integer.parseInt(position);
+            position1 = Integer.parseInt(position);
         }catch (NumberFormatException e) {
             System.err.println("Devi inserire un numero valido");
             return;
@@ -538,32 +545,43 @@ public class Client implements Runnable {
             System.err.println("Devi inserire un valore valido");
             return;
         }
-        jsonCommand.fromWarehouse = convertBoolean(decision);
-        send(out, jsonCommand);
+        boolean fromWarehouse = convertBoolean(decision);
+
+        System.out.println("Scrivere la risorsa da voler ottenere come output della basic production[coin, stone, shield, servant]");
+        String output = stdIn.readLine().toUpperCase();
+        if(invalidResource(output)){
+            System.out.println("Risorsa non valida");
+            return;
+        }
+        Resource output1 = convertResource(output);
+
+        send(out, new LeaderProductionCommand(position1, fromWarehouse, output1));
     }
 
-    private void activateCard(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+    private void activateCard(PrintWriter out, BufferedReader stdIn) throws IOException {
         System.out.println("Scrivere quale carta leader attivare [1, 2]: ");
         String toActivate = stdIn.readLine();
+        int toActivate1;
         try {
-            jsonCommand.toActivate = Integer.parseInt(toActivate);
+            toActivate1 = Integer.parseInt(toActivate);
         }catch (NumberFormatException e) {
             System.err.println("Devi inserire un numero valido");
             return;
         }
-        send(out, jsonCommand);
+        send(out, new ActivateCardCommand(toActivate1));
     }
 
-    private void discardCard(PrintWriter out, BufferedReader stdIn, Command jsonCommand) throws IOException {
+    private void discardCard(PrintWriter out, BufferedReader stdIn) throws IOException {
         System.out.println("Scrivere quale carta leader scartare [1, 2]: ");
         String toDiscard = stdIn.readLine();
+        int toDiscard1;
         try {
-            jsonCommand.toDiscard = Integer.parseInt(toDiscard);
+            toDiscard1 = Integer.parseInt(toDiscard);
         }catch (NumberFormatException e) {
             System.err.println("Devi inserire un numero valido");
             return;
         }
-        send(out, jsonCommand);
+        send(out, new DiscardCardCommand(toDiscard1));
     }
 
 
