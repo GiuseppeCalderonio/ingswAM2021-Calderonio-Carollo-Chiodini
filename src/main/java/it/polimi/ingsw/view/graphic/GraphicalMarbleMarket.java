@@ -21,7 +21,7 @@ public class GraphicalMarbleMarket implements CharFigure{
     }
 
     /**
-     *this method return the width of the GraphicalMarbleMarket
+     *this method returns the width of the GraphicalMarbleMarket
      */
     public int getWidth() {
         return width;
@@ -35,7 +35,7 @@ public class GraphicalMarbleMarket implements CharFigure{
     }
 
     /**
-     *this method draw the GraphicalMarbleMarket in the CharStream at the default position
+     *this method draws the GraphicalMarbleMarket in the CharStream at the default position
      */
     @Override
     public void draw() {
@@ -43,7 +43,7 @@ public class GraphicalMarbleMarket implements CharFigure{
     }
 
     /**
-     *this method draw the GraphicalMarketMarble in the CharStream at X,Y position
+     *this method draws the GraphicalMarketMarble in the CharStream at X,Y position
      * @param relX X position to be considered as X absolute zero when drawing
      * @param relY Y position to be considered as Y absolute zero when drawing
      */
@@ -122,8 +122,6 @@ public class GraphicalMarbleMarket implements CharFigure{
             stream.addString(relX + width, relY + i, String.valueOf(k), ForeColor.ANSI_BLACK, BackColor.ANSI_BG_GREEN);
             k++;
         }
-
-
 
     }
 

@@ -69,4 +69,19 @@ public class CardToken implements SoloToken {
         return "CardToken{" +
                 "color=" + color;
     }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method returns the color associated to the token
+     */
+    public BackColor getBackColor() {
+        if (color.equals(CardColor.BLUE))
+            return BackColor.ANSI_BRIGHT_BG_BLUE;
+        else if (color.equals(CardColor.GREEN))
+            return BackColor.ANSI_BRIGHT_BG_GREEN;
+        else if(color.equals(CardColor.PURPLE))
+            return BackColor.ANSI_BG_PURPLE;
+        else return BackColor.ANSI_BG_YELLOW;
+    }
+
 }

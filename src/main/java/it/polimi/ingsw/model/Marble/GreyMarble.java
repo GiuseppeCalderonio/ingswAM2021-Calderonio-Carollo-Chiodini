@@ -57,6 +57,6 @@ public class GreyMarble implements Marble {
      */
     @Override
     public BackColor getBackColor() {
-        return BackColor.ANSI_GREY;
+        return BackColor.ANSI_BRIGHT_BG_BLACK;
     }
 }

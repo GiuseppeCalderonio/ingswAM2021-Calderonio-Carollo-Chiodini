@@ -39,4 +39,12 @@ public class TrackToken implements SoloToken {
                 "shuffle= " + shuffle +
                 ", faithPoints= " + faithPoints ;
     }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method returns true only if the token requires to shuffle the deck
+     */
+    public boolean getShuffle(){
+        return shuffle;
+    }
 }

@@ -17,4 +17,20 @@ public interface SoloToken extends Serializable {
     boolean equals(Object o);
 
     String toString();
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns the color associated to the token if it is a CardToken
+     */
+    default BackColor getBackColor() {
+        return null;
+    }
+
+    /**
+     *USEFUL ONLY FOR CLIENTS
+     * this method returns true only if the token requires to shuffle the deck
+     */
+    default boolean getShuffle() {
+        return false;
+    }
 }
