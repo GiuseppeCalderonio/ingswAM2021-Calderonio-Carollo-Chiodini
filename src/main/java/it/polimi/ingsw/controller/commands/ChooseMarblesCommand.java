@@ -108,8 +108,12 @@ public class ChooseMarblesCommand implements Command {
                     marbles);
         } // if the actual player has two leader cards of type white marble activated
         else {
-            client.getInterpreter().setPreviousPossibleCommands(new ArrayList<>(possibleCommands));
-            client.getInterpreter().setPossibleCommands(new ArrayList<>(Collections.singletonList("choose_marbles")));
+            previousPossibleCommands.clear();
+            previousPossibleCommands.addAll(possibleCommands);
+            possibleCommands.clear();
+            possibleCommands.add("choose_leaderCards");
+            //client.getInterpreter().setPreviousPossibleCommands(new ArrayList<>(possibleCommands));
+            //client.getInterpreter().setPossibleCommands(new ArrayList<>(Collections.singletonList("choose_leaderCards")));
             return buildResponseWithMarbles("you own 2 white marble leader cards , choose for each white marble how to convert it",
                     possibleCommands,
                     marbles.size());
@@ -154,7 +158,9 @@ public class ChooseMarblesCommand implements Command {
                                                               CommandInterpreter interpreter,
                                                               Game game,
                                                               List<Marble> marbles){
-        interpreter.setPreviousPossibleCommands(new ArrayList<>(possibleCommands));
+        interpreter.getPossibleCommands().clear();
+        interpreter.getPossibleCommands().addAll(possibleCommands);
+        //interpreter.setPreviousPossibleCommands(new ArrayList<>(possibleCommands));
         return buildResponseToInsertInWarehouseLeader( interpreter,
                 game,
                 marbles);
