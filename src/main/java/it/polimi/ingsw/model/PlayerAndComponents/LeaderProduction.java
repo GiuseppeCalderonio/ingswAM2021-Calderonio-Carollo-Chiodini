@@ -75,7 +75,7 @@ public class LeaderProduction extends ProductionPower {
     /**
      * this method verify if the leader production associated with the index in input
      * is active or not.
-     * the method always return false when the card doesn't exist
+     * the method always return false when the LeaderProduction doesn't exist
      * @param toCheck this is the index associated with the leader production to activate
      * @return true if the leader production has already been activated during the turn, false otherwise
      */
