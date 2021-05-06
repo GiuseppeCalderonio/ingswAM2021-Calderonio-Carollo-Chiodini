@@ -67,10 +67,6 @@ public class ShelfCollection extends CollectionResources {
      */
     public boolean isCompatible(CollectionResources toVerify){
         return toVerify.getMaps().stream().allMatch(x -> type.equals(x.getResource().getType()));
-        /*for (MapResources map : toVerify.getMaps()){
-            if (!type.equals(map.getResource().getType())) return false;
-        }
-        return true;*/
     }
     /**
      * this method add a resource to the set

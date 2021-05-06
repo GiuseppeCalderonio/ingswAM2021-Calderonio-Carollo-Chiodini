@@ -8,8 +8,8 @@ import it.polimi.ingsw.view.utilities.colors.ForeColor;
 import java.util.List;
 
 public class GraphicalInitializingLeaderCard implements CharFigure{
-    private CharStream stream;
-    private List<LeaderCard> leaderCards;
+    private final CharStream stream;
+    private final List<LeaderCard> leaderCards;
     private static final int width = 90;
     private static final int height = 30;
 

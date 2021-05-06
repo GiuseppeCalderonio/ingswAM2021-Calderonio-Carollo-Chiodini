@@ -1,15 +1,28 @@
 package it.polimi.ingsw.controller.commands;
 
 import it.polimi.ingsw.controller.ClientHandler;
-import it.polimi.ingsw.controller.ResponseToClient;
+import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.EndGameException;
 
 import java.util.List;
 
+/**
+ * this class represent the set size command.
+ * in particular, this is the first command: every player, once the connection
+ * is established, send this command to the server in order to decide the number of players
+ * of the game that he want to play
+ */
 public class SetSizeCommand implements Command {
 
+    /**
+     * this attribute represent the number of players of the game that the client want to play
+     */
     private final int numberOfPlayers;
 
+    /**
+     * this constructor create the object setting the number of players desired
+     * @param numberOfPlayers this is the integer representing the number of players to set
+     */
     public SetSizeCommand(int numberOfPlayers){
         this.numberOfPlayers = numberOfPlayers;
     }
@@ -43,6 +56,12 @@ public class SetSizeCommand implements Command {
     }
 
 
+    /**
+     * this method get the number of players that the client sent
+     * the method is used only in the subClass SetSizeCommand, otherwise it returns always 0
+     *
+     * @return the number of players that the client sent
+     */
     @Override
     public int getNumberOfPlayers() {
         return numberOfPlayers;

@@ -3,6 +3,8 @@ package it.polimi.ingsw.controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
+import it.polimi.ingsw.network.Lobby;
 import it.polimi.ingsw.model.EndGameException;
 import it.polimi.ingsw.model.Game;
 
@@ -85,10 +87,6 @@ public class ClientHandler implements Runnable{
         lobby.createGame();
     }
 
-    public CommandManager getCommandManager() {
-        return commandManager;
-    }
-
     public synchronized int getNumberOfPlayers () {
         return lobby.getNumberOfPlayers();
     }
@@ -122,11 +120,15 @@ public class ClientHandler implements Runnable{
     }
 
     private List<String> getPossibleCommands(){
-        return getCommandManager().getCommandInterpreter().getPossibleCommands();
+        return commandManager.getCommandInterpreter().getPossibleCommands();
     }
 
     public CommandInterpreter getInterpreter(){
-        return getCommandManager().getCommandInterpreter();
+        return commandManager.getCommandInterpreter();
+    }
+
+    public void setCommandInterpreter(CommandInterpreter interpreter){
+        commandManager.setCommandInterpreter(interpreter);
     }
 
 
@@ -151,6 +153,11 @@ public class ClientHandler implements Runnable{
 
     }
 
+    /**
+     * this method send in broadcast the message in input, it simulate
+     * the method notify for the pattern notify-observer
+     * @param message this is the message to send in broadcast
+     */
     public synchronized void sendInBroadcast (ResponseToClient message) {
         getClients().forEach(client -> client.send(message));
     }

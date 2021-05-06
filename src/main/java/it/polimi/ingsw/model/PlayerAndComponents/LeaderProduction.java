@@ -22,7 +22,7 @@ public class LeaderProduction extends ProductionPower {
      * this attribute indicates if one of the two possible leader productions have
      * been activated during the turn
      */
-    private final boolean[] leaderProductionActivated = { false, false};
+    private boolean[] leaderProductionActivated = { false };
 
     /**
      * this constructor initialise the list of resource with one resource,
@@ -53,6 +53,7 @@ public class LeaderProduction extends ProductionPower {
      * @param toAdd this is the resource to add
      */
     public void addLeaderProduction(Resource toAdd){
+        leaderProductionActivated = new boolean[]{false, false};
         inputs.add(toAdd);
     }
 

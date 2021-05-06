@@ -2098,14 +2098,15 @@ class GameTest {
     }
 
     /**
-     *this test verifies the behaviour of the method changeWhiteMarble, it adds two leader white marble, then it
-     *calls the method with the desired input and at the end it verifies the correct change of marbles in the list
+     * this test verifies the behaviour of the method changeWhiteMarble, it adds two leader white marble, then it
+     * calls the method with the desired input and at the end it verifies the correct change of marbles in the list
      */
     @Test
     void testChangeWhiteMarble6() {
         List<String> nicknames = new ArrayList<>(Collections.singletonList("first"));
         game = new Game(nicknames);
         game.initialiseGame(game.getPlayers().get(0).getNickname(), new CollectionResources(), 1, 3);
+        game.getActualPlayer().getPersonalLeaderCards().clear();
         game.getActualPlayer().getPersonalLeaderCards().add(new NewWhiteMarble(new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.BLUE, CardColor.YELLOW))),2, new Coin()));
         game.getActualPlayer().getPersonalLeaderCards().add(new NewWhiteMarble(new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.GREEN, CardColor.YELLOW))),2, new Shield()));
         game.getActualPlayer().locateDevelopmentCard(new DevelopmentCard(
@@ -2140,8 +2141,8 @@ class GameTest {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Stone())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(), new Shield(), new Shield(), new Shield())))
                 ,0),2);
-        game.getActualPlayer().activateLeaderCard(3);
-        game.getActualPlayer().activateLeaderCard(4);
+        game.getActualPlayer().activateLeaderCard(1);
+        game.getActualPlayer().activateLeaderCard(2);
         List<Marble> marbles = new ArrayList<>(); // initialize list of marbles
         marbles.add(new WhiteMarble());
         marbles.add(new WhiteMarble());
@@ -3040,21 +3041,23 @@ class GameTest {
         List<String> nicknames = new ArrayList<>(Collections.singletonList("first"));
         game = new Game(nicknames);
         game.initialiseGame(game.getPlayers().get(0).getNickname(), new CollectionResources(), 1, 3);
+        game.getActualPlayer().getPersonalLeaderCards().clear();
         game.getActualPlayer().getPersonalLeaderCards().add(new NewWhiteMarble(new ResourcesRequired(new Coin()),2, new Coin()));
         game.getActualPlayer().getPersonalLeaderCards().add(new NewWhiteMarble(new ResourcesRequired(new Coin()),2, new Shield()));
         CollectionResources coins = new CollectionResources();
-        assertFalse(game.activateLeaderCard(3));
-        assertFalse(game.activateLeaderCard(4));
+        assertFalse(game.activateLeaderCard(1));
+        assertFalse(game.activateLeaderCard(2));
         coins.add(new Coin());
         coins.add(new Coin());
         coins.add(new Coin());
         coins.add(new Coin());
         coins.add(new Coin());
         game.getActualPlayer().getPersonalDashboard().getPersonalStrongbox().addResources(coins);
-        assertTrue(game.activateLeaderCard(3));
-        assertEquals(game.getActualPlayer().getLeaderWhiteMarble(1), new YellowMarble());
-        assertTrue(game.activateLeaderCard(4));
+        assertTrue(game.activateLeaderCard(2));
+        assertEquals(game.getActualPlayer().getLeaderWhiteMarble(1), new BlueMarble());
+        assertTrue(game.activateLeaderCard(1));
         assertEquals(game.getActualPlayer().getLeaderWhiteMarble(2), new BlueMarble());
+        assertEquals(game.getActualPlayer().getLeaderWhiteMarble(1), new YellowMarble());
     }
 
     /**

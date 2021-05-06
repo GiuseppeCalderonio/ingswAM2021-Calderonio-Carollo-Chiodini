@@ -1,14 +1,14 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.responseToClients.InitialisingResponse;
+import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
+import it.polimi.ingsw.controller.responseToClients.StartGameResponse;
 import it.polimi.ingsw.model.EndGameException;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static it.polimi.ingsw.controller.ResponseToClient.broadCastStartGame;
-import static it.polimi.ingsw.controller.ResponseToClient.broadcastInitialising;
 
 /**
  * this class represent the command manager, it process the commands,
@@ -74,15 +74,14 @@ public class CommandManager {
     private boolean isPhaseFinished(){
         return client.getClients().stream().
                 allMatch(client -> client.
-                        getCommandManager().
-                        getCommandInterpreter().
+                        getInterpreter().
                         IsPhaseFinished());
     }
 
     private void startInitialisingPhase(){
         // change the state of the game from "login" to "initialise game"
         client.getClients().forEach(client -> client.
-                getCommandManager().setCommandInterpreter(new InitialisingInterpreter()));
+                setCommandInterpreter(new InitialisingInterpreter()));
         // create the game
         client.createGame();
         // send in broadcast the leader cards and the position to every player
@@ -90,14 +89,8 @@ public class CommandManager {
     }
 
     private void startTurnsPhase() {
-        client.getClients().forEach(client -> client.
-                getCommandManager().setCommandInterpreter(new TurnsInterpreter(client)));
-        /*
-        for (ClientHandler client1 : client.getClients()){
-            client1.getCommandManager().setCommandInterpreter(new TurnsInterpreter(client1));
-        }
-
-         */
+        client.getClients().forEach(client -> client
+                .setCommandInterpreter(new TurnsInterpreter(client)));
 
         // send for every player, the market of cards, the market of marbles,
         // the position on the faith track of every player, the warehouse of every player,
@@ -110,7 +103,7 @@ public class CommandManager {
         // for all clients of the game
         for (ClientHandler client1 : client.getClients()) {
             // set a new turns interpreter
-            client1.getCommandManager().setCommandInterpreter(new TurnsInterpreter(client1));
+            client1.setCommandInterpreter(new TurnsInterpreter(client1));
 
             // if the client have to play his turn
             if (client1.isYourTurn()) {
@@ -132,17 +125,39 @@ public class CommandManager {
     }
 
 
-
+    // this is a personalized message, shouldn't be removed
     private synchronized void sendBroadcastInitialising()  {
         int i = 1;
         for (ClientHandler client : client.getClients()) {
-            client.send(broadcastInitialising(client, i));
+            client.send(new InitialisingResponse(client, i));
             i++;
         }
     }
 
+    // this shouldn't change
     private synchronized void sendBroadcastStartGame() {
-        client.getClients().forEach(client -> client.
-                send(broadCastStartGame(client.getGame(), client)));
+
+        client.sendInBroadcast(new StartGameResponse(client, getMessage(), getPossibleCommands()));
+
+    }
+
+    private String getMessage(){
+        if (client.isYourTurn() )
+            return "the game start! Is your turn";
+        return "the game start! Is not your turn, wait...";
+    }
+
+    private List<String> getPossibleCommands(){
+        List<String> possibleCommands = new ArrayList<>();
+        if (client.isYourTurn() ) {
+            possibleCommands.add("shift_resources");
+            possibleCommands.add("choose_marbles");
+            possibleCommands.add("production");
+            possibleCommands.add("buy_card");
+            possibleCommands.add("leader_action");
+            return possibleCommands;
+        }
+
+        return possibleCommands;
     }
 }

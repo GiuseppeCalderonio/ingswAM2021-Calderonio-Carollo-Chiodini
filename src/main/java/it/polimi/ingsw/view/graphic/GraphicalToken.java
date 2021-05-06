@@ -8,7 +8,7 @@ import it.polimi.ingsw.view.utilities.colors.ForeColor;
 
 public class GraphicalToken implements CharFigure {
 
-    private CharStream stream;
+    private final CharStream stream;
     private final SoloToken soloToken;
     private final int width;
     private final int height;

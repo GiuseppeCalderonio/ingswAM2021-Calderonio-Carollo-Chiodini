@@ -83,10 +83,6 @@ public class LeaderWarehouse extends Warehouse {
         leaderFaithPoints = (int)toAdd.asList().stream().
                 filter(leaderShelf[numShelf - 4]::addResource).
                 count();
-        /*for (Resource r : toAdd) {
-            if (leaderShelf[numShelf - 4].addResource(r))
-                leaderFaithPoints++;
-        }*/
         return leaderFaithPoints;
     }
 
@@ -109,17 +105,6 @@ public class LeaderWarehouse extends Warehouse {
                 forEach(y -> temp.remove(x)));
 
 
-        /*for (Resource r : temp) {
-            for (int i = 0; i < 2; i++) {
-                try {
-                    if (r.getType().equals(leaderShelf[i].getResourceType()))
-                        if (!leaderShelf[i].isEmpty()) {
-                            leaderShelf[i].removeResource(r);
-                            temp.remove(r);
-                        }
-                } catch(NullPointerException ignored){}
-            }
-        }*/
         if (!temp.getMaps().isEmpty())
             super.removeResources(temp);
     }
@@ -139,11 +124,6 @@ public class LeaderWarehouse extends Warehouse {
                 filter(Objects::nonNull).
                 forEach(x -> x.getResources().forEach(temp::add));
 
-        /*for (i = 0; i < 2; i++) {
-            try{
-                leaderShelf[i].getResources().forEach(temp::add);
-            }catch (NullPointerException ignored){}
-        }*/
         return temp;
     }
 
@@ -161,10 +141,6 @@ public class LeaderWarehouse extends Warehouse {
                 flatMapToInt(x -> IntStream.of(x.getResources().getSize())).
                 sum();
 
-        /*for (i = 0; i < 2; i++) {
-            if (leaderShelf[i] != null)
-                counter = counter + leaderShelf[i].getResources().getSize();
-        }*/
         return counter;
     }
 

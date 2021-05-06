@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.LeaderCard;
 
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.model.Resources.Resource;
-import it.polimi.ingsw.view.ThinLeaderCard;
+import it.polimi.ingsw.view.thinModelComponents.ThinLeaderCard;
 
 /**
  * this class represent the leader card

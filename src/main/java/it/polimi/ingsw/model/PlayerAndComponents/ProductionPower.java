@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 /**
  * this class represent the production power associated with the dashboard
  */
+@SuppressWarnings("unchecked")
 public class ProductionPower {
 
     /**
@@ -99,9 +100,6 @@ public class ProductionPower {
                         flatMapToInt(y -> IntStream.of(1)).
                         sum())).
                 sum();
-       /* for (int i = 0; i < 3; i++)
-            toReturn = toReturn + personalCards[i].stream().flatMapToInt(x -> IntStream.of(1)).sum();
-        return toReturn;*/
     }
 
     /**
@@ -115,9 +113,6 @@ public class ProductionPower {
                         flatMapToInt(y -> IntStream.of(y.getVictoryPoints())).
                         sum())).
                 sum();
-        /*for (int i = 0; i < 3; i++)
-            toReturn = toReturn + personalCards[i].stream().flatMapToInt(x -> IntStream.of(x.getVictoryPoints())).sum();
-        return toReturn; */
     }
 
     /**

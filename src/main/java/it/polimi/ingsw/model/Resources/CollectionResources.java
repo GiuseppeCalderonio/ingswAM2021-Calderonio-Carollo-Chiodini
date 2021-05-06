@@ -74,10 +74,6 @@ public class CollectionResources implements Iterable<Resource> {
      */
     public boolean contains(Resource toCheck){
         return resources.stream().anyMatch(x -> x.getResource().equals(toCheck));
-       /* for (MapResources map : resources){
-            if (map.getResource().equals(toCheck)) return true;
-        }
-        return false;*/
     }
 
     /**
@@ -111,9 +107,6 @@ public class CollectionResources implements Iterable<Resource> {
         if (!this.contains(toAdd)) resources.add(new MapResources(toAdd , 1));
         else {
             resources.stream().filter(x -> x.getResource().equals(toAdd)).forEach(x ->x.add(1));
-           /* for (MapResources map : resources){
-                if (map.getResource().equals(toAdd)) map.add(1);
-            }*/
         }
         return true;
     }
@@ -126,9 +119,6 @@ public class CollectionResources implements Iterable<Resource> {
     public boolean remove(Resource toRemove) {
         if (!this.contains(toRemove)) return false;
         resources.stream().filter(x -> x.getResource().equals(toRemove)).forEach(x ->x.remove(1));
-        /*for (MapResources map : resources) {
-            if (map.getResource().equals(toRemove)) map.remove(1);
-        }*/
         resources = resources.stream().filter( x -> !x.isEmpty()).collect(Collectors.toList());
         return true;
     }

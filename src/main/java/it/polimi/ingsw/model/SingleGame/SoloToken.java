@@ -4,9 +4,11 @@ import it.polimi.ingsw.model.DevelopmentCards.CardsMarket;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.view.utilities.colors.BackColor;
 
-import java.io.Serializable;
-
-public interface SoloToken extends Serializable {
+/**
+ * this class represent the solo token of the single game.
+ * this interface is implemented by the classes CardToken and CardToken
+ */
+public interface SoloToken {
 
     /**
      *this method invoked by SingleGame and implemented by CardToken and TrackToken defines the behaviour of a token

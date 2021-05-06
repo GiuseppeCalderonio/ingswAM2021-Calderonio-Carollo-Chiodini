@@ -1,11 +1,16 @@
 package it.polimi.ingsw.controller.commands;
 
 import it.polimi.ingsw.controller.ClientHandler;
-import it.polimi.ingsw.controller.ResponseToClient;
+import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.EndGameException;
 
 import java.util.List;
 
+/**
+ * this class represent an unknown command.
+ * in particular, when the client type a command that does not exist,
+ * the class automatically create this object and send it throughout the network
+ */
 public class UnknownCommand implements Command{
     /**
      * this method get the cmd associated with the command
