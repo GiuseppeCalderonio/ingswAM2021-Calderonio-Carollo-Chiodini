@@ -20,6 +20,7 @@ public class CardsMarket {
      * this method create the market
      */
 
+    @SuppressWarnings("unchecked")
     public CardsMarket() {
         cardMatrix = new ArrayList[3][4];
         // stack of card of third level, green color
