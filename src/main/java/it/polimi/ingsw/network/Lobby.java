@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 /**
  * this class represent the lobby
  */
-public class Lobby {
+public class Lobby implements Runnable {
 
-    private List<ClientHandler> clients = new ArrayList<>();
+    private final List<ClientHandler> clients = new ArrayList<>();
     private Game game = new Game(Collections.singletonList(""));
     private List<String> nicknames = new ArrayList<>();
     private final AtomicInteger numberOfPlayers;
@@ -74,7 +74,8 @@ public class Lobby {
     }
 
     public void setClients(List<ClientHandler> clients) {
-        this.clients = clients;
+        this.clients.clear();
+        this.clients.addAll(clients);
     }
 
     /**
@@ -91,7 +92,8 @@ public class Lobby {
                 i++;
             }
         }
-        this.clients = newClients; // set the list of sorted clients
+        this.clients.clear();
+        this.clients.addAll(newClients);// set the list of sorted clients
     }
 
     public void setGameFinished(){
@@ -106,10 +108,43 @@ public class Lobby {
         return gameIsStarted.get();
     }
 
-    public synchronized void ping() throws IOException {
-        for (ClientHandler client : clients){
-            if (!client.getSocket().getInetAddress().isReachable(200))
-                throw new IOException("client not reachable");
+    public synchronized void ping() throws InterruptedException, IOException {
+            for (ClientHandler client : clients){
+                if (!client.getSocket().getInetAddress().isReachable(200))
+                    throw new IOException("a client crushed");
+            }
+    }
+
+    /**
+     * When an object implementing interface {@code Runnable} is used
+     * to create a thread, starting the thread causes the object's
+     * {@code run} method to be called in that separately executing
+     * thread.
+     * <p>
+     * The general contract of the method {@code run} is that it may
+     * take any action whatsoever.
+     *
+     * @see Thread#run()
+     */
+    @Override
+    public void run() {
+        while (true){
+            try {
+                ping();
+                //TimeUnit.SECONDS.sleep(2);
+                if (isGameFinished())
+                    return;
+            } catch (InterruptedException
+                    | IOException
+                    e
+            ){
+                try {
+                    clients.get(0).sendBroadcastDisconnection();
+                } catch (IOException | IndexOutOfBoundsException ex) {
+                    ex.printStackTrace();
+                }
+                return;
+            }
         }
     }
 }

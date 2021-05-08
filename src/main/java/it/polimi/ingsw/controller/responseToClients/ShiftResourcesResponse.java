@@ -13,7 +13,11 @@ public class ShiftResourcesResponse extends ResponseToClient{
     private final ThinTrack track1;
     private final ThinWarehouse warehouse1;
 
-
+    /**
+     * this constructor create the response starting from the client,
+     * getting from him all the data needed and setting all of them
+     * @param client this is the client that send the response
+     */
     public ShiftResourcesResponse(ClientHandler client){
         RealPlayer player = client.getGame().getActualPlayer();
         this.nickname1 = player.getNickname();

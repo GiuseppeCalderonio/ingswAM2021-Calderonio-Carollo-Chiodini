@@ -93,11 +93,10 @@ public abstract class NormalActionCommand implements Command {
         //interpreter.setPossibleCommands(new ArrayList<>(Collections.singletonList("insert_in_warehouse")));
         interpreter.setMarblesConverted(game.convert(marbles));
         interpreter.setResourceSet(new ArrayList<>(
-                new HashSet<>(interpreter.getMarblesConverted().asList())));
-        return new WhiteMarblesConversionResponse(
-                interpreter.getMarblesConverted(),
-                new ArrayList<>(new HashSet<>(interpreter.getMarblesConverted().asList()))
+                new HashSet<>(interpreter.getMarblesConverted().asList()))
         );
+        return new WhiteMarblesConversionResponse(
+                interpreter.getMarblesConverted());
         //return responseToInsertInWarehouse(interpreter.getPossibleCommands(), interpreter.getMarblesConverted());
     }
 

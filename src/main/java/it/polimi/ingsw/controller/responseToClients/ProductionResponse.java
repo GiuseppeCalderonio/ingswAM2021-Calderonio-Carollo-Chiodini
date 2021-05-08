@@ -8,13 +8,39 @@ import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
 import it.polimi.ingsw.view.thinModelComponents.ThinTrack;
 import it.polimi.ingsw.view.thinModelComponents.ThinWarehouse;
 
+/**
+ * this class represent the production response.
+ * in particular, when a player activate correctly a production,
+ * may change his depots state (warehouse and strongbox), and eventually
+ * can advance into the faith track
+ */
 public class ProductionResponse extends ResponseToClient{
 
+    /**
+     * this attribute represent the nickname of the player to update
+     */
     private final String nickname2;
+
+    /**
+     * this attribute represent the warehouse of the player to update
+     */
     private final ThinWarehouse warehouse2;
+
+    /**
+     * this attribute represent the strongbox of the player to update
+     */
     private final CollectionResources strongbox2;
+
+    /**
+     * this attribute represent the track of the player to update
+     */
     private final ThinTrack track2;
 
+    /**
+     * this constructor create the response starting from the client,
+     * getting from him all the data needed and setting all of them
+     * @param client this is the client that send the response
+     */
     public ProductionResponse(ClientHandler client){
 
         RealPlayer player = client.getGame().getActualPlayer();
