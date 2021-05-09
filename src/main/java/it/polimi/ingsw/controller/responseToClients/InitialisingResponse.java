@@ -78,7 +78,7 @@ public class InitialisingResponse extends ResponseToClient{
         CharStream console = new CharStream(200, 30);
         for (int i = 0; i < 200; i++) {
             for (int j = 0; j < 60; j++) {
-                console.addColor(i, j, BackColor.ANSI_BG_BLACK);
+                console.addColor(i, j, BackColor.ANSI_BRIGHT_BG_BLACK);
             }
         }
 

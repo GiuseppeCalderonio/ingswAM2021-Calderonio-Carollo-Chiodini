@@ -10,14 +10,12 @@ public class GraphicalToken implements CharFigure {
 
     private final CharStream stream;
     private final SoloToken soloToken;
-    private final int width;
-    private final int height;
+    private final int width = 4;
+    private final int height = 3;
 
-    public GraphicalToken(CharStream stream, SoloToken soloToken, int width, int height) {
+    public GraphicalToken(CharStream stream, SoloToken soloToken) {
         this.stream = stream;
         this.soloToken = soloToken;
-        this.width = width;
-        this.height = height;
     }
 
     /**

@@ -55,12 +55,12 @@ public class GraphicalFaithTrack implements CharFigure {
      */
     @Override
     public void draw(int relX, int relY) {
-        for (int i = 0; i <= width; ++i) {
+        /*for (int i = 0; i <= width; ++i) {
             for (int j = 0; j <= height; ++j) {
                 //this is the base of FaithTrack
                 stream.addColor(i, j, BackColor.ANSI_BRIGHT_BG_WHITE);
             }
-        }
+        }*/
         //descriptions of players
         stream.addString(relX, relY - 8, "PLAYERS", ForeColor.ANSI_BLACK, BackColor.ANSI_BRIGHT_BG_WHITE);
         stream.addString(relX, relY - 7, "LIST:", ForeColor.ANSI_BLACK, BackColor.ANSI_BRIGHT_BG_WHITE);

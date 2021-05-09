@@ -2,18 +2,21 @@ package it.polimi.ingsw.network;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import it.polimi.ingsw.controller.commands.*;
+import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.commands.LoginCommand;
+import it.polimi.ingsw.controller.commands.QuitCommand;
+import it.polimi.ingsw.controller.commands.SetSizeCommand;
 import it.polimi.ingsw.controller.commands.initialisingCommands.InitialiseLeaderCardsCommand;
 import it.polimi.ingsw.controller.commands.initialisingCommands.InitialiseResourcesCommand;
 import it.polimi.ingsw.controller.commands.leaderCommands.ActivateCardCommand;
 import it.polimi.ingsw.controller.commands.leaderCommands.DiscardCardCommand;
 import it.polimi.ingsw.controller.commands.leaderCommands.LeaderCommand;
 import it.polimi.ingsw.controller.commands.normalCommands.EndTurnCommand;
+import it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands.ChooseLeaderCardsCommand;
 import it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands.ChooseMarblesCommand;
 import it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands.InsertInWarehouseCommand;
 import it.polimi.ingsw.controller.commands.normalCommands.ShiftResourcesCommand;
 import it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands.BuyCardAction;
-import it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands.ChooseLeaderCardsCommand;
 import it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands.SelectPositionCommand;
 import it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands.SelectResourcesFromWarehouseCommand;
 import it.polimi.ingsw.controller.commands.normalCommands.productionCommands.*;
@@ -24,14 +27,17 @@ import it.polimi.ingsw.model.LeaderCard.*;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.Resources.*;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
+import it.polimi.ingsw.view.graphic.GraphicalGame;
 import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
 import it.polimi.ingsw.view.utilities.CharStream;
 import it.polimi.ingsw.view.utilities.colors.BackColor;
 import it.polimi.ingsw.view.utilities.colors.ForeColor;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -610,13 +616,17 @@ public class Client implements Runnable {
     }
 
     public void show(){
+        CharStream console = new CharStream(200, 60);
 
-        System.out.println(Arrays.deepToString(cardsMarket) + "\n");
-        System.out.println(myself + "\n");
-        System.out.println(opponents + "\n");
-        System.out.println(Arrays.deepToString(marbleMarket) + "\n");
-        System.out.println(lonelyMarble + "\n");
-        System.out.println(solotoken + "\n");
+        for(int i=0; i<200; i++)
+            for (int j=0; j<60; j++)
+                console.addColor(i,j, BackColor.ANSI_BRIGHT_BG_CYAN);
+
+        GraphicalGame graphicalGame = new GraphicalGame(console, myself, opponents, marbleMarket, lonelyMarble, cardsMarket, solotoken);
+        graphicalGame.draw();
+        console.print(System.out);
+        console.reset();
+
     }
 
     public void setPosition(int position) {
