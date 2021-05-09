@@ -53,11 +53,8 @@ public class GraphicalProduction implements CharFigure{
      */
     @Override
     public void draw(int relX, int relY) {
-        for(int i = 0; i <= width; ++i) {
-            for (int j = 0; j <= height; ++j) {
-                stream.addColor(i + relX, j + relY, BackColor.ANSI_BRIGHT_BG_WHITE);
-            }
-        }
+
+
         int i = 0;
         stream.addString(relX+i, relY, String.valueOf(inputResources.getMaps().get(0).getCardinality()), ForeColor.ANSI_BLACK, inputResources.getMaps().get(0).getResource().getColor());
         i++;
@@ -69,15 +66,17 @@ public class GraphicalProduction implements CharFigure{
         i++;
         stream.addChar('>', relX+i, relY, ForeColor.ANSI_BRIGHT_BLACK, BackColor.ANSI_BRIGHT_BG_WHITE);
         i++;
-        stream.addString(relX+i, relY, String.valueOf(outputResources.getMaps().get(0).getCardinality()), ForeColor.ANSI_BLACK, outputResources.getMaps().get(0).getResource().getColor());
-        i++;
-        if(outputResources.getMaps().size()>=2) {
-            stream.addString(relX + i, relY, String.valueOf(outputResources.getMaps().get(1).getCardinality()), ForeColor.ANSI_BLACK, outputResources.getMaps().get(1).getResource().getColor());
+        if (!outputResources.getMaps().isEmpty()) {
+            stream.addString(relX+i, relY, String.valueOf(outputResources.getMaps().get(0).getCardinality()), ForeColor.ANSI_BLACK, outputResources.getMaps().get(0).getResource().getColor());
             i++;
-        }
-        if(outputResources.getMaps().size()==3) {
-            stream.addString(relX + i, relY, String.valueOf(outputResources.getMaps().get(2).getCardinality()), ForeColor.ANSI_BLACK, outputResources.getMaps().get(2).getResource().getColor());
-            i++;
+            if(outputResources.getMaps().size()>=2) {
+                stream.addString(relX + i, relY, String.valueOf(outputResources.getMaps().get(1).getCardinality()), ForeColor.ANSI_BLACK, outputResources.getMaps().get(1).getResource().getColor());
+                i++;
+            }
+            if(outputResources.getMaps().size()==3) {
+                stream.addString(relX + i, relY, String.valueOf(outputResources.getMaps().get(2).getCardinality()), ForeColor.ANSI_BLACK, outputResources.getMaps().get(2).getResource().getColor());
+                i++;
+            }
         }
         stream.addString(relX+i, relY, String.valueOf(faithPoints), ForeColor.ANSI_BLACK, BackColor.ANSI_BG_RED);
     }

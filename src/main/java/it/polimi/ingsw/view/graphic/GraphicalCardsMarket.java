@@ -61,12 +61,14 @@ public class GraphicalCardsMarket implements CharFigure{
 
             int y=0;
             for (int x=1; x<=31; x++) {  //column
-
+                int k=0;
                 for (int j = 1; j <= 14; j++) { //row
-                    int k=0;
-                    //if
-                    GraphicalDevelopmentCard graphicalDevelopmentCard = new GraphicalDevelopmentCard(stream, cardsMarket[k][y]);
-                    graphicalDevelopmentCard.draw(relX + x, relY + j);
+
+                    if (cardsMarket[k][y] != null) {
+                        GraphicalDevelopmentCard graphicalDevelopmentCard = new GraphicalDevelopmentCard(stream, cardsMarket[k][y]);
+                        graphicalDevelopmentCard.draw(relX + x, relY + j);
+                    }
+
                     k++;
                     j = j + 4;
                 }
