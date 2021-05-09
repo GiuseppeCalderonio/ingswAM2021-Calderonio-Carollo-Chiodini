@@ -616,10 +616,13 @@ public class Client implements Runnable {
     }
 
     public void show(){
-        CharStream console = new CharStream(200, 60);
+        int height = 60;
+        if (opponents.size() <= 2)
+            height = 41;
+        CharStream console = new CharStream(200, height);
 
         for(int i=0; i<200; i++)
-            for (int j=0; j<60; j++)
+            for (int j=0; j<height; j++)
                 console.addColor(i,j, BackColor.ANSI_BRIGHT_BG_CYAN);
 
         GraphicalGame graphicalGame = new GraphicalGame(console, myself, opponents, marbleMarket, lonelyMarble, cardsMarket, solotoken);

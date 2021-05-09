@@ -20,7 +20,14 @@ public class GraphicalFaithTrack implements CharFigure {
         this.stream = stream;
         this.thinPlayers=thinPlayers;
         nicknamess = new ArrayList<>();
-        for (ThinPlayer thinPlayer : thinPlayers) this.nicknamess.add(thinPlayer.getNickName());
+        for (ThinPlayer thinPlayer : thinPlayers){
+            try{
+                this.nicknamess.add(thinPlayer.getNickName().substring(0, 12));
+            }catch (StringIndexOutOfBoundsException e){
+                this.nicknamess.add(thinPlayer.getNickName());
+            }
+
+        }
         this.positionPlayerss = new ArrayList<>();
         for (ThinPlayer thinPlayer : thinPlayers) this.positionPlayerss.add(thinPlayer.getTrack().getPosition());
     }
@@ -55,12 +62,12 @@ public class GraphicalFaithTrack implements CharFigure {
      */
     @Override
     public void draw(int relX, int relY) {
-        /*for (int i = 0; i <= width; ++i) {
+        for (int i = 0; i <= width; ++i) {
             for (int j = 0; j <= height; ++j) {
                 //this is the base of FaithTrack
-                stream.addColor(i, j, BackColor.ANSI_BRIGHT_BG_WHITE);
+                stream.addColor(i + relX - 1, j + relY - 9, BackColor.ANSI_BRIGHT_BG_WHITE);
             }
-        }*/
+        }
         //descriptions of players
         stream.addString(relX, relY - 8, "PLAYERS", ForeColor.ANSI_BLACK, BackColor.ANSI_BRIGHT_BG_WHITE);
         stream.addString(relX, relY - 7, "LIST:", ForeColor.ANSI_BLACK, BackColor.ANSI_BRIGHT_BG_WHITE);
