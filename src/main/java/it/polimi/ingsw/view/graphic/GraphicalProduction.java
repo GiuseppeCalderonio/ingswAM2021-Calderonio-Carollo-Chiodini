@@ -8,11 +8,11 @@ import it.polimi.ingsw.view.utilities.colors.ForeColor;
 
 public class GraphicalProduction implements CharFigure{
     private final CharStream stream;
-    private CollectionResources inputResources;
-    private CollectionResources outputResources;
+    private final CollectionResources inputResources;
+    private final CollectionResources outputResources;
     private final int width;
     private final int height;
-    private int faithPoints;
+    private final int faithPoints;
 
 
     public GraphicalProduction(CharStream stream, CollectionResources inputResources, CollectionResources outputResources, int faithPoints, int height, int width) {

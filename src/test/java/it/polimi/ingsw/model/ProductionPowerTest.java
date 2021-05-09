@@ -216,4 +216,164 @@ public class ProductionPowerTest {
         assertTrue(prodPower.placeCard(cardsSecond, 3));
         assertTrue(prodPower.placeCard(cardsThird, 3));
     }
+
+    /**
+     * this test try to activate productions that doesn't exist
+     * or that are in positions without cards,
+     * and verify that nothing happen
+     */
+    @Test
+    void testActivateProduction1(){
+        // create a new production power
+        ProductionPower prodPower = new ProductionPower();
+        // activate some production
+        prodPower.activateProduction(0);
+        prodPower.activateProduction(1);
+        prodPower.activateProduction(2);
+        prodPower.activateProduction(3);
+        prodPower.activateProduction(4);
+        // verify that every production is null
+        assertNull(prodPower.getCard(0));
+        assertNull(prodPower.getCard(1));
+        assertNull(prodPower.getCard(2));
+        assertNull(prodPower.getCard(3));
+        assertNull(prodPower.getCard(4));
+    }
+
+    /**
+     * this test activate a production and then verify that the production
+     * has been activated correctly, verifying also the method isProductionActivated
+     */
+    @Test
+    void testActivateProduction2(){
+        // create a new production power
+        ProductionPower prodPower = new ProductionPower();
+        // create 3 level 1 cards
+        DevelopmentCard cards1 = new DevelopmentCard(null, 1, 1, null, null, null, 0);
+        DevelopmentCard cards2 = new DevelopmentCard(null, 1, 5, null, null, null, 0);
+        DevelopmentCard cards3 = new DevelopmentCard(null, 1, 11, null, null, null, 0);
+        // place the cards in the dashboard
+        prodPower.placeCard(cards1, 1);
+        prodPower.placeCard(cards2, 2);
+        prodPower.placeCard(cards3, 3);
+        // activate the first 2 cards
+        prodPower.activateProduction(1);
+        prodPower.activateProduction(2);
+        // verify that the first 2 card are active and the third is inactive
+        assertTrue(prodPower.getCard(1).isProductionActivated());
+        assertTrue(prodPower.getCard(2).isProductionActivated());
+        assertFalse(prodPower.getCard(3).isProductionActivated());
+        // verify the same result with the method isProductionActivated
+        assertTrue(prodPower.isProductionActivated(1));
+        assertTrue(prodPower.isProductionActivated(2));
+        assertFalse(prodPower.isProductionActivated(3));
+
+    }
+
+    /**
+     * this test verify if the method activateBasicProduction
+     * effectively activate the basic production
+     */
+    @Test
+    void testActivateBasicProduction(){
+        // create a new production power
+        ProductionPower prodPower = new ProductionPower();
+        // verify that the basic production isn't active
+        assertFalse(prodPower.isBasicProductionActivated());
+        // activate the basic production
+        prodPower.activateBasicProduction();
+        // verify that the basic production is active
+        assertTrue(prodPower.isBasicProductionActivated());
+    }
+
+    /**
+     * this test verify that if someone try to call the method isProductionActivated()
+     * with the parameter not between 1 and 3 return false, and return false
+     * even if the decks of card are empty
+     */
+    @Test
+    void testIsProductionActivated(){
+        // create a new production power
+        ProductionPower prodPower = new ProductionPower();
+        // verify the test
+        assertFalse(prodPower.isProductionActivated(0));
+        assertFalse(prodPower.isProductionActivated(1));
+        assertFalse(prodPower.isProductionActivated(2));
+        assertFalse(prodPower.isProductionActivated(3));
+        assertFalse(prodPower.isProductionActivated(4));
+    }
+
+    /**
+     * this test verify that a production power without any
+     * card, after the method resetProductions, doesn't change
+     */
+    @Test
+    void testResetProductions1(){
+        // create a new production power
+        ProductionPower prodPower = new ProductionPower();
+        // reset the productions
+        prodPower.resetProductions();
+        // verify that every production isn't active
+        assertFalse(prodPower.isBasicProductionActivated());
+        assertFalse(prodPower.isProductionActivated(1));
+        assertFalse(prodPower.isProductionActivated(2));
+        assertFalse(prodPower.isProductionActivated(3));
+    }
+
+    /**
+     * this test verify that a production power without any
+     * production previously activated, after the method resetProductions, does
+     * not change
+     */
+    @Test
+    void testResetProductions2(){
+        // create a new production power
+        ProductionPower prodPower = new ProductionPower();
+        // create 3 level 1 cards
+        DevelopmentCard cards1 = new DevelopmentCard(null, 1, 1, null, null, null, 0);
+        DevelopmentCard cards2 = new DevelopmentCard(null, 1, 5, null, null, null, 0);
+        DevelopmentCard cards3 = new DevelopmentCard(null, 1, 11, null, null, null, 0);
+        // place the cards in the dashboard
+        prodPower.placeCard(cards1, 1);
+        prodPower.placeCard(cards2, 2);
+        prodPower.placeCard(cards3, 3);
+        // reset the productions
+        prodPower.resetProductions();
+        // verify that every production isn't active
+        assertFalse(prodPower.isBasicProductionActivated());
+        assertFalse(prodPower.isProductionActivated(1));
+        assertFalse(prodPower.isProductionActivated(2));
+        assertFalse(prodPower.isProductionActivated(3));
+    }
+
+    /**
+     * this test create a power production with 3 cards level 1,
+     * then activate 2 of them and the basic production,
+     * then calls the method resetProductions() and verify
+     * if every production isn't active after the call
+     */
+    @Test
+    void testResetProductions3(){
+        // create a new production power
+        ProductionPower prodPower = new ProductionPower();
+        // create 3 level 1 cards
+        DevelopmentCard cards1 = new DevelopmentCard(null, 1, 1, null, null, null, 0);
+        DevelopmentCard cards2 = new DevelopmentCard(null, 1, 5, null, null, null, 0);
+        DevelopmentCard cards3 = new DevelopmentCard(null, 1, 11, null, null, null, 0);
+        // place the cards in the dashboard
+        prodPower.placeCard(cards1, 1);
+        prodPower.placeCard(cards2, 2);
+        prodPower.placeCard(cards3, 3);
+        // activate the 2 cards and the basic production
+        prodPower.activateBasicProduction();
+        prodPower.activateProduction(1);
+        prodPower.activateProduction(2);
+        // reset the productions
+        prodPower.resetProductions();
+        // verify that every production isn't active
+        assertFalse(prodPower.isBasicProductionActivated());
+        assertFalse(prodPower.isProductionActivated(1));
+        assertFalse(prodPower.isProductionActivated(2));
+        assertFalse(prodPower.isProductionActivated(3));
+    }
 }

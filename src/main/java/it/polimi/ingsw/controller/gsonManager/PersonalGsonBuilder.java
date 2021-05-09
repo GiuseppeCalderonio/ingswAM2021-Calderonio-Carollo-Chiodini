@@ -3,8 +3,22 @@ package it.polimi.ingsw.controller.gsonManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
-import it.polimi.ingsw.controller.commands.Command;
 import it.polimi.ingsw.controller.commands.*;
+import it.polimi.ingsw.controller.commands.initialisingCommands.InitialiseLeaderCardsCommand;
+import it.polimi.ingsw.controller.commands.initialisingCommands.InitialiseResourcesCommand;
+import it.polimi.ingsw.controller.commands.leaderCommands.ActivateCardCommand;
+import it.polimi.ingsw.controller.commands.leaderCommands.DiscardCardCommand;
+import it.polimi.ingsw.controller.commands.leaderCommands.LeaderCommand;
+import it.polimi.ingsw.controller.commands.normalCommands.EndTurnCommand;
+import it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands.ChooseMarblesCommand;
+import it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands.InsertInWarehouseCommand;
+import it.polimi.ingsw.controller.commands.normalCommands.ShiftResourcesCommand;
+import it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands.BuyCardAction;
+import it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands.ChooseLeaderCardsCommand;
+import it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands.SelectPositionCommand;
+import it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands.SelectResourcesFromWarehouseCommand;
+import it.polimi.ingsw.controller.commands.normalCommands.productionCommands.*;
+import it.polimi.ingsw.controller.responseToClients.*;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.model.SingleGame.CardToken;
@@ -57,7 +71,7 @@ public class PersonalGsonBuilder {
                         registerSubtype(SetSizeCommand.class, "SetSizeCommand").
                         registerSubtype(ShiftResourcesCommand.class, "ShiftResourcesCommand").
                         registerSubtype(UnknownCommand.class, "UnknownCommand"));
-        /*
+
         builder.registerTypeAdapterFactory(
                 RuntimeTypeAdapterFactory.
                         of(LeaderCommand.class, "type").
@@ -70,7 +84,22 @@ public class PersonalGsonBuilder {
                         registerSubtype(LeaderProductionCommand.class, "LeaderProductionCommand").
                         registerSubtype(EndProductionCommand.class, "EndProductionCommand"));
 
-         */
+        builder.registerTypeAdapterFactory(
+                RuntimeTypeAdapterFactory.of(ResponseToClient.class, "type").
+                        registerSubtype(ResponseToClient.class, "ResponseToClient").
+                        registerSubtype(BuyCardActionResponse.class, "BuyCardActionResponse").
+                        registerSubtype(EndTurnSingleGameResponse.class, "EndTurnSingleGameResponse").
+                        registerSubtype(InitialisingResponse.class, "InitialisingResponse").
+                        registerSubtype(LeaderActionResponse.class, "LeaderActionResponse").
+                        registerSubtype(MarbleActionResponse.class, "MarbleActionResponse").
+                        registerSubtype(ProductionResponse.class, "ProductionResponse").
+                        registerSubtype(ShiftResourcesResponse.class, "ShiftResourcesResponse").
+                        registerSubtype(StartGameResponse.class, "StartGameResponse").
+                        registerSubtype(TwoLeaderWhiteMarblesResponse.class, "TwoLeaderWhiteMarblesResponse").
+                        registerSubtype(WhiteMarblesConversionResponse.class, "WhiteMarblesConversionResponse")
+
+        );
+
 
 
 

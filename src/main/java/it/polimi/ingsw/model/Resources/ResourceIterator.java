@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 public class ResourceIterator implements Iterator<Resource> {
 
     //private CollectionResources Resources;
-    private List<MapResources> maps;
+    private final List<MapResources> maps;
 
     public ResourceIterator (CollectionResources resources){
         maps = resources.getMaps();

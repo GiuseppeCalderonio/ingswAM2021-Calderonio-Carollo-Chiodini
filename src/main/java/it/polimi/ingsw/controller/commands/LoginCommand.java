@@ -1,7 +1,7 @@
 package it.polimi.ingsw.controller.commands;
 
 import it.polimi.ingsw.controller.ClientHandler;
-import it.polimi.ingsw.controller.ResponseToClient;
+import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 
 import java.util.List;
 
@@ -23,7 +23,6 @@ public class LoginCommand implements Command {
      * @param nickname this is the nickname to set
      */
     public LoginCommand(String nickname){
-        //super("login");
         this.nickname = nickname;
     }
 
@@ -51,24 +50,23 @@ public class LoginCommand implements Command {
      */
     @Override
     public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands){
-        if (!possibleCommands.contains(getCmd()))
-            return buildResponse("this command is not available in this phase of the game", possibleCommands);
-
+        // if the nickname is the empty string
         if (nickname.equals(""))
             return buildResponse("the nickname can't be the empty string", possibleCommands);
-
+        // if exist another client in the game that have selected the same nickname
         if (client.getNicknames().contains(nickname))
             return buildResponse("nickname selected is already taken", possibleCommands);
-
+        // add the nickname to the list of nicknames
         client.addNickname(nickname);
+        // set the nickname
         client.setNickname(nickname);
+        // remove the login command from the possible ones
         possibleCommands.remove("login");
-
+        // if the game is a single one
         if (client.getNumberOfPlayers() == 1){
             return buildResponseIgnoringCommands("login completed successfully");
         }
-
-
+        // else
         return buildResponse("login completed successfully, wait for other players to join", possibleCommands);
     }
 }

@@ -126,12 +126,13 @@ class LeaderCardTest {
         DevelopmentCard card1 = new DevelopmentCard(CardColor.GREEN, 1,0,null,null,null,0);
         DevelopmentCard card2 = new DevelopmentCard(CardColor.BLUE, 2,0,null,null,null,0);
         leaderCard1 = new NewWhiteMarble(new ColorRequired(color1), 0, new Coin());
+        leaderCard2 = new NewWhiteMarble(new ColorRequired(color2), 0, new Servant());
+        player = new RealPlayer("player", new ArrayList<>(Arrays.asList(leaderCard1, leaderCard2)));
         assertFalse(leaderCard1.activateCard(player));
         player.locateDevelopmentCard(card1, 1);
         leaderCard1.activateCard(player);
         assertTrue(leaderCard1.isActive());
         assertEquals(player.getLeaderWhiteMarble(1).convert(), leaderCard1.getResource());
-        leaderCard2 = new NewWhiteMarble(new ColorRequired(color2), 0, new Servant());
         assertFalse(leaderCard2.activateCard(player));
         player.locateDevelopmentCard(card2, 1);
         leaderCard2.activateCard(player);

@@ -1,18 +1,13 @@
 package it.polimi.ingsw.controller.commands;
 
 import it.polimi.ingsw.controller.ClientHandler;
-import it.polimi.ingsw.controller.ResponseToClient;
+import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.EndGameException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static it.polimi.ingsw.controller.ResponseToClient.changePlayerState;
-import static it.polimi.ingsw.controller.ResponseToClient.responseWhiteMarbles;
-
 /**
- * this [abstract] class / interface represent a command to do for the evolution of the game.
+ * this interface represent a command to do for the evolution of the game.
  * in particular, when a player have to modify something, it create this object as static type
  * (the dynamic one will be different depending on the function) and send it thought the network.
  * the server will receive and process it, eventually modifying the game state
@@ -62,35 +57,11 @@ public interface Command {
         return new ResponseToClient(message);
     }
 
-    default ResponseToClient buildResponseWithMarbles(String message, List<String> possibleCommands, int marblesSize){
-        return responseWhiteMarbles(message, possibleCommands, marblesSize);
-    }
-
-    default List<String> getNormalActions(){
-        return new ArrayList<>(
-                Arrays.asList("choose_marbles",
-                        "production",
-                        "buy_card"));
-    }
-
-    default List<String> getLeaderActions(){
-        return new ArrayList<>(
-                Arrays.asList("activate_card",
-                        "discard_card"));
-    }
-
-
     /**
-     * this method send in broadcast to every client a change of the model state.
-     * in particular, it notify that a player changed his internal state
-     * @param clients these are the clients to notify (aka the players of the game)
+     * this method get the number of players that the client sent
+     * the method is used only in the subClass SetSizeCommand, otherwise it returns always 0
+     * @return the number of players that the client sent
      */
-    default void sendBroadcastChangePlayerState(List<ClientHandler> clients) {
-        clients.
-                forEach(client -> client.
-                        send(changePlayerState(client.getGame(), client.getNickname())));
-    }
-
     default int getNumberOfPlayers() {
         return 0;
     }

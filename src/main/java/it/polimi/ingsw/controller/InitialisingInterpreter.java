@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,7 +9,7 @@ import java.util.List;
 
 public class InitialisingInterpreter implements CommandInterpreter{
 
-    private List<String> possibleCommands;
+    private final List<String> possibleCommands;
 
     private int firstCard, secondCard;
 
@@ -34,24 +35,26 @@ public class InitialisingInterpreter implements CommandInterpreter{
         if (command.getCmd().equals("quit"))
             throw new QuitException();
         if (!possibleCommands.contains(command.getCmd()))
-            return buildResponse("this command is not available in this phase of the game");
+            return new ResponseToClient("this command is not available in this phase of the game",
+                    possibleCommands);
 
         return command.executeCommand(possibleCommands,client, new ArrayList<>());
     }
 
+    /**
+     * this method get the possible command for a player
+     * according with the rules of the game
+     * @return the possible command for a player according with the rules of the game
+     */
     public List<String> getPossibleCommands() {
         return possibleCommands;
     }
 
-    /**
-     * this method set the possible commands to the value passed as parameter
-     *
-     * @param possibleCommands this is the new list to set
+    /*
+      this method set the possible commands to the value passed as parameter
+
+      @param possibleCommands this is the new list to set
      */
-    @Override
-    public void setPossibleCommands(List<String> possibleCommands) {
-        this.possibleCommands = possibleCommands;
-    }
 
     /**
      * this method return the enum associated with the phase of the game
@@ -63,13 +66,6 @@ public class InitialisingInterpreter implements CommandInterpreter{
     @Override
     public GamePhase getGamePhase() {
         return GamePhase.INITIALISING;
-    }
-
-    private ResponseToClient buildResponse(String message){
-        ResponseToClient response = new ResponseToClient();
-        response.message = message;
-        response.possibleCommands = possibleCommands;
-        return response;
     }
 
     /**

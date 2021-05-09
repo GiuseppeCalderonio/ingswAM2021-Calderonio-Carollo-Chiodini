@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.Resources.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -39,7 +40,7 @@ public class RealPlayer extends Player {
      * with the marbles that should substitute the white marbles
      * when buying resources from market
      */
-    private final List<Marble> leaderWhiteMarbles;
+    private List<Marble> leaderWhiteMarbles;
 
 
     /**
@@ -103,6 +104,7 @@ public class RealPlayer extends Player {
      *
      * @return the personal track
      */
+    @SuppressWarnings("EmptyMethod")
     @Override
     public TrackManager getPersonalTrack() {
         return super.getPersonalTrack();
@@ -269,7 +271,10 @@ public class RealPlayer extends Player {
      * @param toAdd this is the resource to convert in marble to add
      */
     public void addLeaderWhiteMarble(Resource toAdd){
+
         leaderWhiteMarbles.add(toAdd.convertInMarble());
+        if (leaderWhiteMarbles.size() > 1)
+            leaderWhiteMarbles = personalLeaderCards.stream().map(leaderCard -> leaderCard.getResource().convertInMarble()).collect(Collectors.toList());
     }
 
     /**
@@ -314,10 +319,5 @@ public class RealPlayer extends Player {
                 personalLeaderCards.stream().
                         filter(LeaderCard::isActive).
                         flatMapToInt(x -> IntStream.of(x.getVictoryPoints())).sum();
-        /*int victoryPoints = 0;
-        victoryPoints = victoryPoints + personalDashboard.getVictoryPoints();
-        victoryPoints = victoryPoints + super.getPersonalTrack().getVictoryPoints();
-        victoryPoints = victoryPoints + personalLeaderCards.stream().filter(LeaderCard::isActive).flatMapToInt(x -> IntStream.of(x.getVictoryPoints())).sum();
-        return victoryPoints;*/
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.DevelopmentCards.CardColor;
 import it.polimi.ingsw.model.EndGameException;
 import it.polimi.ingsw.model.Marble.Marble;
@@ -51,19 +52,25 @@ public class TurnsInterpreter implements CommandInterpreter {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(Command command, ClientHandler client) throws EndGameException {
+    public ResponseToClient executeCommand(Command command, ClientHandler client) throws EndGameException, QuitException{
         if (command.getCmd().equals("quit"))
             throw new QuitException();
         // if is not your turn
         if (!client.isYourTurn())
-            return buildResponse("is not your turn!");
+            return new ResponseToClient("is not your turn!", possibleCommands);
         // if the command is not a possible command in this phase of game
         if (!possibleCommands.contains(command.getCmd()))
-            return buildResponse("this command is not available in this phase of the game");
+            return new ResponseToClient("this command is not available in this phase of the game",
+                    possibleCommands);
         // execute the command based on the dynamic type of it
         return command.executeCommand(possibleCommands, client, previousPossibleCommands);
     }
 
+    /**
+     * this method get the possible command for a player
+     * according with the rules of the game
+     * @return the possible command for a player according with the rules of the game
+     */
     @Override
     public List<String> getPossibleCommands() {
 
@@ -82,20 +89,11 @@ public class TurnsInterpreter implements CommandInterpreter {
         return GamePhase.TURNS;
     }
 
-    private ResponseToClient buildResponse(String message) {
-        return new ResponseToClient(message, possibleCommands);
-    }
+    /*
+      this method set the possible commands to the value passed as parameter
 
-    /**
-     * this method set the possible commands to the value passed as parameter
-     *
-     * @param possibleCommands this is the new list to set
+      @param possibleCommands this is the new list to set
      */
-
-    @Override
-    public void setPossibleCommands(List<String> possibleCommands) {
-        this.possibleCommands = possibleCommands;
-    }
 
     /**
      * this method get the marbles that the player got in the market during the choose_marbles action.

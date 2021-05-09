@@ -8,10 +8,10 @@ import it.polimi.ingsw.view.utilities.colors.ForeColor;
 
 public class GraphicalLeaderCard implements CharFigure {
     private final CharStream stream;
-    private LeaderCard leaderCard;
+    private final LeaderCard leaderCard;
     private final int width;
     private final int height;
-    private  BackColor cardColor;
+    private final BackColor cardColor;
 
 
 
@@ -66,9 +66,6 @@ public class GraphicalLeaderCard implements CharFigure {
         stream.addColor(relX+4, relY + 1, leaderCard.getRequirements().colors().get(0));
         if (leaderCard.getRequirements().colors().size()>1)
             stream.addColor(relX + 5, relY + 1, leaderCard.getRequirements().colors().get(1));
-        /*stream.addChar(leaderCard.getRequirements().identifier(), relX + 1, relY +1, leaderCard.getRequirements().colors().get(0));
-        if (leaderCard.getRequirements().colors().size()>1)
-            stream.addChar(leaderCard.getRequirements().identifier(),relX+2, relY+1, leaderCard.getRequirements().colors().get(1));*/
 
     }
 }

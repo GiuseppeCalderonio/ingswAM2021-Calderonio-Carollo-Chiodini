@@ -6,7 +6,7 @@ import it.polimi.ingsw.view.utilities.colors.ForeColor;
 
 public class GraphicalBasicProduction implements CharFigure{
 
-    private CharStream stream;
+    private final CharStream stream;
 
 
     public GraphicalBasicProduction (CharStream stream){

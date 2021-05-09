@@ -8,13 +8,12 @@ import it.polimi.ingsw.view.utilities.colors.ForeColor;
 
 public class GraphicalWarehouse implements CharFigure{
 
-    private CharStream stream;
-    private CollectionResources shelf1;
-    private CollectionResources shelf2;
-    private CollectionResources shelf3;
+    private final CharStream stream;
+    private final CollectionResources shelf1;
+    private final CollectionResources shelf2;
+    private final CollectionResources shelf3;
     private CollectionResources shelf4;
     private CollectionResources shelf5;
-    private int width = 15;
     private int height = 11;
 
     public GraphicalWarehouse(CharStream stream,
@@ -76,6 +75,7 @@ public class GraphicalWarehouse implements CharFigure{
             height= 7;
 
         //initialize black background
+        int width = 15;
         for(int i = 0; i <= width; ++i) {
             for (int j = 0; j <= height; ++j) {
                 stream.addColor(i + relX, j + relY, BackColor.ANSI_BRIGHT_BG_WHITE);

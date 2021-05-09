@@ -175,6 +175,7 @@ shift resources
 
           else send a message to every player
           and after send all the warehouse changed, and the new faith track in broadcast
+          send(new warehouse, new faith track, nickname of the changed)
           broadcast
           "{
                 "ignorePossibleCommand" : true ,
@@ -278,7 +279,7 @@ select shelf                                                                    
 
 
             else
-
+                    send(new marbleMarket, new warehouse, new faithTrack)
                     broadcast
                     "{
                           "ignorePossibleCommand" : true ,
@@ -376,14 +377,13 @@ select resources from warehouse                                       //SELECT R
 
 
                else
-
+               send(new cardsMarket, new warehouse, new strongbox)
                broadcast
                    "{
                          "ignorePossibleCommand" : true ,
                          "actualPlayer" : ThinPlayer ,
                          "opponents" : List<ThinPlayer> ,
-                         "marbleMarket" : Marble[][] ,
-                         "lonelyMarble" : Marble ,
+                         "cardsMarket" DevelopmentCard[][] ,
                          "code" : 6 ,
                          "serialize" : true
                     }"
@@ -428,13 +428,13 @@ production
 
 
                          else
-
+                         send(new warehouse, new strongbox, new faith track for every player)
                          broadcast
                        "{
                        "ignorePossibleCommand" : true ,
                        "actualPlayer" : ThinPlayer ,
                        "opponents" : List<ThinPlayer> ,
-                       "code" : 3 ,
+                       "code" : 7 ,
                        "serialize" : true
               }"
                      "{"message" : "basic production activated" , "possibleCommands" : List<String>}"
@@ -461,12 +461,13 @@ production
 
 
                    else
+                   send(new warehouse, new strongbox, new faith track for every player)
                      broadcast
                       "{
                        "ignorePossibleCommand" : true ,
                        "actualPlayer" : ThinPlayer ,
                        "opponents" : List<ThinPlayer> ,
-                       "code" : 3 ,
+                       "code" : 7 ,
                        "serialize" : true
               }"
                      "{"message" : "normal production activated" , "possibleCommands" : List<String>}"
@@ -493,13 +494,13 @@ production
 
 
                     else
-
+                    send(new warehouse, new strongbox, new faith track for every player)
                       broadcast
                        "{
                        "ignorePossibleCommand" : true ,
                        "actualPlayer" : ThinPlayer ,
                        "opponents" : List<ThinPlayer> ,
-                       "code" : 3 ,
+                       "code" : 7 ,
                        "serialize" : true
               }"
                      "{"message" : "leader production activated" , "possibleCommands" : List<String>}"
@@ -559,12 +560,13 @@ ACTIVATE LEADER CARD
 
 
                     else
+                    send(new leaderCards, new trackManager)
                        broadcast
                        "{
                        "ignorePossibleCommand" : true ,
                        "actualPlayer" : ThinPlayer ,
                        "opponents" : List<ThinPlayer> ,
-                       "code" : 3 ,
+                       "code" : 8 ,
                        "serialize" : true
               }"
                      "{"message" : "leader card activated" , "possibleCommands" : List<String>}"
@@ -591,12 +593,13 @@ ACTIVATE LEADER CARD
 
 
                     else
+                    send(new leaderCards, new trackManager)
                       broadcast
                        "{
                        "ignorePossibleCommand" : true ,
                        "actualPlayer" : ThinPlayer ,
                        "opponents" : List<ThinPlayer> ,
-                       "code" : 3 ,
+                       "code" : 8 ,
                        "serialize" : true
               }"
                      "{"message" : "leader card discarded" , "possibleCommands" : List<String>}"
@@ -614,6 +617,7 @@ END OF TURN
 
 
              else //single game
+             send(new soloToken, new CardsMarket, new LorenzoFaithTrack)
                          broadcast
                          "{
                        "ignorePossibleCommand" : true ,
@@ -621,7 +625,7 @@ END OF TURN
                        "opponents" : List<ThinPlayer> ,
                                 "cardsMarket" : DevelopmentCard[][] ,
                                 "soloToken" : SoloToken
-                       "code" : 7 ,
+                       "code" : 8 ,
                        "serialize" : true
               }"
                      "{"message" : "your turn is finished" , "possibleCommands" : List<String>}"
