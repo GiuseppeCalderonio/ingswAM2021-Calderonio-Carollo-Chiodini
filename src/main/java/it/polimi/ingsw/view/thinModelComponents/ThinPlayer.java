@@ -67,7 +67,6 @@ public class ThinPlayer {
         this.thinLeaderCards = player.getPersonalLeaderCards().stream().map(LeaderCard::getThin).collect(Collectors.toList());
         this.productionPower = new ThinProductionPower(player);
         this.track = new ThinTrack(player);
-        this.leaderCards = player.getPersonalLeaderCards();
     }
 
     /**

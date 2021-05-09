@@ -15,7 +15,7 @@ import java.util.List;
 
 public class LocalClientHandler extends ClientHandler{
 
-    private Client view;
+    private final Client view;
     private Game game;
 
     /**

@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class LocalClient extends Client {
 
-    private ClientHandler controller;
+    private final ClientHandler controller;
 
 
     public LocalClient() {
