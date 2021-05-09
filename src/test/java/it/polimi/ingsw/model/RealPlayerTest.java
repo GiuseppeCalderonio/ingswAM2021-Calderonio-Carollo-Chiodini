@@ -16,6 +16,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * this class test the real player class
+ */
 public class RealPlayerTest {
 
     List<LeaderCard> leaderCards = new ArrayList<>();

@@ -4,6 +4,9 @@ package it.polimi.ingsw.model.DevelopmentCards;
 import it.polimi.ingsw.model.Resources.CollectionResources;
 import it.polimi.ingsw.view.utilities.colors.BackColor;
 
+/**
+ * this class represent the development card
+ */
 public class DevelopmentCard {
     /**
      * this attribute represent the color of the card
@@ -177,6 +180,7 @@ public class DevelopmentCard {
     /**
      * USEFUL ONLY FOR CLIENTS
      * this method return the BackColor associated to the Development Card
+     * @return the back color of the development card
      */
     public BackColor getBackColor() {
 

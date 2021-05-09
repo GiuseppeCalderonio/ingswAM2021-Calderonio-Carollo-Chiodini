@@ -10,18 +10,67 @@ import it.polimi.ingsw.model.Resources.Resource;
 
 import java.util.*;
 
+/**
+ * this class represent the turns interpreter.
+ * in particular, when every player finish the initialisation, this
+ * object will be created from the command manager for every client,
+ * and the method execute command will be called.
+ * this class is used also as buffer
+ */
 public class TurnsInterpreter implements CommandInterpreter {
 
+    /**
+     * this attribute represent the possible commands in a specific phase of game
+     */
     private List<String> possibleCommands = new ArrayList<>();
+
+    /**
+     * this attribute represent the previous possible commands in a specific phase of game
+     */
     private List<String> previousPossibleCommands = new ArrayList<>();
+
+    /**
+     * this attribute represent a buffer that store the marbles when a player
+     * select them from the marble market
+     */
     private List<Marble> marbles;
+
+    /**
+     * this attribute represent a buffer of the resources gained from the selection
+     * of marbles from the marble market
+     */
     private CollectionResources marblesConverted;
+
+    /**
+     * thia attribute represent a set of resources stored as a list that need to
+     * be stored in order to remember the resources gained from the shift, taken
+     * singular, and with a specific order, so that every client will send a list
+     * of integers representing the shelves ordered in which the player want to
+     * place the resources in the warehouse for each resource
+     */
     private List<Resource> resourcesSet;
+
+    /**
+     * this attribute is a buffer of the color of the card that the player want to buy
+     */
     private CardColor color;
+
+    /**
+     * this attribute is a buffer of the level of the card that the player want to buy
+     */
     private int level;
+
+    /**
+     * this attribute is a buffer of the dashboard position of the card that the player want
+     * to place into the dashboard
+     */
     private int dashboardPosition;
 
-
+    /**
+     * this constructor create the turns interpreter setting the possible commands
+     * depending on the turn
+     * @param client this is the client associated with the interpreter
+     */
     public TurnsInterpreter(ClientHandler client) {
         if (client.isYourTurn() ){
             possibleCommands = new ArrayList<>(
@@ -88,12 +137,6 @@ public class TurnsInterpreter implements CommandInterpreter {
     public GamePhase getGamePhase() {
         return GamePhase.TURNS;
     }
-
-    /*
-      this method set the possible commands to the value passed as parameter
-
-      @param possibleCommands this is the new list to set
-     */
 
     /**
      * this method get the marbles that the player got in the market during the choose_marbles action.

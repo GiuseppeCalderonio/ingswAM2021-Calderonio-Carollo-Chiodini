@@ -896,7 +896,7 @@ public class Game {
      * his number of cards is >= 7 or if his position reached the last vatican report
      * @return the nickname of the winner
      */
-    public String getWinner(){
+    public synchronized String getWinner(){
         // get the integer list of victory points of every player
         int maxVictoryPoints = players.stream().
                 mapToInt(RealPlayer::getVictoryPoints).

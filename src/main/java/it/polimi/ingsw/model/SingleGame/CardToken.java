@@ -5,10 +5,23 @@ import it.polimi.ingsw.model.DevelopmentCards.CardsMarket;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.view.utilities.colors.BackColor;
 
+/**
+ * this class represent the card token
+ */
 public class CardToken implements SoloToken {
 
+    /**
+     * this attribute represent the color associated with the token.
+     * in particular, during a single game, when the player end his turn,
+     * if the token action is done from this object, will delete
+     * from the cards market 2 cards of this color
+     */
     private final CardColor color;
 
+    /**
+     * this constructor create the card token starting from the color
+     * @param color this is the color to set
+     */
     public CardToken(CardColor color) {
         this.color = color;
     }

@@ -15,12 +15,33 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * this class represent the initialising response.
+ * in particular, when every player do the login the server
+ * send to them the 4 casual leader cards and the casual position
+ * for the turns
+ */
 public class InitialisingResponse extends ResponseToClient{
 
+    /**
+     * this attribute represent the casual position assigned to a client
+     */
     private final int position;
+
+    /**
+     * this attribute represent the 4 initial leader cards
+     */
     private final List<ThinLeaderCard> leaderCards;
 
-    public InitialisingResponse(ClientHandler client, int i) {
+    /**
+     * this constructor create the response starting from the client,
+     * getting from him all the data needed and setting all of them,
+     * and the integer position representing the position
+     *
+     * @param client this is the client that send the response
+     * @param position this is the casual position of the client to start the turn
+     */
+    public InitialisingResponse(ClientHandler client, int position) {
         // create a new response to send to the client setting the possible commands
         super("the game initialization start! decide 2 different leader cards to discard", new ArrayList<>(Collections.singletonList("initialise_leaderCards")));
         // get the leader cards of the client
@@ -31,7 +52,7 @@ public class InitialisingResponse extends ResponseToClient{
                 collect(Collectors.toList());
 
         // set the position (that works because the clients are sorted with the game casual order)
-        this.position = i;
+        this.position = position;
         // send the thin leader cards
         this.leaderCards = leaderCards;
     }
@@ -45,13 +66,15 @@ public class InitialisingResponse extends ResponseToClient{
      */
     @Override
     public void updateClient(Client client){
+        // set the position
         client.setPosition(position);
-
+        // set the leader cards, recreating them
         List<LeaderCard> leaderCards = this.leaderCards.
                 stream().
                 map(leaderCard -> recreate(leaderCard, client.getAllLeaderCards())).
                 collect(Collectors.toList());
 
+        // print the leader cards with ascii art
         CharStream console = new CharStream(200, 30);
         for (int i = 0; i < 200; i++) {
             for (int j = 0; j < 60; j++) {

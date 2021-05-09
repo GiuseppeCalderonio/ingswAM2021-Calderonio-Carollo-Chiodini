@@ -36,7 +36,7 @@ public class CommandManager {
         this.commandInterpreter = commandInterpreter;
     }
 
-    public void processCommand(Command command) throws EndGameException {
+    public synchronized void processCommand(Command command) throws EndGameException {
 
         ResponseToClient response = commandInterpreter.executeCommand(command, client);
         client.send(response);
@@ -137,17 +137,25 @@ public class CommandManager {
     // this shouldn't change
     private synchronized void sendBroadcastStartGame() {
 
-        client.sendInBroadcast(new StartGameResponse(client, getMessage(), getPossibleCommands()));
+        client.getClients().
+                forEach(client -> client.
+                        send(new StartGameResponse(
+                                client,
+                                getMessage(client),
+                                getPossibleCommands(client)
+                        )));
+
+        //client.sendInBroadcast(new StartGameResponse(client, getMessage(), getPossibleCommands(client)));
 
     }
 
-    private String getMessage(){
+    private String getMessage(ClientHandler client){
         if (client.isYourTurn() )
             return "the game start! Is your turn";
         return "the game start! Is not your turn, wait...";
     }
 
-    private List<String> getPossibleCommands(){
+    private List<String> getPossibleCommands(ClientHandler client){
         List<String> possibleCommands = new ArrayList<>();
         if (client.isYourTurn() ) {
             possibleCommands.add("shift_resources");

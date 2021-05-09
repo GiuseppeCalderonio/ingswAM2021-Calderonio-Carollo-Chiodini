@@ -6,7 +6,7 @@ import it.polimi.ingsw.view.utilities.colors.BackColor;
 import it.polimi.ingsw.view.utilities.colors.ForeColor;
 public class GraphicalStrongbox implements CharFigure {
     private final CharStream stream;
-    private CollectionResources strongboxResources = new CollectionResources();
+    private final CollectionResources strongboxResources;
     private final int width = 16;
     private final int height = 3;
 

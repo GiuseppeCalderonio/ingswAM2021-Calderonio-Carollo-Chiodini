@@ -7,8 +7,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * this class represent the login interpreter.
+ * in particular, when every player have to start the login,
+ * this class will be created and the method execute command will be called
+ * from the commandManager
+ */
 public class LoginInterpreter implements CommandInterpreter {
 
+    /**
+     * this attribute represent the possible commands
+     */
     final List<String> possibleCommands = new ArrayList<>(Collections.singletonList("login"));
     
     /**
@@ -40,12 +49,6 @@ public class LoginInterpreter implements CommandInterpreter {
     public List<String> getPossibleCommands() {
         return possibleCommands;
     }
-
-    /*
-      this method set the possible commands to the value passed as parameter
-
-      @param possibleCommands this is the new list to set
-     */
 
     /**
      * this method return the enum associated with the phase of the game
