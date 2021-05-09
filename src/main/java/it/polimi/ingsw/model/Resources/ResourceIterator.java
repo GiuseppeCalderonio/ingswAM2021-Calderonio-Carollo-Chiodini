@@ -1,21 +1,29 @@
 package it.polimi.ingsw.model.Resources;
 
-import it.polimi.ingsw.model.Resources.CollectionResources;
-import it.polimi.ingsw.model.Resources.MapResources;
-import it.polimi.ingsw.model.Resources.Resource;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * this class is used to iterate the elements of the class collectionResources
+ */
 public class ResourceIterator implements Iterator<Resource> {
 
-    //private CollectionResources Resources;
+    /**
+     * this attribute represent the list of map resources of the collectionResources to iterate
+     */
     private final List<MapResources> maps;
 
+    /**
+     * this constructor create the iterator starting from the list of mapResources associated
+     * with the collectionResources to iterate
+     * @param resources this is the list of mapResources associated
+     *                  with the collectionResources to iterate
+     */
     public ResourceIterator (CollectionResources resources){
         maps = resources.getMaps();
     }
+
     /**
      * Returns {@code true} if the iteration has more elements.
      * (In other words, returns {@code true} if {@link #next} would

@@ -32,7 +32,7 @@ public abstract class NormalActionCommand implements Command {
     }
 
     /**
-     * this method send for each client of the list in input the changes to the game
+     * this method send for each client the changes to the game
      * when a player do a choose_marbles action: the marble market, and the new state of every player
      * @param client this is the client that notify everyone of the change
      */
@@ -61,8 +61,7 @@ public abstract class NormalActionCommand implements Command {
                                                               CommandInterpreter interpreter,
                                                               Game game,
                                                               List<Marble> marbles){
-        //aaa
-        // da rivedere
+
         interpreter.getPossibleCommands().clear();
         interpreter.getPossibleCommands().addAll(possibleCommands);
         return buildResponseToInsertInWarehouseLeader( interpreter,
@@ -93,11 +92,10 @@ public abstract class NormalActionCommand implements Command {
         //interpreter.setPossibleCommands(new ArrayList<>(Collections.singletonList("insert_in_warehouse")));
         interpreter.setMarblesConverted(game.convert(marbles));
         interpreter.setResourceSet(new ArrayList<>(
-                new HashSet<>(interpreter.getMarblesConverted().asList())));
-        return new WhiteMarblesConversionResponse(
-                interpreter.getMarblesConverted(),
-                new ArrayList<>(new HashSet<>(interpreter.getMarblesConverted().asList()))
+                new HashSet<>(interpreter.getMarblesConverted().asList()))
         );
+        return new WhiteMarblesConversionResponse(
+                interpreter.getMarblesConverted());
         //return responseToInsertInWarehouse(interpreter.getPossibleCommands(), interpreter.getMarblesConverted());
     }
 

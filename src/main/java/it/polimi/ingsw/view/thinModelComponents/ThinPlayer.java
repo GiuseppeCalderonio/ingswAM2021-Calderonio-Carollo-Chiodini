@@ -12,16 +12,54 @@ import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.network.Client.createLeaderCards;
 
+/**
+ * this class represent the thin player.
+ * in particular, this class used only by client, contains
+ * every information to represent the state of a client in the game
+ */
 public class ThinPlayer {
 
+    /**
+     * this attribute represent the nickname of the player
+     */
     private String nickName;
+
+    /**
+     * this attribute represent the warehouse of the player
+     */
     private ThinWarehouse warehouse;
+
+    /**
+     * this attribute represent the strongbox of the player
+     */
     private CollectionResources strongbox;
+
+    /**
+     * this attribute represent the leader cards of the player
+     */
     private List<LeaderCard> leaderCards;
+
+    /**
+     * this attribute represent the thin leader cards of the player
+     */
     private List<ThinLeaderCard> thinLeaderCards;
+
+    /**
+     * this attribute represent the production power of the player
+     */
     private ThinProductionPower productionPower;
+
+    /**
+     * this attribute represent the faith track of the player
+     */
     private ThinTrack track;
 
+    /**
+     * this constructor create the player starting from a real player.
+     * in particular, it get all the necessary data from the player, and set them as
+     * the attributes of the class
+     * @param player this is the player from which get all the data to set
+     */
     public ThinPlayer(RealPlayer player){
         this.nickName = player.getNickname();
         this.warehouse = new ThinWarehouse(player);
@@ -31,6 +69,12 @@ public class ThinPlayer {
         this.track = new ThinTrack(player);
     }
 
+    /**
+     * this constructor create the player starting from another thin player.
+     * in particular, it is used because the leader cards have to be
+     * reconverted from thin leader cards to leader cards, and this constructor do it
+     * @param thinPlayer this is the thin player to represent
+     */
     public ThinPlayer(ThinPlayer thinPlayer) {
         this.nickName = thinPlayer.nickName;
         this.warehouse = thinPlayer.warehouse;
@@ -48,6 +92,14 @@ public class ThinPlayer {
 
     }
 
+    /**
+     * this constructor create a thin player starting from a player.
+     * in particular, this constructor is used only in case of single game,
+     * so that the nickname will be the nickname of lorenzo il magnifico, and
+     * will be set his track
+     * @param lorenzo this is the player representing lorenzo il magnifico from which
+     *                get the track
+     */
     public ThinPlayer(Player lorenzo){
         this.nickName = lorenzo.getNickname();
         this.track = new ThinTrack(lorenzo);

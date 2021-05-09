@@ -6,12 +6,35 @@ import it.polimi.ingsw.model.SingleGame.SoloToken;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.view.thinModelComponents.ThinTrack;
 
+/**
+ * this class represent the end turn response.
+ * in particular, this response is sent to the client if and only if
+ * a single game is running and the turn finish; once that lorenzo do
+ * his action with the token the model state may change, so this
+ * response send to the client the changes
+ */
 public class EndTurnSingleGameResponse extends ResponseToClient{
 
+    /**
+     * this attribute represent the new cards market after the lorenzo action
+     */
     private final DevelopmentCard[][] cardsMarket5;
+
+    /**
+     * this attribute represent the new token
+     */
     private final SoloToken token5;
+
+    /**
+     * this attribute represent the new track of lorenzo
+     */
     private final ThinTrack track5;
 
+    /**
+     * this constructor create the response starting from the client,
+     * getting from him all the data needed and setting all of them
+     * @param client this is the client that send the response
+     */
     public EndTurnSingleGameResponse(ClientHandler client){
         cardsMarket5 = client.getGame().getSetOfCard().show();
         token5 = client.getGame().getSoloTokens().get(

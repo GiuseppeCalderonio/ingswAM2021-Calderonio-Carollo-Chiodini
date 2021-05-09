@@ -5,10 +5,26 @@ import it.polimi.ingsw.network.Client;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * this class represent the response to send if and only if
+ * a player own two leader cards of type marbles conversion, and
+ * the player selected a row/column containing more than 1 white marble.
+ * the class task is to simply store the number of white marbles
+ */
 public class TwoLeaderWhiteMarblesResponse extends ResponseToClient{
 
+    /**
+     * this attribute represent the number of white marbles selected from a choose_marbles action
+     */
     private final int whiteMarbles;
 
+    /**
+     * this constructor create the response setting the default message:
+     * "you own 2 white marble leader cards , choose for each white marble how to convert it",
+     * and the singleton list of possible commands [choose_leaderCards], last but not least, set
+     * the number of white marbles selected from the row/column chosen
+     * @param whiteMarbles this is the number of white marbles chosen
+     */
     public TwoLeaderWhiteMarblesResponse(int whiteMarbles){
         super("you own 2 white marble leader cards , choose for each white marble how to convert it",
                 new ArrayList<>(Collections.singletonList("choose_leaderCards")));

@@ -21,10 +21,13 @@ import static it.polimi.ingsw.controller.gsonManager.PersonalGsonBuilder.createP
 public class WaitingRoom implements Runnable{
 
     /**
-     * this is the socket associated with the player
+     * this attribute represent the socket associated with the player
      */
     private final Socket socket;
 
+    /**
+     * this attribute represent the gson parser
+     */
     private final Gson gson;
 
     /**
@@ -79,6 +82,9 @@ public class WaitingRoom implements Runnable{
             numberOfPlayers = decideNumberOfPlayers(in, out);
         } catch (QuitException e){ // if he want to quit
             return;
+        } catch (Exception e){
+            e.printStackTrace();
+            return;
         }
 
         // create a new variable to start the game for the client
@@ -117,6 +123,9 @@ public class WaitingRoom implements Runnable{
         }
         // create a new lobby
         Lobby lobby = new Lobby(numberOfPlayers);
+        // create a thread for the ping
+        Thread t = new Thread(lobby);
+        t.start();
         // add it to the lobbies static list
         lobbies.add(lobby);
         // create a client handler and return it
@@ -230,8 +239,10 @@ public class WaitingRoom implements Runnable{
             catch (JsonSyntaxException | NullPointerException e){
                 send(out, buildResponse("Insert a json string please"));
                 // if the player disconnect
-            }catch (NoSuchElementException e){
+            } catch (NoSuchElementException e){
                 throw new QuitException();
+            } catch (Exception e){
+                send(out, buildResponse(e.getMessage()));
             }
         }while (true);
 

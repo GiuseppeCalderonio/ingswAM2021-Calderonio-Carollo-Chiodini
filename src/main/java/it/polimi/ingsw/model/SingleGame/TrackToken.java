@@ -3,11 +3,29 @@ package it.polimi.ingsw.model.SingleGame;
 import it.polimi.ingsw.model.DevelopmentCards.CardsMarket;
 import it.polimi.ingsw.model.Game;
 
+/**
+ * thi class represent the track token
+ */
 public class TrackToken implements SoloToken {
 
+    /**
+     * this attribute indicates if, when invoking the action method,
+     * will cause a shuffle to the stack of tokens
+     */
     private final boolean shuffle;
+
+    /**
+     * this attribute represent the faith points that lorenzo gain when
+     * , at the end of the turn, the method action is called on this object
+     */
     private final int faithPoints;
 
+    /**
+     * this constructor create the track token setting the faith points and if
+     * the token will cause a shuffle on the stack
+     * @param faithPoints these are the faith points to set
+     * @param shuffle this is the boolean shuffle to set
+     */
     public TrackToken(int faithPoints, boolean shuffle) {
         this.faithPoints = faithPoints;
         this.shuffle = shuffle;

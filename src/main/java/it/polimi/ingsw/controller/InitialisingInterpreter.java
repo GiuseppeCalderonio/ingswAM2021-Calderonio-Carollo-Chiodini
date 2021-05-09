@@ -7,12 +7,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * this class represent the initialising interpreter.
+ * in particular, when every player did the login the command manager
+ * associated with every client create this object to manage the initialisation phase
+ */
 public class InitialisingInterpreter implements CommandInterpreter{
 
+    /**
+     * this attribute represent the list of possible commands in a specific phase of game
+     */
     private final List<String> possibleCommands;
 
+    /**
+     * this attributes represent two buffer of indexes referred to the leader cards that
+     * the player want to discard
+     */
     private int firstCard, secondCard;
 
+    /**
+     * this constructor create the object setting the list of possible commands
+     * as a singleton list containing only [initialise_leaderCards]
+     */
     public InitialisingInterpreter(){
         possibleCommands = new ArrayList<>(Collections.singletonList("initialise_leaderCards"));
 

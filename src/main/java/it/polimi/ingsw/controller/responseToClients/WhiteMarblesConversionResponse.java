@@ -6,16 +6,34 @@ import it.polimi.ingsw.network.Client;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
+/**
+ * this class represent the response to send when
+ * a client chosen a row/column of marbles from the marble market,
+ * and have to decide how to add the resources gained into the warehouse
+ */
 public class WhiteMarblesConversionResponse extends ResponseToClient{
 
+    /**
+     * this attribute represent a set of the resources gained from the choice as a list
+     */
     private final List<Resource> gainedFromMarbleMarket;
 
-    public WhiteMarblesConversionResponse(CollectionResources resources, List<Resource> gainedFromMarbleMarket){
+    /**
+     * this constructor create the response setting the default message:
+     * "you gained [x] resources, decide how to place them into the warehouse"
+     * where x is the parameter resources converted to string.
+     * it also set the default singleton list of possible commands [insert_in_warehouse],
+     * and set the set of resources gained as a list, inferred from the collectionResources
+     * passed as parameter in input
+     * @param resources these are the resources gained
+     */
+    public WhiteMarblesConversionResponse(CollectionResources resources){
         super( "you gained " + resources.toString() + ", decide how to place them into the warehouse",
         new ArrayList<>(Collections.singletonList("insert_in_warehouse")) );
-        this.gainedFromMarbleMarket = gainedFromMarbleMarket;
+        this.gainedFromMarbleMarket = new ArrayList<>(new HashSet<>(resources.asList()));
     }
 
     /**

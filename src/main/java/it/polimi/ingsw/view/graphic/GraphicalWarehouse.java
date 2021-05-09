@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.graphic;
 
 import it.polimi.ingsw.model.Resources.CollectionResources;
 import it.polimi.ingsw.model.Resources.Resource;
+import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
 import it.polimi.ingsw.view.utilities.CharStream;
 import it.polimi.ingsw.view.utilities.colors.BackColor;
 import it.polimi.ingsw.view.utilities.colors.ForeColor;
@@ -14,42 +15,30 @@ public class GraphicalWarehouse implements CharFigure{
     private final CollectionResources shelf3;
     private CollectionResources shelf4;
     private CollectionResources shelf5;
-    private int height = 11;
+    private int height = 4;
+    private final int width = 15;
 
-    public GraphicalWarehouse(CharStream stream,
-                              CollectionResources shelf1,
-                              CollectionResources shelf2,
-                              CollectionResources shelf3,
-                              CollectionResources shelf4,
-                              CollectionResources shelf5){
+    public GraphicalWarehouse(CharStream stream, ThinPlayer player){
         this.stream = stream;
-        this.shelf1 = shelf1;
-        this.shelf2 = shelf2;
-        this.shelf3 = shelf3;
-        this.shelf4 = shelf4;
-        this.shelf5 = shelf5;
+        this.shelf1 = player.getWarehouse().getFirstShelf();
+        this.shelf2 = player.getWarehouse().getSecondShelf();
+        this.shelf3 = player.getWarehouse().getThirdShelf();
+        this.shelf4 = player.getWarehouse().getFourthShelf();
+        this.shelf5 = player.getWarehouse().getFifthShelf();
     }
 
-    public GraphicalWarehouse(CharStream stream,
-                              CollectionResources shelf1,
-                              CollectionResources shelf2,
-                              CollectionResources shelf3,
-                              CollectionResources shelf4){
-        this.stream = stream;
-        this.shelf1 = shelf1;
-        this.shelf2 = shelf2;
-        this.shelf3 = shelf3;
-        this.shelf4 = shelf4;
+    /**
+     *this method returns the width of the GraphicalPlayer
+     */
+    public int getWidth() {
+        return width;
     }
 
-    public GraphicalWarehouse(CharStream stream,
-                              CollectionResources shelf1,
-                              CollectionResources shelf2,
-                              CollectionResources shelf3){
-        this.stream = stream;
-        this.shelf1 = shelf1;
-        this.shelf2 = shelf2;
-        this.shelf3 = shelf3;
+    /**
+     *this method returns the height of the GraphicalPlayer
+     */
+    public int getHeight() {
+        return height;
     }
 
     /**
@@ -69,10 +58,10 @@ public class GraphicalWarehouse implements CharFigure{
     @Override
     public void draw(int relX, int relY) {
 
-        if (shelf5 == null)
-            height = 9;
-        if (shelf4 == null)
-            height= 7;
+        if (shelf4 != null)
+            height += 1;
+        if (shelf5 != null)
+            height += 1;
 
         //initialize black background
         int width = 15;
@@ -83,7 +72,7 @@ public class GraphicalWarehouse implements CharFigure{
         }
 
         // define the number to space shelves
-        int heightOffset = 2;
+        int heightOffset = 1;
         // define the space between each resource
         int widthOffset = 10;
 

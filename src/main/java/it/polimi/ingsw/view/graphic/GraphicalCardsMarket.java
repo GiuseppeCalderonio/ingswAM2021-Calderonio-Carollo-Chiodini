@@ -7,8 +7,8 @@ import it.polimi.ingsw.view.utilities.colors.ForeColor;
 
 public class GraphicalCardsMarket implements CharFigure{
 
-    private final CharStream stream;
-    private final DevelopmentCard[][] cardsMarket;
+    private CharStream stream;
+    private DevelopmentCard[][] cardsMarket;
     private static final int width = 32;
     private static final int height = 15;
 
@@ -63,7 +63,7 @@ public class GraphicalCardsMarket implements CharFigure{
             for (int x=1; x<=31; x++) {  //column
                 for (int j = 1; j <= 14; j++) { //row
                     int k=0;
-                    GraphicalDevelopmentCard graphicalDevelopmentCard = new GraphicalDevelopmentCard(stream, cardsMarket[k][y], 6, 3);
+                    GraphicalDevelopmentCard graphicalDevelopmentCard = new GraphicalDevelopmentCard(stream, cardsMarket[k][y]);
                     graphicalDevelopmentCard.draw(relX + x, relY + j);
                     //k++;
                     j = j + 4;

@@ -1,5 +1,6 @@
 
 
+
 package it.polimi.ingsw.view.graphic;
 
 
@@ -10,15 +11,13 @@ import it.polimi.ingsw.view.utilities.colors.ForeColor;
 public class GraphicalDevelopmentCard implements CharFigure{
     private final CharStream stream;
     private final DevelopmentCard developmentCard;
-    private final int width;
-    private final int height;
+    private final int width=6;
+    private final int height=3;
 
 
-    public GraphicalDevelopmentCard(CharStream stream, DevelopmentCard developmentCard, int width, int height) {
+    public GraphicalDevelopmentCard(CharStream stream, DevelopmentCard developmentCard) {
         this.stream = stream;
         this.developmentCard = developmentCard;
-        this.width = width;
-        this.height = height;
     }
 
     /**
@@ -55,11 +54,10 @@ public class GraphicalDevelopmentCard implements CharFigure{
         int k=0;
 
         //initialize the card a the respective color
-        for(int i = 0; i <= width; ++i){
-            for(int j = 0; j <= height; ++j){
+        for(int i = 0; i <= width; ++i)
+            for(int j = 0; j <= height; ++j)
                 stream.addColor(i + relX, j + relY, developmentCard.getBackColor());
-            }
-        }
+
 
 
         //add the cost to the card
@@ -71,7 +69,7 @@ public class GraphicalDevelopmentCard implements CharFigure{
         }
         if(developmentCard.getCost().getMaps().size() == 3) {
             stream.addString(midPointWidth + k, relY, String.valueOf(developmentCard.getCost().getMaps().get(2).getCardinality()), ForeColor.ANSI_BLACK, developmentCard.getCost().getMaps().get(2).getResource().getColor());
-           // k++;
+            // k++;
         }
 
         //add the level to the card

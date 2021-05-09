@@ -11,12 +11,35 @@ import it.polimi.ingsw.view.thinModelComponents.ThinTrack;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * this class represent the leader action response.
+ * in particular, when a client do a leader action, can
+ * change his leader cards (activating or discarding), and can
+ * advance in the faith track (discarding), so this data have to be sent
+ */
 public class LeaderActionResponse extends ResponseToClient{
 
+    /**
+     * this attribute represent the nickname of the player to update
+     */
     private final String nickname4;
+
+    /**
+     * this attribute represent the faith track of the player to update
+     */
     private final ThinTrack track4;
+
+    /**
+     * this attribute represent the leader cards of the player to update
+     */
     private final List<ThinLeaderCard> cards4;
 
+    /**
+     * this constructor create the response starting from the client,
+     * getting from him all the data needed and setting all of them
+     *
+     * @param client this is the client that send the response
+     */
     public LeaderActionResponse(ClientHandler client){
 
         RealPlayer player = client.getGame().getActualPlayer();

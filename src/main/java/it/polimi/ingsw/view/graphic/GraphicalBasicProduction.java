@@ -14,6 +14,16 @@ public class GraphicalBasicProduction implements CharFigure{
     }
 
     /**
+     *this method returns the width of the GraphicalBasicProduction
+     */
+    public int getWidth() {return 7;}
+
+    /**
+     *this method returns the height of the GraphicalBasicProduction
+     */
+    public int getHeight() {return 2;}
+
+    /**
      * This method should be implemented by classes that will eventually use CharStream to draw themselves on it.
      */
     @Override
@@ -31,13 +41,13 @@ public class GraphicalBasicProduction implements CharFigure{
     public void draw(int relX, int relY) {
         for(int i = 0; i <= 7; ++i) {
             for (int j = 0; j <= 2; ++j) {
-                stream.addColor(i , j , BackColor.ANSI_BG_BLACK);
+                stream.addColor(relX+i , relY+j , BackColor.ANSI_BG_BLACK);
             }
         }
 
-        stream.addString(0, 0 , "(?)", ForeColor.ANSI_BRIGHT_WHITE, BackColor.ANSI_BG_BLACK);
-        stream.addString(0, 2 , "(?)", ForeColor.ANSI_BRIGHT_WHITE, BackColor.ANSI_BG_BLACK);
-        stream.addString(3, 1 , "}", ForeColor.ANSI_BRIGHT_WHITE, BackColor.ANSI_BG_BLACK);
-        stream.addString(5, 1 , "(?)", ForeColor.ANSI_BRIGHT_WHITE, BackColor.ANSI_BG_BLACK);
+        stream.addString(relX, relY , "(?)", ForeColor.ANSI_BRIGHT_WHITE, BackColor.ANSI_BG_BLACK);
+        stream.addString(relX, relY+2 , "(?)", ForeColor.ANSI_BRIGHT_WHITE, BackColor.ANSI_BG_BLACK);
+        stream.addString(relX+3, relY+1 , "}", ForeColor.ANSI_BRIGHT_WHITE, BackColor.ANSI_BG_BLACK);
+        stream.addString(relX+5, relY+1 , "(?)", ForeColor.ANSI_BRIGHT_WHITE, BackColor.ANSI_BG_BLACK);
     }
 }

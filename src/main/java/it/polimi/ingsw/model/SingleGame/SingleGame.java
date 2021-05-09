@@ -11,9 +11,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * this attribute represent the single game
+ */
 public class SingleGame extends Game {
 
+    /**
+     * this attribute represent the solo tokens as a list
+     */
     private final List<SoloToken> soloTokens;
+
+    /**
+     * this attribute represent lorenzo il magnifico
+     */
     private final Player lorenzoIlMagnifico;
 
 

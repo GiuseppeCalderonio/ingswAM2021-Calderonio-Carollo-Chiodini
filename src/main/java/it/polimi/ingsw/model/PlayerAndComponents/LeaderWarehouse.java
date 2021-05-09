@@ -6,7 +6,14 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
+/**
+ * this class represent the leader warehouse
+ */
 public class LeaderWarehouse extends Warehouse {
+
+    /**
+     * this attribute represent the leader shelves as an array
+     */
     private final Shelf[] leaderShelf;
 
     /** this constructor initialize the leaderWarehouse adding a new leaderShelf of input type to the existing warehouse

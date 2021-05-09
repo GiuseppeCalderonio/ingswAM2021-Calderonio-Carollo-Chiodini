@@ -25,8 +25,22 @@ import it.polimi.ingsw.model.SingleGame.CardToken;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
 import it.polimi.ingsw.model.SingleGame.TrackToken;
 
+/**
+ * this class represent the gson builder.
+ * in particular, this class contains only a static method that return the
+ * gson builder that can parse every interface needed
+ */
 public class PersonalGsonBuilder {
 
+    /**
+     * this method create a gson capable of parse this classes
+     * (1) Marble with all his subclasses,
+     * (2) Resource with all his subclasses,
+     * (3) SoloToken with all his subclasses,
+     * (4) Command with all his subclasses,
+     * (5) ResponseToClient with all his subclasses
+     * @return the gson capable to parse every class needed
+     */
     public static Gson createPersonalGsonBuilder(){
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapterFactory(
@@ -99,9 +113,6 @@ public class PersonalGsonBuilder {
                         registerSubtype(WhiteMarblesConversionResponse.class, "WhiteMarblesConversionResponse")
 
         );
-
-
-
 
         return builder.create();
     }
