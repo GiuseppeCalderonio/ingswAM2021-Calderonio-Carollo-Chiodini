@@ -2,9 +2,8 @@ package it.polimi.ingsw.view.graphic;
 
 import it.polimi.ingsw.model.Resources.*;
 import it.polimi.ingsw.view.utilities.CharStream;
-import it.polimi.ingsw.view.utilities.colors.ForeColor;
 import it.polimi.ingsw.view.utilities.colors.BackColor;
-
+import it.polimi.ingsw.view.utilities.colors.ForeColor;
 public class GraphicalStrongbox implements CharFigure {
     private final CharStream stream;
     private CollectionResources strongboxResources = new CollectionResources();
@@ -90,5 +89,8 @@ public class GraphicalStrongbox implements CharFigure {
         //this is the title of strongbox
         stream.addString(relX+4*offsetX, relY,"STRONGBOX",ForeColor.ANSI_RED);
     }
+
 }
+
+
 
