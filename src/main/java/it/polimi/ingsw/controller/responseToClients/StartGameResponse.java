@@ -89,6 +89,10 @@ public class StartGameResponse extends ResponseToClient{
         client.setLonelyMarble(lonelyMarble1);
         client.setSoloToken(soloToken);
         client.setMyself(actualPlayer);
+        // this part of code is used to use the constructor that recreate the leader cards from the thin ones
+        List<ThinPlayer> opponents = this.opponents.stream().
+                map(ThinPlayer::new).
+                collect(Collectors.toList());
         client.setOpponents(opponents);
         client.show();
 
