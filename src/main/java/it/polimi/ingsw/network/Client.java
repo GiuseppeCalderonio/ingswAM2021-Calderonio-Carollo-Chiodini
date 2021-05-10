@@ -2,23 +2,12 @@ package it.polimi.ingsw.network;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import it.polimi.ingsw.controller.commands.Command;
-import it.polimi.ingsw.controller.commands.LoginCommand;
-import it.polimi.ingsw.controller.commands.QuitCommand;
-import it.polimi.ingsw.controller.commands.SetSizeCommand;
-import it.polimi.ingsw.controller.commands.initialisingCommands.InitialiseLeaderCardsCommand;
-import it.polimi.ingsw.controller.commands.initialisingCommands.InitialiseResourcesCommand;
-import it.polimi.ingsw.controller.commands.leaderCommands.ActivateCardCommand;
-import it.polimi.ingsw.controller.commands.leaderCommands.DiscardCardCommand;
-import it.polimi.ingsw.controller.commands.leaderCommands.LeaderCommand;
-import it.polimi.ingsw.controller.commands.normalCommands.EndTurnCommand;
-import it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands.ChooseLeaderCardsCommand;
-import it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands.ChooseMarblesCommand;
-import it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands.InsertInWarehouseCommand;
-import it.polimi.ingsw.controller.commands.normalCommands.ShiftResourcesCommand;
-import it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands.BuyCardAction;
-import it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands.SelectPositionCommand;
-import it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands.SelectResourcesFromWarehouseCommand;
+import it.polimi.ingsw.controller.commands.*;
+import it.polimi.ingsw.controller.commands.normalCommands.*;
+import it.polimi.ingsw.controller.commands.initialisingCommands.*;
+import it.polimi.ingsw.controller.commands.leaderCommands.*;
+import it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands.*;
+import it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands.*;
 import it.polimi.ingsw.controller.commands.normalCommands.productionCommands.*;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.DevelopmentCards.CardColor;
@@ -63,7 +52,6 @@ public class Client implements Runnable {
     private List<Resource> gainedFromMarbleMarket;
     private int marbles;
     private List<String> possibleCommands;
-    private CharStream console = new CharStream(200, 7);
     private PrintWriter out;
     private final BufferedReader stdIn;
 
@@ -72,36 +60,20 @@ public class Client implements Runnable {
 
         stdIn = new BufferedReader(new InputStreamReader(System.in));
 
+        CharStream console = new CharStream(200, 7);
+        console.setMessage("MAESTRI DEL RINASCIMENTO",0,0, ForeColor.ANSI_BRIGHT_YELLOW, BackColor.ANSI_BG_BLACK);
+        console.print(System.out);
+        console.reset();
+
         if (portNumber == 0 || hostName == null)
             return;
 
         try {
             this.echoSocket = new Socket(hostName, portNumber);
-        }catch (IOException e){
-            System.err.println("Error during the connection with the server");
-            System.exit(1);
-        }
-
-        try {
-             out = new PrintWriter(echoSocket.getOutputStream(), true);
-        } catch (IOException e) {
-            //e.printStackTrace();
-            System.err.println(e.getMessage());
-            System.exit(1);
-        }
-
-        
-        
-
-        //allLeaderCards = createLeaderCards();
-        //gson = createPersonalGsonBuilder();
-        //console = new CharStream(200, 7);
-        console.setMessage("MAESTRI DEL RINASCIMENTO",0,0, ForeColor.ANSI_BRIGHT_YELLOW, BackColor.ANSI_BG_BLACK);
-        console.print(System.out);
-        console.reset();
-        try {
+            out = new PrintWriter(echoSocket.getOutputStream(), true);
             start();
         } catch (IOException e) {
+            //e.printStackTrace();
             System.err.println(e.getMessage());
             System.exit(1);
         }
@@ -113,101 +85,104 @@ public class Client implements Runnable {
         Thread t = new Thread(this);
         t.start();
 
-            String command;
+        String command;
 
-            while ((command = stdIn.readLine()) != null) {
+        // in theory, here the class should call a method of an interface
+        // implemented by the cli and gui, that receive the new command to send,
+        // and by override the method will get the command in different ways
+
+        while ((command = stdIn.readLine()) != null) {
                 
 
-                switch (command){
+            switch (command){
 
-                    case "show":
-                        show();
+                case "show":
+                    show();
+                    break;
+                case "set_players" :
+                    System.out.println("Scrivere il numero di giocatori");
+                    String numberOfPlayers = stdIn.readLine();
+                    int numberOfPlayers1;
+                    try {
+                        numberOfPlayers1 = Integer.parseInt(numberOfPlayers);
+                    }catch (NumberFormatException e){
+                        System.err.println("Devi scrivere un numero valido");
                         break;
+                    }
+                    send(new SetSizeCommand(numberOfPlayers1));
+                        break;
+                case "login":
+                    System.out.println("Scrivere il nickname");
+                    send(new LoginCommand(stdIn.readLine()));
+                    break;
+                case "initialise_leaderCards":
+                    initialiseLeaderCard();
+                    break;
 
-                    case "set_players" :
-                        System.out.println("Scrivere il numero di giocatori");
-                        String numberOfPlayers = stdIn.readLine();
-                        int numberOfPlayers1;
-                        try {
-                            numberOfPlayers1 = Integer.parseInt(numberOfPlayers);
-                        }catch (NumberFormatException e){
-                            System.err.println("Devi scrivere un numero valido");
-                            break;
-                        }
-                        send(new SetSizeCommand(numberOfPlayers1));
-                        break;
-                    case "login":
-                        System.out.println("Scrivere il nickname");
-                        send(new LoginCommand(stdIn.readLine()));
-                        break;
-                    case "initialise_leaderCards":
-                        initialiseLeaderCard();
-                        break;
+                case "initialise_resources":
+                    initialiseResources();
+                    break;
 
-                    case "initialise_resources":
-                        initialiseResources();
-                        break;
+                case "shift_resources":
+                    shiftResources();
+                    break;
+                case "choose_marbles":
+                    chooseMarbles();
+                    break;
+                case "choose_leaderCards":
+                    try {
+                        chooseLeaderCard();
+                    }catch (NullPointerException e){
+                        System.err.println("you can't do this action");
+                    }
 
-                    case "shift_resources":
-                        shiftResources();
-                        break;
-                    case "choose_marbles":
-                        chooseMarbles();
-                        break;
-                    case "choose_leaderCards":
-                        try {
-                            chooseLeaderCard();
-                        }catch (NullPointerException e){
-                            System.err.println("you can't do this action");
-                        }
-
-                        break;
-                    case "insert_in_warehouse":
-                        insertInWarehouse();
-                        break;
-                    case "buy_card":
-                        buyCard();
-                        break;
-                    case "select_position":
-                        selectPosition();
-                        break;
-                    case "select_resources_from_warehouse":
-                        selectResourcesFromWarehouse();
-                        break;
-                    case "production":
-                        send(new ProductionCommand());
-                        break;
-                    case "basic_production":
-                        basicProduction();
-                        break;
-                    case "normal_production":
-                        normalProduction();
-                        break;
-                    case "leader_production":
-                        leaderProduction();
-                        break;
-                    case "end_production":
-                        send(new EndProductionCommand());
-                        break;
-                    case "leader_action":
-                        send(new LeaderCommand());
-                        break;
-                    case "activate_card":
-                        activateCard( );
-                        break;
-                    case "discard_card":
-                        discardCard( );
-                        break;
-                    case "end_turn":
-                        send(new EndTurnCommand());
-                        break;
-                    case "quit":
-                        send(new QuitCommand());
-                        break;
-                    default:
-                        System.out.println("Comando non riconosciuto");
-                        System.out.println("possible commands" + possibleCommands);
-                        break;
+                    break;
+                case "insert_in_warehouse":
+                    insertInWarehouse();
+                    break;
+                case "buy_card":
+                    buyCard();
+                    break;
+                case "select_position":
+                    selectPosition();
+                    break;
+                case "select_resources_from_warehouse":
+                    selectResourcesFromWarehouse();
+                    break;
+                case "production":
+                    send(new ProductionCommand());
+                    break;
+                case "basic_production":
+                    basicProduction();
+                    break;
+                case "normal_production":
+                    normalProduction();
+                    break;
+                case "leader_production":
+                    leaderProduction();
+                    break;
+                case "end_production":
+                    send(new EndProductionCommand());
+                    break;
+                case "leader_action":
+                    send(new LeaderCommand());
+                    break;
+                case "activate_card":
+                    activateCard( );
+                    break;
+                case "discard_card":
+                    discardCard( );
+                    break;
+                case "end_turn":
+                    send(new EndTurnCommand());
+                    break;
+                case "quit":
+                    send(new QuitCommand());
+                    break;
+                default:
+                    System.out.println("Comando non riconosciuto");
+                    System.out.println("possible commands" + possibleCommands);
+                    break;
                 }
             }
 
@@ -228,23 +203,21 @@ public class Client implements Runnable {
 
     @Override
     public void run() {
-        BufferedReader in =
-                null;
+        BufferedReader in = null;
         try {
-            in = new BufferedReader(
-                    new InputStreamReader(echoSocket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
+            System.exit(1);
         }
 
         ResponseToClient response;
         String received;
 
         try {
-            while (true){
-                assert in != null;
-                if ((received = in.readLine()) == null) break;
-                synchronized (this){
+            while ((received = in.readLine()) != null) {
+
+                synchronized (this) {
                     response = gson.fromJson(received, ResponseToClient.class);
 
                     response.updateClient(this);
@@ -257,6 +230,7 @@ public class Client implements Runnable {
         } catch (IOException e){
             System.err.println("Qualcosa è andato storto con IOexception...");
             System.err.println(e.getMessage());
+            System.exit(1);
         }catch (NullPointerException e){
             System.err.println("Un client si è Disconnesso, errore di NullPointerException");
             System.err.println(e.getMessage());
@@ -264,6 +238,7 @@ public class Client implements Runnable {
         }catch (JsonSyntaxException e){
             System.err.println("Disconnessione in corso per json errore...");
             System.err.println(e.getMessage());
+            System.exit(1);
         }
     }
 

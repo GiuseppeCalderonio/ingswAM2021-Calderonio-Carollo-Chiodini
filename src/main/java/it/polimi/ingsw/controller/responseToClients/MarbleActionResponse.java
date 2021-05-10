@@ -98,11 +98,5 @@ public class MarbleActionResponse extends ResponseToClient{
 
         players.forEach(player -> player.setTrack(tracks.get(player.getNickName())));
 
-        /*
-        for (ThinPlayer player : players){
-            player.setTrack(tracks.get(player.getNickName()));
-        }
-
-         */
     }
 }

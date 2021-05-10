@@ -1,10 +1,5 @@
 package it.polimi.ingsw.model.Resources;
 
-import it.polimi.ingsw.model.Resources.CollectionResources;
-import it.polimi.ingsw.model.Resources.Resource;
-import it.polimi.ingsw.model.Resources.ResourceType;
-import it.polimi.ingsw.model.Resources.ShelfCollection;
-
 import java.util.ArrayList;
 import java.util.List;
 

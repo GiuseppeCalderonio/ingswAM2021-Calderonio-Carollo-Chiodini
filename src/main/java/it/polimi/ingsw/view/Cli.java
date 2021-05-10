@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.Resources.Stone;
 import it.polimi.ingsw.view.graphic.GraphicalWarehouse;
 import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
 import it.polimi.ingsw.view.utilities.CharStream;
+
 import java.util.Collections;
 
 public class Cli {

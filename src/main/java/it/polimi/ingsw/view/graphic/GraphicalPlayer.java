@@ -50,10 +50,6 @@ public class GraphicalPlayer implements CharFigure{
     @Override
     public void draw(int relX, int relY) {
 
-        /*//SEPARATION
-        for(int i=0; i<=width; i++)
-            stream.addChar('-',relX+i, relY, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);*/
-
         //NICKNAME
         stream.addString(relX,relY, thinPlayer.getNickName(), ForeColor.ANSI_BRIGHT_WHITE, backgroundColor);
 

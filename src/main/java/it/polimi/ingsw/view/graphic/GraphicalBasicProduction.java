@@ -4,6 +4,7 @@ import it.polimi.ingsw.view.utilities.CharStream;
 import it.polimi.ingsw.view.utilities.colors.BackColor;
 import it.polimi.ingsw.view.utilities.colors.ForeColor;
 
+@SuppressWarnings("SameReturnValue")
 public class GraphicalBasicProduction implements CharFigure{
 
     private final CharStream stream;

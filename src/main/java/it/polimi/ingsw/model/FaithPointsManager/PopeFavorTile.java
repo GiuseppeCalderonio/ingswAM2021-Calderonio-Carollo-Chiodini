@@ -51,7 +51,7 @@ public class PopeFavorTile {
 
     /**
      * this method return the state of isActive
-     * @return true if the pope favour tile is active, flase otherwise
+     * @return true if the pope favour tile is active, false otherwise
      */
     public boolean getActive(){
         return isActive;

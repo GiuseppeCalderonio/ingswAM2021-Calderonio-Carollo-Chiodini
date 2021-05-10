@@ -6,7 +6,9 @@ import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.model.SingleGame.SingleGame;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -244,8 +246,8 @@ public class Lobby implements Runnable {
         while (true){
             try {
                 ping();
-                //if(clients.size() == 0)
-                //    setGameFinished();
+                if(clients.size() == 0)
+                    setGameFinished();
                 TimeUnit.SECONDS.sleep(2);
                 if (isGameFinished())
                     return;

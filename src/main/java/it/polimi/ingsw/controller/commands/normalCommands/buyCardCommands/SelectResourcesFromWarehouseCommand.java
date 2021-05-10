@@ -1,9 +1,9 @@
 package it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.commands.normalCommands.NormalActionCommand;
 import it.polimi.ingsw.controller.responseToClients.BuyCardActionResponse;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
-import it.polimi.ingsw.controller.commands.normalCommands.NormalActionCommand;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Resources.CollectionResources;

@@ -203,11 +203,10 @@ public class RealPlayer extends Player {
      * are already discounted by the game
      * @param toPayFromWarehouse these are the resources to pay from warehouse
      * @param toPayFromStrongbox these are the resources to pay from strongbox
-     * @return true if this operation is a success else false
      */
-    public boolean buyDevelopmentCard(CollectionResources toPayFromWarehouse, CollectionResources toPayFromStrongbox){
-       if (!personalDashboard.removeFromWarehouse(toPayFromWarehouse)) return false;
-        return personalDashboard.removeFromStrongbox(toPayFromStrongbox);
+    public void buyDevelopmentCard(CollectionResources toPayFromWarehouse, CollectionResources toPayFromStrongbox){
+       if (!personalDashboard.removeFromWarehouse(toPayFromWarehouse)) return;
+        personalDashboard.removeFromStrongbox(toPayFromStrongbox);
     }
 
     /**

@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
     public class GraphicalGame implements CharFigure {
-        private CharStream stream;
-        private ThinPlayer myPlayer;
-        private List<ThinPlayer> opponents;
+        private final CharStream stream;
+        private final ThinPlayer myPlayer;
+        private final List<ThinPlayer> opponents;
         private final Marble[][] marketMarble;
         private final Marble lonelyMarble;
-        private DevelopmentCard[][] cardsMarket;
+        private final DevelopmentCard[][] cardsMarket;
         private final BackColor backgroundColor = BackColor.ANSI_BRIGHT_BG_CYAN;
-        private SoloToken soloToken;
+        private final SoloToken soloToken;
 
 
         public GraphicalGame(CharStream stream, ThinPlayer myPlayer, List<ThinPlayer> opponents, Marble[][] marketMarble, Marble lonelyMarble, DevelopmentCard[][] cardsMarket, SoloToken soloToken) {
@@ -63,7 +63,6 @@ import java.util.List;
             GraphicalFaithTrack graphicalFaithTrack = new GraphicalFaithTrack(stream, thinPlayers);
             graphicalFaithTrack.draw(relX, relY+ graphicalCardsMarket.getHeight()+10);
 
-            //rivedere draw relx e rely di faith track
 
 
             //PLAYERS

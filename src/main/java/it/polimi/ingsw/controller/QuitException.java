@@ -6,4 +6,6 @@ package it.polimi.ingsw.controller;
  * this exception will be thrown
  */
 public class QuitException extends RuntimeException{
+
+
 }

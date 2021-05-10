@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import it.polimi.ingsw.controller.ClientHandler;
 import it.polimi.ingsw.controller.QuitException;
-import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 
 import java.io.IOException;
 import java.io.PrintWriter;

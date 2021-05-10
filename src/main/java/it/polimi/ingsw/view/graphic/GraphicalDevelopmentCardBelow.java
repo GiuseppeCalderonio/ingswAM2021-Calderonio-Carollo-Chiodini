@@ -5,7 +5,7 @@ import it.polimi.ingsw.view.utilities.CharStream;
 
 public class GraphicalDevelopmentCardBelow implements CharFigure{
 
-    private CharStream stream;
+    private final CharStream stream;
     private final DevelopmentCard developmentCard;
     private static final int width = 6;
     private static final int height = 0;

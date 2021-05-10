@@ -8,6 +8,7 @@ import java.lang.reflect.Type;
 /**
  * this class is used to deserialize with gson the interface marble
  */
+@SuppressWarnings("rawtypes")
 public class MarbleInterfaceAdapter implements JsonSerializer<Marble>, JsonDeserializer<Marble> {
 
     /**
@@ -26,10 +27,11 @@ public class MarbleInterfaceAdapter implements JsonSerializer<Marble>, JsonDeser
      * @param type this is the type
      * @param jsonDeserializationContext this is the jsonDeserializationContext
      * @return the marble deserialized
-     * @throws JsonParseException
+     * @throws JsonParseException when a json parser exception occurs
      */
+    @SuppressWarnings("rawtypes")
     public Marble deserialize(JsonElement jsonElement, Type type,
-                                   JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+                              JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonPrimitive prim = (JsonPrimitive) jsonObject.get(CLASSNAME);
@@ -57,6 +59,7 @@ public class MarbleInterfaceAdapter implements JsonSerializer<Marble>, JsonDeser
      * @param className this is the string representing the name of the class
      * @return the class with the name specified in input
      */
+    @SuppressWarnings("rawtypes")
     public Class getObjectClass(String className) {
         try {
             return Class.forName(className);

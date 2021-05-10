@@ -1,8 +1,8 @@
 package it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
-import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.controller.commands.normalCommands.NormalActionCommand;
+import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.controller.responseToClients.TwoLeaderWhiteMarblesResponse;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Marble.Marble;

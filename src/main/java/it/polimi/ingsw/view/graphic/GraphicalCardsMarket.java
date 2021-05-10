@@ -7,8 +7,8 @@ import it.polimi.ingsw.view.utilities.colors.ForeColor;
 
 public class GraphicalCardsMarket implements CharFigure{
 
-    private CharStream stream;
-    private DevelopmentCard[][] cardsMarket;
+    private final CharStream stream;
+    private final DevelopmentCard[][] cardsMarket;
     private static final int width = 32;
     private static final int height = 15;
 

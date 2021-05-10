@@ -13,10 +13,9 @@ public class GraphicalWarehouse implements CharFigure{
     private final CollectionResources shelf1;
     private final CollectionResources shelf2;
     private final CollectionResources shelf3;
-    private CollectionResources shelf4;
-    private CollectionResources shelf5;
+    private final CollectionResources shelf4;
+    private final CollectionResources shelf5;
     private int height = 4;
-    private final int width = 15;
 
     public GraphicalWarehouse(CharStream stream, ThinPlayer player){
         this.stream = stream;
@@ -31,6 +30,7 @@ public class GraphicalWarehouse implements CharFigure{
      *this method returns the width of the GraphicalPlayer
      */
     public int getWidth() {
+        int width = 15;
         return width;
     }
 

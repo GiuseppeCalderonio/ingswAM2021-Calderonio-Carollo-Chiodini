@@ -1,9 +1,5 @@
 package it.polimi.ingsw.model.Resources;
 
-import it.polimi.ingsw.model.Resources.CollectionResources;
-import it.polimi.ingsw.model.Resources.Resource;
-import it.polimi.ingsw.model.Resources.ResourceType;
-
 import java.util.List;
 
 /**

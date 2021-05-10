@@ -4,14 +4,17 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import it.polimi.ingsw.controller.commands.Command;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
-import it.polimi.ingsw.network.Lobby;
 import it.polimi.ingsw.model.EndGameException;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.network.Lobby;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.*;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -73,12 +76,14 @@ public class ClientHandler {
     private final AtomicBoolean play = new AtomicBoolean(true);
 
     /**
-     *
-     * @param socket
-     * @param lobby
-     * @param out
-     * @param in
-     * @param gson
+     * this constructor create the client handler starting from his socket, the
+     * lobby joined with his game, the print writer to send messages with the socket, the scanner to
+     * receive messages from the socket, the gson to deserialize and serialize messages
+     * @param socket this is the socket associated with the client
+     * @param lobby this is the lobby joined from the client
+     * @param out this is the print writer associated with the socket
+     * @param in this is the scanner associated with the socket
+     * @param gson this is the gson to deserialize and serialize messages
      */
     public ClientHandler(Socket socket, Lobby lobby, PrintWriter out, Scanner in, Gson gson) {
 
@@ -90,7 +95,13 @@ public class ClientHandler {
     }
 
     /**
-     *
+     * this method start the client handler.
+     * in particular, when the waiting room find the lobby for a client, after adding him,
+     * call this method that is the main one of this class, because it handle
+     * disconnections, it read message, it show the methods to send messages, send broadcasts,
+     * send broadcast disconnections , so that the controller can use them to manage the match.
+     * this method use a while true until the match finish for any reason, and wait to read messages
+     * and process them using the helper method read message
      */
     public void start() {
 
@@ -130,46 +141,53 @@ public class ClientHandler {
     }
 
     /**
-     *
+     * this method set the attribute ,relative to indicates if continue the
+     * match for this client or not, to true
      */
+
     public void setPlayFalse(){
         play.set(false);
     }
 
     /**
-     *
-     * @return
+     * this method get the game associated with the lobby joined from the client
+     * @return the game associated with the lobby joined from the client
      */
     public synchronized Game getGame() {
         return lobby.getGame();
     }
 
     /**
-     *
+     * this method create the game to play for the lobby joined by the client.
+     * in particular, this method if the lobby is composed only by one player,
+     * will create a single game, a normal one otherwise
      */
     public synchronized void createGame (){
         lobby.createGame();
     }
 
     /**
-     *
-     * @return
+     * this method get the number of players of the lobby joined by the client.
+     * in particular, when a client want to start a game, and selecting the number of
+     * players desired, if there isn't space in any lobby, the waiting room creates one and
+     * store there the number of player, that this method get
+     * @return the number of players of the lobby joined by the client
      */
     public synchronized int getNumberOfPlayers () {
         return lobby.getNumberOfPlayers();
     }
 
     /**
-     *
-     * @param nickname
+     * this method add a nickname to the list of nicknames associated with the lobby
+     * @param nickname this is the nickname to add
      */
     public synchronized void addNickname (String nickname){
         lobby.addNickname(nickname);
     }
 
     /**
-     *
-     * @return
+     * this method get a list of String representing the nicknames of every player that joined the lobby
+     * @return the nicknames of every player that joined the lobby
      */
     public synchronized List<String> getNicknames () {
 
@@ -177,74 +195,102 @@ public class ClientHandler {
     }
 
     /**
-     *
-     * @return
+     * this method get the nickname of the client chosen during the login phase
+     * @return the nickname of the client chosen during the login phase, "" if the
+     *         client haven't selected his nickname yet
      */
     public String getNickname() {
         return nickname;
     }
 
     /**
-     *
-     * @param nickname
+     * this method set the nickname of the client, it is used during the login phase
+     * @param nickname this is the nickname to set
      */
     public void setNickname (String nickname){ this.nickname = nickname; }
 
     /**
-     *
-     * @return
+     * this method get the list of Client Handlers associated with every client that
+     * joined the lobby.
+     * it is mainly used to send broadcast messages
+     * @return the list of client handlers associated with every client that
+     *         joined the lobby
      */
     protected List<ClientHandler> getClients() {
         return lobby.getClients();
     }
 
     /**
-     *
-     * @return
+     * this method get the socket associated with the client
+     * @return the socket associated with the client
      */
     public Socket getSocket() {
         return socket;
     }
 
     /**
-     *
-     * @return
+     * this method indicates if if the turn of the client or not.
+     * if the match is composed only by one player, it should return true always
+     * @return true if id the turn of the client, false otherwise
      */
     protected boolean isYourTurn(){
         return lobby.getGame().isYourTurn(nickname);
     }
 
     /**
-     *
-     * @return
+     * this method get the possible commands for the client in a specific phase of the game
+     * @return the possible commands for the client in a specific phase of the game
      */
     private List<String> getPossibleCommands(){
         return commandManager.getCommandInterpreter().getPossibleCommands();
     }
 
+
+
     /**
-     *
-     * @return
+     * this method get the command interpreter of the client.
+     * in particular, the command interpreter is used to read and
+     * execute command, checking if a command is right or not, store
+     * the buffers to manage multiple operations, store
+     * the list of possible commands, send the broadcast messages if necessary
+     * @return the command interpreter associated with the client
      */
     public CommandInterpreter getInterpreter(){
         return commandManager.getCommandInterpreter();
     }
 
     /**
-     *
-     * @param interpreter
+     * this method set the command interpreter of the client.
+     * in particular, the command interpreter is used to read and
+     * execute command, checking if a command is right or not, store
+     * the buffers to manage multiple operations, store
+     * the list of possible commands, send the broadcast messages if necessary
+     * @param interpreter this is the command interpreter to set
      */
     protected void setCommandInterpreter(CommandInterpreter interpreter){
         commandManager.setCommandInterpreter(interpreter);
     }
 
+    /**
+     * this class get the command manager associated with the client.
+     * in particular, the command manager is used to manage the phases of the game
+     * (LOGIN, INITIALISE, TURNS see GamePhase) , to send broadcast during the change of a phase,
+     * to send the messages processed from the command interpreter
+     * @return the command manager associated with the client
+     * @see GamePhase
+     */
     protected CommandManager getCommandManager() {
         return commandManager;
     }
 
     /**
+     * this class set the command manager associated with the client.
+     * in particular, the command manager is used to manage the phases of the game
+     * (LOGIN, INITIALISE, TURNS see GamePhase) , to send broadcast during the change of a phase,
+     * to send the messages processed from the command interpreter
      *
-     * @param commandManager
+     * @param commandManager this is the command manager to set
+     * @see GamePhase
      */
     public void setCommandManager(CommandManager commandManager) {
         this.commandManager = commandManager;
@@ -284,8 +330,12 @@ public class ClientHandler {
     }
 
     /**
-     * this method send a message to the client associated
+     * this method send a message to the client associated.
+     * if the class is of dynamic type LocalClientHandler,
+     * the method just update the client with the method
+     * message.updateClient(client)
      * @param message this is the message to send
+     * @see LocalClientHandler
      */
     public synchronized void send(ResponseToClient message){
         out.println(gson.toJson(message, ResponseToClient.class));
@@ -293,8 +343,18 @@ public class ClientHandler {
     }
 
     /**
-     *
-     * @return
+     * this method read the message sent from the client.
+     * in particular,it use the nextLine(), and if the client disconnect (and the game isn' in the login phase),
+     * the method will throw a NoSuchElementException, and will be called a broadcast disconnection,
+     * if the client send a quit message (and the game isn' in the login phase),
+     * will be called a broadcast disconnection, if the client send a wrong json message,
+     * will be sent to the client an error message, if the method of the command manager
+     * processCommand throws an IndexOutOfBoundException or a NullPointerException, the method
+     * send an error message to the client, if the method processCommand throws an
+     * EndGameException will be notified in broadcast the name of the winner and the lobby will be
+     * set to gameFinished, in order to be filtered by the waiting room.
+     * otherwise , the command will be processed and executed
+     * @return false if the client have to leave the lobby for any reason, true otherwise
      */
     public boolean readMessage() {
         String line;
@@ -344,9 +404,11 @@ public class ClientHandler {
     }
 
     /**
-     * this method is used only by the subclass localClientHandler
-     * @param command
-     * @return
+     * this method is used only by the subclass localClientHandler.
+     * it is used to read the message starting from the command passed in input, and then will be
+     * called the method processCommand on it
+     * @param command this is the command to process
+     * @see LocalClientHandler
      */
     public void readMessage(Command command){
     }

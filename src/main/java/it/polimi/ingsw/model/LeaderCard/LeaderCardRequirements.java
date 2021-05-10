@@ -27,11 +27,11 @@ public interface LeaderCardRequirements extends Serializable {
      * USEFUL ONLY FOR CLIENTS
      * this method returns the String that identifies the requirement
      */
-    public String identifier();
+    String identifier();
 
     /**
      *USEFUL ONLY FOR CLIENTS
      * this method returns the list of BackColor associated to the requirement
      */
-    public List<BackColor> colors();
+    List<BackColor> colors();
 }

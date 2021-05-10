@@ -4,9 +4,9 @@ import it.polimi.ingsw.controller.ClientHandler;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.network.Client;
-import it.polimi.ingsw.view.thinModelComponents.ThinLeaderCard;
 import it.polimi.ingsw.view.graphic.CharFigure;
 import it.polimi.ingsw.view.graphic.GraphicalInitializingLeaderCard;
+import it.polimi.ingsw.view.thinModelComponents.ThinLeaderCard;
 import it.polimi.ingsw.view.utilities.CharStream;
 import it.polimi.ingsw.view.utilities.colors.BackColor;
 

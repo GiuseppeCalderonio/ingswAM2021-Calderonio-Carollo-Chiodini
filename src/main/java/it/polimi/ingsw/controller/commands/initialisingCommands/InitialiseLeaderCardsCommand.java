@@ -1,8 +1,8 @@
 package it.polimi.ingsw.controller.commands.initialisingCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
-import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 
 import java.util.List;
 

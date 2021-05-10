@@ -8,6 +8,7 @@ import java.lang.reflect.Type;
 /**
  * this class is used to deserialize with gson the interface resource
  */
+@SuppressWarnings("ALL")
 public class ResourceInterfaceAdapter implements JsonSerializer<Resource>, JsonDeserializer<Resource> {
 
     /**
@@ -26,7 +27,7 @@ public class ResourceInterfaceAdapter implements JsonSerializer<Resource>, JsonD
      * @param type this is the type
      * @param jsonDeserializationContext this is the jsonDeserializationContext
      * @return the marble deserialized
-     * @throws JsonParseException
+     * @throws JsonParseException when a json parser exception occurs
      */
     public Resource deserialize(JsonElement jsonElement, Type type,
                          JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
@@ -34,7 +35,7 @@ public class ResourceInterfaceAdapter implements JsonSerializer<Resource>, JsonD
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonPrimitive prim = (JsonPrimitive) jsonObject.get(CLASSNAME);
         String className = prim.getAsString();
-        Class klass = getObjectClass(className);
+        @SuppressWarnings("rawtypes") Class klass = getObjectClass(className);
         return jsonDeserializationContext.deserialize(jsonObject.get(DATA), klass);
     }
 
