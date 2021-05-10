@@ -17,6 +17,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class LeaderWarehouseTest {
 
+    /**
+     * this attribute represent the leader warehouse to test
+     */
     private Warehouse leaderWarehouse;
 
     /**

@@ -10,6 +10,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ShelfTest {
 
+    /**
+     * this attribute represent the shelf to test
+     */
     private Shelf shelf;
 
     /**

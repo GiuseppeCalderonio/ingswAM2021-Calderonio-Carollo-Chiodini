@@ -12,7 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class DiscountDashboardTest {
 
-    Dashboard discounted;
+    /**
+     * this attribute represent the discounted dashboard to test
+     */
+    private Dashboard discounted;
 
     /**
      * this test verify that a discounted dashboard got created

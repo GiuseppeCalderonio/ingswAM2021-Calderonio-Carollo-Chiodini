@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * this class test the method of the the development card
  */
 class DevelopmentCardTest {
+
     /**
      * this test verify that the getters of the card work correctly
      */
@@ -42,6 +43,9 @@ class DevelopmentCardTest {
         assertEquals(faithPoints, card.getProductionPowerFaithPoints());
     }
 
+    /**
+     * this test verify that the equals method works correctly fro the development card
+     */
     @Test
     public void testEquals(){
         DevelopmentCard card1 = new DevelopmentCard(CardColor.PURPLE

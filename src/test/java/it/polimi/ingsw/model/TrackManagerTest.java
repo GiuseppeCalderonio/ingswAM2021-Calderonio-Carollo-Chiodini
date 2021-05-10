@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
  * this class test all methods of trackManager class
  */
 public class TrackManagerTest {
+
     /**
      * this test check the correct position of a player in track and his victoryPoints; only one player
      */

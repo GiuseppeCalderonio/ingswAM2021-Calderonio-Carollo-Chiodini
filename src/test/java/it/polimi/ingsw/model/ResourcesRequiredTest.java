@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * are always 5
  */
 public class ResourcesRequiredTest {
+
     /**
      * this test create an empty player and check if the containsRequirements method return false
      */

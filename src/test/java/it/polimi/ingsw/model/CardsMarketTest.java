@@ -17,6 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class CardsMarketTest {
 
+    /**
+     * this attribute represent the cards market to test
+     */
     private CardsMarket market;
 
     /**

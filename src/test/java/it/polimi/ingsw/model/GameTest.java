@@ -22,7 +22,10 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class GameTest {
 
-    Game game;
+    /**
+     * this attribute represent the game to test
+     */
+    private Game game;
 
     /**
      * this test verify that every player got created with the associated string
@@ -256,6 +259,11 @@ class GameTest {
         assertEquals(cards, game.getPlayers().get(0).getPersonalLeaderCards());
     }
 
+    /**
+     * this test verify that after the initialisation of 4 players, their position is correct.
+     * in particular, that player_1.position = 0, player_2.position = 0,
+     *  player_3.position = 1, player_4.position = 1,
+     */
     @Test
     void testInitialiseGame4() {
         List<String> nicknames = new ArrayList<>(Arrays.asList("first", "second", "third", "fourth"));

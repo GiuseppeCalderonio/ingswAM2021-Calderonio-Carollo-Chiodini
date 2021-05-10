@@ -18,9 +18,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class ColorRequiredTest {
 
-    LeaderCardRequirements requirements1;
-    LeaderCardRequirements requirements2;
-    RealPlayer player = new RealPlayer("player", null);
+    /**
+     * this attribute represent a requirement for the color requirement to test
+     */
+    private LeaderCardRequirements requirements1;
+
+    /**
+     * this attribute represent a requirement for the color requirement to test
+     */
+    private LeaderCardRequirements requirements2;
+
+    /**
+     * this attribute represent a real player to test leader cards with it
+     */
+    final RealPlayer player = new RealPlayer("player", null);
 
     /**
      * this test verify that a player with no cards

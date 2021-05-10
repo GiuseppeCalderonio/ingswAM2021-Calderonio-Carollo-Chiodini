@@ -15,6 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class WarehouseTest {
 
+    /**
+     * this attribute represent the warehouse to test
+     */
     private Warehouse warehouse;
 
     /**

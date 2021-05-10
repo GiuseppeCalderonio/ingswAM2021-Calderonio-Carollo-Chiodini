@@ -15,7 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class DashboardTest {
 
-    Dashboard dashboard;
+    /**
+     * this attribute represent the dashboard to test
+     */
+    private Dashboard dashboard;
 
     /**
      * this test verify that the method placeCard return

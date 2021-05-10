@@ -21,13 +21,18 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * this class test the singeGame
  */
+@SuppressWarnings("ResultOfMethodCallIgnored")
 class SingleGameTest {
 
-    Game singleGame = new SingleGame(Collections.singletonList("player"));
+    /**
+     * this attribute represent the single game to test
+     */
+    private final Game singleGame = new SingleGame(Collections.singletonList("player"));
 
     /**
      * this test verify that the creation of a singleGame is correct
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     void testConstructor(){
         // initialise the game
@@ -59,7 +64,7 @@ class SingleGameTest {
     void testCheckEndGame(){
         // initialise the game
         singleGame.initialiseGame("player", new CollectionResources(), 1, 3);
-        assertDoesNotThrow(() -> singleGame.checkEndGame());
+        assertDoesNotThrow(singleGame::checkEndGame);
         // remove every card of a color except for one
         // cards of level 3
         singleGame.getSetOfCard().popCard(3, CardColor.PURPLE);
@@ -75,10 +80,10 @@ class SingleGameTest {
         singleGame.getSetOfCard().popCard(1, CardColor.PURPLE);
         singleGame.getSetOfCard().popCard(1, CardColor.PURPLE);
         singleGame.getSetOfCard().popCard(1, CardColor.PURPLE);
-        assertDoesNotThrow(() -> singleGame.checkEndGame());
+        assertDoesNotThrow(singleGame::checkEndGame);
         // pop the last card from the column
         singleGame.getSetOfCard().popCard(1, CardColor.PURPLE);
-        assertThrows(EndGameException.class ,() -> singleGame.checkEndGame());
+        assertThrows(EndGameException.class , singleGame::checkEndGame);
     }
 
     /**
@@ -89,7 +94,7 @@ class SingleGameTest {
     void testAddFaithPointsExceptTo(){
         // initialise the game
         singleGame.initialiseGame("player", new CollectionResources(), 1, 3);
-        assertDoesNotThrow(() -> singleGame.checkEndGame());
+        assertDoesNotThrow(singleGame::checkEndGame);
         // adds 3 points indirectly to Lorenzo
         singleGame.addFaithPointsExceptTo(singleGame.getActualPlayer(), 3);
 
@@ -252,7 +257,7 @@ class SingleGameTest {
         for (i=0;i<=2;i++) {
             cardsMarket[2][1].remove(0);
         }
-        assertThrows(EndGameException.class, ()-> singleGame.endTurn());
+        assertThrows(EndGameException.class, singleGame::endTurn);
         assertTrue(cardsMarket[2][1].isEmpty());
         assertTrue(cardsMarket[0][1].isEmpty());
     }

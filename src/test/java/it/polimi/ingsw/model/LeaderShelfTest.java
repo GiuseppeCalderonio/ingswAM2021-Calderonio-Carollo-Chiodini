@@ -9,6 +9,10 @@ import static org.junit.jupiter.api.Assertions.*;
  * this class test LeaderShelf
  */
 class LeaderShelfTest {
+
+    /**
+     * this attribute represent the leader shelf to test
+     */
     private Shelf leaderShelf;
 
     /**

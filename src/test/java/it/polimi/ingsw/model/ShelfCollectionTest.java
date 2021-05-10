@@ -13,7 +13,10 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ShelfCollectionTest {
 
-    ShelfCollection shelf;
+    /**
+     * this attribute represent the shelfCollection to test
+     */
+    private ShelfCollection shelf;
 
     /**
      *this test verify that method isCompatible(resource) return true only when the resource is of the same type of

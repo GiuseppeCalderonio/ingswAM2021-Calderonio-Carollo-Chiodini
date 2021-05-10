@@ -14,6 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class CollectionResourcesTest {
 
+    /**
+     * this attribute represent the collectionResources to test
+     */
     private CollectionResources collection;
 
     /**

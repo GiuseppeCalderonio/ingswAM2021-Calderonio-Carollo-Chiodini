@@ -21,8 +21,15 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class RealPlayerTest {
 
-    List<LeaderCard> leaderCards = new ArrayList<>();
-    RealPlayer player;
+    /**
+     * this attribute represent the leader cards used to test the player
+     */
+    private final List<LeaderCard> leaderCards = new ArrayList<>();
+
+    /**
+     * this attribute represent the real player to test
+     */
+    private RealPlayer player;
 
     /**
      * this test verifies the correct initialization of the Track through the RealPlayer: position = 0, none of the

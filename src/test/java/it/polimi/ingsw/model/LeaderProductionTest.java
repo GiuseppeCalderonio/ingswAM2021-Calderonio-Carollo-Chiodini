@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * this class tests all methods of LeaderProduction class
  */
 public class LeaderProductionTest {
+
     /**
      * this method check the resource insertion in stack
      */

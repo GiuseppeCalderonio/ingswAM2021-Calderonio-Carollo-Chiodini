@@ -19,12 +19,30 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class LeaderCardTest {
 
-    LeaderCard leaderCard;
-    LeaderCard leaderCard1;
-    LeaderCard leaderCard2;
-    LeaderCard leaderCard3;
-    RealPlayer player = new RealPlayer("player", null);
-    LeaderCardRequirements requirements1;     LeaderCardRequirements requirements2;
+    /**
+     * this attribute represent a leader card to test
+     */
+    private LeaderCard leaderCard;
+
+    /**
+     * this attribute represent a leader card to test
+     */
+    private LeaderCard leaderCard1;
+
+    /**
+     * this attribute represent a leader card to test
+     */
+    private LeaderCard leaderCard2;
+
+    /**
+     * this attribute represent a real player to use to test leader cards
+     */
+    private RealPlayer player = new RealPlayer("player", null);
+
+    /**
+     * this attribute represent a leader card requirement to use to test leader cards
+     */
+    private LeaderCardRequirements requirements1;     LeaderCardRequirements requirements2;
 
     /**
      * this test check if two leaderCard are equals.
@@ -94,7 +112,7 @@ class LeaderCardTest {
         leaderCard = new NewShelf(new ResourcesRequired(new Shield()),3,new Coin());
         leaderCard1 = new NewDiscount(requirements1,2,new Stone());
         leaderCard2 = new NewWhiteMarble(requirements2,5,new Coin());
-        leaderCard3 = new NewProduction(new LevelRequired(CardColor.GREEN),4,new Coin());
+        LeaderCard leaderCard3 = new NewProduction(new LevelRequired(CardColor.GREEN), 4, new Coin());
         assertNotEquals(leaderCard, leaderCard1);
         assertNotEquals(leaderCard1, leaderCard2);
         assertNotEquals(leaderCard2, leaderCard3);

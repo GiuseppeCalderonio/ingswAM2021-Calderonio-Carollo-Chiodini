@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * this class tests the methods of the market of marbles
  */
 class MarbleMarketTest {
+
     /**
      * this test verify that the market contains all the marble correctly
      */

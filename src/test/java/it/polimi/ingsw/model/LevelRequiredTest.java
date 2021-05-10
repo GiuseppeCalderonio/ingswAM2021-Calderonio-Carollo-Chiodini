@@ -14,8 +14,15 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class LevelRequiredTest {
 
-    LeaderCardRequirements requirements;
-    RealPlayer player = new RealPlayer("player", null);
+    /**
+     * this attribute represent a requirement for the level requirement to test
+     */
+    private LeaderCardRequirements requirements;
+
+    /**
+     * this attribute represent a real player to test leader cards with it
+     */
+    private final RealPlayer player = new RealPlayer("player", null);
 
     /**
      * this test verify that a player with no cards

@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 
 public class ProductionPowerTest {
+
     /**
      * this method sum faith points of all card in dashboard and check if this sum is correct
      */
