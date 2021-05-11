@@ -8,33 +8,65 @@ import it.polimi.ingsw.view.utilities.colors.ForeColor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * this class represent the graphical faith track.
+ * in particular, it implement the CharFigure interface because
+ * is a part of the cli done with colours and ascii art
+ */
 public class GraphicalFaithTrack implements CharFigure {
+
+    /**
+     * this attribute represent the charStream used to draw
+     */
     private final CharStream stream;
+
+    /**
+     * this attribute represent the width of the figure to draw
+     */
     private final int width = 155;
+
+    /**
+     * this attribute represent the height of the figure to draw
+     */
     private final int height = 15;
+
+    /**
+     * this attribute represent the list of thin players from
+     * which get the pope favour tiles
+     */
     private final List<ThinPlayer> thinPlayers;
-    private final List<Integer> positionPlayerss;
-    private final List<String> nicknamess;
+
+    /**
+     * this attribute represent the positions of the players as
+     * a list of integers
+     */
+    private final List<Integer> positionPlayers;
+
+    /**
+     * this attribute represent the nicknames of the players as
+     * a list of strings
+     */
+    private final List<String> nicknames;
 
     /**
      * this is the constructor of the class, here we take the players nickname, players position and we create two different list
      * @param stream is the console where i print the track
-     * @param thinPlayers this is a thin player; contains all informations about a player
+     * @param thinPlayers this is a thin player; contains all information about a player
      */
     public GraphicalFaithTrack(CharStream stream, List<ThinPlayer> thinPlayers) {
         this.stream = stream;
         this.thinPlayers=thinPlayers;
-        nicknamess = new ArrayList<>();
+        nicknames = new ArrayList<>();
         for (ThinPlayer thinPlayer : thinPlayers){
             try{
-                this.nicknamess.add(thinPlayer.getNickName().substring(0, 12));
+                this.nicknames.add(thinPlayer.getNickName().substring(0, 12));
             }catch (StringIndexOutOfBoundsException e){
-                this.nicknamess.add(thinPlayer.getNickName());
+                this.nicknames.add(thinPlayer.getNickName());
             }
 
         }
-        this.positionPlayerss = new ArrayList<>();
-        for (ThinPlayer thinPlayer : thinPlayers) this.positionPlayerss.add(thinPlayer.getTrack().getPosition());
+        this.positionPlayers = new ArrayList<>();
+        for (ThinPlayer thinPlayer : thinPlayers) this.positionPlayers.add(thinPlayer.getTrack().getPosition());
     }
 
     /**
@@ -76,8 +108,8 @@ public class GraphicalFaithTrack implements CharFigure {
         //descriptions of players
         stream.addString(relX, relY - 8, "PLAYERS", ForeColor.ANSI_BLACK, BackColor.ANSI_BRIGHT_BG_WHITE);
         stream.addString(relX, relY - 7, "LIST:", ForeColor.ANSI_BLACK, BackColor.ANSI_BRIGHT_BG_WHITE);
-        for (int i = 1; i <= nicknamess.size(); i++) {
-            stream.addString(relX, relY - 7 + i, i + "->" + nicknamess.get(i - 1), ForeColor.ANSI_BLACK, BackColor.ANSI_BRIGHT_BG_WHITE);
+        for (int i = 1; i <= nicknames.size(); i++) {
+            stream.addString(relX, relY - 7 + i, i + "->" + nicknames.get(i - 1), ForeColor.ANSI_BLACK, BackColor.ANSI_BRIGHT_BG_WHITE);
         }
         //here there is the print of faithTrack
         //position from 0 to 2
@@ -328,10 +360,10 @@ public class GraphicalFaithTrack implements CharFigure {
      */
     private void dynamicPositions(int RELX , int RELY) {
         //here i calculate dynamically the positions of all players in faith track
-        for (int i = 0; i < nicknamess.size(); i++) {
-            checkHighPositions(positionPlayerss.get(i), RELX, RELY, i);
-            checkMiddlePositions(positionPlayerss.get(i), RELX, RELY, i);
-            checkLowPositions(positionPlayerss.get(i), RELX, RELY, i);
+        for (int i = 0; i < nicknames.size(); i++) {
+            checkHighPositions(positionPlayers.get(i), RELX, RELY, i);
+            checkMiddlePositions(positionPlayers.get(i), RELX, RELY, i);
+            checkLowPositions(positionPlayers.get(i), RELX, RELY, i);
         }
     }
 
