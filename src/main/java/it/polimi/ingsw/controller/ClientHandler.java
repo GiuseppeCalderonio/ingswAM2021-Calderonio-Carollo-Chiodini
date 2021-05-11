@@ -109,7 +109,7 @@ public class ClientHandler {
         System.out.println("New connection with " + socket);
 
         try {
-            socket.setSoTimeout(2000);
+            socket.setSoTimeout(5000);
         } catch (SocketException e) {
             e.printStackTrace();
             return;
@@ -305,9 +305,6 @@ public class ClientHandler {
     }
 
 
-
-
-
     /**
      * this method notify every player of the disconnection of the game
      * for any possible reason, and close the connection
@@ -370,6 +367,7 @@ public class ClientHandler {
         try {
             line = in.nextLine();
         } catch (NoSuchElementException e){
+            e.printStackTrace();
             System.err.println(e.getMessage());
             return false;
         }

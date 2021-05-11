@@ -225,13 +225,9 @@ public class Lobby implements Runnable {
      * @throws IOException if a network error occurs
      */
     public synchronized void ping() throws  IOException {
+
             for (ClientHandler client : clients){
                 client.send(new PingResponse());
-                /*
-                if (!client.getSocket().getInetAddress().isReachable(200))
-                    throw new IOException("a client crushed");
-
-                 */
             }
 
 
@@ -252,10 +248,11 @@ public class Lobby implements Runnable {
     public void run() {
         while (true){
             try {
+                TimeUnit.SECONDS.sleep(2);
                 ping();
                 if(clients.size() == 0)
                     setGameFinished();
-                TimeUnit.SECONDS.sleep(2);
+
                 if (isGameFinished())
                     return;
             } catch ( // possible exceptions handled
