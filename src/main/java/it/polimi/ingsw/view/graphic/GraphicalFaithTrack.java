@@ -16,6 +16,11 @@ public class GraphicalFaithTrack implements CharFigure {
     private final List<Integer> positionPlayerss;
     private final List<String> nicknamess;
 
+    /**
+     * this is the constructor of the class, here we take the players nickname, players position and we create two different list
+     * @param stream is the console where i print the track
+     * @param thinPlayers this is a thin player; contains all informations about a player
+     */
     public GraphicalFaithTrack(CharStream stream, List<ThinPlayer> thinPlayers) {
         this.stream = stream;
         this.thinPlayers=thinPlayers;
@@ -55,7 +60,7 @@ public class GraphicalFaithTrack implements CharFigure {
     }
 
     /**
-     * this method draw the GraphicalFaithTrack in the CharStream at X,Y position
+     * this method draw the GraphicalFaithTrack in the CharStream at X,Y position;
      *
      * @param relX X position to be considered as X absolute zero when drawing
      * @param relY Y position to be considered as Y absolute zero when drawing
@@ -294,14 +299,19 @@ public class GraphicalFaithTrack implements CharFigure {
             for (int j = 1; j < 3; j++)
                 stream.addColor(relX + i + 144, relY + j - 7, BackColor.ANSI_BG_PURPLE); //all position 24
 
-        //here there is the end of faith track print and i begin to print the players
+        //here there is the end of the faith track print and i begin to print the players
         dynamicPositions(relX , relY);
-        //here i print on every pope favor tile card all players that have got them
+        //here i print on every pope favor tile card all players that have got 'em
         dynamicPopeCard(relX , relY);
     }
 
+    /**
+     * this method print dynamically all the owner of a pope favor tile card on each pope favour tile card
+     * @param RELX is the position x of the faith track
+     * @param RELY is the position y of the faith track
+     */
     private void dynamicPopeCard(int RELX ,int RELY){
-        for (int i=0 ; i< thinPlayers.size() ; i++){//per ogni player si fa quello che dice questo ciclo for
+        for (int i=0 ; i< thinPlayers.size() ; i++){
             for(int j=0 ; j<3 ; j++){
                 if(thinPlayers.get(i).getTrack().getPopeFavourTiles()[j])
                     stream.addString(RELX + 33 + (40*j), RELY - 1, (i + 1) +"V", ForeColor.ANSI_BLACK, BackColor.ANSI_BRIGHT_BG_WHITE);
@@ -314,7 +324,7 @@ public class GraphicalFaithTrack implements CharFigure {
     }
 
     /**
-     * i call this method to print dynamically all players position
+     * i call this method to print dynamically all players position on the faith track
      */
     private void dynamicPositions(int RELX , int RELY) {
         //here i calculate dynamically the positions of all players in faith track
@@ -382,13 +392,18 @@ public class GraphicalFaithTrack implements CharFigure {
         }
     }
 
+    /**
+     * this method is called only if a player reach the position 3 or 10 or 17. We have to check the player position to translate correctly the index.
+     * @param playerPosition is the player position
+     * @return a index, this index is equals to 0 if the player position is 3, 1 if the player position is 10 and 2 if the player position is 17
+     */
     private int translationIndex(int playerPosition) {
         int toReturn;
         //for position number 3
         if (playerPosition == 3) toReturn = 0;
-            //for position number 10
+        //for position number 10
         else if (playerPosition == 10) toReturn = 1;
-            //for position number 17
+        //for position number 17
         else toReturn = 2;
         return toReturn;
     }
