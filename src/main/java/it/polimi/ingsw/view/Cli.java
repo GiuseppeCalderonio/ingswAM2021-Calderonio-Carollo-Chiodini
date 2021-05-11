@@ -7,17 +7,19 @@ import it.polimi.ingsw.view.graphic.GraphicalWarehouse;
 import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
 import it.polimi.ingsw.view.utilities.CharStream;
 
-import java.util.Collections;
+
+import java.util.Arrays;
 
 public class Cli {
+
+    private static int width = 200;
+    private static int height = 200;
 
     public static void main(String[] args) {
 
 
-        int height = 200;
-        int width = 200;
         CharStream console = new CharStream(width, height);
-        Game game = new Game(Collections.singletonList("pippo"));
+        Game game = new Game(Arrays.asList("pippo"));
         game.getPlayers().get(0).addLeaderShelf(new Coin());
         game.getPlayers().get(0).addLeaderShelf(new Stone());
         GraphicalWarehouse graphicalWarehouse = new GraphicalWarehouse(console,new ThinPlayer(game.findPlayer("pippo")));
