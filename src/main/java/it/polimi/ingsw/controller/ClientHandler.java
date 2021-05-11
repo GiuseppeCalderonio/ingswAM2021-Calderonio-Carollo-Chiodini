@@ -11,6 +11,7 @@ import it.polimi.ingsw.network.Lobby;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -106,6 +107,13 @@ public class ClientHandler {
     public void start() {
 
         System.out.println("New connection with " + socket);
+
+        try {
+            socket.setSoTimeout(2000);
+        } catch (SocketException e) {
+            e.printStackTrace();
+            return;
+        }
 
         // create a new command manager
         commandManager = new CommandManager(this);
@@ -362,6 +370,7 @@ public class ClientHandler {
         try {
             line = in.nextLine();
         } catch (NoSuchElementException e){
+            System.err.println(e.getMessage());
             return false;
         }
 
@@ -371,7 +380,7 @@ public class ClientHandler {
             command = gson.fromJson(line, Command.class); // convert the message in a processable command
             // when the command is not in a json format
         }catch (JsonParseException e) { // the string received is not in gson format
-
+            System.err.println(e.getMessage());
             send(new ResponseToClient("you have to insert a correct json string format", getPossibleCommands()));
             return true;
         }
@@ -384,7 +393,7 @@ public class ClientHandler {
 
             // if one of the parameters of the command does not respect the preconditions
         }catch (NullPointerException | IndexOutOfBoundsException e){
-
+            System.err.println(e.getMessage());
             send(new ResponseToClient("Something gone wrong, you've probably chosen wrong inputs ", getPossibleCommands()));
 
             return true;

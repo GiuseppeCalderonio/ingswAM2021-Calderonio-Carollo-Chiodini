@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.commands.normalCommands.productionCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.responseToClients.EndProductionResponse;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.PlayerAndComponents.ProductionPower;
 
@@ -52,6 +53,8 @@ public class EndProductionCommand extends ProductionCommand {
 
         // end the production filling the strongbox with all the resources gained and reset the productions
         client.getGame().endProduction();
+        // send the end production broadcast for view the new strongbox
+        client.sendInBroadcast(new EndProductionResponse(client));
         // remove all the normal actions from the possible commands
         possibleCommands.removeAll(getNormalActions());
         // add the end turn to the possible commands

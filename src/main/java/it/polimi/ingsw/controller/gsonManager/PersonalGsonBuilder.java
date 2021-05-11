@@ -19,8 +19,8 @@ import it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands.Select
 import it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands.SelectResourcesFromWarehouseCommand;
 import it.polimi.ingsw.controller.commands.normalCommands.productionCommands.*;
 import it.polimi.ingsw.controller.responseToClients.*;
-import it.polimi.ingsw.model.Marble.Marble;
-import it.polimi.ingsw.model.Resources.Resource;
+import it.polimi.ingsw.model.Marble.*;
+import it.polimi.ingsw.model.Resources.*;
 import it.polimi.ingsw.model.SingleGame.CardToken;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
 import it.polimi.ingsw.model.SingleGame.TrackToken;
@@ -43,14 +43,34 @@ public class PersonalGsonBuilder {
      */
     public static Gson createPersonalGsonBuilder(){
         GsonBuilder builder = new GsonBuilder();
+        // register tokens
         builder.registerTypeAdapterFactory(
                 RuntimeTypeAdapterFactory.
                         of(SoloToken.class, "type").
                         registerSubtype(TrackToken.class, "trackToken").
                         registerSubtype(CardToken.class, "cardToken"));
-        builder.registerTypeAdapter(Resource.class, new ResourceInterfaceAdapter());
-        builder.registerTypeAdapter(Marble.class, new MarbleInterfaceAdapter());
+        // register resources
+        builder.registerTypeAdapterFactory(
+                RuntimeTypeAdapterFactory.
+                        of(Resource.class, "type").
+                        registerSubtype(Coin.class, "coin").
+                        registerSubtype(Stone.class, "stone").
+                        registerSubtype(Shield.class, "shield").
+                        registerSubtype(Servant.class, "servant")
+        );
+        // register marbles
+        builder.registerTypeAdapterFactory(
+                RuntimeTypeAdapterFactory.
+                        of(Marble.class, "type").
+                        registerSubtype(RedMarble.class, "redMarble").
+                        registerSubtype(WhiteMarble.class, "whiteMarble").
+                        registerSubtype(YellowMarble.class, "yellowMarble").
+                        registerSubtype(GreyMarble.class, "greyMarble").
+                        registerSubtype(BlueMarble.class, "blueMarble").
+                        registerSubtype(PurpleMarble.class, "purpleMarble")
+        );
 
+        // register commands
         builder.registerTypeAdapterFactory(
                 RuntimeTypeAdapterFactory.
                         of(Command.class, "type").
@@ -78,6 +98,7 @@ public class PersonalGsonBuilder {
 
                         registerSubtype(NormalProductionCommand.class, "NormalProductionCommand").
 
+                        registerSubtype(PongCommand.class, "PongCommand").
                         registerSubtype(ProductionCommand.class, "ProductionCommand").
                         registerSubtype(QuitCommand.class, "QuitCommand").
                         registerSubtype(SelectPositionCommand.class, "SelectPositionCommand").
@@ -98,6 +119,7 @@ public class PersonalGsonBuilder {
                         registerSubtype(LeaderProductionCommand.class, "LeaderProductionCommand").
                         registerSubtype(EndProductionCommand.class, "EndProductionCommand"));
 
+        // register response to client
         builder.registerTypeAdapterFactory(
                 RuntimeTypeAdapterFactory.of(ResponseToClient.class, "type").
                         registerSubtype(ResponseToClient.class, "ResponseToClient").
@@ -106,6 +128,7 @@ public class PersonalGsonBuilder {
                         registerSubtype(InitialisingResponse.class, "InitialisingResponse").
                         registerSubtype(LeaderActionResponse.class, "LeaderActionResponse").
                         registerSubtype(MarbleActionResponse.class, "MarbleActionResponse").
+                        registerSubtype(PingResponse.class, "PingResponse").
                         registerSubtype(ProductionResponse.class, "ProductionResponse").
                         registerSubtype(ShiftResourcesResponse.class, "ShiftResourcesResponse").
                         registerSubtype(StartGameResponse.class, "StartGameResponse").

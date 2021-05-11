@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.responseToClients;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.model.PlayerAndComponents.Player;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
@@ -50,6 +51,11 @@ public class ShiftResourcesResponse extends ResponseToClient{
 
         client.getGame().getPlayers().
                 forEach(player1 -> tracks.put(player1.getNickname(), new ThinTrack(player1)));
+
+        try{ // if the game is a single game
+            Player lorenzo = client.getGame().getLorenzoIlMagnifico();
+            tracks.put(lorenzo.getNickname(), new ThinTrack(lorenzo));
+        }catch (NullPointerException ignored){ }
 
         this.tracks1 = tracks;
         this.warehouse1 = new ThinWarehouse(player);

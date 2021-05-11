@@ -9,14 +9,11 @@ import it.polimi.ingsw.view.utilities.colors.BackColor;
  */
 public class Coin implements Resource {
 
-    ResourceType type = ResourceType.COIN;
-
+    /**
+     * this constructor create a new coin
+     */
     public Coin(){
 
-    }
-
-    public Coin(ResourceType type){
-        this.type = type;
     }
 
     /**

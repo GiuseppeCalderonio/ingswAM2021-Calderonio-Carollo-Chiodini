@@ -9,14 +9,11 @@ import it.polimi.ingsw.view.utilities.colors.BackColor;
  */
 public class Servant implements Resource {
 
-    ResourceType type = ResourceType.SERVANT;
-
+    /**
+     * this constructor create a new servant
+     */
     public Servant(){
 
-    }
-
-    public Servant(ResourceType type){
-        this.type = type;
     }
 
     /**

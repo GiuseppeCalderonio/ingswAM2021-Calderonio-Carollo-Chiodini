@@ -10,14 +10,11 @@ import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 public class Stone implements Resource {
 
-    ResourceType type = ResourceType.STONE;
-
+    /**
+     * this constructor create a new stone
+     */
     public Stone(){
 
-    }
-
-    public Stone(ResourceType type){
-        this.type = type;
     }
 
     /**

@@ -48,10 +48,23 @@ public class SingleGame extends Game {
         Collections.shuffle(soloTokens);
     }
 
+    /**
+     * this method get a player representing lorenzo il magnifico.
+     * in particular, if the game is a single game, it returns the right player,
+     * it returns null otherwise
+     * @return a player representing lorenzo il magnifico
+     */
+    @Override
     public Player getLorenzoIlMagnifico() {
         return lorenzoIlMagnifico;
     }
 
+    /**
+     * this method get the list of solo tokens of the game.
+     * in particular, if the game is a single game, it returns the right list,
+     * it returns null otherwise
+     * @return the list of solo tokens of the game
+     */
     @Override
     public List<SoloToken> getSoloTokens() {
         return soloTokens;

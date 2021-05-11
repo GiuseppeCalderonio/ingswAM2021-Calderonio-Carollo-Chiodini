@@ -3063,9 +3063,9 @@ class GameTest {
         game.getActualPlayer().getPersonalDashboard().getPersonalStrongbox().addResources(coins);
         assertTrue(game.activateLeaderCard(2));
         assertEquals(game.getActualPlayer().getLeaderWhiteMarble(1), new BlueMarble());
-        assertTrue(game.activateLeaderCard(1));
-        assertEquals(game.getActualPlayer().getLeaderWhiteMarble(2), new BlueMarble());
-        assertEquals(game.getActualPlayer().getLeaderWhiteMarble(1), new YellowMarble());
+        assertTrue(game.activateLeaderCard(2));
+        assertEquals(game.getActualPlayer().getLeaderWhiteMarble(1), new BlueMarble());
+        assertEquals(game.getActualPlayer().getLeaderWhiteMarble(2), new YellowMarble());
     }
 
     /**

@@ -178,6 +178,8 @@ public class Client implements Runnable {
                     break;
                 case "quit":
                     send(new QuitCommand());
+                    System.out.println("exit from the match...");
+                    System.exit(1);
                     break;
                 default:
                     System.out.println("Comando non riconosciuto");
@@ -591,19 +593,27 @@ public class Client implements Runnable {
     }
 
     public void show(){
-        int height = 60;
-        if (opponents.size() <= 2)
-            height = 41;
-        CharStream console = new CharStream(200, height);
 
-        for(int i=0; i<200; i++)
-            for (int j=0; j<height; j++)
-                console.addColor(i,j, BackColor.ANSI_BRIGHT_BG_CYAN);
+        try {
+            int height = 60;
+            if (opponents.size() <= 1)
+                height = 41;
+            CharStream console = new CharStream(200, height);
 
-        GraphicalGame graphicalGame = new GraphicalGame(console, myself, opponents, marbleMarket, lonelyMarble, cardsMarket, solotoken);
-        graphicalGame.draw();
-        console.print(System.out);
-        console.reset();
+            for(int i=0; i<200; i++)
+                for (int j=0; j<height; j++)
+                    console.addColor(i,j, BackColor.ANSI_BRIGHT_BG_CYAN);
+
+            GraphicalGame graphicalGame = new GraphicalGame(console, myself, opponents, marbleMarket, lonelyMarble, cardsMarket, solotoken);
+            graphicalGame.draw();
+            console.print(System.out);
+            console.reset();
+        } catch (NullPointerException e){
+
+            System.err.println("error, this operation can be done only if the match is started");
+        }
+
+
 
     }
 

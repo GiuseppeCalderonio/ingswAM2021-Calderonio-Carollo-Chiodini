@@ -7,17 +7,13 @@ import it.polimi.ingsw.view.utilities.colors.BackColor;
 /**
  * this class represent the shield resource
  */
-
 public class Shield implements Resource {
 
-    ResourceType type = ResourceType.SHIELD;
-
+    /**
+     * this constructor create a new shield
+     */
     public Shield(){
 
-    }
-
-    public Shield(ResourceType type){
-        this.type = type;
     }
 
     /**

@@ -89,7 +89,13 @@ public class CommandManager {
      */
     public synchronized void processCommand(Command command) throws EndGameException, QuitException {
 
+        // if the command is a pong
+        if (command.getCmd().equals("pong"))
+            return; // do nothing
+
+        // execute the command with the command interpreter
         ResponseToClient response = commandInterpreter.executeCommand(command, client);
+        // send the response created based on the command executed from the command interpreter
         client.send(response);
 
         // if every player did the login, so if everyone is in a login phase, there are enough players in the lobby, and everyone decided his nickname

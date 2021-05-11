@@ -92,28 +92,60 @@ public class Game {
         turnManager = -nicknames.size();
     }
 
+    /**
+     * this method get a list of the players that are playing the game
+     * @return a list of the players that are playing the game
+     */
     public synchronized List<RealPlayer> getPlayers(){
         return players;
     }
 
+    /**
+     * this method get the market board of the game
+     * @return the market board of the game
+     */
     public synchronized MarbleMarket getMarketBoard() {
         return marketBoard;
     }
 
+    /**
+     * this method get the set of cards of the game
+     * @return the set of cards of the game
+     */
     public synchronized CardsMarket getSetOfCard() {
         return setOfCards;
     }
 
+    /**
+     * this method get the turn manager of the game, that indicates the turn
+     * @return the turn manager of the game, that indicates the turn
+     */
     public synchronized int getTurnManager() {
         return turnManager;
     }
 
+    /**
+     * this method get an array of 3 boolean representing the 3 game vatican reports
+     * @return an array of 3 boolean representing the 3 game vatican reports
+     */
     public synchronized boolean[] getVaticanReports() {
         return vaticanReports;
     }
 
+    /**
+     * this method get a player representing lorenzo il magnifico.
+     * in particular, if the game is a single game, it returns the right player,
+     * it returns null otherwise
+     * @return a player representing lorenzo il magnifico
+     */
     public synchronized Player getLorenzoIlMagnifico(){ return null; }
 
+    /**
+     * this method get the list of solo tokens of the game.
+     * in particular, if the game is a single game, it returns the right list,
+     * it returns null otherwise
+     * @return the list of solo tokens of the game
+     */
     public synchronized List<SoloToken> getSoloTokens(){ return null; }
 
     /**

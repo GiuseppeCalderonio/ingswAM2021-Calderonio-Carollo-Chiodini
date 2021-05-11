@@ -9,7 +9,6 @@ import it.polimi.ingsw.model.Resources.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -40,8 +39,7 @@ public class RealPlayer extends Player {
      * with the marbles that should substitute the white marbles
      * when buying resources from market
      */
-    private List<Marble> leaderWhiteMarbles;
-
+    private final List<Marble> leaderWhiteMarbles;
 
     /**
      * this constructor create a player giving him his nickname
@@ -187,12 +185,11 @@ public class RealPlayer extends Player {
 
     /**
      * this method is used to locate a card in one of the three position in dashboard.
-     * @param position is =1 or =2 or =3; is the position where the card is locate in dashboard
      * @param toPlace contains the developmentCard that the player wants to insert in dashboard
-     * @return true if the card has been correctly inserted, else false
+     * @param position is =1 or =2 or =3; is the position where the card is locate in dashboard
      */
-    public boolean locateDevelopmentCard (DevelopmentCard toPlace , int position) {
-        return personalDashboard.placeDevelopmentCard(toPlace , position);
+    public void locateDevelopmentCard (DevelopmentCard toPlace , int position) {
+        personalDashboard.placeDevelopmentCard(toPlace, position);
     }
 
     /**
@@ -245,7 +242,16 @@ public class RealPlayer extends Player {
      * @return true if the card got activated correctly, false otherwise
      */
     public boolean activateLeaderCard(int toActivate){
-        return personalLeaderCards.get(toActivate - 1).activateCard(this);
+        boolean activated = personalLeaderCards.get(toActivate - 1).activateCard(this);
+        if (activated) // if the leader card have been activated
+            // sort them, placing at the end the inactive ones
+            personalLeaderCards.sort((leaderCard1, leaderCard2) -> {
+                if (!leaderCard2.isActive() && leaderCard1.isActive()) return -1;
+                if (leaderCard2.isActive() && !leaderCard1.isActive()) return 1;
+                return 0;
+            }
+            );
+        return activated;
     }
 
     /**
@@ -272,8 +278,6 @@ public class RealPlayer extends Player {
     public void addLeaderWhiteMarble(Resource toAdd){
 
         leaderWhiteMarbles.add(toAdd.convertInMarble());
-        if (leaderWhiteMarbles.size() > 1)
-            leaderWhiteMarbles = personalLeaderCards.stream().map(leaderCard -> leaderCard.getResource().convertInMarble()).collect(Collectors.toList());
     }
 
     /**

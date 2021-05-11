@@ -30,8 +30,7 @@ public class GraphicalWarehouse implements CharFigure{
      *this method returns the width of the GraphicalPlayer
      */
     public int getWidth() {
-        int width = 15;
-        return width;
+        return 15;
     }
 
     /**

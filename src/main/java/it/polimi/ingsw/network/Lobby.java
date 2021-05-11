@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.responseToClients.PingResponse;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.model.SingleGame.SingleGame;
@@ -225,9 +226,15 @@ public class Lobby implements Runnable {
      */
     public synchronized void ping() throws  IOException {
             for (ClientHandler client : clients){
+                client.send(new PingResponse());
+                /*
                 if (!client.getSocket().getInetAddress().isReachable(200))
                     throw new IOException("a client crushed");
+
+                 */
             }
+
+
     }
 
     /**
