@@ -16,10 +16,6 @@ import java.util.List;
  */
 public class LeaderCommand implements Command {
 
-    //private int leaderCommandCode;
-
-
-
     /**
      * this method get the cmd associated with the command
      *
@@ -51,7 +47,7 @@ public class LeaderCommand implements Command {
         // set the possible commands to the leader actions
         possibleCommands.clear();
         possibleCommands.addAll(getLeaderActions());
-
+        // return the response
         return buildResponse("choose the leader action to do", client.getInterpreter().getPossibleCommands());
     }
 

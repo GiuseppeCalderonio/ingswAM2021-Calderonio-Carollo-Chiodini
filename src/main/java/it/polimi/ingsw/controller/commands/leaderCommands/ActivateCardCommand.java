@@ -68,8 +68,9 @@ public class ActivateCardCommand extends LeaderCommand {
 
         // reset the possible commands
         possibleCommands.remove("leader_action");
+        // send in broadcast the new game state
         client.sendInBroadcast(new LeaderActionResponse(client));
-        //sendBroadcastChangePlayerState(client.getClients());
+        // return the response
         return buildResponse("leader card activated", possibleCommands);
     }
 }

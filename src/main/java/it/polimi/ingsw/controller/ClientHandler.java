@@ -120,12 +120,12 @@ public class ClientHandler {
 
 
         while (play.get()) {
-            try {
+            //try {
                 play.set(readMessage());
-            } catch (Exception e){
-                System.err.println("A generic error occurs :" + e.getMessage());
-                play.set(false);
-            }
+            //} catch (Exception e){
+            //    System.err.println("A generic error occurs :" + e.getMessage());
+            //    play.set(false);
+            //}
         }
 
         // closing stream and sockets, and eventually restart a new game kicking off every player
@@ -141,9 +141,9 @@ public class ClientHandler {
                 sendBroadcastDisconnection();
 
         } catch(IOException e) {
-            System.err.println("A client disconnected");
+            System.err.println("A client disconnected, message " + e.getMessage() + " method: start in ClientHandler, socket" + socket);
         } catch (Exception e){
-            System.err.println("Fatal error");
+            System.err.println("Fatal error message " + e.getMessage() + " method: start in ClientHandler, socket" + socket);
             System.out.println(e.getMessage());
         }
     }
@@ -161,7 +161,7 @@ public class ClientHandler {
      * this method get the game associated with the lobby joined from the client
      * @return the game associated with the lobby joined from the client
      */
-    public synchronized Game getGame() {
+    public Game getGame() {
         return lobby.getGame();
     }
 
@@ -170,7 +170,7 @@ public class ClientHandler {
      * in particular, this method if the lobby is composed only by one player,
      * will create a single game, a normal one otherwise
      */
-    public synchronized void createGame (){
+    public void createGame (){
         lobby.createGame();
     }
 
@@ -181,7 +181,7 @@ public class ClientHandler {
      * store there the number of player, that this method get
      * @return the number of players of the lobby joined by the client
      */
-    public synchronized int getNumberOfPlayers () {
+    public int getNumberOfPlayers () {
         return lobby.getNumberOfPlayers();
     }
 
@@ -189,7 +189,7 @@ public class ClientHandler {
      * this method add a nickname to the list of nicknames associated with the lobby
      * @param nickname this is the nickname to add
      */
-    public synchronized void addNickname (String nickname){
+    public void addNickname (String nickname){
         lobby.addNickname(nickname);
     }
 
@@ -197,7 +197,7 @@ public class ClientHandler {
      * this method get a list of String representing the nicknames of every player that joined the lobby
      * @return the nicknames of every player that joined the lobby
      */
-    public synchronized List<String> getNicknames () {
+    public List<String> getNicknames () {
 
         return lobby.getNicknames();
     }
@@ -224,7 +224,7 @@ public class ClientHandler {
      * @return the list of client handlers associated with every client that
      *         joined the lobby
      */
-    protected List<ClientHandler> getClients() {
+    public List<ClientHandler> getClients() {
         return lobby.getClients();
     }
 
@@ -330,7 +330,7 @@ public class ClientHandler {
      * the method notify for the pattern notify-observer
      * @param message this is the message to send in broadcast
      */
-    public synchronized void sendInBroadcast (ResponseToClient message) {
+    public void sendInBroadcast (ResponseToClient message) {
         getClients().forEach(client -> client.send(message));
     }
 
@@ -367,12 +367,12 @@ public class ClientHandler {
         try {
             line = in.nextLine();
         } catch (NoSuchElementException e){
-            e.printStackTrace();
-            System.err.println(e.getMessage());
+            System.err.println("the client " + socket.toString() + " disconnected, message: " + e.getMessage() + ",socket : " + socket + "method : readMessage in ClientHandler");
             return false;
         }
 
         Command command;
+
         try {
             // translate the string to a command
             command = gson.fromJson(line, Command.class); // convert the message in a processable command

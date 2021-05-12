@@ -22,7 +22,7 @@ public class ThinPlayer {
     /**
      * this attribute represent the nickname of the player
      */
-    private String nickName;
+    private String nickname;
 
     /**
      * this attribute represent the warehouse of the player
@@ -61,7 +61,7 @@ public class ThinPlayer {
      * @param player this is the player from which get all the data to set
      */
     public ThinPlayer(RealPlayer player){
-        this.nickName = player.getNickname();
+        this.nickname = player.getNickname();
         this.warehouse = new ThinWarehouse(player);
         this.strongbox = player.getPersonalDashboard().getPersonalStrongbox().getStrongboxResources();
         this.thinLeaderCards = player.getPersonalLeaderCards().stream().map(LeaderCard::getThin).collect(Collectors.toList());
@@ -76,7 +76,7 @@ public class ThinPlayer {
      * @param thinPlayer this is the thin player to represent
      */
     public ThinPlayer(ThinPlayer thinPlayer) {
-        this.nickName = thinPlayer.nickName;
+        this.nickname = thinPlayer.nickname;
         this.warehouse = thinPlayer.warehouse;
         this.strongbox = thinPlayer.strongbox;
         //this.thinLeaderCards = thinPlayer.thinLeaderCards;
@@ -101,9 +101,11 @@ public class ThinPlayer {
      *                get the track
      */
     public ThinPlayer(Player lorenzo){
-        this.nickName = lorenzo.getNickname();
+        this.nickname = lorenzo.getNickname();
         this.track = new ThinTrack(lorenzo);
     }
+
+
 
 
 
@@ -127,8 +129,8 @@ public class ThinPlayer {
         this.leaderCards = leaderCards;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getNickname() {
+        return nickname;
     }
 
     public ThinProductionPower getProductionPower() {
@@ -152,7 +154,7 @@ public class ThinPlayer {
     }
 
     public void setNickName(String nickName){
-        this.nickName = nickName;
+        this.nickname = nickName;
     }
 
     public void setTrack(ThinTrack track) {
@@ -193,19 +195,19 @@ public class ThinPlayer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ThinPlayer that = (ThinPlayer) o;
-        return nickName.equals(that.nickName);
+        return nickname.equals(that.nickname);
     }
 
     @Override
     public String toString() {
         if (leaderCards == null) {
             return "ThinPlayer{" + "\n" +
-                    "nickName='" + nickName + '\'' +"\n" +
+                    "nickName='" + nickname + '\'' +"\n" +
                     ", thinTrack " + track + "\n" +
                     '}' + "\n" ;
         }
         return "ThinPlayer{" + "\n" +
-                "nickName='" + nickName + '\'' +"\n" +
+                "nickName='" + nickname + '\'' +"\n" +
                 "warehouse" + warehouse + "\n" +
                 ", strongbox=" + strongbox + "\n" +
                 ", leaderCards=" + leaderCards + "\n" +

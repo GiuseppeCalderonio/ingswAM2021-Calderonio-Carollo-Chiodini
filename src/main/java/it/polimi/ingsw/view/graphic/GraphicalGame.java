@@ -70,7 +70,7 @@ import java.util.List;
             clientOwner.draw(relX,relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight()+ 2);
 
             if (opponents.size()==1) {
-                if (!opponents.get(0).getNickName().equals("LorenzoIlMagnifico")) { //print only another player
+                if (!opponents.get(0).getNickname().equals("LorenzoIlMagnifico")) { //print only another player
                     GraphicalPlayer opponent = new GraphicalPlayer(stream, opponents.get(0));
 
                     for(int i=0; i<=clientOwner.getHeight(); i++) {

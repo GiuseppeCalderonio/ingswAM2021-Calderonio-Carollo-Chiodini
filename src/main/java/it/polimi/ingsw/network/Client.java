@@ -595,7 +595,7 @@ public class Client implements Runnable {
     public void show(){
 
         try {
-            int height = 60;
+            int height = 53;
             if (opponents.size() <= 1)
                 height = 41;
             CharStream console = new CharStream(200, height);

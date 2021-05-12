@@ -12,8 +12,8 @@ import it.polimi.ingsw.model.Marble.Marble;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * this abstract class represent the normal action of a player.
@@ -40,36 +40,8 @@ public abstract class NormalActionCommand implements Command {
      * @param client this is the client that notify everyone of the change
      */
     protected void sendBroadcastMarbleAction(ClientHandler client) {
+        // send in broadcast the new game state
         client.sendInBroadcast(new MarbleActionResponse(client));
-        //clients.forEach(client -> client.send(broadcastMarbleAction(client.getGame(), client.getNickname())));
-    }
-
-    /**
-     * this method send to the client that chose the choose_marbles action
-     * a response containing the resources gained from the selection.
-     * in particular, it convert the marbles passed in input into the collectionResources
-     * correspondent and store it into a buffer, then create the set of resources
-     * starting from the collection gained
-     * it also set into a buffer all the resources gained from the selection
-     * and change the possible commands to [insert_in_warehouse] (the name of the method)
-     *
-     * @param possibleCommands this is the list of possible commands to change
-     * @param interpreter this is the command interpreter containing all the buffers
-     * @param game this is the game in which the method have to call the convert
-     * @param marbles these are the marbles to convert
-     *
-     * @return the response to send to the client
-     */
-    protected ResponseToClient buildResponseToInsertInWarehouse(List<String> possibleCommands,
-                                                              CommandInterpreter interpreter,
-                                                              Game game,
-                                                              List<Marble> marbles){
-
-        interpreter.getPossibleCommands().clear();
-        interpreter.getPossibleCommands().addAll(possibleCommands);
-        return buildResponseToInsertInWarehouseLeader( interpreter,
-                game,
-                marbles);
     }
 
     /**
@@ -87,19 +59,14 @@ public abstract class NormalActionCommand implements Command {
      *
      * @return the response to send to the client
      */
-    protected ResponseToClient buildResponseToInsertInWarehouseLeader(CommandInterpreter interpreter,
-                                                                    Game game,
-                                                                    List<Marble> marbles){
+    protected ResponseToClient buildResponseToInsertInWarehouse(CommandInterpreter interpreter,
+                                                                      Game game,
+                                                                      List<Marble> marbles){
         interpreter.getPossibleCommands().clear();
         interpreter.getPossibleCommands().add("insert_in_warehouse");
-        //interpreter.setPossibleCommands(new ArrayList<>(Collections.singletonList("insert_in_warehouse")));
         interpreter.setMarblesConverted(game.convert(marbles));
-        interpreter.setResourceSet(new ArrayList<>(
-                new HashSet<>(interpreter.getMarblesConverted().asList()))
-        );
-        return new WhiteMarblesConversionResponse(
-                interpreter.getMarblesConverted());
-        //return responseToInsertInWarehouse(interpreter.getPossibleCommands(), interpreter.getMarblesConverted());
+        interpreter.setResourceSet(interpreter.getMarblesConverted().asList().stream().distinct().collect(Collectors.toList()));
+        return new WhiteMarblesConversionResponse(interpreter.getMarblesConverted());
     }
 
     /**

@@ -28,7 +28,7 @@ public class Lobby implements Runnable {
      * this attribute represent a list of every thread associated with the clients
      * that are playing the same game
      */
-    private final List<ClientHandler> clients = new ArrayList<>();
+    private List<ClientHandler> clients = Collections.synchronizedList(new ArrayList<>());
 
     /**
      * this attribute represent the game of the lobby in common with every player
@@ -39,7 +39,7 @@ public class Lobby implements Runnable {
      * this attribute represent a list (ordered once the game starts) of
      * the players nicknames
      */
-    private List<String> nicknames = new ArrayList<>();
+    private List<String> nicknames = Collections.synchronizedList(new ArrayList<>());
 
     /**
      * this attribute represent the number of players of the game
@@ -75,7 +75,7 @@ public class Lobby implements Runnable {
      * number of players of the lobby and the game isn't started yet
      * @param client this attribute represent the client to add
      */
-    public synchronized void addClient(ClientHandler client){
+    public void addClient(ClientHandler client){
         clients.add(client);
     }
 
@@ -108,7 +108,7 @@ public class Lobby implements Runnable {
      * the list of clients with the same casual order of the game,
      * it finally set to true that the game is started
      */
-    public synchronized void createGame() {
+    public void createGame() {
         // singlePlayer
         if (nicknames.size() == 1){
             game = new SingleGame(nicknames);
@@ -172,18 +172,17 @@ public class Lobby implements Runnable {
      * this method sort the threads associated with the player
      * in the same order of the nicknames of the game
      */
-    private synchronized void sortClients(){
+    private void sortClients(){
         List<ClientHandler> newClients = new ArrayList<>();
         for (String nickname : nicknames){
-            int i = 0;
-            for (ClientHandler ignored : this.clients) {
-                if (clients.get(i).getNickname().equals(nickname))
-                    newClients.add(clients.get(i));
-                i++;
+            //int i = 0;
+            for (ClientHandler client : this.clients) {
+                if (client.getNickname().equals(nickname))
+                    newClients.add(client);
+                //i++;
             }
         }
-        this.clients.clear();
-        this.clients.addAll(newClients);// set the list of sorted clients
+        clients = Collections.synchronizedList(newClients);
     }
 
     /**
@@ -220,17 +219,11 @@ public class Lobby implements Runnable {
 
     /**
      * this method ping the clients to understand if a client crashed.
-     * in particular, this method works only if the connection fall for
-     * reasons of connection break
-     * @throws IOException if a network error occurs
+     * in particular, it send a broadcast ping message, that should be followed with a ping response
+     * in order to stimulate the in.readLine and reset the timeout of the socket
      */
-    public synchronized void ping() throws  IOException {
-
-            for (ClientHandler client : clients){
-                client.send(new PingResponse());
-            }
-
-
+    public synchronized void ping() {
+        clients.forEach(client -> client.send(new PingResponse()));
     }
 
     /**
@@ -246,28 +239,27 @@ public class Lobby implements Runnable {
      */
     @Override
     public void run() {
-        while (true){
-            try {
+        try{
+            while (true){
                 TimeUnit.SECONDS.sleep(2);
                 ping();
-                if(clients.size() == 0)
+                if (clients.size() == 0)
                     setGameFinished();
 
                 if (isGameFinished())
                     return;
-            } catch ( // possible exceptions handled
-                    IOException
-                    | InterruptedException
-                    e
-            ){
-                try {
-                    clients.get(0).sendBroadcastDisconnection();
-                } catch (
-                        IOException | IndexOutOfBoundsException ex) {
+            }
+        } catch ( // possible exceptions handled
+                InterruptedException e
+        ){
+            System.err.println("Ping error, a client crushed, message : " + e.getMessage() + ", class : Lobby ");
+            try {
+                clients.get(0).sendBroadcastDisconnection();
+            } catch (
+                    IOException | IndexOutOfBoundsException ex) {
+                    System.err.println("Ping error, a client crushed, message : " + ex.getMessage() + ", class : Lobby ");
                     ex.printStackTrace();
                 }
-                return;
-            }
         }
     }
 }

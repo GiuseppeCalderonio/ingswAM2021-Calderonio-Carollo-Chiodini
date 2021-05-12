@@ -15,8 +15,6 @@ import java.util.List;
  */
 public class EndTurnCommand extends NormalActionCommand {
 
-    //private int endTurnCode;
-
     /**
      * this method get the cmd associated with the command
      *
@@ -50,8 +48,10 @@ public class EndTurnCommand extends NormalActionCommand {
         if (client.getNumberOfPlayers() == 1){
             // send to the client the new game state
             sendEndSingleGame(client);
+            // return the response
             return buildSoloResponse();
         }
+        // return the response
         return buildResponse("turn finished, is not your turn now", possibleCommands);
     }
 
@@ -71,7 +71,7 @@ public class EndTurnCommand extends NormalActionCommand {
      * @param client this is the (unique) client to notify
      */
     private void sendEndSingleGame(ClientHandler client) {
+        // send the new game state
         client.send(new EndTurnSingleGameResponse(client));
-         //client.send(endSingleGame(client.getGame(), client.getNickname()));
     }
 }

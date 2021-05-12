@@ -19,8 +19,6 @@ import java.util.List;
  */
 public class ProductionCommand extends NormalActionCommand {
 
-    //private int productionCode;
-
     /**
      * this method get the cmd associated with the command
      *

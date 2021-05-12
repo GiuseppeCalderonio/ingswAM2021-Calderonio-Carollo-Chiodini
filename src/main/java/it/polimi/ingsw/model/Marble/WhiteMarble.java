@@ -8,7 +8,7 @@ import it.polimi.ingsw.view.utilities.colors.BackColor;
  */
 public class WhiteMarble implements Marble{
 
-    private final MarbleColor color = MarbleColor.YELLOW;
+    private final MarbleColor color = MarbleColor.WHITE;
 
     /**
      * this method return zero faith point

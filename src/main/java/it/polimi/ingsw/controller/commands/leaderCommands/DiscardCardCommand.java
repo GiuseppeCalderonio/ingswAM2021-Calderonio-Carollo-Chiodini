@@ -53,7 +53,7 @@ public class DiscardCardCommand extends LeaderCommand {
      */
     @Override
     public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) throws EndGameException {
-
+        // reset the previous possible commands
         possibleCommands.clear();
         possibleCommands.addAll(previousPossibleCommands);
 
@@ -69,7 +69,7 @@ public class DiscardCardCommand extends LeaderCommand {
         possibleCommands.remove("leader_action");
         // send to every player the new game state
         client.sendInBroadcast(new LeaderActionResponse(client));
-        //sendBroadcastChangePlayerState(client.getClients());
+        // return the response
         return buildResponse("leader card discarded", possibleCommands);
     }
 }

@@ -73,7 +73,7 @@ public class ChooseLeaderCardsCommand extends NormalActionCommand {
             game.changeWhiteMarble(marbles, indexes[i]);
         }
         // change the state and send to the player that he have to select the marbles converted in his warehouse
-        return buildResponseToInsertInWarehouseLeader(client.getInterpreter(), game, marbles);
+        return buildResponseToInsertInWarehouse(client.getInterpreter(), game, marbles);
     }
 
 

@@ -36,7 +36,10 @@ public class LeaderActionResponse extends ResponseToClient{
 
     /**
      * this constructor create the response starting from the client,
-     * getting from him all the data needed and setting all of them
+     * getting from him all the data needed and setting all of them.
+     * it also hide the leader cards if the nickname of the actual player
+     * of the game is not equal with the nickname of the client
+     * passed in input
      *
      * @param client this is the client that send the response
      */
@@ -46,7 +49,6 @@ public class LeaderActionResponse extends ResponseToClient{
         this.nickname4 = player.getNickname();
         this.track4 = new ThinTrack(player);
         this.cards4 = player.getPersonalLeaderCards().stream().map(LeaderCard::getThin).collect(Collectors.toList());
-
 
     }
 
@@ -62,8 +64,14 @@ public class LeaderActionResponse extends ResponseToClient{
     public void updateClient(Client client) {
 
         ThinPlayer toChange = getPlayerToChange(client, nickname4);
+
+        if (!nickname4.equals(client.getMyself().getNickname()))
+            cards4.stream().filter(card -> !card.isActive()).forEach(ThinLeaderCard::hide);
+
         toChange.setTrack(track4);
+
         toChange.setLeaderCards(cards4.stream().map(ThinPlayer::recreate).collect(Collectors.toList()));
+
         client.show();
 
         super.updateClient(client);

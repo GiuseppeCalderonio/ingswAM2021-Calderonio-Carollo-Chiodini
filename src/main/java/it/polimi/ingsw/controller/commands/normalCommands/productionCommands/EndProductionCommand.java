@@ -17,8 +17,6 @@ import java.util.List;
  */
 public class EndProductionCommand extends ProductionCommand {
 
-    //private int endProductionCode;
-
     /**
      * this method get the cmd associated with the command
      *

@@ -51,7 +51,7 @@ public class GraphicalPlayer implements CharFigure{
     public void draw(int relX, int relY) {
 
         //NICKNAME
-        stream.addString(relX,relY, thinPlayer.getNickName(), ForeColor.ANSI_BRIGHT_WHITE, backgroundColor);
+        stream.addString(relX,relY, thinPlayer.getNickname(), ForeColor.ANSI_BRIGHT_WHITE, backgroundColor);
 
         //WAREHOUSE
         // GraphicalWarehouse graphicalWarehouse = new GraphicalWarehouse(stream, thinPlayer.getFirstShelf(), thinPlayer.getSecondShelf(), thinPlayer.getThirdShelf());

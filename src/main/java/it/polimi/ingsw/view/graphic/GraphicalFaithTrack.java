@@ -59,9 +59,9 @@ public class GraphicalFaithTrack implements CharFigure {
         nicknames = new ArrayList<>();
         for (ThinPlayer thinPlayer : thinPlayers){
             try{
-                this.nicknames.add(thinPlayer.getNickName().substring(0, 12));
+                this.nicknames.add(thinPlayer.getNickname().substring(0, 12));
             }catch (StringIndexOutOfBoundsException e){
-                this.nicknames.add(thinPlayer.getNickName());
+                this.nicknames.add(thinPlayer.getNickname());
             }
 
         }

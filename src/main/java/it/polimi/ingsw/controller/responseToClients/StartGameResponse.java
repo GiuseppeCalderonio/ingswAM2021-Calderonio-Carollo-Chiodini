@@ -6,7 +6,6 @@ import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
 import it.polimi.ingsw.network.Client;
-import it.polimi.ingsw.view.thinModelComponents.ThinLeaderCard;
 import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
 
 import java.util.ArrayList;
@@ -163,16 +162,5 @@ public class StartGameResponse extends ResponseToClient{
         }
     }
 
-    /**
-     * this method hide the leader cards of a thin player, in fact the cards
-     * of a player different from the owner, when another player did not activate
-     * a leader card, should not be visible
-     * @param players these are the player with the leader cards to hide
-     */
-    private void hideLeaderCards(List<ThinPlayer> players){
-        players.stream().
-                flatMap(player -> player.getThinLeaderCards().stream()).
-                filter(leaderCard -> !leaderCard.isActive()).
-                forEach(ThinLeaderCard::hide);
-    }
+
 }

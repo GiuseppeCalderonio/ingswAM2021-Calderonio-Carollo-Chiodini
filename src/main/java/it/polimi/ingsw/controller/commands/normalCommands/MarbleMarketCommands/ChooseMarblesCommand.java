@@ -83,52 +83,21 @@ public class ChooseMarblesCommand extends NormalActionCommand {
         List<Marble> whiteMarbles = marbles.stream().filter(marble -> marble.equals(new WhiteMarble())).collect(Collectors.toList());
         // if the player selected a list of marbles without any white marble, so the marbles are all to insert in warehouse
         if (whiteMarbles.size() == 0)
-            return buildResponseToInsertInWarehouse(possibleCommands,
-                    client.getInterpreter(),
-                    game,
-                    marbles);
+            return buildResponseToInsertInWarehouse(client.getInterpreter(), game, marbles);
 
         // from here is sure that the marbles selected contains almost a white marble
 
         // if the player does not own any leader card
-        if (game.getActualPlayer().getLeaderWhiteMarbles().isEmpty()) {
+        if (game.getActualPlayer().getLeaderWhiteMarbles().isEmpty())
+            return caseNoLeaderCards(marbles, game, client, possibleCommands);
 
-            // if the marbles selected converted to resources do not contains any resource (4 white marbles or 3 white and 1 red marbles)
-            if (marbles.stream().
-                    allMatch(marble -> marble.equals(new WhiteMarble()) || marble.equals(new RedMarble()))){
-                // set the state of the game
-                client.getInterpreter().setMarblesConverted(game.convert(marbles));
-                //marblesConverted = game.convert(marbles);
-                possibleCommands.removeAll(getNormalActions());
-                possibleCommands.add("end_turn");
-                sendBroadcastMarbleAction(client);
-                return buildResponse("action completed, any resource got added", possibleCommands);
-            }
-            else // if the marbles selected converted to resources contain a resource
-                return buildResponseToInsertInWarehouse(possibleCommands,
-                        client.getInterpreter(),
-                        game,
-                        marbles);
+         // if the actual player has a leader card of type white marble activated
+        else if (game.getActualPlayer().getLeaderWhiteMarbles().size() == 1)
+            return caseOneLeaderCard(game, marbles, client);
 
-
-        } // if the actual player has a leader card of type white marble activated
-        else if (game.getActualPlayer().getLeaderWhiteMarbles().size() == 1){
-            //noinspection StatementWithEmptyBody
-            while (game.changeWhiteMarble(marbles, 1));
-            return buildResponseToInsertInWarehouse(possibleCommands,
-                    client.getInterpreter(),
-                    game,
-                    marbles);
-        } // if the actual player has two leader cards of type white marble activated
-        else {
-            previousPossibleCommands.clear();
-            previousPossibleCommands.addAll(possibleCommands);
-            possibleCommands.clear();
-            possibleCommands.add("choose_leaderCards");
-
-            return new TwoLeaderWhiteMarblesResponse(marbles.size());
-
-        }
+         // if the actual player has two leader cards of type white marble activated
+        else
+            return caseTwoLeaderCards(possibleCommands, previousPossibleCommands, whiteMarbles.size());
     }
 
     /**
@@ -165,16 +134,79 @@ public class ChooseMarblesCommand extends NormalActionCommand {
         return marbles;
     }
 
-    /*
-     * this method create a response to client to send to the client.
-     * in particular, it is called if and only if the player own 2 white marble leader cards,
-     * the method send the message, the possibleCommands :[choose_leaderCards], and
-     * the int representing the number of white marbles selected, that have to ve converted
-     * in resources with the command choose_leaderCards
-     * @param possibleCommands these are the possible commands for the player
-     * @param marblesSize this is the number of white marbles to convert in resources
+    /**
+     * this method handle the case in which a player have no leader cards white marbles conversion
+     * active.
+     * in particular, if the row/column selected doesn't contain any marble different from red marble
+     * and white marble, it do the action without changing anything and removing the normal
+     * commands from the possible ones and sending the new marble market,
+     * else it prepare the new response to send in order to make the client choose the
+     * shelves in which collect the resources chosen.
+     * it also change the state of the buffers whenever it is necessary
+     * @param marbles this is the list of marbles selected to convert
+     * @param game this is the game in which do the conversion
+     * @param client this is the client from which get the buffers to change
+     * @param possibleCommands these are the possible commands to change
+     * @return the response to send to the client/s
+     */
+    private ResponseToClient caseNoLeaderCards(List<Marble> marbles, Game game, ClientHandler client, List<String> possibleCommands){
+        // if the marbles selected converted to resources do not contains any resource (4 white marbles or 3 white and 1 red marbles)
+        if (marbles.stream().
+                allMatch(marble -> marble.equals(new WhiteMarble()) || marble.equals(new RedMarble()))){
+            // set the state of the game
+            client.getInterpreter().setMarblesConverted(game.convert(marbles));
+            // remove all the normal actions fro the possible commands
+            possibleCommands.removeAll(getNormalActions());
+            // add the possibility to end the turn
+            possibleCommands.add("end_turn");
+            sendBroadcastMarbleAction(client);
+            return buildResponse("action completed, any resource got added", possibleCommands);
+        }
+        else // if the marbles selected converted to resources contain a resource
+            return buildResponseToInsertInWarehouse(client.getInterpreter(), game, marbles);
+    }
+
+    /**
+     * this method handle the case in which a player have one leader card white marbles conversion
+     * active.
+     * in particular, it change every white marble of the list passed in input and
+     * it prepare the new response to send in order to make the client choose the
+     * shelves in which collect the resources chosen
+     * @param game ths is the game in which change the white marbles
+     * @param marbles these are the marbles selected from the column/row
+     * @param client this is the client from which get the buffers to change
      * @return the response to send to the client
      */
+    private ResponseToClient caseOneLeaderCard(Game game, List<Marble> marbles, ClientHandler client){
+        //noinspection StatementWithEmptyBody
+        while (game.changeWhiteMarble(marbles, 1));
+        return buildResponseToInsertInWarehouse(client.getInterpreter(), game, marbles);
+    }
 
+    /**
+     * this method handle the case in which a player have one leader card white marbles conversion
+     * active.
+     * in particular, store the possible commands into the previous ones, set the
+     * possible commands into the singleton list "choose_leaderCards", and return the
+     * response that allows the client to select how to convert every white marble chosen
+     * into a resource
+     * @param possibleCommands this is the list of possible commands to set
+     * @param previousPossibleCommands this is the list of previous possible commands in which
+     *                                 store the possible commands before setting them
+     * @param whiteMarbles this is the number of white marbles chosen
+     * @return the response that allows the player to select how to convert every white marble chosen
+     *         into a resource
+     */
+    private ResponseToClient caseTwoLeaderCards(List<String> possibleCommands,
+                                                List<String> previousPossibleCommands,
+                                                int whiteMarbles){
+        // set the previous possible commands
+        previousPossibleCommands.clear();
+        previousPossibleCommands.addAll(possibleCommands);
+        // set the possible commands
+        possibleCommands.clear();
+        possibleCommands.add("choose_leaderCards");
 
+        return new TwoLeaderWhiteMarblesResponse(whiteMarbles);
+    }
 }

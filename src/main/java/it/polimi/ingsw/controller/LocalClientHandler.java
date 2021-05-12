@@ -157,7 +157,7 @@ public class LocalClientHandler extends ClientHandler{
      * joined the lobby
      */
     @Override
-    protected List<ClientHandler> getClients() {
+    public List<ClientHandler> getClients() {
         return new ArrayList<>(Collections.singletonList(this));
     }
 

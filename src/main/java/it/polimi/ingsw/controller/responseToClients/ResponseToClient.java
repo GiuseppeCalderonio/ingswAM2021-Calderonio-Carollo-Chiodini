@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.responseToClients;
 
 import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.view.thinModelComponents.ThinLeaderCard;
 import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
 
 import java.util.ArrayList;
@@ -106,7 +107,7 @@ public class ResponseToClient {
         try {
             // get the thin player with the nickname desired
             return players.stream().
-                    filter(thinPlayer -> thinPlayer.getNickName().equals(nickname)).
+                    filter(thinPlayer -> thinPlayer.getNickname().equals(nickname)).
                     collect(Collectors.toList()).get(0);
         } catch (NullPointerException e){
             return null;
@@ -128,6 +129,19 @@ public class ResponseToClient {
      */
     public String getMessage() {
         return message;
+    }
+
+    /**
+     * this method hide the leader cards of a thin player, in fact the cards
+     * of a player different from the owner, when another player did not activate
+     * a leader card, should not be visible
+     * @param players these are the player with the leader cards to hide
+     */
+    protected void hideLeaderCards(List<ThinPlayer> players){
+        players.stream().
+                flatMap(player -> player.getThinLeaderCards().stream()).
+                filter(leaderCard -> !leaderCard.isActive()).
+                forEach(ThinLeaderCard::hide);
     }
 
 }

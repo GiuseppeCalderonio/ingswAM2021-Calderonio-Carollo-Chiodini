@@ -88,7 +88,7 @@ public class ShiftResourcesResponse extends ResponseToClient{
         List<ThinPlayer> players = new ArrayList<>(client.getOpponents());
         players.add(client.getMyself());
 
-        players.forEach(player -> player.setTrack(tracks1.get(player.getNickName())));
+        players.forEach(player -> player.setTrack(tracks1.get(player.getNickname())));
 
     }
 }
