@@ -83,7 +83,7 @@ public class ProductionCommand extends NormalActionCommand {
         if (!game.checkProduction(1) && !game.checkProduction(2) && !game.checkProduction(3))
             possibleCommands.remove("normal_production");
 
-        if (!game.checkProduction(4) || !game.checkProduction(5))
+        if (!game.checkProduction(4) && !game.checkProduction(5))
             possibleCommands.remove("leader_production");
         // if the possible command is only end_production
         return possibleCommands.equals(new ArrayList<>(Collections.singletonList("end_production")));

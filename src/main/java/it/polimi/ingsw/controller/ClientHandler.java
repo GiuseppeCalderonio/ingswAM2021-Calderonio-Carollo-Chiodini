@@ -396,7 +396,7 @@ public class ClientHandler {
         // the condition of ending a game are met
         }catch (EndGameException e){
             // send in broadcast the name of the winner and the personal victory points gained
-            sendInBroadcast(new ResponseToClient("The game finish, the winner is" + e.getMessage() + ", you gained :" + getGame().findPlayer(nickname).getVictoryPoints() + " victory points"));
+            sendInBroadcast(new ResponseToClient("The game finish, the winner is: " + e.getMessage() + ", he gained :" + getGame().findPlayer(nickname).getVictoryPoints() + " victory points"));
             // set the lobby to finished
             lobby.setGameFinished();
             return true;

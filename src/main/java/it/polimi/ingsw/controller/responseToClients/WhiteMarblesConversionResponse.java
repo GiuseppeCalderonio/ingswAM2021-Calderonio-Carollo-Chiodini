@@ -4,10 +4,7 @@ import it.polimi.ingsw.model.Resources.CollectionResources;
 import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.network.Client;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * this class represent the response to send when
@@ -32,7 +29,7 @@ public class WhiteMarblesConversionResponse extends ResponseToClient{
      */
     public WhiteMarblesConversionResponse(CollectionResources resources){
         super( "you gained " + resources.toString() + ", decide how to place them into the warehouse",
-        new ArrayList<>(Collections.singletonList("insert_in_warehouse")) );
+        new ArrayList<>(Arrays.asList("insert_in_warehouse", "shift_resources")) );
         this.gainedFromMarbleMarket = new ArrayList<>(new HashSet<>(resources.asList()));
     }
 

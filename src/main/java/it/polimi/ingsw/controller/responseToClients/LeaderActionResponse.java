@@ -7,6 +7,7 @@ import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.view.thinModelComponents.ThinLeaderCard;
 import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
 import it.polimi.ingsw.view.thinModelComponents.ThinTrack;
+import it.polimi.ingsw.view.thinModelComponents.ThinWarehouse;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +36,11 @@ public class LeaderActionResponse extends ResponseToClient{
     private final List<ThinLeaderCard> cards4;
 
     /**
+     * this attribute represent the thin warehouse to update
+     */
+    private final ThinWarehouse warehouse4;
+
+    /**
      * this constructor create the response starting from the client,
      * getting from him all the data needed and setting all of them.
      * it also hide the leader cards if the nickname of the actual player
@@ -49,6 +55,7 @@ public class LeaderActionResponse extends ResponseToClient{
         this.nickname4 = player.getNickname();
         this.track4 = new ThinTrack(player);
         this.cards4 = player.getPersonalLeaderCards().stream().map(LeaderCard::getThin).collect(Collectors.toList());
+        this.warehouse4 = new ThinWarehouse(player);
 
     }
 
@@ -71,6 +78,8 @@ public class LeaderActionResponse extends ResponseToClient{
         toChange.setTrack(track4);
 
         toChange.setLeaderCards(cards4.stream().map(ThinPlayer::recreate).collect(Collectors.toList()));
+
+        toChange.setWarehouse(warehouse4);
 
         client.show();
 
