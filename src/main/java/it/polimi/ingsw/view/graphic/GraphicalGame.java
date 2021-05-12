@@ -74,7 +74,7 @@ import java.util.List;
                     GraphicalPlayer opponent = new GraphicalPlayer(stream, opponents.get(0));
 
                     for(int i=0; i<=clientOwner.getHeight(); i++) {
-                        stream.addChar('║', relX+clientOwner.getWidth()+2, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+i, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
+                        stream.addChar('|', relX+clientOwner.getWidth()+2, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+i, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
                     }
                     opponent.draw(relX+clientOwner.getWidth()+4, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2);
 
@@ -88,19 +88,11 @@ import java.util.List;
                 GraphicalPlayer opponent1 = new GraphicalPlayer(stream, opponents.get(0));
                 GraphicalPlayer opponent2 = new GraphicalPlayer(stream, opponents.get(1));
 
-                for(int i=0; i<=clientOwner.getHeight(); i++) {
-                    stream.addChar('║', relX+clientOwner.getWidth()+2, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+i, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
-                }
-
-                opponent1.draw(relX+clientOwner.getWidth()+4, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2);
-
-                for(int i=0; i<=(clientOwner.getWidth()+1); i++) {
-                    stream.addChar('═', relX+i, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+clientOwner.getHeight()+1, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
-                }
-                stream.addChar('╝', relX+clientOwner.getWidth()+2, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+clientOwner.getHeight()+1, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
+                drawCorners(relX, relY, graphicalCardsMarket, graphicalFaithTrack, clientOwner, opponent1);
+                stream.addChar('+', relX+clientOwner.getWidth()+2, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+clientOwner.getHeight()+1, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
 
                 for(int i=3; i<=(clientOwner.getWidth()+1); i++) {
-                    stream.addChar('═', relX+clientOwner.getWidth()+i, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+clientOwner.getHeight()+1, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
+                    stream.addChar('-', relX+clientOwner.getWidth()+i, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+clientOwner.getHeight()+1, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
                 }
 
                opponent2.draw(relX, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+ clientOwner.getHeight()+2);
@@ -111,38 +103,35 @@ import java.util.List;
                 GraphicalPlayer opponent2 = new GraphicalPlayer(stream, opponents.get(1));
                 GraphicalPlayer opponent3 = new GraphicalPlayer(stream, opponents.get(2));
 
-                for(int i=0; i<=clientOwner.getHeight(); i++) {
-                    stream.addChar('║', relX+clientOwner.getWidth()+2, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+i, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
-                }
-
-                opponent1.draw(relX+clientOwner.getWidth()+4, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2);
-
-                for(int i=0; i<=(clientOwner.getWidth()+1); i++) {
-                    stream.addChar('═', relX+i, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+clientOwner.getHeight()+1, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
-                }
+                drawCorners(relX, relY, graphicalCardsMarket, graphicalFaithTrack, clientOwner, opponent1);
 
 
                 for(int i=3; i<=(clientOwner.getWidth()+1); i++) {
-                    stream.addChar('═', relX+clientOwner.getWidth()+i, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+clientOwner.getHeight()+1, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
+                    stream.addChar('-', relX+clientOwner.getWidth()+i, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+clientOwner.getHeight()+1, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
                 }
 
                 opponent2.draw(relX, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+ clientOwner.getHeight()+2);
 
                 for(int i=0; i<=(clientOwner.getHeight()+1); i++) {
-                    stream.addChar('║', relX+clientOwner.getWidth()+2, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+i+clientOwner.getHeight()+1, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
+                    stream.addChar('|', relX+clientOwner.getWidth()+2, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+i+clientOwner.getHeight()+1, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
                 }
 
                 opponent3.draw(relX+clientOwner.getWidth()+4, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight()+clientOwner.getHeight()+4);
 
             }
-
-
-
-
         }
 
+        private void drawCorners(int relX, int relY, GraphicalCardsMarket graphicalCardsMarket, GraphicalFaithTrack graphicalFaithTrack, GraphicalPlayer clientOwner, GraphicalPlayer opponent1) {
+            for(int i=0; i<=clientOwner.getHeight(); i++) {
+                stream.addChar('|', relX+clientOwner.getWidth()+2, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+i, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
+            }
 
+            opponent1.draw(relX+clientOwner.getWidth()+4, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2);
 
-}
+            for(int i=0; i<=(clientOwner.getWidth()+1); i++) {
+                stream.addChar('-', relX+i, relY+ graphicalCardsMarket.getHeight()+ graphicalFaithTrack.getHeight() +2+clientOwner.getHeight()+1, ForeColor.ANSI_BRIGHT_GREEN, backgroundColor);
+            }
+        }
+    }
 
 

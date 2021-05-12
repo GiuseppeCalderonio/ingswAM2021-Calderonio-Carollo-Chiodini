@@ -12,6 +12,7 @@ import it.polimi.ingsw.model.Marble.Marble;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,7 +66,8 @@ public abstract class NormalActionCommand implements Command {
         interpreter.getPossibleCommands().clear();
         interpreter.getPossibleCommands().add("insert_in_warehouse");
         interpreter.setMarblesConverted(game.convert(marbles));
-        interpreter.setResourceSet(interpreter.getMarblesConverted().asList().stream().distinct().collect(Collectors.toList()));
+        interpreter.setResourceSet(new ArrayList<>(new HashSet<>(interpreter.getMarblesConverted().asList())));
+        //interpreter.setResourceSet(interpreter.getMarblesConverted().asList().stream().distinct().collect(Collectors.toList()));
         return new WhiteMarblesConversionResponse(interpreter.getMarblesConverted());
     }
 
