@@ -69,19 +69,6 @@ public class ResourcesRequired implements LeaderCardRequirements {
     @Override
     public List<BackColor> colors() {
         return new ArrayList<>(Collections.singletonList(resources.asList().get(0).getColor()));
-        /*
-        List<BackColor> list = new ArrayList<>();
-        list.add(resources.asList().get(0).getColor());
-        if (resources.isCompatible(new Coin()))
-            list.add(BackColor.ANSI_BG_YELLOW);
-        else if (resources.isCompatible(new Shield()))
-            list.add(BackColor.ANSI_BRIGHT_BG_BLUE);
-        else if (resources.isCompatible(new Stone()))
-            list.add(BackColor.ANSI_GREY);
-        else list.add(BackColor.ANSI_BG_PURPLE);
-        return list;
-
-         */
 
     }
 }
