@@ -374,9 +374,7 @@ public class ClientHandler {
             System.err.println("the client " + socket.toString() + " disconnected, message: " + e.getMessage() + ",socket : " + socket + "method : readMessage in ClientHandler");
             return false;
         }
-
         Command command;
-
         try {
             // translate the string to a command
             command = gson.fromJson(line, Command.class); // convert the message in a processable command
@@ -387,29 +385,23 @@ public class ClientHandler {
             return true;
         }
         try {
-
             // process the command and send the message or the messages to the players
             commandManager.processCommand(command);
-
             return true;
-
             // if one of the parameters of the command does not respect the preconditions
         }catch (NullPointerException | IndexOutOfBoundsException e){
             System.err.println(e.getMessage());
             send(new ResponseToClient("Something gone wrong, you've probably chosen wrong inputs ", getPossibleCommands()));
-
             return true;
         // the condition of ending a game are met
         }catch (EndGameException e){
-
-            sendInBroadcast(new ResponseToClient("The game finish, the winner is" + e.getMessage()));
-
+            // send in broadcast the name of the winner and the personal victory points gained
+            sendInBroadcast(new ResponseToClient("The game finish, the winner is" + e.getMessage() + ", you gained :" + getGame().findPlayer(nickname).getVictoryPoints() + " victory points"));
+            // set the lobby to finished
             lobby.setGameFinished();
-
             return true;
-
         } catch (QuitException e){ // quit the game if a player wat to exit
-
+            // exit from the loop
             return false;
         }
     }

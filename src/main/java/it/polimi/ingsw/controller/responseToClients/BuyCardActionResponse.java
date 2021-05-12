@@ -89,7 +89,7 @@ public class BuyCardActionResponse extends ResponseToClient{
         toChange.setStrongbox(strongbox6);
         toChange.setWarehouse(warehouse6);
         toChange.setProductionPower(productionPower);
-        client.getCardsMarket()[level6 - 1][color6.getIndex()] = card6;
+        client.setCard(level6, color6, card6);
         client.show();
 
         super.updateClient(client);

@@ -676,4 +676,8 @@ public class Client implements Runnable {
     public DevelopmentCard[][] getCardsMarket() {
         return cardsMarket;
     }
+
+    public void setCard(int level, CardColor color, DevelopmentCard card){
+        cardsMarket[2 - (level - 1)][color.getIndex()] = card;
+    }
 }

@@ -80,20 +80,11 @@ public class SelectResourcesFromWarehouseCommand extends NormalActionCommand {
         possibleCommands.removeAll(getNormalActions());
         // add end turn to the possible commands
         possibleCommands.add("end_turn");
-
         // send to every player the new game state
         client.sendInBroadcast(new BuyCardActionResponse(client,
                 game.getSetOfCard().getCard(card.getLevel(), card.getColor()),
                 card.getLevel(),
                 card.getColor()));
-        //sendBroadcastCardAction(client.getClients());
         return buildResponse("card bought correctly", possibleCommands);
     }
-
-    /*
-      this method send to every client of the list in input a change of the game state.
-      in particular, it send the new cards market, and the new state of the
-      players
-      @param clients these are the clients to notify of the model's change
-     */
 }
