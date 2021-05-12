@@ -120,12 +120,7 @@ public class ClientHandler {
 
 
         while (play.get()) {
-            //try {
                 play.set(readMessage());
-            //} catch (Exception e){
-            //    System.err.println("A generic error occurs :" + e.getMessage());
-            //    play.set(false);
-            //}
         }
 
         // closing stream and sockets, and eventually restart a new game kicking off every player
@@ -338,13 +333,22 @@ public class ClientHandler {
      * this method send a message to the client associated.
      * if the class is of dynamic type LocalClientHandler,
      * the method just update the client with the method
-     * message.updateClient(client)
+     * message.updateClient(client).
+     * if the parsing of the message fails, the method send
+     * a broadcast disconnection (this thing should never happen)
      * @param message this is the message to send
      * @see LocalClientHandler
      */
     public synchronized void send(ResponseToClient message){
-        out.println(gson.toJson(message, ResponseToClient.class));
-        out.flush();
+        try {
+            out.println(gson.toJson(message, ResponseToClient.class));
+            out.flush();
+        } catch (JsonParseException e){
+            System.err.println("Error json parser exception: " + e.getMessage() + ", in method send, class ClientHandler");
+            e.printStackTrace();
+            setPlayFalse();
+        }
+
     }
 
     /**

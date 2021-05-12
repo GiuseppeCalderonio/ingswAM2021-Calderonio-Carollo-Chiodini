@@ -124,6 +124,7 @@ public class PersonalGsonBuilder {
                 RuntimeTypeAdapterFactory.of(ResponseToClient.class, "type").
                         registerSubtype(ResponseToClient.class, "ResponseToClient").
                         registerSubtype(BuyCardActionResponse.class, "BuyCardActionResponse").
+                        registerSubtype(EndProductionResponse.class, "EndProductionResponse").
                         registerSubtype(EndTurnSingleGameResponse.class, "EndTurnSingleGameResponse").
                         registerSubtype(InitialisingResponse.class, "InitialisingResponse").
                         registerSubtype(LeaderActionResponse.class, "LeaderActionResponse").
