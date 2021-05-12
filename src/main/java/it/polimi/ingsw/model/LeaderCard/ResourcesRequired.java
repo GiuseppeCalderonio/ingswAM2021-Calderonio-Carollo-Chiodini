@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.Resources.*;
 import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -67,7 +68,10 @@ public class ResourcesRequired implements LeaderCardRequirements {
      */
     @Override
     public List<BackColor> colors() {
+        return new ArrayList<>(Collections.singletonList(resources.asList().get(0).getColor()));
+        /*
         List<BackColor> list = new ArrayList<>();
+        list.add(resources.asList().get(0).getColor());
         if (resources.isCompatible(new Coin()))
             list.add(BackColor.ANSI_BG_YELLOW);
         else if (resources.isCompatible(new Shield()))
@@ -76,5 +80,8 @@ public class ResourcesRequired implements LeaderCardRequirements {
             list.add(BackColor.ANSI_GREY);
         else list.add(BackColor.ANSI_BG_PURPLE);
         return list;
+
+         */
+
     }
 }
