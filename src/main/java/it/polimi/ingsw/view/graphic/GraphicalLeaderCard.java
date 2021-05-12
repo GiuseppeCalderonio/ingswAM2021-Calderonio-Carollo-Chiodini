@@ -62,10 +62,18 @@ public class GraphicalLeaderCard implements CharFigure {
         //stream.addChar(leaderCard.identifier(), midPointCard, relY, cardColor); //resource associated
         stream.addString(relX, relY, leaderCard.identifier(), cardColor);
         stream.addString(midPointCard, height + relY, String.valueOf(leaderCard.getVictoryPoints()), ForeColor.ANSI_BLACK, BackColor.ANSI_BG_WHITE); // victory points
+        if (leaderCard.isActive())
+            stream.addChar('A', relX, height + relY, ForeColor.ANSI_BLACK, BackColor.ANSI_BG_WHITE);
+        else stream.addChar('U', relX, height + relY, ForeColor.ANSI_BLACK, BackColor.ANSI_BG_WHITE);
         stream.addString(relX,  relY + 1, leaderCard.getRequirements().identifier(),ForeColor.ANSI_BLACK, BackColor.ANSI_BG_WHITE);
         stream.addColor(relX+4, relY + 1, leaderCard.getRequirements().colors().get(0));
-        if (leaderCard.getRequirements().colors().size()>1)
+        if (leaderCard.getRequirements().colors().size()==2)
             stream.addColor(relX + 5, relY + 1, leaderCard.getRequirements().colors().get(1));
+        if (leaderCard.getRequirements().colors().size()==3) {
+            stream.addChar('2',relX+4, relY + 1, ForeColor.ANSI_BLACK, leaderCard.getRequirements().colors().get(0));
+            stream.addColor(relX + 5, relY + 1, leaderCard.getRequirements().colors().get(2));
+        }
+
 
     }
 }

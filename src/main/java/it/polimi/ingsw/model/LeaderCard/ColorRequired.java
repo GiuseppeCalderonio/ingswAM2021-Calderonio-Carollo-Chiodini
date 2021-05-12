@@ -83,6 +83,16 @@ public class ColorRequired implements LeaderCardRequirements {
             list.add(BackColor.ANSI_BG_PURPLE);
         else list.add(BackColor.ANSI_BG_YELLOW);
 
+        if (colors.size()==3) {
+            if (colors.get(2).equals(CardColor.BLUE))
+                list.add(BackColor.ANSI_BRIGHT_BG_BLUE);
+            else if (colors.get(2).equals(CardColor.GREEN))
+                list.add(BackColor.ANSI_BRIGHT_BG_GREEN);
+            else if (colors.get(2).equals(CardColor.PURPLE))
+                list.add(BackColor.ANSI_BG_PURPLE);
+            else list.add(BackColor.ANSI_BG_YELLOW);
+        }
+
         return list;
 
     }
