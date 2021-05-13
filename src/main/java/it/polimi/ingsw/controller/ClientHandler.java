@@ -391,6 +391,7 @@ public class ClientHandler {
             // if one of the parameters of the command does not respect the preconditions
         }catch (NullPointerException | IndexOutOfBoundsException e){
             System.err.println(e.getMessage());
+            e.printStackTrace();
             send(new ResponseToClient("Something gone wrong, you've probably chosen wrong inputs ", getPossibleCommands()));
             return true;
         // the condition of ending a game are met
