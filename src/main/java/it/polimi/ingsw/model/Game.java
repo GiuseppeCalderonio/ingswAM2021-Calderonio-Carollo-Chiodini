@@ -871,7 +871,7 @@ public class Game {
      */
     protected synchronized void handleVaticanReport() throws EndGameException {
         int i=0;
-        while((vaticanReports[i]) && (i < 3)) i++;
+        while((i < 3) && (vaticanReports[i])) i++;
         if (i > 2) return;
         i++;
         for(RealPlayer p : players){
