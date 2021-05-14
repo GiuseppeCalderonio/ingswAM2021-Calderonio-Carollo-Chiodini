@@ -47,49 +47,6 @@ public class CharStream {
         return height;
     }
 
-    /**
-     * This method returns the char saved on the stream's position X, Y
-     * @param x X coord
-     * @param y Y param
-     * @return an char.
-     */
-    public char getChar(int x, int y){
-        if (x < 0 || x >= width || y < 0 || y >= height) return 0;
-        return content[y][x];
-    }
-
-    /**
-     * This method add the given char and its background color to the stream's position X, Y,
-     * @param content is the char to add.
-     * @param x is the coordinate X.
-     * @param y is the coordinate Y.
-     * @param backColor is the color of the background.
-     */
-    public void addChar(char content,int x, int y,  BackColor backColor){
-        addChar(content, x , y , null, backColor);
-    }
-
-    /**
-     * This method add the given char and its color to the stream's position X, Y,
-     * @param content is the char to add.
-     * @param x is the coordinate X.
-     * @param y is the coordinate Y.
-     * @param foreColor is the color of the content.
-     */
-    public void addChar(char content,int x, int y,  ForeColor foreColor){
-        addChar(content, x , y , foreColor, null);
-    }
-
-    /**
-     * This method add the given char to the stream's position X, Y,
-     * @param content is the char to add.
-     * @param x is the coordinate X.
-     * @param y is the coordinate Y.
-     */
-    public void addChar(char content,int x, int y){
-        addChar(content, x , y , null, null);
-    }
-
 
     /**
      * This method add the given char, its color and background color to the stream's position X, Y,
