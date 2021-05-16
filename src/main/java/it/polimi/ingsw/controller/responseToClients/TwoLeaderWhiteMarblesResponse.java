@@ -26,8 +26,7 @@ public class TwoLeaderWhiteMarblesResponse extends ResponseToClient{
      * @param whiteMarbles this is the number of white marbles chosen
      */
     public TwoLeaderWhiteMarblesResponse(int whiteMarbles){
-        super("you own 2 white marble leader cards , choose for each white marble how to convert it",
-                new ArrayList<>(Collections.singletonList("choose_leaderCards")));
+        super(Status.ACCEPTED);
         this.whiteMarbles = whiteMarbles;
     }
 

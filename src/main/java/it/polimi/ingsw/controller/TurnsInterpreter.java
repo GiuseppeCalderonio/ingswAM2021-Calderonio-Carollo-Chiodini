@@ -1,7 +1,9 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
+import it.polimi.ingsw.controller.responseToClients.Status;
 import it.polimi.ingsw.model.DevelopmentCards.CardColor;
 import it.polimi.ingsw.model.EndGameException;
 import it.polimi.ingsw.model.Marble.Marble;
@@ -24,12 +26,12 @@ public class TurnsInterpreter implements CommandInterpreter {
     /**
      * this attribute represent the possible commands in a specific phase of game
      */
-    private List<String> possibleCommands = new ArrayList<>();
+    private List<CommandName> possibleCommands = new ArrayList<>();
 
     /**
      * this attribute represent the previous possible commands in a specific phase of game
      */
-    private List<String> previousPossibleCommands = new ArrayList<>();
+    private List<CommandName> previousPossibleCommands = new ArrayList<>();
 
     /**
      * this attribute represent a buffer that store the marbles when a player
@@ -76,18 +78,13 @@ public class TurnsInterpreter implements CommandInterpreter {
     public TurnsInterpreter(ClientHandler client) {
         if (client.isYourTurn() ){
             possibleCommands = new ArrayList<>(
-                    Arrays.asList("shift_resources",
-                            "choose_marbles",
-                            "production",
-                            "buy_card",
-                            "leader_action"));
+                    Arrays.asList(CommandName.SHIFT_RESOURCES,
+                            CommandName.CHOOSE_MARBLES,
+                            CommandName.PRODUCTION,
+                            CommandName.BUY_CARD,
+                            CommandName.LEADER_ACTION));
 
-            previousPossibleCommands = new ArrayList<>(
-                    Arrays.asList("shift_resources",
-                            "choose_marbles",
-                            "production",
-                            "buy_card",
-                            "leader_action"));
+            previousPossibleCommands = new ArrayList<>(possibleCommands);
         }
     }
 
@@ -104,15 +101,14 @@ public class TurnsInterpreter implements CommandInterpreter {
      */
     @Override
     public ResponseToClient executeCommand(Command command, ClientHandler client) throws EndGameException, QuitException{
-        if (command.getCmd().equals("quit"))
+        if (command.getCmd().equals(CommandName.QUIT))
             throw new QuitException();
         // if is not your turn
         if (!client.isYourTurn())
-            return new ResponseToClient("is not your turn!", possibleCommands);
+            return new ResponseToClient(Status.WRONG_TURN);
         // if the command is not a possible command in this phase of game
         if (!possibleCommands.contains(command.getCmd()))
-            return new ResponseToClient("this command is not available in this phase of the game",
-                    possibleCommands);
+            return new ResponseToClient(Status.REFUSED);
         // execute the command based on the dynamic type of it
         return command.executeCommand(possibleCommands, client, previousPossibleCommands);
     }
@@ -123,7 +119,7 @@ public class TurnsInterpreter implements CommandInterpreter {
      * @return the possible command for a player according with the rules of the game
      */
     @Override
-    public List<String> getPossibleCommands() {
+    public List<CommandName> getPossibleCommands() {
 
         return possibleCommands;
     }

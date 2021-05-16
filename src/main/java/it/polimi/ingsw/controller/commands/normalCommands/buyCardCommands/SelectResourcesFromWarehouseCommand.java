@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.commands.normalCommands.NormalActionCommand;
 import it.polimi.ingsw.controller.responseToClients.BuyCardActionResponse;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
@@ -40,8 +41,32 @@ public class SelectResourcesFromWarehouseCommand extends NormalActionCommand {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "select_resources_from_warehouse";
+    public CommandName getCmd() {
+        return CommandName.SELECT_RESOURCES_FROM_WAREHOUSE;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "the resources selected doesn't cover the cost of the card";
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return "card bought";
     }
 
     /**
@@ -58,7 +83,7 @@ public class SelectResourcesFromWarehouseCommand extends NormalActionCommand {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) {
 
         Game game = client.getGame();
 
@@ -69,7 +94,7 @@ public class SelectResourcesFromWarehouseCommand extends NormalActionCommand {
         // if the warehouse resources to buy the card are not compatible with the
         // resources storage state of the player
         if (!game.checkWarehouseResources(card, toPayFromWarehouse))
-            return buildResponse("error,you have selected an incorrect number of resources", possibleCommands);
+            return errorMessage();
 
         // buy the card with the resources chosen
         game.buyCard(card.getLevel(),
@@ -79,12 +104,12 @@ public class SelectResourcesFromWarehouseCommand extends NormalActionCommand {
         // delete any normal action from the possible commands
         possibleCommands.removeAll(getNormalActions());
         // add end turn to the possible commands
-        possibleCommands.add("end_turn");
+        possibleCommands.add(CommandName.END_TURN);
         // send to every player the new game state
         client.sendInBroadcast(new BuyCardActionResponse(client,
                 game.getSetOfCard().getCard(card.getLevel(), card.getColor()),
                 card.getLevel(),
                 card.getColor()));
-        return buildResponse("card bought correctly", possibleCommands);
+        return acceptedMessage();
     }
 }

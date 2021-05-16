@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.commands.normalCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.controller.responseToClients.ShiftResourcesResponse;
 import it.polimi.ingsw.model.Game;
@@ -42,8 +43,32 @@ public class ShiftResourcesCommand extends NormalActionCommand {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "shift_resources";
+    public CommandName getCmd() {
+        return CommandName.SHIFT_RESOURCES;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "you can't do the shift";
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return "shift done correctly";
     }
 
     /**
@@ -59,19 +84,19 @@ public class ShiftResourcesCommand extends NormalActionCommand {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) {
         // if on of the shelves selected doesn't exist
         Game game = client.getGame();
         if (!(game.checkShelfSelected(source) &&
                 game.checkShelfSelected(destination)))
-            return buildResponse("error, one of the shelf selected does not exist", possibleCommands);
+            return errorMessage();
         // if a shift can't be done
         if (!(game.shiftResources(source, destination)))
-            return buildResponse("error, you can't do this kind of shift", possibleCommands);
+            return errorMessage();
         // send to every player the new game state
         client.sendInBroadcast(new ShiftResourcesResponse(client));
         //sendBroadcastChangePlayerState(client.getClients());
         // send that string to the client
-        return buildResponse("ok, shift done correctly", possibleCommands);
+        return acceptedMessage();
     }
 }

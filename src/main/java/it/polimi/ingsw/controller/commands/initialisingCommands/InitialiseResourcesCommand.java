@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.commands.initialisingCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Resources.CollectionResources;
@@ -34,8 +35,32 @@ public class InitialiseResourcesCommand implements Command {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "initialise_resources";
+    public CommandName getCmd() {
+        return CommandName.INITIALISE_RESOURCES;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "initialising of resources failed";
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return "resources initialised correctly, if is your turn start, wait otherwise";
     }
 
     /**
@@ -51,7 +76,7 @@ public class InitialiseResourcesCommand implements Command {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands){
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands){
         // get the game
         Game game = client.getGame();
         // get the first leader card from the buffer
@@ -60,12 +85,12 @@ public class InitialiseResourcesCommand implements Command {
         int secondCard = client.getInterpreter().getSecondLeaderCard();
         // if the resources chosen are not compatible with the player position
         if (!game.checkInitialising(client.getNickname(), initialisingResources))
-            return buildResponse("you have chosen too much or not anymore resources", possibleCommands);
+            return errorMessage();
         // remove from the possible commands the actual one
-        possibleCommands.remove("initialise_resources");
+        possibleCommands.remove(CommandName.INITIALISE_RESOURCES);
         // initialise the player assigning him the resources and discarding the leader cards chosen
         game.initialiseGame(client.getNickname(), initialisingResources, firstCard ,secondCard );
         // if the game got created correctly
-        return buildResponse("ok, now wait that everyone decides his resources and leader cards, then the game will start", possibleCommands);
+        return acceptedMessage();
     }
 }

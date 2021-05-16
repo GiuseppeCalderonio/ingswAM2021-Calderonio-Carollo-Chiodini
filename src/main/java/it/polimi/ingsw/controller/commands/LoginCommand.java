@@ -32,8 +32,32 @@ public class LoginCommand implements Command {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "login";
+    public CommandName getCmd() {
+        return CommandName.LOGIN;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "login failed";
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return "login completed, if you can see your leader cards, discard 2 of them, wait otherwise for other players to join";
     }
 
     /**
@@ -49,24 +73,21 @@ public class LoginCommand implements Command {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands){
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands){
         // if the nickname is the empty string
         if (nickname.equals(""))
-            return buildResponse("the nickname can't be the empty string", possibleCommands);
+            return errorMessage();
         // if exist another client in the game that have selected the same nickname
         if (client.getNicknames().contains(nickname))
-            return buildResponse("nickname selected is already taken", possibleCommands);
+            return errorMessage();
         // add the nickname to the list of nicknames
         client.addNickname(nickname);
         // set the nickname
         client.setNickname(nickname);
         // remove the login command from the possible ones
-        possibleCommands.remove("login");
-        // if the game is a single one
-        if (client.getNumberOfPlayers() == 1){
-            return buildResponseIgnoringCommands("login completed successfully");
-        }
-        // else
-        return buildResponse("login completed successfully, wait for other players to join", possibleCommands);
+        possibleCommands.remove(CommandName.LOGIN);
+
+        return acceptedMessage();
+
     }
 }

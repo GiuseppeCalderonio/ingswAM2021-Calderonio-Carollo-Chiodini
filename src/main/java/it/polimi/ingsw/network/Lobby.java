@@ -6,13 +6,11 @@ import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.model.SingleGame.SingleGame;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -28,7 +26,7 @@ public class Lobby implements Runnable {
      * this attribute represent a list of every thread associated with the clients
      * that are playing the same game
      */
-    private List<ClientHandler> clients = Collections.synchronizedList(new ArrayList<>());
+    private List<ClientHandler> clients = new ArrayList<>();
 
     /**
      * this attribute represent the game of the lobby in common with every player
@@ -39,12 +37,12 @@ public class Lobby implements Runnable {
      * this attribute represent a list (ordered once the game starts) of
      * the players nicknames
      */
-    private List<String> nicknames = Collections.synchronizedList(new ArrayList<>());
+    private List<String> nicknames = new ArrayList<>();
 
     /**
      * this attribute represent the number of players of the game
      */
-    private final AtomicInteger numberOfPlayers;
+    private final int numberOfPlayers;
 
     /**
      * this attribute indicates if a game finished.
@@ -66,7 +64,10 @@ public class Lobby implements Runnable {
      * @param numberOfPlayers this is the number of players of the game to set
      */
     public Lobby(int numberOfPlayers){
-        this.numberOfPlayers = new AtomicInteger(numberOfPlayers);
+        this.numberOfPlayers = numberOfPlayers;
+        // create a thread for the ping
+        Thread ping = new Thread(this);
+        ping.start();
     }
 
     /**
@@ -74,8 +75,12 @@ public class Lobby implements Runnable {
      * this method have to be called when a client want to play a game with the same
      * number of players of the lobby and the game isn't started yet
      * @param client this attribute represent the client to add
+     * @throws LobbyFinishedException when the attribute gameIsFinished is true
      */
-    public void addClient(ClientHandler client){
+    public void addClient(ClientHandler client) throws LobbyFinishedException{
+        if (gameIsFinished.get()){
+            throw new LobbyFinishedException();
+        }
         clients.add(client);
     }
 
@@ -155,7 +160,7 @@ public class Lobby implements Runnable {
      * @return the number of players of the game
      */
     public int getNumberOfPlayers(){
-        return numberOfPlayers.get();
+        return numberOfPlayers;
     }
 
     /**
@@ -164,7 +169,7 @@ public class Lobby implements Runnable {
      * and this method return this
      * @return the list of clients that have joined the lobby
      */
-    public List<ClientHandler> getClients() {
+    public synchronized List<ClientHandler> getClients() {
         return clients;
     }
 
@@ -182,7 +187,7 @@ public class Lobby implements Runnable {
                 //i++;
             }
         }
-        clients = Collections.synchronizedList(newClients);
+        clients = newClients;
     }
 
     /**
@@ -222,8 +227,11 @@ public class Lobby implements Runnable {
      * in particular, it send a broadcast ping message, that should be followed with a ping response
      * in order to stimulate the in.readLine and reset the timeout of the socket
      */
-    public synchronized void ping() {
-        clients.forEach(client -> client.send(new PingResponse()));
+    public void ping() {
+        synchronized (this){
+            clients.forEach(client -> client.send(new PingResponse()));
+        }
+
     }
 
     /**
@@ -240,26 +248,21 @@ public class Lobby implements Runnable {
     @Override
     public void run() {
         try{
-            while (true){
-                TimeUnit.SECONDS.sleep(2);
-                ping();
-                if (clients.size() == 0)
-                    setGameFinished();
 
-                if (isGameFinished())
+            TimeUnit.SECONDS.sleep(2);
+
+            while (true){
+
+                TimeUnit.SECONDS.sleep(1);
+                //TimeUnit.NANOSECONDS.sleep(1);
+                ping();
+
+                if (clients.size() == 0)
                     return;
             }
         } catch ( // possible exceptions handled
-                InterruptedException e
-        ){
-            System.err.println("Ping error, a client crushed, message : " + e.getMessage() + ", class : Lobby ");
-            try {
-                clients.get(0).sendBroadcastDisconnection();
-            } catch (
-                    IOException | IndexOutOfBoundsException ex) {
-                    System.err.println("Ping error, a client crushed, message : " + ex.getMessage() + ", class : Lobby ");
-                    ex.printStackTrace();
-                }
+                InterruptedException e){
+            e.printStackTrace();
         }
     }
 }

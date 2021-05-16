@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.commands.normalCommands.NormalActionCommand;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.controller.responseToClients.TwoLeaderWhiteMarblesResponse;
@@ -49,8 +50,32 @@ public class ChooseMarblesCommand extends NormalActionCommand {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "choose_marbles";
+    public CommandName getCmd() {
+        return CommandName.CHOOSE_MARBLES;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "you can't select this resources";
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return "ok, now decide how to place the resources in the warehouse, or do a shift, or decide how to convert white marbles";
     }
 
     /**
@@ -66,15 +91,15 @@ public class ChooseMarblesCommand extends NormalActionCommand {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) {
         Game game = client.getGame();
         List<Marble> marbles = client.getInterpreter().getMarbles();
         // if the parameters are not correct
         if (!dimension.equals("row") && !dimension.equals("column"))
-            return buildResponse("the dimension chosen is not correct, it should be \"row\" or \"column\" ", possibleCommands);
+            return errorMessage();
         // if the indexes are not correct
         if (!checkDimension())
-            return buildResponse("the index is not correct", possibleCommands);
+            return errorMessage();
 
         // select the marbles from the market and shift it depending on the input
         marbles = shiftMarket(game, marbles);
@@ -149,7 +174,7 @@ public class ChooseMarblesCommand extends NormalActionCommand {
      * @param possibleCommands these are the possible commands to change
      * @return the response to send to the client/s
      */
-    private ResponseToClient caseNoLeaderCards(List<Marble> marbles, Game game, ClientHandler client, List<String> possibleCommands){
+    private ResponseToClient caseNoLeaderCards(List<Marble> marbles, Game game, ClientHandler client, List<CommandName> possibleCommands){
         // if the marbles selected converted to resources do not contains any resource (4 white marbles or 3 white and 1 red marbles)
         if (marbles.stream().
                 allMatch(marble -> marble.equals(new WhiteMarble()) || marble.equals(new RedMarble()))){
@@ -158,9 +183,9 @@ public class ChooseMarblesCommand extends NormalActionCommand {
             // remove all the normal actions fro the possible commands
             possibleCommands.removeAll(getNormalActions());
             // add the possibility to end the turn
-            possibleCommands.add("end_turn");
+            possibleCommands.add(CommandName.END_TURN);
             sendBroadcastMarbleAction(client);
-            return buildResponse("action completed, any resource got added", possibleCommands);
+            return acceptedMessage();
         }
         else // if the marbles selected converted to resources contain a resource
             return buildResponseToInsertInWarehouse(client.getInterpreter(), game, marbles);
@@ -197,15 +222,15 @@ public class ChooseMarblesCommand extends NormalActionCommand {
      * @return the response that allows the player to select how to convert every white marble chosen
      *         into a resource
      */
-    private ResponseToClient caseTwoLeaderCards(List<String> possibleCommands,
-                                                List<String> previousPossibleCommands,
+    private ResponseToClient caseTwoLeaderCards(List<CommandName> possibleCommands,
+                                                List<CommandName> previousPossibleCommands,
                                                 int whiteMarbles){
         // set the previous possible commands
         previousPossibleCommands.clear();
         previousPossibleCommands.addAll(possibleCommands);
         // set the possible commands
         possibleCommands.clear();
-        possibleCommands.add("choose_leaderCards");
+        possibleCommands.add(CommandName.CHOOSE_LEADER_CARDS);
 
         return new TwoLeaderWhiteMarblesResponse(whiteMarbles);
     }

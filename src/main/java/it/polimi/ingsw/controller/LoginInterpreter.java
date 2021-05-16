@@ -1,7 +1,9 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
+import it.polimi.ingsw.controller.responseToClients.Status;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +20,7 @@ public class LoginInterpreter implements CommandInterpreter {
     /**
      * this attribute represent the possible commands
      */
-    final List<String> possibleCommands = new ArrayList<>(Collections.singletonList("login"));
+    final List<CommandName> possibleCommands = new ArrayList<>(Collections.singletonList(CommandName.LOGIN));
     
     /**
      * this method execute the command given in input, returning a code that will
@@ -32,11 +34,10 @@ public class LoginInterpreter implements CommandInterpreter {
      */
     @Override
     public ResponseToClient executeCommand(Command command, ClientHandler client) {
-        if (command.getCmd().equals("quit"))
+        if (command.getCmd().equals(CommandName.QUIT))
             throw new QuitException();
         if (!possibleCommands.contains(command.getCmd()))
-            return new ResponseToClient("this command is not available in this phase of the game",
-            possibleCommands);
+            return new ResponseToClient(Status.REFUSED);
 
         return command.executeCommand(possibleCommands, client, new ArrayList<>() );
     }
@@ -46,7 +47,7 @@ public class LoginInterpreter implements CommandInterpreter {
      * according with the rules of the game
      * @return the possible command for a player according with the rules of the game
      */
-    public List<String> getPossibleCommands() {
+    public List<CommandName> getPossibleCommands() {
         return possibleCommands;
     }
 

@@ -72,7 +72,7 @@ public class LeaderActionResponse extends ResponseToClient{
 
         ThinPlayer toChange = getPlayerToChange(client, nickname4);
 
-        if (!nickname4.equals(client.getMyself().getNickname()))
+        if (!nickname4.equals(client.getGame().getMyself().getNickname()))
             cards4.stream().filter(card -> !card.isActive()).forEach(ThinLeaderCard::hide);
 
         toChange.setTrack(track4);

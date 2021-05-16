@@ -28,8 +28,7 @@ public class WhiteMarblesConversionResponse extends ResponseToClient{
      * @param resources these are the resources gained
      */
     public WhiteMarblesConversionResponse(CollectionResources resources){
-        super( "you gained " + resources.toString() + ", decide how to place them into the warehouse",
-        new ArrayList<>(Arrays.asList("insert_in_warehouse", "shift_resources")) );
+        super( Status.ACCEPTED);
         this.gainedFromMarbleMarket = new ArrayList<>(new HashSet<>(resources.asList()));
     }
 

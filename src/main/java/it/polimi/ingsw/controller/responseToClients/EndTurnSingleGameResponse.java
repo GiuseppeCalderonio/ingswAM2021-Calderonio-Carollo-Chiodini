@@ -54,9 +54,9 @@ public class EndTurnSingleGameResponse extends ResponseToClient{
     @Override
     public void updateClient(Client client) {
 
-        client.setCardsMarket(cardsMarket5);
-        client.setSoloToken(token5);
-        client.getOpponents().get(0).setTrack(track5);
+        client.getGame().setCardsMarket(cardsMarket5);
+        client.getGame().setSoloToken(token5);
+        client.getGame().getOpponents().get(0).setTrack(track5);
         client.show();
 
         super.updateClient(client);

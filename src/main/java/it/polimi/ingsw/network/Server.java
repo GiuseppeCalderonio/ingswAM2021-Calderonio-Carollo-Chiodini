@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
  * assigned to a thread that will run in the class waiting room, and from
  * there the communication will start
  */
-public class MultiEchoServer {
+public class Server {
 
     /**
      * this attribute represent the port of the server
@@ -23,7 +23,7 @@ public class MultiEchoServer {
      * this constructor create the server setting the port
      * @param port this is the port in which the server will be reachable
      */
-    public MultiEchoServer(int port) {
+    public Server(int port) {
         this.port = port;
     }
 
@@ -62,7 +62,7 @@ public class MultiEchoServer {
      * @param args these are the arguments of the main, containing the port pf the server
      */
     public static void main(String[] args) {
-        MultiEchoServer echoServer = new MultiEchoServer(Integer.parseInt(args[0]));
-        echoServer.startServer();
+        Server Server = new Server(Integer.parseInt(args[0]));
+        Server.startServer();
     }
 }

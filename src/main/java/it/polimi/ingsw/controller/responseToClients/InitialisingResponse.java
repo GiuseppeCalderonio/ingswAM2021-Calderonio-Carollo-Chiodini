@@ -43,8 +43,7 @@ public class InitialisingResponse extends ResponseToClient{
      */
     public InitialisingResponse(ClientHandler client, int position) {
         // create a new response to send to the client setting the possible commands
-        super("the game initialization start! You are the " + position + " decide 2 different leader cards to discard",
-                new ArrayList<>(Collections.singletonList("initialise_leaderCards")));
+        super(Status.ACCEPTED);
         // get the leader cards of the client
         List<ThinLeaderCard> leaderCards = client.getGame().
                 findPlayer(client.getNickname()).

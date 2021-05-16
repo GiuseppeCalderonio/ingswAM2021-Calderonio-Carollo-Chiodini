@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.graphic;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
+import it.polimi.ingsw.view.thinModelComponents.ThinGame;
 import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
 import it.polimi.ingsw.view.utilities.CharStream;
 import it.polimi.ingsw.view.utilities.colors.BackColor;
@@ -21,6 +22,16 @@ import java.util.List;
         private final BackColor backgroundColor = BackColor.ANSI_BRIGHT_BG_CYAN;
         private final SoloToken soloToken;
 
+
+        public GraphicalGame(CharStream stream, ThinGame game){
+            this.stream = stream;
+            this.myPlayer = game.getMyself();
+            this.opponents = game.getOpponents();
+            this.marketMarble = game.getMarbleMarket();
+            this.lonelyMarble = game.getLonelyMarble();
+            this.cardsMarket = game.getCardsMarket();
+            this.soloToken = game.getSoloToken();
+        }
 
         public GraphicalGame(CharStream stream, ThinPlayer myPlayer, List<ThinPlayer> opponents, Marble[][] marketMarble, Marble lonelyMarble, DevelopmentCard[][] cardsMarket, SoloToken soloToken) {
             this.stream = stream;

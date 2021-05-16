@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.commands.leaderCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.EndGameException;
 
@@ -22,8 +23,32 @@ public class LeaderCommand implements Command {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "leader_action";
+    public CommandName getCmd() {
+        return CommandName.LEADER_ACTION;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "you can't activate the leader cards";
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return "decide the leader action to do";
     }
 
     /**
@@ -40,7 +65,7 @@ public class LeaderCommand implements Command {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) throws EndGameException {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) throws EndGameException {
         // store the previous possible commands
         previousPossibleCommands.clear();
         previousPossibleCommands.addAll(possibleCommands);
@@ -48,16 +73,16 @@ public class LeaderCommand implements Command {
         possibleCommands.clear();
         possibleCommands.addAll(getLeaderActions());
         // return the response
-        return buildResponse("choose the leader action to do", client.getInterpreter().getPossibleCommands());
+        return acceptedMessage();
     }
 
     /**
      * this method get the possible leader actions: [activate_card, discard_card]
      * @return the possible leader actions
      */
-    protected List<String> getLeaderActions(){
+    protected List<CommandName> getLeaderActions(){
         return new ArrayList<>(
-                Arrays.asList("activate_card",
-                        "discard_card"));
+                Arrays.asList(CommandName.ACTIVATE_CARD,
+                        CommandName.DISCARD_CARD));
     }
 }

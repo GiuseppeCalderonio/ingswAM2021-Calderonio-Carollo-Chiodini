@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.commands.normalCommands.NormalActionCommand;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.Game;
@@ -42,8 +43,32 @@ public class InsertInWarehouseCommand extends NormalActionCommand {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "insert_in_warehouse";
+    public CommandName getCmd() {
+        return CommandName.INSERT_IN_WAREHOUSE;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "insert failed";
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return "resources insert in warehouse correctly";
     }
 
     /**
@@ -60,16 +85,16 @@ public class InsertInWarehouseCommand extends NormalActionCommand {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) {
 
         Game game = client.getGame();
         List<Resource> resourcesSet = client.getInterpreter().getResourcesSet();
         CollectionResources marblesConverted = client.getInterpreter().getMarblesConverted();
         // if one of the shelves selected does not exist
         if (!Arrays.stream(shelves).allMatch(game::checkShelfSelected))
-            return buildResponse("one of the shelf selected does not exist", possibleCommands);
+            return errorMessage();
         if (resourcesSet.size() != shelves.length)
-            return buildResponse("you have selected too much or not anymore shelves", possibleCommands);
+            return errorMessage();
         // insert in warehouse all the resources selected in all the shelves selected
         for (int i = 0; i < resourcesSet.size(); i++) {
             game.insertInWarehouse(shelves[i], resourcesSet.get(i), marblesConverted);
@@ -80,11 +105,10 @@ public class InsertInWarehouseCommand extends NormalActionCommand {
         possibleCommands.clear();
         possibleCommands.addAll(previousPossibleCommands);
         possibleCommands.removeAll(getNormalActions());
-        possibleCommands.add("end_turn");
+        possibleCommands.add(CommandName.END_TURN);
 
         // send to every player the new game state
         sendBroadcastMarbleAction(client);
-        return buildResponse("action completed, resources got added",
-                client.getInterpreter().getPossibleCommands());
+        return acceptedMessage();
     }
 }

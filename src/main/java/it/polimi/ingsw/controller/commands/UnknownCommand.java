@@ -18,7 +18,31 @@ public class UnknownCommand implements Command{
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
+    public CommandName getCmd() {
+        return CommandName.UNKNOWN;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "you can't use this command";
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
         return "";
     }
 
@@ -36,7 +60,7 @@ public class UnknownCommand implements Command{
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) throws EndGameException {
-        return buildResponse("this command doesn't exist", possibleCommands);
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) throws EndGameException {
+        return errorMessage();
     }
 }

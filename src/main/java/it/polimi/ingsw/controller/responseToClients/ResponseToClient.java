@@ -20,17 +20,7 @@ public class ResponseToClient {
      * this attribute represent the message to send to the client, it can be null if
      * there is anything to say (for example, the game state changed)
      */
-    private String message;
-
-    /**
-     * this attribute represent the possible commands referred to a specific phase of the game
-     */
-    private List<String> possibleCommands;
-
-    /**
-     * this attribute indicates if the message have to ignore the possible commands
-     */
-    private boolean ignorePossibleCommands = false;
+    private Status message;
 
     /**
      * this is the default constructor, that initialise every attribute with his default value
@@ -44,21 +34,8 @@ public class ResponseToClient {
      * in particular, it set the message and the attribute ignorePossibleCommands = true
      * @param message this is the message to set
      */
-    public ResponseToClient(String message){
+    public ResponseToClient(Status message){
         this.message = message;
-        ignorePossibleCommands = true;
-    }
-
-    /**
-     * this constructor create a response to send to the client.
-     * in particular, it set the message and the attribute ignorePossibleCommands = true
-     * @param message this is the message to set
-     * @param possibleCommands this is the list of possible commands that the destination client
-     *                         can do
-     */
-    public ResponseToClient(String message, List<String> possibleCommands){
-        this.message = message;
-        this.possibleCommands = new ArrayList<>(possibleCommands);
     }
 
     /**
@@ -69,24 +46,9 @@ public class ResponseToClient {
      * @param client this is the client to update
      */
     public void updateClient(Client client){
-        // if the server didn't send any message
-        if (message != null){
-            // if the message does not contain any list of possible commands
-            if (ignorePossibleCommands)
-                // show the message
-                System.out.println(message);
+        // show to the client the context action
+        client.showContextAction(message);
 
-            else{
-
-                //add default commands to the list
-                possibleCommands.add("quit");
-                possibleCommands.add("show");
-                // set the new possible commands for the client
-                client.setPossibleCommands(possibleCommands);
-                // print the message with the possible commands
-                System.out.println(message + ", Possible commands:" + possibleCommands);
-            }
-        }
     }
 
     /**
@@ -101,8 +63,8 @@ public class ResponseToClient {
      */
     protected ThinPlayer getPlayerToChange(Client client, String nickname){
         // create a list containing all the thin players of the game
-        List<ThinPlayer> players = new ArrayList<>(client.getOpponents());
-        players.add(client.getMyself());
+        List<ThinPlayer> players = new ArrayList<>(client.getGame().getOpponents());
+        players.add(client.getGame().getMyself());
 
         try {
             // get the thin player with the nickname desired
@@ -116,18 +78,10 @@ public class ResponseToClient {
     }
 
     /**
-     * this method get the possible commands referred to a specific phase of the game
-     * @return the possible commands referred to a specific phase of the game
-     */
-    public List<String> getPossibleCommands() {
-        return possibleCommands;
-    }
-
-    /**
      * this method get the string representing the message
      * @return the string representing message
      */
-    public String getMessage() {
+    public Status getMessage() {
         return message;
     }
 

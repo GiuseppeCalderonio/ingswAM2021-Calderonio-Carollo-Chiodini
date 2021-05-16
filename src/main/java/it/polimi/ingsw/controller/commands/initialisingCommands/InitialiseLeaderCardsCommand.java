@@ -1,7 +1,9 @@
 package it.polimi.ingsw.controller.commands.initialisingCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.GamePhase;
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 
 import java.util.List;
@@ -38,8 +40,32 @@ public class InitialiseLeaderCardsCommand implements Command {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "initialise_leaderCards";
+    public CommandName getCmd() {
+        return CommandName.INITIALISE_LEADER_CARDS;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "initialising failed";
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return "leader cards initialised, now initialise your resources";
     }
 
     /**
@@ -55,23 +81,23 @@ public class InitialiseLeaderCardsCommand implements Command {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands){
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands){
         // if the index of the cards is not between 1 and 4
         if( (firstCard < 1 || firstCard > 4) ||
                 (secondCard < 1 || secondCard > 4))
-            return buildResponse("one of the cards index is not between 1 and 4", possibleCommands);
+            return errorMessage();
         // if the indexes are equals
         if( firstCard == secondCard)
-            return buildResponse("the two cards indexes are equals", possibleCommands);
+            return errorMessage();
         // store the first leader card in a buffer
         client.getInterpreter().setFirstLeaderCard(firstCard);
         // store the second leader card in a buffer
         client.getInterpreter().setSecondLeaderCard(secondCard);
         // remove the actual command from the possible ones
-        possibleCommands.remove("initialise_leaderCards");
+        possibleCommands.remove(CommandName.INITIALISE_LEADER_CARDS);
         // add the next command to the possible ones
-        possibleCommands.add("initialise_resources");
+        possibleCommands.add(CommandName.INITIALISE_RESOURCES);
 
-        return buildResponse("ok, choose your resources", possibleCommands);
+        return acceptedMessage();
     }
 }

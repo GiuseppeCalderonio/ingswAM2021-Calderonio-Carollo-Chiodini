@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import it.polimi.ingsw.controller.commands.Command;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
+import it.polimi.ingsw.controller.responseToClients.Status;
+import it.polimi.ingsw.controller.responseToClients.WinnerResponse;
 import it.polimi.ingsw.model.EndGameException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.Lobby;
@@ -14,10 +16,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 /**
  * this class represent the client handler.
@@ -74,7 +73,7 @@ public class ClientHandler {
      * this attribute indicates if the game for this specific client
      * have to continue the game
      */
-    private final AtomicBoolean play = new AtomicBoolean(true);
+    private boolean play = true;
 
     /**
      * this constructor create the client handler starting from his socket, the
@@ -108,9 +107,11 @@ public class ClientHandler {
 
         System.out.println("New connection with " + socket);
 
+        // set the timeout of the socket for handle remote disconnections
         try {
-            socket.setSoTimeout(5000);
-        } catch (SocketException e) {
+                socket.setSoTimeout(3000);
+
+        } catch (SocketException e){
             e.printStackTrace();
             return;
         }
@@ -118,38 +119,29 @@ public class ClientHandler {
         // create a new command manager
         commandManager = new CommandManager(this);
 
-
-        while (play.get()) {
-                play.set(readMessage());
+        while (play) {
+                play = readMessage();
         }
 
-        // closing stream and sockets, and eventually restart a new game kicking off every player
-        try {
-            in.close();
-            out.close();
-            socket.close();
-            lobby.removeClient(this);
-            lobby.getNicknames().remove(nickname);
-            System.out.println("Connection closed with " + socket);
-            // if the game isn't in the login phase
-            if (!getInterpreter().getGamePhase().equals(GamePhase.LOGIN))
+
+        synchronized (lobby){
+            // closing stream and sockets, and eventually restart a new game kicking off every player
+            try {
+
                 sendBroadcastDisconnection();
 
-        } catch(IOException e) {
-            System.err.println("A client disconnected, message " + e.getMessage() + " method: start in ClientHandler, socket" + socket);
-        } catch (Exception e){
-            System.err.println("Fatal error message " + e.getMessage() + " method: start in ClientHandler, socket" + socket);
-            System.out.println(e.getMessage());
+            } catch(IOException e) {
+                System.err.println("A client disconnected, message " + e.getMessage() + " method: start in ClientHandler, socket" + socket);
+                e.printStackTrace();
+            } catch (Exception e){
+                System.err.println("Fatal error message " + e.getMessage() + " method: start in ClientHandler, socket" + socket);
+                System.out.println(e.getMessage());
+            }
+
+            if (lobby.getClients().isEmpty())
+                lobby.setGameFinished();
         }
-    }
 
-    /**
-     * this method set the attribute ,relative to indicates if continue the
-     * match for this client or not, to true
-     */
-
-    public void setPlayFalse(){
-        play.set(false);
     }
 
     /**
@@ -240,14 +232,6 @@ public class ClientHandler {
         return lobby.getGame().isYourTurn(nickname);
     }
 
-    /**
-     * this method get the possible commands for the client in a specific phase of the game
-     * @return the possible commands for the client in a specific phase of the game
-     */
-    private List<String> getPossibleCommands(){
-        return commandManager.getCommandInterpreter().getPossibleCommands();
-    }
-
 
 
     /**
@@ -305,19 +289,29 @@ public class ClientHandler {
      * for any possible reason, and close the connection
      * @throws IOException Signals that an I/O exception of some sort has occurred
      */
-    public synchronized void sendBroadcastDisconnection () throws IOException {
-        List<ClientHandler> clients = getClients().stream().filter(Objects::nonNull).collect(Collectors.toList());
-        for (ClientHandler client : clients) {
-            client.setPlayFalse();
-            ResponseToClient response = new ResponseToClient("Someone left the game, everyone will be kicked out");
-            client.send(response);
-            client.socket.getOutputStream().close();
-            client.socket.getInputStream().close();
+    public void sendBroadcastDisconnection () throws IOException {
+
+        removeClient();
+
+        if (getInterpreter().getGamePhase().equals(GamePhase.LOGIN)){
+            return;
+        }
+
+        for (ClientHandler client : getClients()) {
             client.socket.close();
         }
         getClients().clear();
         lobby.setGameFinished();
 
+    }
+
+    private void removeClient() throws IOException {
+        in.close();
+        out.close();
+        socket.close();
+        lobby.removeClient(this);
+        lobby.getNicknames().remove(nickname);
+        System.out.println("Connection closed with " + socket);
     }
 
     /**
@@ -346,7 +340,7 @@ public class ClientHandler {
         } catch (JsonParseException e){
             System.err.println("Error json parser exception: " + e.getMessage() + ", in method send, class ClientHandler");
             e.printStackTrace();
-            setPlayFalse();
+            play = false;
         }
 
     }
@@ -369,9 +363,11 @@ public class ClientHandler {
         String line;
         // read from the input (eventually throws NoSuchElementException)
         try {
+
             line = in.nextLine();
-        } catch (NoSuchElementException e){
-            System.err.println("the client " + socket.toString() + " disconnected, message: " + e.getMessage() + ",socket : " + socket + "method : readMessage in ClientHandler");
+
+        } catch (NoSuchElementException | IllegalStateException e){ //when a client disconnected
+            e.printStackTrace();
             return false;
         }
         Command command;
@@ -381,9 +377,27 @@ public class ClientHandler {
             // when the command is not in a json format
         }catch (JsonParseException e) { // the string received is not in gson format
             System.err.println(e.getMessage());
-            send(new ResponseToClient("you have to insert a correct json string format", getPossibleCommands()));
+            send(new ResponseToClient(Status.ERROR));
             return true;
         }
+
+        synchronized (lobby){
+            return readMessage(command);
+        }
+    }
+
+    /**
+     * this method is an helper method of the readMessage method.
+     * in particular, it is synchronized in the lobby, and calls the method
+     * processCommand of the commandManager, handling all the possible exceptions of the game.
+     *
+     * in the subclass localClientHandler it is used to read the message starting from the command passed in input, and then will be
+     * called the method processCommand on it
+     * @param command this is the command to process
+     * @see LocalClientHandler
+     */
+    public boolean readMessage(Command command){
+
         try {
             // process the command and send the message or the messages to the players
             commandManager.processCommand(command);
@@ -392,12 +406,12 @@ public class ClientHandler {
         }catch (NullPointerException | IndexOutOfBoundsException e){
             System.err.println(e.getMessage());
             e.printStackTrace();
-            send(new ResponseToClient("Something gone wrong, you've probably chosen wrong inputs ", getPossibleCommands()));
+            send(new ResponseToClient(Status.ERROR));
             return true;
-        // the condition of ending a game are met
+            // the condition of ending a game are met
         }catch (EndGameException e){
             // send in broadcast the name of the winner and the personal victory points gained
-            sendInBroadcast(new ResponseToClient("The game finish, the winner is: " + e.getMessage() + ", he gained :" + getGame().findPlayer(nickname).getVictoryPoints() + " victory points"));
+            sendInBroadcast(new WinnerResponse(e.getMessage(), getGame().findPlayer(nickname).getVictoryPoints()));
             // set the lobby to finished
             lobby.setGameFinished();
             return true;
@@ -405,15 +419,5 @@ public class ClientHandler {
             // exit from the loop
             return false;
         }
-    }
-
-    /**
-     * this method is used only by the subclass localClientHandler.
-     * it is used to read the message starting from the command passed in input, and then will be
-     * called the method processCommand on it
-     * @param command this is the command to process
-     * @see LocalClientHandler
-     */
-    public void readMessage(Command command){
     }
 }

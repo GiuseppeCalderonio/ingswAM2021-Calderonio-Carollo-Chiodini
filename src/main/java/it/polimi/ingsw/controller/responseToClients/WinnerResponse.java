@@ -1,9 +1,17 @@
 package it.polimi.ingsw.controller.responseToClients;
 
-import it.polimi.ingsw.controller.commands.PongCommand;
 import it.polimi.ingsw.network.Client;
 
-public class PingResponse extends ResponseToClient{
+public class WinnerResponse extends ResponseToClient{
+
+    private final String winner;
+
+    private final int victoryPoints;
+
+    public WinnerResponse(String winner, int victoryPoints){
+        this.winner = winner;
+        this.victoryPoints = victoryPoints;
+    }
 
     /**
      * this method update the state of a client.
@@ -15,6 +23,6 @@ public class PingResponse extends ResponseToClient{
      */
     @Override
     public void updateClient(Client client) {
-        client.send(new PongCommand());
+        System.out.println("the winner is " + winner + ", you gained: " + victoryPoints);
     }
 }

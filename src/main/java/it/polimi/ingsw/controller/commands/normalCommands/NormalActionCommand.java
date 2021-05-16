@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller.commands.normalCommands;
 import it.polimi.ingsw.controller.ClientHandler;
 import it.polimi.ingsw.controller.CommandInterpreter;
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.MarbleActionResponse;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.controller.responseToClients.WhiteMarblesConversionResponse;
@@ -27,11 +28,11 @@ public abstract class NormalActionCommand implements Command {
      * this method get a list containing all the normal actions of the game
      * @return a list containing all the normal actions of the game
      */
-    public List<String> getNormalActions(){
+    public List<CommandName> getNormalActions(){
         return new ArrayList<>(
-                Arrays.asList("choose_marbles",
-                        "production",
-                        "buy_card"));
+                Arrays.asList(CommandName.CHOOSE_MARBLES,
+                        CommandName.PRODUCTION,
+                        CommandName.BUY_CARD));
     }
 
     /**
@@ -63,11 +64,10 @@ public abstract class NormalActionCommand implements Command {
                                                                       Game game,
                                                                       List<Marble> marbles){
         interpreter.getPossibleCommands().clear();
-        interpreter.getPossibleCommands().add("insert_in_warehouse");
-        interpreter.getPossibleCommands().add("shift_resources");
+        interpreter.getPossibleCommands().add(CommandName.INSERT_IN_WAREHOUSE);
+        interpreter.getPossibleCommands().add(CommandName.SHIFT_RESOURCES);
         interpreter.setMarblesConverted(game.convert(marbles));
         interpreter.setResourceSet(new ArrayList<>(new HashSet<>(interpreter.getMarblesConverted().asList())));
-        //interpreter.setResourceSet(interpreter.getMarblesConverted().asList().stream().distinct().collect(Collectors.toList()));
         return new WhiteMarblesConversionResponse(interpreter.getMarblesConverted());
     }
 

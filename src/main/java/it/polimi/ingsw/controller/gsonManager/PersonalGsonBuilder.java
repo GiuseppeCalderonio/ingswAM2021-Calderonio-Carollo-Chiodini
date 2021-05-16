@@ -134,7 +134,8 @@ public class PersonalGsonBuilder {
                         registerSubtype(ShiftResourcesResponse.class, "ShiftResourcesResponse").
                         registerSubtype(StartGameResponse.class, "StartGameResponse").
                         registerSubtype(TwoLeaderWhiteMarblesResponse.class, "TwoLeaderWhiteMarblesResponse").
-                        registerSubtype(WhiteMarblesConversionResponse.class, "WhiteMarblesConversionResponse")
+                        registerSubtype(WhiteMarblesConversionResponse.class, "WhiteMarblesConversionResponse").
+                        registerSubtype(WinnerResponse.class, "WinnerResponse")
 
         );
 

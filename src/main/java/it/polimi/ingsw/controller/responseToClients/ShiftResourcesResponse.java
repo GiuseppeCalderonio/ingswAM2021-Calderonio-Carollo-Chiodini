@@ -85,8 +85,8 @@ public class ShiftResourcesResponse extends ResponseToClient{
      * @param client this is the client to update
      */
     private void updateTracks(Client client){
-        List<ThinPlayer> players = new ArrayList<>(client.getOpponents());
-        players.add(client.getMyself());
+        List<ThinPlayer> players = new ArrayList<>(client.getGame().getOpponents());
+        players.add(client.getGame().getMyself());
 
         players.forEach(player -> player.setTrack(tracks1.get(player.getNickname())));
 

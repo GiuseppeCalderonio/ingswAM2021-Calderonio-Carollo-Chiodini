@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.commands.normalCommands.productionCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.ProductionResponse;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.Game;
@@ -51,8 +52,8 @@ public class BasicProductionCommand extends ProductionCommand {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "basic_production";
+    public CommandName getCmd() {
+        return CommandName.BASIC_PRODUCTION;
     }
 
     /**
@@ -69,28 +70,26 @@ public class BasicProductionCommand extends ProductionCommand {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) {
 
         Game game = client.getGame();
 
         // if the production can't be activated
         if (!game.checkProduction(0))
-            return buildResponse("you selected a position that doesn't exist, or you selected a wrong amount of resources", possibleCommands);
+            return errorMessage();
         if (!game.checkActivateBasicProduction(toPayFromWarehouse, toPayFromStrongbox, output))
-            return buildResponse("error, one of these things could be the motivation :" +
-                    "1) you haven't chosen the right amount of resources (you have to choose 2 resources in input and 1 in output)" +
-                    "2) you don't own the chosen resources in your storage", possibleCommands);
+            return errorMessage();
         // activate the basic production
         game.activateBasicProduction(toPayFromWarehouse, toPayFromStrongbox, output);
         // filter the possible production after the internal state change
         clearProductions(game, possibleCommands);
         // remove the basic production from the possible commands
-        possibleCommands.remove("basic_production");
+        possibleCommands.remove(CommandName.BASIC_PRODUCTION);
         // send to every player the new game state
         client.sendInBroadcast(new ProductionResponse(client));
         //sendBroadcastChangePlayerState(client.getClients());
 
-        return buildResponse("basic production activated correctly, now choose another one or end the production", possibleCommands);
+        return acceptedMessage();
     }
 
 

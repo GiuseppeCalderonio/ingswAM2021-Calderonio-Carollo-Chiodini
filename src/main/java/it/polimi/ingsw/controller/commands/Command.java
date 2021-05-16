@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.commands;
 
 import it.polimi.ingsw.controller.ClientHandler;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
+import it.polimi.ingsw.controller.responseToClients.Status;
 import it.polimi.ingsw.model.EndGameException;
 
 import java.util.List;
@@ -18,7 +19,23 @@ public interface Command {
      * this method get the cmd associated with the command
      * @return the cmd associated with the command
      */
-    String getCmd();
+    CommandName getCmd();
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     * @return a string representing the error message
+     *         associated with the command
+     */
+    String getErrorMessage();
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     * @return a string representing the confirm message
+     *         associated with the command
+     */
+    String getConfirmMessage();
 
     /**
      * this method execute the command given in input,
@@ -32,29 +49,24 @@ public interface Command {
      *                                 command, that eventually may be modified
      * @return the response to send to the client\s
      */
-    ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) throws EndGameException;
+    ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) throws EndGameException;
 
     /**
      * this method build an object ResponseToClient to send to the client.
-     * in particular, it create it starting from a string message,
-     * and a list of available possible commands in a specific phase of the game
-     * @param message this is the message to send
-     * @param possibleCommands these are the possible commands
+     * in particular, it create it setting an error status
      * @return the object ResponseToClient built with the input parameters
      */
-    default ResponseToClient buildResponse(String message, List<String> possibleCommands){
-        return new ResponseToClient(message, possibleCommands);
+    default ResponseToClient errorMessage(){
+        return new ResponseToClient(Status.REFUSED);
     }
 
     /**
      * this method build an object ResponseToClient to send to the client.
-     * in particular, it create it starting from a string message,
-     * and set the attribute ignorePossibleCommands = true
-     * @param message these are the possible commands
+     * in particular, it create it setting an accepted status
      * @return the object ResponseToClient built with the input parameters
      */
-    default ResponseToClient buildResponseIgnoringCommands(String message){
-        return new ResponseToClient(message);
+    default ResponseToClient acceptedMessage(){
+        return new ResponseToClient(Status.ACCEPTED);
     }
 
     /**

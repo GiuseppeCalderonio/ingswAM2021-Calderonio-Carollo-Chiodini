@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.DevelopmentCards.CardColor;
 import it.polimi.ingsw.model.Marble.Marble;
@@ -31,7 +32,7 @@ public interface CommandInterpreter {
      * according with the rules of the game
      * @return the possible command for a player according with the rules of the game
      */
-    List<String> getPossibleCommands();
+    List<CommandName> getPossibleCommands();
 
     /**
      * this method return a boolean that represent if a phase of the game is finished,

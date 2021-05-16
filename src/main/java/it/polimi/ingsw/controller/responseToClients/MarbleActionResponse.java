@@ -87,8 +87,8 @@ public class MarbleActionResponse extends ResponseToClient{
         updateTracks(client);
         //toChange.setTrack(track3);
         toChange.setWarehouse(warehouse3);
-        client.setLonelyMarble(lonelyMarble3);
-        client.setMarbleMarket(marbleMarket3);
+        client.getGame().setLonelyMarble(lonelyMarble3);
+        client.getGame().setMarbleMarket(marbleMarket3);
         client.show();
 
         super.updateClient(client);
@@ -99,8 +99,8 @@ public class MarbleActionResponse extends ResponseToClient{
      * @param client this is the client to update
      */
     private void updateTracks(Client client){
-        List<ThinPlayer> players = new ArrayList<>(client.getOpponents());
-        players.add(client.getMyself());
+        List<ThinPlayer> players = new ArrayList<>(client.getGame().getOpponents());
+        players.add(client.getGame().getMyself());
 
         players.forEach(player -> player.setTrack(tracks.get(player.getNickname())));
 

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.commands.normalCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.EndTurnSingleGameResponse;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.EndGameException;
@@ -21,8 +22,32 @@ public class EndTurnCommand extends NormalActionCommand {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "end_turn";
+    public CommandName getCmd() {
+        return CommandName.END_TURN;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "you can't end the turn now";
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return "turn finished, is not your turn anymore";
     }
 
     /**
@@ -39,7 +64,7 @@ public class EndTurnCommand extends NormalActionCommand {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) throws EndGameException {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) throws EndGameException {
         // end the turn
         client.getGame().endTurn();
         // remove all the possible commands
@@ -48,21 +73,9 @@ public class EndTurnCommand extends NormalActionCommand {
         if (client.getNumberOfPlayers() == 1){
             // send to the client the new game state
             sendEndSingleGame(client);
-            // return the response
-            return buildSoloResponse();
         }
         // return the response
-        return buildResponse("turn finished, is not your turn now", possibleCommands);
-    }
-
-    /**
-     * this method send the message "Lorenzo did his action!"
-     * it is used only in case of single game
-     *
-     * @return the message "Lorenzo did his action!"
-     */
-    private ResponseToClient buildSoloResponse() {
-        return new ResponseToClient("Lorenzo did his action!");
+        return acceptedMessage();
     }
 
     /**

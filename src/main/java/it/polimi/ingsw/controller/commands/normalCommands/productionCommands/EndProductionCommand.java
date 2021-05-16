@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.commands.normalCommands.productionCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.EndProductionResponse;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.PlayerAndComponents.ProductionPower;
@@ -23,8 +24,32 @@ public class EndProductionCommand extends ProductionCommand {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "end_production";
+    public CommandName getCmd() {
+        return CommandName.END_PRODUCTION;
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return "production ended";
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "error, you can't end the production";
     }
 
     /**
@@ -41,13 +66,13 @@ public class EndProductionCommand extends ProductionCommand {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) {
         possibleCommands.clear();
         possibleCommands.addAll(previousPossibleCommands);
         //client.getInterpreter().setPossibleCommands(previousPossibleCommands);
         // if the player didn't activate any kind of production
         if (anyProductionGotActivated(client.getGame().getActualPlayer().getPersonalDashboard().getPersonalProductionPower()))
-            return buildResponse("you didn't activate any production", possibleCommands);
+            return acceptedMessage();
 
         // end the production filling the strongbox with all the resources gained and reset the productions
         client.getGame().endProduction();
@@ -56,9 +81,9 @@ public class EndProductionCommand extends ProductionCommand {
         // remove all the normal actions from the possible commands
         possibleCommands.removeAll(getNormalActions());
         // add the end turn to the possible commands
-        possibleCommands.add("end_turn");
+        possibleCommands.add(CommandName.END_TURN);
         // set the new possible commands
-        return buildResponse("the production is finished", possibleCommands);
+        return acceptedMessage();
     }
 
     /**

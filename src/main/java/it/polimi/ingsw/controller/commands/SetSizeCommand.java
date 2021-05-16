@@ -33,8 +33,32 @@ public class SetSizeCommand implements Command {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "set_size";
+    public CommandName getCmd() {
+        return CommandName.SET_SIZE;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "size setting failed";
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return "size set correctly, start with the login";
     }
 
     /**
@@ -51,7 +75,7 @@ public class SetSizeCommand implements Command {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) throws EndGameException {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) throws EndGameException {
         return null;
     }
 

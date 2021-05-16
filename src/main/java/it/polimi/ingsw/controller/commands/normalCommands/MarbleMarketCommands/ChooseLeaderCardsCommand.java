@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.commands.normalCommands.NormalActionCommand;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.Game;
@@ -39,8 +40,32 @@ public class ChooseLeaderCardsCommand extends NormalActionCommand {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "choose_leaderCards";
+    public CommandName getCmd() {
+        return CommandName.CHOOSE_LEADER_CARDS;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "you can't use this leader card";
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return "ok, now decide how to place the resources in the warehouse";
     }
 
     /**
@@ -57,17 +82,17 @@ public class ChooseLeaderCardsCommand extends NormalActionCommand {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) {
         List<Marble> marbles = client.getInterpreter().getMarbles();
         Game game = client.getGame();
         // create a list with the white marbles contained into the marbles previously selected
         List<Marble> whiteMarbles = marbles.stream().filter(marble -> marble.equals(new WhiteMarble())).collect(Collectors.toList());
         // if the white marbles length don't match the indexes length
         if (whiteMarbles.size() != indexes.length)
-            return buildResponse("you have selected too much or not anymore leader cards", possibleCommands);
+            return errorMessage();
         // if one of the indexes selected is not between 1 and 2
         if (!Arrays.stream(indexes).allMatch(index -> index == 1 || index == 2))
-            return buildResponse("one of the leader card selected does not exist", possibleCommands);
+            return errorMessage();
 
         for (int i = 0; i < whiteMarbles.size(); i++) {
             game.changeWhiteMarble(marbles, indexes[i]);

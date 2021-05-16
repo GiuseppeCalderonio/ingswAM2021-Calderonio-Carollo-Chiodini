@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.commands.normalCommands.NormalActionCommand;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.DevelopmentCards.CardColor;
@@ -41,8 +42,32 @@ public class BuyCardAction extends NormalActionCommand {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "buy_card";
+    public CommandName getCmd() {
+        return CommandName.BUY_CARD;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "you can' buy this card";
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return "select the position in which locate the card";
     }
 
     /**
@@ -59,18 +84,13 @@ public class BuyCardAction extends NormalActionCommand {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) {
 
         Game game = client.getGame();
 
         // if the client can't buy the specified card
         if (!game.checkBuyCard(level, color))
-            return buildResponse("error, one of these things could be the motivation :" +
-                    "(1) you have selected a level not between 1 and 3, " +
-                    "(2) you have selected a color that doesn't exist, " +
-                    "(3) you have selected an empty deck of cards, " +
-                    "(4) you can't buy the card because you can't afford it, " +
-                    "(5) you can't place the card selected into the dashboard", possibleCommands);
+            return errorMessage();
         // set the color of the card into a buffer
         client.getInterpreter().setColor(color);
         //color = command.color;
@@ -82,7 +102,7 @@ public class BuyCardAction extends NormalActionCommand {
         previousPossibleCommands.clear();
         previousPossibleCommands.addAll(possibleCommands);
         possibleCommands.clear();
-        possibleCommands.add("select_position");
-        return buildResponse("deck selected is available, now decide where you want to place the card in your dashboard", possibleCommands);
+        possibleCommands.add(CommandName.SELECT_POSITION);
+        return acceptedMessage();
     }
 }

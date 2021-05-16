@@ -2,6 +2,8 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.commands.Command;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
+import it.polimi.ingsw.controller.responseToClients.Status;
+import it.polimi.ingsw.controller.responseToClients.WinnerResponse;
 import it.polimi.ingsw.model.EndGameException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.SingleGame.SingleGame;
@@ -55,14 +57,16 @@ public class LocalClientHandler extends ClientHandler{
      * called the method processCommand on it
      * @param command this is the command to process
      */
-    public void readMessage(Command command) {
+    public boolean readMessage(Command command) {
         try {
             getCommandManager().processCommand(command);
         } catch (EndGameException e){
-            send(new ResponseToClient("The game finish, the winner is" + e.getMessage()));
+            send(new WinnerResponse(e.getMessage(), game.getActualPlayer().getVictoryPoints()));
         } catch (QuitException e){
-            send(new ResponseToClient(e.getMessage()));
+            send(new ResponseToClient(Status.QUIT));
         }
+
+        return true;
     }
 
     /**
@@ -85,7 +89,7 @@ public class LocalClientHandler extends ClientHandler{
      */
     @Override
     public synchronized void sendBroadcastDisconnection() {
-        send(new ResponseToClient("The game finish..."));
+        send(new ResponseToClient(Status.QUIT));
     }
 
     /**
@@ -185,16 +189,6 @@ public class LocalClientHandler extends ClientHandler{
     @Override
     protected boolean isYourTurn() {
         return true;
-    }
-
-    /**
-     * this method set the attribute ,relative to indicates if continue the
-     * match for this client or not, to true.
-     * in this subclass, the method do nothing
-     */
-    @Override
-    public void setPlayFalse() {
-
     }
 
     /**

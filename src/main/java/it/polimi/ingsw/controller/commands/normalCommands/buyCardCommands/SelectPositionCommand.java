@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.commands.normalCommands.buyCardCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.commands.normalCommands.NormalActionCommand;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
@@ -34,8 +35,32 @@ public class SelectPositionCommand extends NormalActionCommand {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "select_position";
+    public CommandName getCmd() {
+        return CommandName.SELECT_POSITION;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "you can't locate the card in this position";
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return "decide how to pay the resources";
     }
 
     /**
@@ -52,7 +77,7 @@ public class SelectPositionCommand extends NormalActionCommand {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) {
 
         Game game = client.getGame();
         DevelopmentCard card = getCard(client.getInterpreter(), game);
@@ -62,17 +87,15 @@ public class SelectPositionCommand extends NormalActionCommand {
             possibleCommands.clear();
             possibleCommands.addAll(previousPossibleCommands);
             //possibleCommands = previousPossibleCommands;
-            return buildResponse("error, one of these things could be the motivation :" +
-                    "1) the position selected is not between 1 and 3" +
-                    "2) the position selected does not allow the card placement", possibleCommands);
+            return errorMessage();
         }
         // set the dashboard position in which place the card
         client.getInterpreter().setDashboardPosition(dashboardPosition);
         // set the new possible command
         possibleCommands.clear();
-        possibleCommands.add("select_resources_from_warehouse");
+        possibleCommands.add(CommandName.SELECT_RESOURCES_FROM_WAREHOUSE);
 
-        return buildResponse("now select the warehouse resources to pay the card", possibleCommands);
+        return acceptedMessage();
     }
 
 }

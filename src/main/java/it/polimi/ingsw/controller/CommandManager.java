@@ -1,14 +1,12 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.InitialisingResponse;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.controller.responseToClients.StartGameResponse;
+import it.polimi.ingsw.controller.responseToClients.Status;
 import it.polimi.ingsw.model.EndGameException;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * this class represent the command manager, it process the commands,
@@ -46,7 +44,7 @@ public class CommandManager {
         commandInterpreter = new LoginInterpreter();
         this.client = client;
 
-        client.send(buildLoginResponse());
+        client.send(new ResponseToClient(Status.ACCEPTED));
     }
 
     /**
@@ -87,10 +85,10 @@ public class CommandManager {
      * @throws EndGameException if the conditions to finish a game are met
      * @throws QuitException if the player sent a quit command
      */
-    public synchronized void processCommand(Command command) throws EndGameException, QuitException {
+    public void processCommand(Command command) throws EndGameException, QuitException {
 
         // if the command is a pong
-        if (command.getCmd().equals("pong"))
+        if (command.getCmd().equals(CommandName.PONG))
             return; // do nothing
 
         // execute the command with the command interpreter
@@ -215,26 +213,10 @@ public class CommandManager {
 
             // if the client have to play his turn
             if (client1.isYourTurn()) {
-                String message = "now is your turn";
-                // get the possible commands to send
-                List<String> possibleCommands = client1.
-                        getInterpreter().
-                        getPossibleCommands();
                 // send the message to the client
-                client1.send(new ResponseToClient(message, possibleCommands));
+                client1.send(new ResponseToClient(Status.YOUR_TURN));
             }
         }
-    }
-
-    /**
-     * this method create a response to client relative to the login phase,
-     * sending a message that guide to the player to do the login,
-     * and the singleton list of possible commands containing only the login command
-     * @return the static login response to send to the client
-     */
-    private ResponseToClient buildLoginResponse(){
-        return new ResponseToClient("Welcome to the server! Start with the login",
-                new ArrayList<>(Collections.singletonList("login")));
     }
 
 
@@ -244,7 +226,7 @@ public class CommandManager {
      * with the position of every client based on the casual order of the game,
      * and the 4 initial and casual leaderCards
      */
-    private synchronized void sendBroadcastInitialising()  {
+    private void sendBroadcastInitialising()  {
         int i = 1;
         for (ClientHandler client : client.getClients()) {
             client.send(new InitialisingResponse(client, i));
@@ -259,52 +241,12 @@ public class CommandManager {
      * for a player, that will be an empty list if the player doesn't own
      * the inkwell, will be the list of all the possible commands otherwise
      */
-    private synchronized void sendBroadcastStartGame() {
+    private void sendBroadcastStartGame() {
 
         client.getClients().
                 forEach(client -> client.
-                        send(new StartGameResponse(
-                                client,
-                                getMessage(client),
-                                getPossibleCommands(client)
-                        )));
+                        send(new StartGameResponse(client)));
     }
 
-    /**
-     * this method is an helper method used to get the message in the
-     * private method sendBroadcastStartGame() .
-     * in particular, it create a personalized message to the client
-     * based on the inkwell position
-     * @param client this is the client to verify if he own the inkwell
-     * @return the string "the game start! Is your turn" if the player own the inkwell,
-     *         the string "the game start! Is not your turn, wait..." otherwise
-     */
-    private String getMessage(ClientHandler client){
-        if (client.isYourTurn() )
-            return "the game start! Is your turn";
-        return "the game start! Is not your turn, wait...";
-    }
 
-    /**
-     * this method is an helper method used to get the possible commands in the
-     * private method sendBroadcastStartGame() .
-     * in particular, it create a personalized list of possible commands
-     * that the client can do based on the inkwell position
-     * @param client this is the client to verify if he own the inkwell
-     * @return the list of possible commands compatible with the game if the player own the inkwell,
-     *         an empty list of strings otherwise
-     */
-    private List<String> getPossibleCommands(ClientHandler client){
-        List<String> possibleCommands = new ArrayList<>();
-        if (client.isYourTurn() ) {
-            possibleCommands.add("shift_resources");
-            possibleCommands.add("choose_marbles");
-            possibleCommands.add("production");
-            possibleCommands.add("buy_card");
-            possibleCommands.add("leader_action");
-            return possibleCommands;
-        }
-
-        return possibleCommands;
-    }
 }

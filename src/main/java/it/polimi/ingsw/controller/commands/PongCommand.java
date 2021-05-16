@@ -15,8 +15,32 @@ public class PongCommand implements Command{
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "pong";
+    public CommandName getCmd() {
+        return CommandName.PONG;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return null;
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return null;
     }
 
     /**
@@ -33,7 +57,7 @@ public class PongCommand implements Command{
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) throws EndGameException {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) throws EndGameException {
         return new ResponseToClient(null);
     }
 }

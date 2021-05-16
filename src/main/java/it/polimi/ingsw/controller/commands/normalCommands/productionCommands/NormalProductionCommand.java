@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.commands.normalCommands.productionCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.ProductionResponse;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.Game;
@@ -44,8 +45,8 @@ public class NormalProductionCommand extends ProductionCommand {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "normal_production";
+    public CommandName getCmd() {
+        return CommandName.NORMAL_PRODUCTION;
     }
 
     /**
@@ -62,17 +63,16 @@ public class NormalProductionCommand extends ProductionCommand {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) {
 
         Game game = client.getGame();
 
         // if the production can't be activated
         if (!game.checkProduction(position))
-            return buildResponse("you selected a position that doesn't exist," +
-                    " or you already selected this production before, choose another one or end the production", possibleCommands);
+            return errorMessage();
 
         if (!game.checkActivateProduction(position, toPayFromWarehouse))
-            return buildResponse("error from check", possibleCommands);
+            return errorMessage();
         // activate the production
         game.activateProduction(position, toPayFromWarehouse);
         // filter the possible production after the internal state change
@@ -80,6 +80,6 @@ public class NormalProductionCommand extends ProductionCommand {
         // send to every player the new game state
         client.sendInBroadcast(new ProductionResponse(client));
         //sendBroadcastChangePlayerState(client.getClients()); // code 3
-        return buildResponse(position + "° normal production activated correctly, now choose another one or end the production", possibleCommands);
+        return acceptedMessage();
     }
 }

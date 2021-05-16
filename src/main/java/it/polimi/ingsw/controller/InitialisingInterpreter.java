@@ -1,7 +1,9 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
+import it.polimi.ingsw.controller.responseToClients.Status;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +19,7 @@ public class InitialisingInterpreter implements CommandInterpreter{
     /**
      * this attribute represent the list of possible commands in a specific phase of game
      */
-    private final List<String> possibleCommands;
+    private final List<CommandName> possibleCommands;
 
     /**
      * this attributes represent two buffer of indexes referred to the leader cards that
@@ -30,7 +32,7 @@ public class InitialisingInterpreter implements CommandInterpreter{
      * as a singleton list containing only [initialise_leaderCards]
      */
     public InitialisingInterpreter(){
-        possibleCommands = new ArrayList<>(Collections.singletonList("initialise_leaderCards"));
+        possibleCommands = new ArrayList<>(Collections.singletonList(CommandName.INITIALISE_LEADER_CARDS));
 
     }
 
@@ -48,11 +50,10 @@ public class InitialisingInterpreter implements CommandInterpreter{
      */
     @Override
     public ResponseToClient executeCommand(Command command, ClientHandler client) {
-        if (command.getCmd().equals("quit"))
+        if (command.getCmd().equals(CommandName.QUIT))
             throw new QuitException();
         if (!possibleCommands.contains(command.getCmd()))
-            return new ResponseToClient("this command is not available in this phase of the game",
-                    possibleCommands);
+            return new ResponseToClient(Status.REFUSED);
 
         return command.executeCommand(possibleCommands,client, new ArrayList<>());
     }
@@ -62,15 +63,9 @@ public class InitialisingInterpreter implements CommandInterpreter{
      * according with the rules of the game
      * @return the possible command for a player according with the rules of the game
      */
-    public List<String> getPossibleCommands() {
+    public List<CommandName> getPossibleCommands() {
         return possibleCommands;
     }
-
-    /*
-      this method set the possible commands to the value passed as parameter
-
-      @param possibleCommands this is the new list to set
-     */
 
     /**
      * this method return the enum associated with the phase of the game

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.commands.normalCommands.productionCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.ProductionResponse;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.Game;
@@ -52,8 +53,8 @@ public class LeaderProductionCommand extends ProductionCommand {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "leader_production";
+    public CommandName getCmd() {
+        return CommandName.LEADER_PRODUCTION;
     }
 
     /**
@@ -70,23 +71,22 @@ public class LeaderProductionCommand extends ProductionCommand {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) {
 
         Game game = client.getGame();
 
         // if the production can't be activated
         if (!game.checkProduction(position + 3))
-            return buildResponse("error,you don't have enough resources or the production selected doesn't exist," +
-                    " or you already selected this production before, choose another one or end the production", possibleCommands);
+            return errorMessage();
         if (!game.checkActivateLeaderProduction(position, fromWarehouse))
-            return buildResponse("error,you have selected an incorrect number of resources", possibleCommands);
+            return errorMessage();
         // activate the production
         game.activateLeaderProduction(position, output, fromWarehouse);
         // filter the possible production after the internal state change
         clearProductions(game, possibleCommands);
         // send to every player the new game state
         client.sendInBroadcast(new ProductionResponse(client));
-        //sendBroadcastChangePlayerState(client.getClients());
-        return buildResponse(position + "° leader production activated correctly, now choose another one or end the production", possibleCommands);
+
+        return acceptedMessage();
     }
 }

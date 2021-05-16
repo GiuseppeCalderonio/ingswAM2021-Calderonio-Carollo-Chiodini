@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.commands.leaderCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.LeaderActionResponse;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.EndGameException;
@@ -34,8 +35,32 @@ public class DiscardCardCommand extends LeaderCommand {
      * @return the cmd associated with the command
      */
     @Override
-    public String getCmd() {
-        return "discard_card";
+    public CommandName getCmd() {
+        return CommandName.DISCARD_CARD;
+    }
+
+    /**
+     * this method return a string representing the error message
+     * associated with the command
+     *
+     * @return a string representing the error message
+     * associated with the command
+     */
+    @Override
+    public String getErrorMessage() {
+        return "you can0t discard this card";
+    }
+
+    /**
+     * this method return a string representing the confirm message
+     * associated with the command
+     *
+     * @return a string representing the confirm message
+     * associated with the command
+     */
+    @Override
+    public String getConfirmMessage() {
+        return "leader card discarded";
     }
 
     /**
@@ -52,24 +77,24 @@ public class DiscardCardCommand extends LeaderCommand {
      * @return the response to send to the client\s
      */
     @Override
-    public ResponseToClient executeCommand(List<String> possibleCommands, ClientHandler client, List<String> previousPossibleCommands) throws EndGameException {
+    public ResponseToClient executeCommand(List<CommandName> possibleCommands, ClientHandler client, List<CommandName> previousPossibleCommands) throws EndGameException {
         // reset the previous possible commands
         possibleCommands.clear();
         possibleCommands.addAll(previousPossibleCommands);
 
         // if the card selected doesn't exist
         if (!client.getGame().checkLeaderCard(toDiscard))
-            return buildResponse("the leader cards selected does not exist", possibleCommands);
+            return errorMessage();
 
         // if the card can't be discarded
         if (!client.getGame().discardLeaderCard(toDiscard))
-            return buildResponse("the leader card is already active and you can't discard it", possibleCommands);
+            return errorMessage();
 
         // remove leader actions from possible commands
-        possibleCommands.remove("leader_action");
+        possibleCommands.remove(CommandName.LEADER_ACTION);
         // send to every player the new game state
         client.sendInBroadcast(new LeaderActionResponse(client));
         // return the response
-        return buildResponse("leader card discarded", possibleCommands);
+        return acceptedMessage();
     }
 }
