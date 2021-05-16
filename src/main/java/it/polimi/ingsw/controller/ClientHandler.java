@@ -123,13 +123,10 @@ public class ClientHandler {
                 play = readMessage();
         }
 
-
         synchronized (lobby){
             // closing stream and sockets, and eventually restart a new game kicking off every player
             try {
-
                 sendBroadcastDisconnection();
-
             } catch(IOException e) {
                 System.err.println("A client disconnected, message " + e.getMessage() + " method: start in ClientHandler, socket" + socket);
                 e.printStackTrace();
@@ -293,13 +290,14 @@ public class ClientHandler {
 
         removeClient();
 
-        if (getInterpreter().getGamePhase().equals(GamePhase.LOGIN)){
+        if (!lobby.isGameStarted()){
             return;
         }
 
         for (ClientHandler client : getClients()) {
             client.socket.close();
         }
+
         getClients().clear();
         lobby.setGameFinished();
 
@@ -367,8 +365,7 @@ public class ClientHandler {
             line = in.nextLine();
 
         } catch (NoSuchElementException | IllegalStateException e){ //when a client disconnected
-            e.printStackTrace();
-            return false;
+             return false;
         }
         Command command;
         try {

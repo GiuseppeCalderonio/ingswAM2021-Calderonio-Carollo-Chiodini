@@ -106,6 +106,17 @@ public class WaitingRoom implements Runnable{
 
     }
 
+
+    /**
+     * this method filter only the lobbies with a game in progress.
+     * in particular, check all the lobbies that have false the attribute
+     * isGameFinished
+     */
+    private void clearLobbies(){
+        // remove if the game is finished
+        lobbies.removeIf(Lobby::isGameFinished);
+    }
+
     /**
      * this method search a lobby for the client.
      * in particular, when already exist a game with the same number of players chosen
@@ -148,46 +159,10 @@ public class WaitingRoom implements Runnable{
      * @param numberOfPlayers these are the number of players chosen from the client
      * @return true if the player can join the lobby, false otherwise
      */
-    private boolean joinLobby(Lobby lobby, int numberOfPlayers){
+    private boolean joinLobby(Lobby lobby, int numberOfPlayers) {
         return lobby.getNumberOfPlayers() == numberOfPlayers && // if the lobby has the same number of players chosen from the client
                 !lobby.isGameStarted() && //if the lobby isn't already started
-                lobby.getNumberOfPlayers() > lobby.getClients().size(); // if the lobby isn't full of players
-    }
-
-    /**
-     * this method filter only the lobbies with a game in progress.
-     * in particular, check all the lobbies that have false the attribute
-     * isGameFinished
-     */
-    private void clearLobbies(){
-        // remove if the game is finished
-        lobbies.removeIf(Lobby::isGameFinished);
-    }
-
-
-    /**
-     * this method send a message to the client in the gson format, as a ResponseToClient object
-     * @param out this is the printWriter associated with the socket
-     * @param response this is the response that must be send
-     */
-    private void send(PrintWriter out, ResponseToClient response){
-            // parse the object ResponseToClient to a string
-            String toSend = gson.toJson(response, ResponseToClient.class);
-            // send the string to the print writer
-            out.println(toSend);
-            out.flush();
-    }
-
-    /**
-     * this method create an object ResponseToClient starting from a string.
-     * in particular, it assign to the attribute response.message the string message
-     * and to the attribute response.possibleCommands the list [se_players],
-     * that is the only action that the client can do in this phase of the game
-     * @param message this is the message to send
-     * @return the response built starting from the message
-     */
-    private ResponseToClient buildResponse(Status message){
-        return  new ResponseToClient(message);
+                lobby.getClients().size() < lobby.getNumberOfPlayers(); // if the lobby isn't full of players
     }
 
     /**
@@ -203,6 +178,9 @@ public class WaitingRoom implements Runnable{
         // create a new object client handler
         ClientHandler newClient = new ClientHandler(socket, lobby, out, in, gson);
         // add the client just created to the lobby assigned
+        // this action is synchronized to the specified lobby because can happen that a
+        // client, while disconnecting himself, set the attribute gameIsFinished to true, and
+        // this code, if not synchronized, can join the lobby and wait infinite time,
         synchronized (lobby){
             lobby.addClient(newClient);
         }
@@ -262,4 +240,30 @@ public class WaitingRoom implements Runnable{
 
         return numberOfPlayers;
     }
+
+    /**
+     * this method send a message to the client in the gson format, as a ResponseToClient object
+     * @param out this is the printWriter associated with the socket
+     * @param response this is the response that must be send
+     */
+    private void send(PrintWriter out, ResponseToClient response){
+        // parse the object ResponseToClient to a string
+        String toSend = gson.toJson(response, ResponseToClient.class);
+        // send the string to the print writer
+        out.println(toSend);
+        out.flush();
+    }
+
+    /**
+     * this method create an object ResponseToClient starting from a string.
+     * in particular, it assign to the attribute response.message the string message
+     * and to the attribute response.possibleCommands the list [se_players],
+     * that is the only action that the client can do in this phase of the game
+     * @param message this is the message to send
+     * @return the response built starting from the message
+     */
+    private ResponseToClient buildResponse(Status message){
+        return  new ResponseToClient(message);
+    }
+
 }

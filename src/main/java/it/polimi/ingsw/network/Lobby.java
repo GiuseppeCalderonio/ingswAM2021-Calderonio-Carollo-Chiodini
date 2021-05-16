@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
@@ -50,14 +49,14 @@ public class Lobby implements Runnable {
      * this attribute will be set to true, and even if the number of clients
      * of the lobby is empty.
      */
-    private final AtomicBoolean gameIsFinished = new AtomicBoolean(false);
+    private boolean gameIsFinished = false;
 
     /**
      * this attribute indicates if the game started.
      * in particular, when every player complete the login, the game start
      * and this attribute will be true till the end of the game
      */
-    private final AtomicBoolean gameIsStarted = new AtomicBoolean(false);
+    private boolean gameIsStarted = false;
 
     /**
      * this constructor create a lobby setting the number of players of the game
@@ -78,7 +77,7 @@ public class Lobby implements Runnable {
      * @throws LobbyFinishedException when the attribute gameIsFinished is true
      */
     public void addClient(ClientHandler client) throws LobbyFinishedException{
-        if (gameIsFinished.get()){
+        if (gameIsFinished){
             throw new LobbyFinishedException();
         }
         clients.add(client);
@@ -127,7 +126,7 @@ public class Lobby implements Runnable {
         // sort the clients based on the game nicknames order
         sortClients();
         // start the game
-        gameIsStarted.set(true);
+        gameIsStarted = true;
     }
 
     /**
@@ -169,8 +168,14 @@ public class Lobby implements Runnable {
      * and this method return this
      * @return the list of clients that have joined the lobby
      */
-    public synchronized List<ClientHandler> getClients() {
-        return clients;
+    public List<ClientHandler> getClients() {
+        // this method is synchronized because when the waiting room try to
+        // get the number of clients of the match, this list MUST not change,
+        // in order to give a right information
+        synchronized (this){
+            return clients;
+        }
+
     }
 
     /**
@@ -198,7 +203,7 @@ public class Lobby implements Runnable {
      * after that, the waiting room will delete this lobby from the possible ones
      */
     public void setGameFinished(){
-        gameIsFinished.set(true);
+        gameIsFinished = true;
     }
 
     /**
@@ -208,7 +213,7 @@ public class Lobby implements Runnable {
      * @return true if the game is finished, false otherwise
      */
     public boolean isGameFinished(){
-        return gameIsFinished.get();
+        return gameIsFinished;
     }
 
     /**
@@ -219,7 +224,7 @@ public class Lobby implements Runnable {
      * @return true if the gme is started (every player did the login), false otherwise
      */
     public boolean isGameStarted() {
-        return gameIsStarted.get();
+        return gameIsStarted;
     }
 
     /**
@@ -228,10 +233,7 @@ public class Lobby implements Runnable {
      * in order to stimulate the in.readLine and reset the timeout of the socket
      */
     public void ping() {
-        synchronized (this){
             clients.forEach(client -> client.send(new PingResponse()));
-        }
-
     }
 
     /**
@@ -254,7 +256,6 @@ public class Lobby implements Runnable {
             while (true){
 
                 TimeUnit.SECONDS.sleep(1);
-                //TimeUnit.NANOSECONDS.sleep(1);
                 ping();
 
                 if (clients.size() == 0)
