@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller.responseToClients;
 
-import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.PlayerAndComponents.Player;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;

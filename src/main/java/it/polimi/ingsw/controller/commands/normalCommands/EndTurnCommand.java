@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller.commands.normalCommands;
 
-import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.EndTurnSingleGameResponse;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;

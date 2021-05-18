@@ -1,15 +1,11 @@
 package it.polimi.ingsw.network;
 
-import it.polimi.ingsw.controller.ClientHandler;
 import it.polimi.ingsw.controller.responseToClients.PingResponse;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.model.SingleGame.SingleGame;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -19,7 +15,7 @@ import java.util.stream.Collectors;
  * of the game, the nicknames of every player, if the game is started or finished.
  * it also implements runnable to ping players
  */
-public class Lobby implements Runnable {
+public class Lobby {
 
     /**
      * this attribute represent a list of every thread associated with the clients
@@ -58,6 +54,8 @@ public class Lobby implements Runnable {
      */
     private boolean gameIsStarted = false;
 
+    private Timer timer;
+
     /**
      * this constructor create a lobby setting the number of players of the game
      * @param numberOfPlayers this is the number of players of the game to set
@@ -65,8 +63,7 @@ public class Lobby implements Runnable {
     public Lobby(int numberOfPlayers){
         this.numberOfPlayers = numberOfPlayers;
         // create a thread for the ping
-        Thread ping = new Thread(this);
-        ping.start();
+        startTimer();
     }
 
     /**
@@ -93,6 +90,8 @@ public class Lobby implements Runnable {
      */
     public void removeClient(ClientHandler client){
         clients.remove(client);
+        if (clients.size() == 0)
+            timer.cancel();
     }
 
     /**
@@ -237,33 +236,19 @@ public class Lobby implements Runnable {
     }
 
     /**
-     * When an object implementing interface {@code Runnable} is used
-     * to create a thread, starting the thread causes the object's
-     * {@code run} method to be called in that separately executing
-     * thread.
-     * <p>
-     * The general contract of the method {@code run} is that it may
-     * take any action whatsoever.
-     *
-     * @see Thread#run()
+     * this method start the timer that ping every client to handle disconnections
      */
-    @Override
-    public void run() {
-        try{
+    public void startTimer() {
 
-            //TimeUnit.SECONDS.sleep(2);
-
-            while (true){
-
-                TimeUnit.SECONDS.sleep(1);
+        TimerTask ping = new TimerTask() {
+            @Override
+            public void run() {
                 ping();
-
-                if (clients.size() == 0)
-                    return;
             }
-        } catch ( // possible exceptions handled
-                InterruptedException e){
-            e.printStackTrace();
-        }
+        };
+
+        timer = new Timer("Timer");
+        long delay = 1000L;
+        timer.schedule(ping, delay, 1000);
     }
 }

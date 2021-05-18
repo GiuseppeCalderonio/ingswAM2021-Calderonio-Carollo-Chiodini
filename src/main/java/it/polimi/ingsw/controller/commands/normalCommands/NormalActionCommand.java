@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller.commands.normalCommands;
 
-import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.controller.CommandInterpreter;
 import it.polimi.ingsw.controller.commands.Command;
 import it.polimi.ingsw.controller.commands.CommandName;

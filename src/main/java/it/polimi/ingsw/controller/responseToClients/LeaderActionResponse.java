@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller.responseToClients;
 
-import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.network.Client;

@@ -29,6 +29,8 @@ public abstract class LeaderCard {
      */
     private final Resource resource;
 
+    private String png;
+
     /**
      * this constructor create a leader card from requirements,
      * victory points and resource
@@ -41,6 +43,18 @@ public abstract class LeaderCard {
         this.victoryPoints = victoryPoints;
         this.resource = resource;
         this.isActive = false;
+
+    }
+
+
+    public LeaderCard(LeaderCardRequirements requirements, int victoryPoints, Resource resource, String png){
+        this.requirements = requirements;
+        this.victoryPoints = victoryPoints;
+        this.resource = resource;
+        this.isActive = false;
+        String pngNameConstant = "/front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-";
+        this.png = pngNameConstant + png + "-1.png";
+
     }
 
     /**
@@ -131,4 +145,8 @@ public abstract class LeaderCard {
      * this method returns the String that identifies the LeaderCard
      */
     public abstract String identifier();
+
+    public String getPng() {
+        return png;
+    }
 }

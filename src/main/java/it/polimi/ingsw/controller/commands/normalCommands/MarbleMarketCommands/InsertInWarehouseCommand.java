@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands;
 
-import it.polimi.ingsw.controller.ClientHandler;
+import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.commands.normalCommands.NormalActionCommand;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;

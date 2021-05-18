@@ -33,7 +33,7 @@ import static it.polimi.ingsw.view.gui.Gui.startGui;
 /**
  * this class represent the main
  */
-public class Client implements Runnable {
+public class Client implements Runnable, NetworkUser<Command, ResponseToClient> {
 
     private Socket socket;
     private final Gson gson = createPersonalGsonBuilder();
@@ -44,6 +44,7 @@ public class Client implements Runnable {
     private List<Resource> gainedFromMarbleMarket;
     private int marbles;
     private PrintWriter out;
+    private BufferedReader in;
     private Command lastCommand = new UnknownCommand();
     private final View view;
 
@@ -73,6 +74,7 @@ public class Client implements Runnable {
 
             this.socket = new Socket(hostName, portNumber);
             out = new PrintWriter(this.socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             start();
         } catch (IOException e) {
@@ -112,46 +114,33 @@ public class Client implements Runnable {
 
     @Override
     public void run() {
-        BufferedReader in = null;
-        try {
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
 
         ResponseToClient response;
-        String received;
 
         try {
-            while ((received = in.readLine()) != null) {
 
-                synchronized (this) {
-                    response = gson.fromJson(received, ResponseToClient.class);
+            try {
+                while (true) {
 
-                    response.updateClient(this);
+                    synchronized (this) {
+                        response = receiveMessage();
+
+                        response.updateClient(this);
+                    }
+
                 }
+            } catch (NullPointerException e){
 
+                in.close();
+                System.err.println("Disconnection...");
+                System.exit(1);
             }
-            in.close();
-            System.err.println("Disconnection...");
-            System.exit(1);
 
         } catch (IOException e){
             System.err.println("Something wrong happened IOException..." + e.getMessage());
             System.exit(1);
 
-        }/* catch (NullPointerException e){
-            System.err.println(" NullPointerException error");
-            System.err.println(e.getMessage());
-            System.exit(1);
-        }catch (JsonSyntaxException e){
-            System.err.println("Json error...");
-            System.err.println(e.getMessage());
-            System.exit(1);
         }
-
-         */
     }
 
     /**
@@ -159,12 +148,24 @@ public class Client implements Runnable {
      * have to be in the format class Command
      * @param command this is the socket to send
      */
+    @Override
     public void send(Command command){
-        this.out.println(gson.toJson(command, Command.class));
-        this.out.flush();
+        out.println(gson.toJson(command, Command.class));
+        out.flush();
+    }
+
+    /**
+     * this method receive a message from the network
+     * @return the message received
+     * @throws IOException if a network error occurs
+     */
+    @Override
+    public ResponseToClient receiveMessage() throws IOException {
+        return gson.fromJson(in.readLine(), ResponseToClient.class);
     }
 
     public static List<LeaderCard> createLeaderCards(){
+
         List<LeaderCard> leaders = new ArrayList<>(); // create an arraylist of leaderCard
         LeaderCardRequirements requirements1 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.BLUE, CardColor.BLUE, CardColor.YELLOW)));
         LeaderCardRequirements requirements2 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.PURPLE, CardColor.PURPLE, CardColor.GREEN)));
@@ -172,11 +173,20 @@ public class Client implements Runnable {
         LeaderCardRequirements requirements4 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.YELLOW, CardColor.BLUE)));
 
         //NewWhiteMarble leaderCards
-        leaders.add(new NewWhiteMarble(requirements2,5,new Coin())); leaders.add(new NewWhiteMarble(requirements1 ,5,new Stone())); leaders.add(new NewWhiteMarble(requirements4,5,new Servant())); leaders.add(new NewWhiteMarble(requirements3,5,new Shield())); //NewWhiteMarble leaderCard
+        leaders.add(new NewWhiteMarble(requirements2,5,new Coin(), "60"));
+        leaders.add(new NewWhiteMarble(requirements1 ,5,new Stone(), "59"));
+        leaders.add(new NewWhiteMarble(requirements4,5,new Servant(), "57"));
+        leaders.add(new NewWhiteMarble(requirements3,5,new Shield(), "58"));
         //NewShelf leaderCards
-        leaders.add(new NewShelf(new ResourcesRequired(new Shield()),3,new Coin())); leaders.add(new NewShelf(new ResourcesRequired(new Servant()),3,new Shield())); leaders.add(new NewShelf(new ResourcesRequired(new Stone()),3,new Servant())); leaders.add(new NewShelf(new ResourcesRequired(new Coin()),3,new Stone())); //NewShelf leaderCard
+        leaders.add(new NewShelf(new ResourcesRequired(new Shield()),3,new Coin(), "56"));
+        leaders.add(new NewShelf(new ResourcesRequired(new Servant()),3,new Shield(), "55"));
+        leaders.add(new NewShelf(new ResourcesRequired(new Stone()),3,new Servant(), "54"));
+        leaders.add(new NewShelf(new ResourcesRequired(new Coin()),3,new Stone(), "53"));
         //NewProduction leaderCards
-        leaders.add(new NewProduction(new LevelRequired(CardColor.GREEN) ,4 , new Coin())); leaders.add(new NewProduction(new LevelRequired(CardColor.PURPLE) ,4 , new Stone())); leaders.add(new NewProduction(new LevelRequired(CardColor.BLUE) ,4 , new Servant())); leaders.add(new NewProduction(new LevelRequired(CardColor.YELLOW) ,4 , new Shield())); //NewProduction leaderCard
+        leaders.add(new NewProduction(new LevelRequired(CardColor.GREEN) ,4 , new Coin(), "64"));
+        leaders.add(new NewProduction(new LevelRequired(CardColor.PURPLE) ,4 , new Stone(), "63"));
+        leaders.add(new NewProduction(new LevelRequired(CardColor.BLUE) ,4 , new Servant(), "62"));
+        leaders.add(new NewProduction(new LevelRequired(CardColor.YELLOW) ,4 , new Shield(), "61"));
 
         LeaderCardRequirements requirement1 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.PURPLE)));
         LeaderCardRequirements requirement2 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.GREEN , CardColor.BLUE)));
@@ -184,7 +194,10 @@ public class Client implements Runnable {
         LeaderCardRequirements requirement4 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.GREEN)));
 
         //NewDiscount leaderCards
-        leaders.add(new NewDiscount(requirement1,2,new Coin())); leaders.add(new NewDiscount(requirement2,2,new Stone())); leaders.add(new NewDiscount(requirement3,2,new Shield())); leaders.add(new NewDiscount(requirement4,2,new Servant())); //NewDiscount leaderCard
+        leaders.add(new NewDiscount(requirement1,2,new Coin(), "52"));
+        leaders.add(new NewDiscount(requirement2,2,new Stone(), "51"));
+        leaders.add(new NewDiscount(requirement3,2,new Shield(), "50"));
+        leaders.add(new NewDiscount(requirement4,2,new Servant(), "49"));
         return leaders;
     }
 
@@ -235,5 +248,9 @@ public class Client implements Runnable {
 
     public void showContextAction(Status message){
         view.showContextAction(lastCommand, message);
+    }
+
+    public View getView(){
+        return view;
     }
 }

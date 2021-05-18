@@ -1,14 +1,10 @@
 package it.polimi.ingsw.controller.responseToClients;
 
-import it.polimi.ingsw.controller.ClientHandler;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.network.Client;
-import it.polimi.ingsw.view.graphic.CharFigure;
-import it.polimi.ingsw.view.graphic.GraphicalInitializingLeaderCard;
+import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.view.thinModelComponents.ThinLeaderCard;
-import it.polimi.ingsw.view.utilities.CharStream;
-import it.polimi.ingsw.view.utilities.colors.BackColor;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,7 +59,7 @@ public class InitialisingResponse extends ResponseToClient{
      * @param client this is the client to update
      */
     @Override
-    public void updateClient(Client client){
+    public void updateClient(Client client) {
         // set the position
         client.setPosition(position);
         // set the leader cards, recreating them
@@ -72,18 +68,8 @@ public class InitialisingResponse extends ResponseToClient{
                 map(leaderCard -> recreate(leaderCard, client.getAllLeaderCards())).
                 collect(Collectors.toList());
 
-        // print the leader cards with ascii art
-        CharStream console = new CharStream(200, 30);
-        for (int i = 0; i < 200; i++) {
-            for (int j = 0; j < 60; j++) {
-                console.addColor(i, j, BackColor.ANSI_BRIGHT_BG_BLACK);
-            }
-        }
+        client.getView().showInitialisingPhase(leaderCards, position);
 
-        CharFigure graphicLeaderCards = new GraphicalInitializingLeaderCard(console, leaderCards);
-        graphicLeaderCards.draw();
-        console.print(System.out);
-        console.reset();
         super.updateClient(client);
     }
 

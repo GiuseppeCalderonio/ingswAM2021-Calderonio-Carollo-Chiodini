@@ -21,6 +21,10 @@ public class NewWhiteMarble extends LeaderCard {
         super(requirements, victoryPoints, resource);
     }
 
+    public NewWhiteMarble(LeaderCardRequirements requirements, int victoryPoints, Resource resource, String png) {
+        super(requirements, victoryPoints, resource, png);
+    }
+
     /**
      * this method add a new resource that can be gained from a white marble
      * at the player in input when he

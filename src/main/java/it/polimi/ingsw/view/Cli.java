@@ -6,8 +6,11 @@ import it.polimi.ingsw.controller.commands.normalCommands.EndTurnCommand;
 import it.polimi.ingsw.controller.commands.normalCommands.productionCommands.EndProductionCommand;
 import it.polimi.ingsw.controller.commands.normalCommands.productionCommands.ProductionCommand;
 import it.polimi.ingsw.controller.responseToClients.Status;
+import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.view.graphic.CharFigure;
 import it.polimi.ingsw.view.graphic.GraphicalGame;
+import it.polimi.ingsw.view.graphic.GraphicalInitializingLeaderCard;
 import it.polimi.ingsw.view.thinModelComponents.ThinGame;
 import it.polimi.ingsw.view.utilities.CharStream;
 import it.polimi.ingsw.view.utilities.colors.BackColor;
@@ -17,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.InvalidParameterException;
+import java.util.List;
 
 public class Cli implements View{
 
@@ -142,6 +146,22 @@ public class Cli implements View{
     @Override
     public void showErrorMessage(Exception e) {
         System.err.println(e.getMessage());
+    }
+
+    @Override
+    public void showInitialisingPhase(List<LeaderCard> leaderCards, int position) {
+        // print the leader cards with ascii art
+        CharStream console = new CharStream(200, 30);
+        for (int i = 0; i < 200; i++) {
+            for (int j = 0; j < 60; j++) {
+                console.addColor(i, j, BackColor.ANSI_BRIGHT_BG_BLACK);
+            }
+        }
+
+        CharFigure graphicLeaderCards = new GraphicalInitializingLeaderCard(console, leaderCards);
+        graphicLeaderCards.draw();
+        console.print(System.out);
+        console.reset();
     }
 
     @Override

@@ -21,6 +21,10 @@ public class NewProduction extends LeaderCard {
         super(requirements, victoryPoints, resource);
     }
 
+    public NewProduction(LeaderCardRequirements requirements, int victoryPoints, Resource resource, String png) {
+        super(requirements, victoryPoints, resource, png);
+    }
+
     /**
      * this method add a new power production at the player in input when he
      * has all the requirements of the leader card

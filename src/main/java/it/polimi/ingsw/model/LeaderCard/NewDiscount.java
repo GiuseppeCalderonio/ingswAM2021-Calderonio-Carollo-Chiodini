@@ -21,6 +21,10 @@ public class NewDiscount extends LeaderCard {
         super(requirements, victoryPoints, resource);
     }
 
+    public NewDiscount(LeaderCardRequirements requirements, int victoryPoints, Resource resource, String png) {
+        super(requirements, victoryPoints, resource, png);
+    }
+
     /**
      * this method add a new resource to use as discount
      * when the player in input buy a card,but only if he

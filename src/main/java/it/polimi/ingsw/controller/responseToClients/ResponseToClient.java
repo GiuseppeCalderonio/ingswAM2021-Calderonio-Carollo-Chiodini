@@ -45,7 +45,7 @@ public class ResponseToClient {
      * set the values that have to change after a model's change
      * @param client this is the client to update
      */
-    public void updateClient(Client client){
+    public void updateClient(Client client) {
         // show to the client the context action
         client.showContextAction(message);
 

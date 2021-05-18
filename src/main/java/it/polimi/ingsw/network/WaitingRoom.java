@@ -2,7 +2,6 @@ package it.polimi.ingsw.network;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import it.polimi.ingsw.controller.ClientHandler;
 import it.polimi.ingsw.controller.QuitException;
 import it.polimi.ingsw.controller.commands.Command;
 import it.polimi.ingsw.controller.commands.CommandName;
@@ -23,7 +22,7 @@ import static it.polimi.ingsw.controller.gsonManager.PersonalGsonBuilder.createP
  * this class represent the waiting room, in which every client can choose
  * the number of player of the game that he want to play
  */
-public class WaitingRoom implements Runnable{
+public class WaitingRoom implements Runnable, NetworkUser<ResponseToClient, Command>{
 
     /**
      * this attribute represent the socket associated with the player
@@ -42,6 +41,10 @@ public class WaitingRoom implements Runnable{
      * or he will create it
      */
     private final static List<Lobby> lobbies = new ArrayList<>();
+
+    private PrintWriter out;
+
+    private Scanner in;
 
 
     /**
@@ -68,8 +71,6 @@ public class WaitingRoom implements Runnable{
      */
     @Override
     public void run() {
-        Scanner in;
-        PrintWriter out;
         try {
             in = new Scanner(socket.getInputStream());
             out = new PrintWriter(socket.getOutputStream());
@@ -81,7 +82,7 @@ public class WaitingRoom implements Runnable{
 
 
         try { // let the client decide the number of players of the game
-            numberOfPlayers = decideNumberOfPlayers(in, out);
+            numberOfPlayers = decideNumberOfPlayers();
         } catch (QuitException e){ // if he want to quit
             return;
         } catch (Exception e){
@@ -98,7 +99,7 @@ public class WaitingRoom implements Runnable{
             // here is synchronized because two threads can try to remove the same lobby
             clearLobbies();
             // here is synchronized because two threads could enter into a lobby even if there isn't enough space
-            newClient = searchLobby(numberOfPlayers, out, in);
+            newClient = searchLobby(numberOfPlayers);
         }
 
         // start the match for the client
@@ -124,18 +125,16 @@ public class WaitingRoom implements Runnable{
      * create a new lobby and add the client to it
      *
      * @param numberOfPlayers these are the number of players of the game to search/create
-     * @param out this is the printWriter associated with the socket
-     * @param in this is the scanner associated with the socket
      * @return the ClientHandler already added to the lobby
      */
-    private ClientHandler searchLobby(int numberOfPlayers, PrintWriter out, Scanner in) {
+    private ClientHandler searchLobby(int numberOfPlayers) {
         // for all lobbies
         for (Lobby lobby : lobbies){
             try {
                 // if the client can enter into the lobby
                 if (joinLobby(lobby, numberOfPlayers))
                     // return the new client adding him to the lobby
-                    return createClientHandler(out, in, lobby);
+                    return createClientHandler(lobby);
                 // if a client disconnect, is the last client of the lobby, and another client try to
                 // enter into the lobby while the attribute gameIsFinished is true
             } catch (LobbyFinishedException ignored) { }
@@ -146,7 +145,7 @@ public class WaitingRoom implements Runnable{
         // add it to the lobbies static list
         lobbies.add(lobby);
         // create a client handler and return it
-        return createClientHandler(out, in, lobby);
+        return createClientHandler(lobby);
     }
 
     /**
@@ -167,14 +166,12 @@ public class WaitingRoom implements Runnable{
 
     /**
      * this method initialise a client and adds it to the lobby in input
-     * @param out this is the printWriter associated with the socket
-     * @param in this is the scanner associated with the socket
      * @param lobby this is the lobby in which add the client
      * @return the client handler object associated with the client
      * @throws LobbyFinishedException when the method try to add a client to a lobby, but
      *         another client set the attribute gameIsFinished to true
      */
-    private ClientHandler createClientHandler(PrintWriter out, Scanner in, Lobby lobby) throws LobbyFinishedException {
+    private ClientHandler createClientHandler( Lobby lobby) throws LobbyFinishedException {
         // create a new object client handler
         ClientHandler newClient = new ClientHandler(socket, lobby, out, in, gson);
         // add the client just created to the lobby assigned
@@ -197,15 +194,12 @@ public class WaitingRoom implements Runnable{
      * the method throws a QuitException when the client send a QuitCommand.class
      * or when the connection is closed
      *
-     * @param in this is the scanner associated with the socket
-     * @param out this is the printWriter associated with the socket
-     *
      * @return the number of players of the game that the client associated with
      *         the thread want to play
      *
      * @throws QuitException when the client send a QuitCommand.class or when the connection is closed
      */
-    private int decideNumberOfPlayers(Scanner in, PrintWriter out) throws QuitException{
+    private int decideNumberOfPlayers() throws QuitException{
         int numberOfPlayers;
         do {
             try {
@@ -222,19 +216,19 @@ public class WaitingRoom implements Runnable{
                     break;
                 //else
                 // notify the player of his error
-                send(out , buildResponse(Status.REFUSED));
+                send( buildResponse(Status.REFUSED));
                 // if the player didn't send a number
             }catch (NumberFormatException e){
-                send(out, buildResponse(Status.REFUSED));
+                send( buildResponse(Status.REFUSED));
             }
             // if the string sent from the client isn't in a gson format
             catch (JsonSyntaxException | NullPointerException e){
-                send(out, buildResponse(Status.QUIT));
+                send( buildResponse(Status.QUIT));
                 // if the player disconnect
             } catch (NoSuchElementException e){
                 throw new QuitException();
             } catch (Exception e){
-                send(out, buildResponse(Status.ERROR));
+                send( buildResponse(Status.ERROR));
             }
         }while (true);
 
@@ -243,15 +237,24 @@ public class WaitingRoom implements Runnable{
 
     /**
      * this method send a message to the client in the gson format, as a ResponseToClient object
-     * @param out this is the printWriter associated with the socket
      * @param response this is the response that must be send
      */
-    private void send(PrintWriter out, ResponseToClient response){
+    @Override
+    public void send( ResponseToClient response){
         // parse the object ResponseToClient to a string
         String toSend = gson.toJson(response, ResponseToClient.class);
         // send the string to the print writer
         out.println(toSend);
         out.flush();
+    }
+
+    /**
+     * this method receive a message from the network
+     * @return the message received
+     */
+    @Override
+    public Command receiveMessage() {
+        return gson.fromJson(in.nextLine(), Command.class);
     }
 
     /**

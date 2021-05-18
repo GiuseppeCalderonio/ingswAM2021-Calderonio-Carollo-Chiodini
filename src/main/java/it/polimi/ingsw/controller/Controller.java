@@ -7,6 +7,7 @@ import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.controller.responseToClients.StartGameResponse;
 import it.polimi.ingsw.controller.responseToClients.Status;
 import it.polimi.ingsw.model.EndGameException;
+import it.polimi.ingsw.network.ClientHandler;
 
 /**
  * this class represent the command manager, it process the commands,
@@ -52,7 +53,7 @@ public class Controller {
      * @return the command interpreter associated with this object
      * @see CommandInterpreter
      */
-    protected CommandInterpreter getCommandInterpreter() {
+    public CommandInterpreter getCommandInterpreter() {
         return commandInterpreter;
     }
 
@@ -61,7 +62,7 @@ public class Controller {
      * @param commandInterpreter this is the command interpreter to set
      * @see CommandInterpreter
      */
-    protected void setCommandInterpreter(CommandInterpreter commandInterpreter) {
+    public void setCommandInterpreter(CommandInterpreter commandInterpreter) {
         this.commandInterpreter = commandInterpreter;
     }
 
