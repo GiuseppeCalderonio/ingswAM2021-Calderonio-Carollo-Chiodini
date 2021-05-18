@@ -13,6 +13,9 @@ public class LocalClientMain {
      *             in this specific case
      */
     public static void main(String[] args) {
-        new LocalClient();
+
+        boolean cli = Integer.parseInt(args[0]) == 0;
+
+        new LocalClient(cli);
     }
 }

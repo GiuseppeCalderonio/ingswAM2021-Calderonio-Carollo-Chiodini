@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.Resources;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Iterator;
 
 /**
@@ -100,7 +98,7 @@ public class MapResources implements Iterable<Resource> {
      *
      * @return an Iterator.
      */
-    @NotNull
+
     @Override
     public Iterator<Resource> iterator() {
         return new MapResourcesIterator(this.cardinality, this.resource);

@@ -10,8 +10,6 @@ import it.polimi.ingsw.view.thinModelComponents.ThinLeaderCard;
 import it.polimi.ingsw.view.utilities.CharStream;
 import it.polimi.ingsw.view.utilities.colors.BackColor;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

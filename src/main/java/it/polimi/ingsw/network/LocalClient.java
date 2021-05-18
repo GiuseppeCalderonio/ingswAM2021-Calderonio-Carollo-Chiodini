@@ -30,8 +30,8 @@ public class LocalClient extends Client {
      * @see ClientHandler
      * @see LocalClientHandler
      */
-    public LocalClient() {
-        super(null, 0);
+    public LocalClient(boolean cli) {
+        super(null, 0, cli, null);
 
         this.controller = new LocalClientHandler(this);
 

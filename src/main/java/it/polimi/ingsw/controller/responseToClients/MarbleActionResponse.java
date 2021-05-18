@@ -85,7 +85,6 @@ public class MarbleActionResponse extends ResponseToClient{
 
         ThinPlayer toChange = getPlayerToChange(client, nickname3);
         updateTracks(client);
-        //toChange.setTrack(track3);
         toChange.setWarehouse(warehouse3);
         client.getGame().setLonelyMarble(lonelyMarble3);
         client.getGame().setMarbleMarket(marbleMarket3);

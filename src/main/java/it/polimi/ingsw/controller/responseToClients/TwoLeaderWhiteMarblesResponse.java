@@ -2,9 +2,6 @@ package it.polimi.ingsw.controller.responseToClients;
 
 import it.polimi.ingsw.network.Client;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 /**
  * this class represent the response to send if and only if
  * a player own two leader cards of type marbles conversion, and

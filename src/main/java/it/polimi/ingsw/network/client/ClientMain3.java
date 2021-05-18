@@ -16,6 +16,9 @@ public class ClientMain3 {
      */
     public static void main(String[] args) {
 
-        new Client(args[1], Integer.parseInt(args[0]));
+        boolean cli = Integer.parseInt(args[2]) == 0;
+
+
+        new Client(args[1], Integer.parseInt(args[0]), cli, null);
     }
 }

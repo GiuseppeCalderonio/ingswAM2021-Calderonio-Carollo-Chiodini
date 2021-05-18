@@ -1,7 +1,6 @@
 package it.polimi.ingsw.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import it.polimi.ingsw.controller.commands.Command;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.controller.responseToClients.Status;
@@ -43,11 +42,11 @@ public class ClientHandler {
     private final Gson gson;
 
     /**
-     * this attribute represent the command manager.
+     * this attribute represent the controller.
      * in particular, this attribute is the first real
      * layer of the controller that get messages and respond with messages
      */
-    private CommandManager commandManager;
+    private Controller controller;
 
     /**
      * this attribute represent the lobby associated with the client.
@@ -117,7 +116,7 @@ public class ClientHandler {
         }
 
         // create a new command manager
-        commandManager = new CommandManager(this);
+        controller = new Controller(this);
 
         while (play) {
                 play = readMessage();
@@ -240,7 +239,7 @@ public class ClientHandler {
      * @return the command interpreter associated with the client
      */
     public CommandInterpreter getInterpreter(){
-        return commandManager.getCommandInterpreter();
+        return controller.getCommandInterpreter();
     }
 
     /**
@@ -252,32 +251,32 @@ public class ClientHandler {
      * @param interpreter this is the command interpreter to set
      */
     protected void setCommandInterpreter(CommandInterpreter interpreter){
-        commandManager.setCommandInterpreter(interpreter);
+        controller.setCommandInterpreter(interpreter);
     }
 
     /**
-     * this class get the command manager associated with the client.
-     * in particular, the command manager is used to manage the phases of the game
+     * this class get the controller associated with the client.
+     * in particular, the controller is used to manage the phases of the game
      * (LOGIN, INITIALISE, TURNS see GamePhase) , to send broadcast during the change of a phase,
      * to send the messages processed from the command interpreter
-     * @return the command manager associated with the client
+     * @return the controller associated with the client
      * @see GamePhase
      */
-    protected CommandManager getCommandManager() {
-        return commandManager;
+    protected Controller getController() {
+        return controller;
     }
 
     /**
-     * this class set the command manager associated with the client.
-     * in particular, the command manager is used to manage the phases of the game
+     * this class set the controller associated with the client.
+     * in particular, the controller is used to manage the phases of the game
      * (LOGIN, INITIALISE, TURNS see GamePhase) , to send broadcast during the change of a phase,
      * to send the messages processed from the command interpreter
      *
-     * @param commandManager this is the command manager to set
+     * @param controller this is the command manager to set
      * @see GamePhase
      */
-    public void setCommandManager(CommandManager commandManager) {
-        this.commandManager = commandManager;
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
 
@@ -397,7 +396,7 @@ public class ClientHandler {
 
         try {
             // process the command and send the message or the messages to the players
-            commandManager.processCommand(command);
+            controller.processCommand(command);
             return true;
             // if one of the parameters of the command does not respect the preconditions
         }catch (NullPointerException | IndexOutOfBoundsException e){

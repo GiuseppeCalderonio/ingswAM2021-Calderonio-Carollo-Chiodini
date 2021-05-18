@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.Resources;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -176,7 +174,6 @@ public class CollectionResources implements Iterable<Resource> {
      *
      * @return an Iterator.
      */
-    @NotNull
     @Override
     public Iterator<Resource> iterator() {
         CollectionResources toPass = new CollectionResources();

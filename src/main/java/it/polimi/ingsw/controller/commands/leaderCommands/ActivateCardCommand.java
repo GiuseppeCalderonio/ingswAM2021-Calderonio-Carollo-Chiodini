@@ -1,7 +1,6 @@
 package it.polimi.ingsw.controller.commands.leaderCommands;
 
 import it.polimi.ingsw.controller.ClientHandler;
-import it.polimi.ingsw.controller.GamePhase;
 import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.LeaderActionResponse;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;

@@ -39,6 +39,7 @@ public class Cli implements View{
 
         while ((command = stdIn.readLine()) != null) {
 
+            System.out.println("Choose a command, or wait if you can't do anything");
 
             switch (command){
 

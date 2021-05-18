@@ -82,19 +82,6 @@ public class StartGameResponse extends ResponseToClient{
     @Override
     public void updateClient(Client client) {
         client.createGame(cardsMarket1, marbleMarket1, lonelyMarble1, soloToken, actualPlayer, opponents);
-        /*
-        client.getGame().setCardsMarket(cardsMarket1);
-        client.getGame().setMarbleMarket(marbleMarket1);
-        client.getGame().setLonelyMarble(lonelyMarble1);
-        client.getGame().setSoloToken(soloToken);
-        client.getGame().setMyself(actualPlayer);
-        // this part of code is used to use the constructor that recreate the leader cards from the thin ones
-        List<ThinPlayer> opponents = this.opponents.stream().
-                map(ThinPlayer::new).
-                collect(Collectors.toList());
-        client.getGame().setOpponents(opponents);
-
-         */
         client.show();
 
 

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.network;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import it.polimi.ingsw.controller.commands.Command;
 import it.polimi.ingsw.controller.commands.UnknownCommand;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
@@ -14,6 +13,7 @@ import it.polimi.ingsw.model.Resources.*;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
 import it.polimi.ingsw.view.Cli;
 import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.gui.Gui;
 import it.polimi.ingsw.view.thinModelComponents.ThinGame;
 import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
 
@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static it.polimi.ingsw.controller.gsonManager.PersonalGsonBuilder.createPersonalGsonBuilder;
+import static it.polimi.ingsw.view.gui.Gui.startGui;
 
 /**
  * this class represent the main
@@ -44,10 +45,26 @@ public class Client implements Runnable {
     private int marbles;
     private PrintWriter out;
     private Command lastCommand = new UnknownCommand();
-    private final View view = new Cli(this);
+    private final View view;
 
 
-    public Client(String hostName, int portNumber) {
+    public Client(String hostName, int portNumber, boolean cli, View gui) {
+
+        if (cli){
+            view = new Cli(this);
+        }
+        else {
+            view = new Gui();
+            Gui.setClient(this);
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    startGui();
+                }
+            });
+            t.start();
+
+        }
 
         if (portNumber == 0 || hostName == null)
             return;
@@ -119,11 +136,12 @@ public class Client implements Runnable {
             in.close();
             System.err.println("Disconnection...");
             System.exit(1);
+
         } catch (IOException e){
-            System.err.println("Something wrong happened IOException...");
-            System.err.println(e.getMessage());
+            System.err.println("Something wrong happened IOException..." + e.getMessage());
             System.exit(1);
-        }catch (NullPointerException e){
+
+        }/* catch (NullPointerException e){
             System.err.println(" NullPointerException error");
             System.err.println(e.getMessage());
             System.exit(1);
@@ -132,6 +150,8 @@ public class Client implements Runnable {
             System.err.println(e.getMessage());
             System.exit(1);
         }
+
+         */
     }
 
     /**
@@ -170,7 +190,6 @@ public class Client implements Runnable {
 
     public void show(){
         view.show(game);
-        //view.show(opponents, myself, marbleMarket, lonelyMarble, cardsMarket, soloToken);
     }
 
     public void setPosition(int position) {
@@ -201,50 +220,6 @@ public class Client implements Runnable {
                            List<ThinPlayer> opponents){
         game = new ThinGame(cardsMarket, marbleMarket, lonelyMarble, soloToken, actualPlayer, opponents);
     }
-
-    /*
-    public void setCardsMarket(DevelopmentCard[][] cardsMarket) {
-        this.cardsMarket = cardsMarket;
-    }
-
-    public void setLonelyMarble(Marble lonelyMarble) {
-        this.lonelyMarble = lonelyMarble;
-    }
-
-    public void setMarbleMarket(Marble[][] marbleMarket) {
-        this.marbleMarket = marbleMarket;
-    }
-
-    public void setMyself(ThinPlayer myself) {
-        this.myself = new ThinPlayer(myself);
-    }
-
-    public void setOpponents(List<ThinPlayer> opponents) {
-        this.opponents = opponents;
-    }
-
-    public void setSoloToken(SoloToken solotoken) {
-        this.solotoken = solotoken;
-    }
-
-    public ThinPlayer getMyself() {
-        return myself;
-    }
-
-    public List<ThinPlayer> getOpponents() {
-        return opponents;
-    }
-
-
-    public DevelopmentCard[][] getCardsMarket() {
-        return cardsMarket;
-    }
-
-    public void setCard(int level, CardColor color, DevelopmentCard card){
-        cardsMarket[2 - (level - 1)][color.getIndex()] = card;
-    }
-
-     */
 
     public void setGainedFromMarbleMarket(List<Resource> gainedFromMarbleMarket) {
         this.gainedFromMarbleMarket = gainedFromMarbleMarket;

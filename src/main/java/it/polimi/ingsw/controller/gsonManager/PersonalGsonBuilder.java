@@ -1,7 +1,6 @@
 package it.polimi.ingsw.controller.gsonManager;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import it.polimi.ingsw.controller.commands.*;
 import it.polimi.ingsw.controller.commands.initialisingCommands.InitialiseLeaderCardsCommand;

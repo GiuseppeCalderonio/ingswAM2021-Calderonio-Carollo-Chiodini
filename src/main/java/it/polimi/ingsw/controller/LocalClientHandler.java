@@ -48,7 +48,7 @@ public class LocalClientHandler extends ClientHandler{
     public LocalClientHandler(Client view) {
         super(null, null, null, null, null);
         this.view = view;
-        setCommandManager(new CommandManager(this));
+        setController(new Controller(this));
     }
 
     /**
@@ -59,7 +59,7 @@ public class LocalClientHandler extends ClientHandler{
      */
     public boolean readMessage(Command command) {
         try {
-            getCommandManager().processCommand(command);
+            getController().processCommand(command);
         } catch (EndGameException e){
             send(new WinnerResponse(e.getMessage(), game.getActualPlayer().getVictoryPoints()));
         } catch (QuitException e){
@@ -78,7 +78,7 @@ public class LocalClientHandler extends ClientHandler{
      * @see ResponseToClient
      */
     @Override
-    public synchronized void send(ResponseToClient message) {
+    public void send(ResponseToClient message) {
         message.updateClient(view);
     }
 
@@ -88,7 +88,7 @@ public class LocalClientHandler extends ClientHandler{
      * in this subclass just call the method send with an error message to the client
      */
     @Override
-    public synchronized void sendBroadcastDisconnection() {
+    public void sendBroadcastDisconnection() {
         send(new ResponseToClient(Status.QUIT));
     }
 
@@ -101,7 +101,7 @@ public class LocalClientHandler extends ClientHandler{
      * @param message this is the message to send in broadcast
      */
     @Override
-    public synchronized void sendInBroadcast(ResponseToClient message) {
+    public void sendInBroadcast(ResponseToClient message) {
         send(message);
     }
 
@@ -112,7 +112,7 @@ public class LocalClientHandler extends ClientHandler{
      * @return the nicknames of every player that joined the lobby
      */
     @Override
-    public synchronized List<String> getNicknames() {
+    public List<String> getNicknames() {
         return new ArrayList<>(Collections.singletonList(getNickname()));
     }
 
@@ -123,7 +123,7 @@ public class LocalClientHandler extends ClientHandler{
      * @param nickname this is the nickname to add
      */
     @Override
-    public synchronized void addNickname(String nickname) {
+    public void addNickname(String nickname) {
 
     }
 
@@ -135,7 +135,7 @@ public class LocalClientHandler extends ClientHandler{
      * @return the game associated with the lobby joined from the client
      */
     @Override
-    public synchronized Game getGame() {
+    public Game getGame() {
         return game;
     }
 
@@ -146,7 +146,7 @@ public class LocalClientHandler extends ClientHandler{
      * in this subclass create a single game with the unique nickname of the local client
      */
     @Override
-    public synchronized void createGame() {
+    public void createGame() {
         game = new SingleGame(getNicknames());
     }
 
@@ -175,7 +175,7 @@ public class LocalClientHandler extends ClientHandler{
      * @return the number of players of the lobby joined by the client
      */
     @Override
-    public synchronized int getNumberOfPlayers() {
+    public int getNumberOfPlayers() {
         return 1;
     }
 

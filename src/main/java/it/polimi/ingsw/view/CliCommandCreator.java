@@ -146,8 +146,12 @@ public class CliCommandCreator {
     }
 
     protected Command insertInWarehouse(BufferedReader stdIn, List<Resource> gainedFromMarbleMarket) throws IOException {
+        if (gainedFromMarbleMarket == null)
+            throw new InvalidParameterException("you can't do this action");
+
         int[] shelves = new int[gainedFromMarbleMarket.size()];
         int i = 0;
+
         for (Resource gained : gainedFromMarbleMarket){
             System.out.println("Decide in which shelf of the warehouse place: "+ gained);
             String index = stdIn.readLine();

@@ -12,7 +12,7 @@ import it.polimi.ingsw.model.EndGameException;
  * this class represent the command manager, it process the commands,
  * and manage the possible commands that a player can do in a phase of the game
  */
-public class CommandManager {
+public class Controller {
 
     /**
      * this attribute represent the client handler associated with
@@ -39,7 +39,7 @@ public class CommandManager {
      * @param client this is the client handler associated with the object to set
      * @see ClientHandler
      */
-    public CommandManager(ClientHandler client) {
+    public Controller(ClientHandler client) {
 
         commandInterpreter = new LoginInterpreter();
         this.client = client;
@@ -95,7 +95,12 @@ public class CommandManager {
         ResponseToClient response = commandInterpreter.executeCommand(command, client);
         // send the response created based on the command executed from the command interpreter
         client.send(response);
+        // update the state of the controller after this change
+        updateState();
 
+    }
+
+    private void updateState(){
         // if every player did the login, so if everyone is in a login phase, there are enough players in the lobby, and everyone decided his nickname
         if (loginPhaseFinished())
             startInitialisingPhase(); //change the state of the game from LOGIN to INITIALISE
