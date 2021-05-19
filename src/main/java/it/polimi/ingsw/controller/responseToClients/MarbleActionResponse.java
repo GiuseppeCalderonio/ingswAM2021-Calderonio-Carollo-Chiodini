@@ -1,17 +1,14 @@
 package it.polimi.ingsw.controller.responseToClients;
 
-import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.PlayerAndComponents.Player;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
-import it.polimi.ingsw.network.Client;
-import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
+import it.polimi.ingsw.network.ClientHandler;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.thinModelComponents.ThinTrack;
 import it.polimi.ingsw.view.thinModelComponents.ThinWarehouse;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -81,8 +78,14 @@ public class MarbleActionResponse extends ResponseToClient{
      * @param client this is the client to update
      */
     @Override
-    public void updateClient(Client client) {
+    public void updateClient(View view) {
 
+        view.updateTrack(tracks);
+        view.updateWarehouse(warehouse3, nickname3);
+        view.updateMarbleMarket(marbleMarket3, lonelyMarble3);
+        view.showCli();
+
+        /*
         ThinPlayer toChange = getPlayerToChange(client, nickname3);
         updateTracks(client);
         toChange.setWarehouse(warehouse3);
@@ -90,18 +93,8 @@ public class MarbleActionResponse extends ResponseToClient{
         client.getGame().setMarbleMarket(marbleMarket3);
         client.show();
 
-        super.updateClient(client);
-    }
+         */
 
-    /**
-     * this method update the track of every player
-     * @param client this is the client to update
-     */
-    private void updateTracks(Client client){
-        List<ThinPlayer> players = new ArrayList<>(client.getGame().getOpponents());
-        players.add(client.getGame().getMyself());
-
-        players.forEach(player -> player.setTrack(tracks.get(player.getNickname())));
-
+        super.updateClient(view);
     }
 }

@@ -2,9 +2,11 @@ package it.polimi.ingsw.controller.responseToClients;
 
 import it.polimi.ingsw.model.Resources.CollectionResources;
 import it.polimi.ingsw.model.Resources.Resource;
-import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.view.View;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * this class represent the response to send when
@@ -41,10 +43,12 @@ public class WhiteMarblesConversionResponse extends ResponseToClient{
      * @param client this is the client to update
      */
     @Override
-    public void updateClient(Client client) {
+    public void updateClient(View view) {
 
-        client.setGainedFromMarbleMarket(gainedFromMarbleMarket);
+        view.updateBufferGainedMarbles(gainedFromMarbleMarket);
 
-        super.updateClient(client);
+        //client.setGainedFromMarbleMarket(gainedFromMarbleMarket);
+
+        super.updateClient(view);
     }
 }

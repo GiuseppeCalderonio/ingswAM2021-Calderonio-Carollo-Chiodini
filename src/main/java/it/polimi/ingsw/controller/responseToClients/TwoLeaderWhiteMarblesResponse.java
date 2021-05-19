@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller.responseToClients;
 
-import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.view.View;
 
 /**
  * this class represent the response to send if and only if
@@ -36,10 +36,12 @@ public class TwoLeaderWhiteMarblesResponse extends ResponseToClient{
      * @param client this is the client to update
      */
     @Override
-    public void updateClient(Client client) {
+    public void updateClient(View view) {
 
-        client.setMarbles(whiteMarbles);
+        view.updateBufferMarbles(whiteMarbles);
 
-        super.updateClient(client);
+        //client.setMarbles(whiteMarbles);
+
+        super.updateClient(view);
     }
 }

@@ -6,25 +6,29 @@ import it.polimi.ingsw.controller.commands.initialisingCommands.InitialiseLeader
 import it.polimi.ingsw.controller.commands.initialisingCommands.InitialiseResourcesCommand;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
-import it.polimi.ingsw.model.Resources.CollectionResources;
+import it.polimi.ingsw.model.Resources.*;
 import it.polimi.ingsw.network.NetworkUser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class InitialisisngController implements GuiController , Initializable {
 
     @FXML
-    private final Pane paneView = new Pane();
+    private Button choiceButton;
+
+    @FXML
+    private Label contextAction = new Label();
 
     @FXML
     private Label errorMessage;
@@ -42,16 +46,16 @@ public class InitialisisngController implements GuiController , Initializable {
     private CheckBox first;
 
     @FXML
-    private  ImageView firstLeaderCard = new ImageView();
+    private  ImageView firstChoice = new ImageView();
 
     @FXML
-    private  ImageView secondLeaderCard = new ImageView();
+    private  ImageView secondChoice = new ImageView();
 
     @FXML
-    private  ImageView thirdLeaderCard = new ImageView();
+    private  ImageView thirdChoice = new ImageView();
 
     @FXML
-    private  ImageView fourthLeaderCard = new ImageView();
+    private  ImageView fourthChoice = new ImageView();
 
     private  List<LeaderCard> leaderCards;
 
@@ -68,45 +72,103 @@ public class InitialisisngController implements GuiController , Initializable {
     }
 
     @Override
-    public void update(CommandName name) throws IOException {
+    public void update(CommandName name) {
 
+    }
+
+    @Override
+    public void sendNewCommand(Command toSend) {
+        Gui.setLastCommand(toSend);
+        networkUser.send(toSend);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        firstLeaderCard.setImage(new Image(leaderCards.get(0).getPng()));
+        firstChoice.setImage(new Image(leaderCards.get(0).getPng()));
 
-        secondLeaderCard.setImage(new Image(leaderCards.get(1).getPng()));
+        secondChoice.setImage(new Image(leaderCards.get(1).getPng()));
 
-        thirdLeaderCard.setImage(new Image(leaderCards.get(2).getPng()));
+        thirdChoice.setImage(new Image(leaderCards.get(2).getPng()));
 
-        fourthLeaderCard.setImage(new Image(leaderCards.get(3).getPng()));
+        fourthChoice.setImage(new Image(leaderCards.get(3).getPng()));
+
+        contextAction.setText("these are your leader cards! Choose two of them to discard");
     }
 
     public void discardLeaderCards(ActionEvent actionEvent) {
-        List<Integer> checkBoxes = new ArrayList<>();
 
-        addIfSelected(checkBoxes, first.isSelected(), 1);
-        addIfSelected(checkBoxes, second.isSelected(), 2);
-        addIfSelected(checkBoxes, third.isSelected(), 3);
-        addIfSelected(checkBoxes, fourth.isSelected(), 4);
+        List<Integer> discarded = new ArrayList<>();
 
-        if (checkBoxes.size() == 2){
-            networkUser.send(new InitialiseLeaderCardsCommand(checkBoxes.get(0), checkBoxes.get(1)));
+        addIfSelected(discarded, first.isSelected(), 1);
+        addIfSelected(discarded, second.isSelected(), 2);
+        addIfSelected(discarded, third.isSelected(), 3);
+        addIfSelected(discarded, fourth.isSelected(), 4);
 
-            if (position == 1)
-                networkUser.send(new InitialiseResourcesCommand(new CollectionResources()));
+        if (discarded.size() == 2){
+            sendNewCommand(new InitialiseLeaderCardsCommand(discarded.get(0), discarded.get(1)));
 
-            return;
-        }
+            if (position == 1){
+                sendNewCommand(new InitialiseResourcesCommand(new CollectionResources()));
+                Gui.setRoot("/WaitingWindow", new WaitingController("Wait for other player to initialize..."));
+            }else {
+                switchScenario();
+            }
+
+        }else {
             errorMessage.setOpacity(1);
+        }
+
 
     }
 
     private void addIfSelected(List<Integer> checkBoxes, boolean checkBox, int toAdd){
         if (checkBox)
             checkBoxes.add(toAdd);
+    }
+
+    private void addIfSelected(CollectionResources checkBoxes, boolean checkBox, Resource toAdd){
+        if (checkBox)
+            checkBoxes.add(toAdd);
+    }
+
+    private void switchScenario(){
+        firstChoice.setImage(new Image(new Coin().getPng()));
+        secondChoice.setImage(new Image(new Stone().getPng()));
+        thirdChoice.setImage(new Image(new Shield().getPng()));
+        fourthChoice.setImage(new Image(new Servant().getPng()));
+        contextAction.setText("choose " + resourcesToChoose() + " resources");
+        errorMessage.setOpacity(0);
+        errorMessage.setText("You can choose only " + resourcesToChoose() + " resources" );
+        choiceButton.setText("gain");
+        choiceButton.setOnAction(actionEvent -> chooseResources());
+    }
+
+    private int resourcesToChoose(){
+        switch (position){
+            case 2:
+                return 1;
+            case 3:
+            case 4:
+                return 2;
+        }
+        return 0;
+    }
+
+    void chooseResources(){
+
+        CollectionResources resourcesGained = new CollectionResources();
+
+        addIfSelected(resourcesGained, first.isSelected(), new Coin());
+        addIfSelected(resourcesGained, second.isSelected(), new Stone());
+        addIfSelected(resourcesGained, third.isSelected(), new Shield());
+        addIfSelected(resourcesGained, fourth.isSelected(), new Servant());
+
+        if (resourcesGained.getSize() == resourcesToChoose()){
+            sendNewCommand(new InitialiseResourcesCommand(resourcesGained));
+        }else {
+            errorMessage.setOpacity(1);
+        }
     }
 
 }

@@ -1,16 +1,15 @@
 package it.polimi.ingsw.view.thinModelComponents;
 
-import it.polimi.ingsw.model.LeaderCard.LeaderCard;
-import it.polimi.ingsw.model.LeaderCard.NewWhiteMarble;
+import it.polimi.ingsw.model.DevelopmentCards.CardColor;
+import it.polimi.ingsw.model.LeaderCard.*;
 import it.polimi.ingsw.model.PlayerAndComponents.Player;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
-import it.polimi.ingsw.model.Resources.CollectionResources;
-import it.polimi.ingsw.model.Resources.Resource;
+import it.polimi.ingsw.model.Resources.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static it.polimi.ingsw.network.Client.createLeaderCards;
 
 /**
  * this class represent the thin player.
@@ -166,22 +165,17 @@ public class ThinPlayer {
      * @param leaderCard this is the leader card to recreate
      * @return the card
      */
-    public static LeaderCard recreate( ThinLeaderCard leaderCard){
-        //----------------------------------------------
-
-        List<LeaderCard> allLeaderCards = createLeaderCards();
-
-        //------------------------------------------------
+    public static LeaderCard recreate(ThinLeaderCard leaderCard){
         Resource resource = leaderCard.getResource();
         int victoryPoints = leaderCard.getVictoryPoints();
-        for (LeaderCard card : allLeaderCards){
+        for (LeaderCard card : createAllLeaderCards()){
             if (card.getResource().equals(resource) && card.getVictoryPoints() == victoryPoints){
                 if (leaderCard.isActive())
                     card.setActive();
                 return card;
             }
         }
-        return new NewWhiteMarble(null , 0 , null);
+        return new NewWhiteMarble(null , 0 , null, "Masters of Renaissance__Cards_BACK_3mmBleed-49-1.png");
     }
 
 
@@ -214,5 +208,42 @@ public class ThinPlayer {
                 ", productionPower=" + productionPower + "\n" +
                 ", thinTrack " + track + "\n" +
                 '}' + "\n" ;
+    }
+
+    public static List<LeaderCard> createAllLeaderCards(){
+
+        List<LeaderCard> leaders = new ArrayList<>(); // create an arraylist of leaderCard
+        LeaderCardRequirements requirements1 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.BLUE, CardColor.BLUE, CardColor.YELLOW)));
+        LeaderCardRequirements requirements2 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.PURPLE, CardColor.PURPLE, CardColor.GREEN)));
+        LeaderCardRequirements requirements3 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.GREEN, CardColor.GREEN, CardColor.PURPLE)));
+        LeaderCardRequirements requirements4 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.YELLOW, CardColor.BLUE)));
+
+        //NewWhiteMarble leaderCards
+        leaders.add(new NewWhiteMarble(requirements2,5,new Coin(), "60"));
+        leaders.add(new NewWhiteMarble(requirements1 ,5,new Stone(), "59"));
+        leaders.add(new NewWhiteMarble(requirements4,5,new Servant(), "57"));
+        leaders.add(new NewWhiteMarble(requirements3,5,new Shield(), "58"));
+        //NewShelf leaderCards
+        leaders.add(new NewShelf(new ResourcesRequired(new Shield()),3,new Coin(), "56"));
+        leaders.add(new NewShelf(new ResourcesRequired(new Servant()),3,new Shield(), "55"));
+        leaders.add(new NewShelf(new ResourcesRequired(new Stone()),3,new Servant(), "54"));
+        leaders.add(new NewShelf(new ResourcesRequired(new Coin()),3,new Stone(), "53"));
+        //NewProduction leaderCards
+        leaders.add(new NewProduction(new LevelRequired(CardColor.GREEN) ,4 , new Coin(), "64"));
+        leaders.add(new NewProduction(new LevelRequired(CardColor.PURPLE) ,4 , new Stone(), "63"));
+        leaders.add(new NewProduction(new LevelRequired(CardColor.BLUE) ,4 , new Servant(), "62"));
+        leaders.add(new NewProduction(new LevelRequired(CardColor.YELLOW) ,4 , new Shield(), "61"));
+
+        LeaderCardRequirements requirement1 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.PURPLE)));
+        LeaderCardRequirements requirement2 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.GREEN , CardColor.BLUE)));
+        LeaderCardRequirements requirement3 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.BLUE , CardColor.PURPLE)));
+        LeaderCardRequirements requirement4 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.GREEN)));
+
+        //NewDiscount leaderCards
+        leaders.add(new NewDiscount(requirement1,2,new Coin(), "52"));
+        leaders.add(new NewDiscount(requirement2,2,new Stone(), "51"));
+        leaders.add(new NewDiscount(requirement3,2,new Shield(), "50"));
+        leaders.add(new NewDiscount(requirement4,2,new Servant(), "49"));
+        return leaders;
     }
 }

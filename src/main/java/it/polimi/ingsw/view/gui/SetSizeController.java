@@ -7,8 +7,6 @@ import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.network.NetworkUser;
 import javafx.fxml.FXML;
 
-import java.io.IOException;
-
 public class SetSizeController implements GuiController{
 
     private NetworkUser<Command, ResponseToClient> networkUser;
@@ -18,38 +16,44 @@ public class SetSizeController implements GuiController{
     }
 
     @FXML
-    private void switchToLogin() throws IOException {
+    private void switchToLogin()  {
         Gui.setRoot("/LoginWindow", new LoginController(networkUser));
     }
 
     @FXML
     public void setSizeOne() {
 
-        networkUser.send(new SetSizeCommand(1));
+        sendNewCommand(new SetSizeCommand(1));
         System.out.println("1");
     }
 
     @FXML
     public void SetSizeTwo() {
-        networkUser.send(new SetSizeCommand(2));
+        sendNewCommand(new SetSizeCommand(2));
         System.out.println("2");
     }
 
     @FXML
     public void SetSizeThree() {
-        networkUser.send(new SetSizeCommand(3));
+        sendNewCommand(new SetSizeCommand(3));
         System.out.println("3");
     }
 
     @FXML
     public void SetSizeFour() {
-        networkUser.send(new SetSizeCommand(4));
+        sendNewCommand(new SetSizeCommand(4));
         System.out.println("4");
     }
 
     @Override
-    public void update(CommandName name) throws IOException {
+    public void update(CommandName name)  {
             switchToLogin();
 
+    }
+
+    @Override
+    public void sendNewCommand(Command toSend) {
+        Gui.setLastCommand(toSend);
+        networkUser.send(toSend);
     }
 }

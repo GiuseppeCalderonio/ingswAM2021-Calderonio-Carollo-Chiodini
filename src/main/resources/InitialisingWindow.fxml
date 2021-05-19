@@ -8,17 +8,17 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.InitialisisngController">
    <children>
-      <Label layoutX="41.0" layoutY="325.0" prefHeight="45.0" prefWidth="507.0" text="this are your leader cards! Choose two of them to discard">
+      <Label fx:id="contextAction" layoutX="41.0" layoutY="325.0" prefHeight="45.0" prefWidth="507.0" textAlignment="CENTER">
          <font>
-            <Font size="20.0" />
+            <Font size="19.0" />
          </font>
       </Label>
       <Pane fx:id="paneView" layoutX="37.0" layoutY="35.0" prefHeight="200.0" prefWidth="536.0">
          <children>
-            <ImageView fx:id="firstLeaderCard" fitHeight="150.0" fitWidth="116.0" layoutX="10.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="secondLeaderCard" fitHeight="150.0" fitWidth="116.0" layoutX="138.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="fourthLeaderCard" fitHeight="150.0" fitWidth="109.0" layoutX="405.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="thirdLeaderCard" fitHeight="150.0" fitWidth="126.0" layoutX="268.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="firstChoice" fitHeight="150.0" fitWidth="116.0" layoutX="10.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="secondChoice" fitHeight="150.0" fitWidth="116.0" layoutX="138.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="fourthChoice" fitHeight="150.0" fitWidth="116.0" layoutX="405.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="thirdChoice" fitHeight="150.0" fitWidth="116.0" layoutX="268.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </Pane>
       <CheckBox fx:id="first" layoutX="85.0" layoutY="251.0" mnemonicParsing="false" />
@@ -31,8 +31,8 @@
          <opaqueInsets>
             <Insets />
          </opaqueInsets></CheckBox>
-      <Button fx:id="discardButton" layoutX="269.0" layoutY="289.0" mnemonicParsing="false" onAction="#discardLeaderCards" text="Discard" />
-      <Label fx:id="errorMessage" layoutX="70.0" layoutY="285.0" opacity="0.0" prefHeight="33.0" prefWidth="150.0" text="Choose only 2 of them" textFill="RED">
+      <Button fx:id="choiceButton" layoutX="269.0" layoutY="289.0" mnemonicParsing="false" onAction="#discardLeaderCards" text="Discard" />
+      <Label fx:id="errorMessage" layoutX="70.0" layoutY="285.0" opacity="0.0" prefHeight="33.0" prefWidth="150.0" text="Choose 2 of them!" textFill="RED">
          <font>
             <Font size="14.0" />
          </font>

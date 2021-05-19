@@ -58,4 +58,15 @@ public class Stone implements Resource {
     public BackColor getColor() {
         return BackColor.ANSI_BRIGHT_BG_BLACK;
     }
+
+    /**
+     * this method get the png associated with the resource,
+     * USEFUL ONLY FOR THE GUI
+     *
+     * @return the png associated with the resource
+     */
+    @Override
+    public String getPng() {
+        return "/punchboard/stone.png";
+    }
 }

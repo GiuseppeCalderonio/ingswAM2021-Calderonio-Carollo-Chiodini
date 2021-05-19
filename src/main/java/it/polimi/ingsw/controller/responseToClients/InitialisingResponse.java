@@ -2,8 +2,8 @@ package it.polimi.ingsw.controller.responseToClients;
 
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.Resources.Resource;
-import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.network.ClientHandler;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.thinModelComponents.ThinLeaderCard;
 
 import java.util.List;
@@ -59,18 +59,20 @@ public class InitialisingResponse extends ResponseToClient{
      * @param client this is the client to update
      */
     @Override
-    public void updateClient(Client client) {
+    public void updateClient(View view) {
+
         // set the position
-        client.setPosition(position);
+        view.updatePosition(position);
+
         // set the leader cards, recreating them
         List<LeaderCard> leaderCards = this.leaderCards.
                 stream().
-                map(leaderCard -> recreate(leaderCard, client.getAllLeaderCards())).
+                map(leaderCard -> recreate(leaderCard, view.getAllLeaderCards())).
                 collect(Collectors.toList());
 
-        client.getView().showInitialisingPhase(leaderCards, position);
+        view.showInitialisingPhase(leaderCards, position);
 
-        super.updateClient(client);
+        super.updateClient(view);
     }
 
     /**

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.controller.responseToClients;
 
-import it.polimi.ingsw.controller.commands.PongCommand;
-import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.newView.PingException;
 
 public class PingResponse extends ResponseToClient{
 
@@ -14,7 +14,7 @@ public class PingResponse extends ResponseToClient{
      * @param client this is the client to update
      */
     @Override
-    public void updateClient(Client client) {
-        client.send(new PongCommand());
+        public void updateClient(View view) {
+            throw new PingException();
     }
 }

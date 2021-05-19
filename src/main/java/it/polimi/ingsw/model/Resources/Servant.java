@@ -58,5 +58,16 @@ public class Servant implements Resource {
     public BackColor getColor() {
         return BackColor.ANSI_BG_PURPLE;
     }
+
+    /**
+     * this method get the png associated with the resource,
+     * USEFUL ONLY FOR THE GUI
+     *
+     * @return the png associated with the resource
+     */
+    @Override
+    public String getPng() {
+        return "/punchboard/servant.png";
+    }
 }
 

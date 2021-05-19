@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.client;
 
-import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.view.newView.Client;
 
 /**
  * this class represent the main
@@ -16,9 +16,12 @@ public class ClientMain2 {
      */
     public static void main(String[] args) {
 
-        boolean cli = Integer.parseInt(args[2]) == 0;
+        String view = args[0];
 
+        int portNumber = Integer.parseInt(args[1]);
 
-        new Client(args[1], Integer.parseInt(args[0]), cli, null);
+        String hostname = args[2];
+
+        new Client(hostname, portNumber, view);
     }
 }

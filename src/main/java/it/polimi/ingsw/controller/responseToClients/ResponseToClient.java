@@ -1,12 +1,10 @@
 package it.polimi.ingsw.controller.responseToClients;
 
-import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.thinModelComponents.ThinLeaderCard;
 import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * this class represent the response to client.
@@ -43,37 +41,11 @@ public class ResponseToClient {
      * in particular, it shows the message sent from the server and,
      * if the command is not of dynamic type ResponseToClient,
      * set the values that have to change after a model's change
-     * @param client this is the client to update
+     * @param view this is the view to update
      */
-    public void updateClient(Client client) {
+    public void updateClient(View view) {
         // show to the client the context action
-        client.showContextAction(message);
-
-    }
-
-    /**
-     * this method get the thin player from his nickname.
-     * in particular, it create a list containing all the thin players
-     * of the client (himself + opponents) and search for that one with the
-     * nickname passed in input
-     * @param client this is the client from which get the thin players
-     * @param nickname this is the nickname of the thin player to return
-     * @return the thin player with the nickname passed as input, null if not exist any
-     *         player with that nickname (this case should never happen)
-     */
-    protected ThinPlayer getPlayerToChange(Client client, String nickname){
-        // create a list containing all the thin players of the game
-        List<ThinPlayer> players = new ArrayList<>(client.getGame().getOpponents());
-        players.add(client.getGame().getMyself());
-
-        try {
-            // get the thin player with the nickname desired
-            return players.stream().
-                    filter(thinPlayer -> thinPlayer.getNickname().equals(nickname)).
-                    collect(Collectors.toList()).get(0);
-        } catch (NullPointerException e){
-            return null;
-        }
+        view.showContextAction(message);
 
     }
 

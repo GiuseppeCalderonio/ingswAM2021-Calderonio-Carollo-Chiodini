@@ -1,11 +1,10 @@
 package it.polimi.ingsw.controller.responseToClients;
 
-import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
-import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.network.ClientHandler;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.thinModelComponents.ThinLeaderCard;
-import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
 import it.polimi.ingsw.view.thinModelComponents.ThinTrack;
 import it.polimi.ingsw.view.thinModelComponents.ThinWarehouse;
 
@@ -68,8 +67,14 @@ public class LeaderActionResponse extends ResponseToClient{
      * @param client this is the client to update
      */
     @Override
-    public void updateClient(Client client) {
+    public void updateClient(View view) {
 
+        view.updateLeaderCards(cards4, nickname4);
+        view.updateTrack(track4, nickname4);
+        view.updateWarehouse(warehouse4, nickname4);
+        view.showCli();
+
+        /*
         ThinPlayer toChange = getPlayerToChange(client, nickname4);
 
         if (!nickname4.equals(client.getGame().getMyself().getNickname()))
@@ -83,6 +88,8 @@ public class LeaderActionResponse extends ResponseToClient{
 
         client.show();
 
-        super.updateClient(client);
+         */
+
+        super.updateClient(view);
     }
 }

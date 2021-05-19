@@ -1,12 +1,11 @@
 package it.polimi.ingsw.controller.responseToClients;
 
-import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.model.DevelopmentCards.CardColor;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.model.Resources.CollectionResources;
-import it.polimi.ingsw.network.Client;
-import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
+import it.polimi.ingsw.network.ClientHandler;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.thinModelComponents.ThinProductionPower;
 import it.polimi.ingsw.view.thinModelComponents.ThinWarehouse;
 
@@ -80,18 +79,25 @@ public class BuyCardActionResponse extends ResponseToClient{
      * if the command is not of dynamic type ResponseToClient,
      * set the values that have to change after a model's change
      *
-     * @param client this is the client to update
+     * @param view
      */
     @Override
-    public void updateClient(Client client) {
+    public void updateClient(View view) {
 
-        ThinPlayer toChange = getPlayerToChange(client, nickname6);
-        toChange.setStrongbox(strongbox6);
-        toChange.setWarehouse(warehouse6);
-        toChange.setProductionPower(productionPower);
-        client.getGame().setCard(level6, color6, card6);
-        client.show();
 
-        super.updateClient(client);
+
+        //ThinPlayer toChange = getPlayerToChange(client, nickname6);
+        view.updateStrongbox(strongbox6, nickname6);
+        view.updateWarehouse(warehouse6, nickname6);
+        view.updateProductionPower(productionPower, nickname6);
+        view.updateCard(level6, color6, card6);
+
+        //toChange.setStrongbox(strongbox6);
+        //toChange.setWarehouse(warehouse6);
+        //toChange.setProductionPower(productionPower);
+        //client.getGame().setCard(level6, color6, card6);
+        view.showCli();
+
+        super.updateClient(view);
     }
 }

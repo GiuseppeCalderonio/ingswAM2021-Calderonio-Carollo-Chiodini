@@ -1,5 +1,7 @@
 package it.polimi.ingsw.network.localGame;
 
+import it.polimi.ingsw.view.newView.Client;
+
 /**
  * this class represent the local client main
  */
@@ -12,8 +14,8 @@ public class LocalClientMain {
      */
     public static void main(String[] args) {
 
-        boolean cli = Integer.parseInt(args[0]) == 0;
+        String view = args[0];
 
-        new LocalClient(cli);
+        new Client(null, 0, view);
     }
 }

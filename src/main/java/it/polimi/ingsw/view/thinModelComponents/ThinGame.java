@@ -2,20 +2,18 @@ package it.polimi.ingsw.view.thinModelComponents;
 
 import it.polimi.ingsw.model.DevelopmentCards.CardColor;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
-import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-
-import static it.polimi.ingsw.network.Client.createLeaderCards;
 
 public class ThinGame {
 
     private ThinPlayer myself;
     private List<ThinPlayer> opponents;
-    private final List<LeaderCard> allLeaderCards = createLeaderCards();
     private DevelopmentCard[][] cardsMarket;
     private Marble[][] marbleMarket;
     private Marble lonelyMarble;
@@ -78,10 +76,6 @@ public class ThinGame {
         cardsMarket[2 - (level - 1)][color.getIndex()] = card;
     }
 
-    public List<LeaderCard> getAllLeaderCards() {
-        return allLeaderCards;
-    }
-
     public Marble getLonelyMarble() {
         return lonelyMarble;
     }
@@ -92,5 +86,23 @@ public class ThinGame {
 
     public SoloToken getSoloToken() {
         return soloToken;
+    }
+
+    public ThinPlayer getPlayer(String nickname){
+        if (myself.getNickname().equals(nickname))
+            return myself;
+        for (ThinPlayer opponent : opponents){
+            if (opponent.getNickname().equals(nickname))
+                return opponent;
+        }
+        return null;
+    }
+
+    public void updateTracks(Map<String, ThinTrack> tracks){
+
+        List<ThinPlayer> players = new LinkedList<>(opponents);
+        players.add(myself);
+
+        players.forEach(player -> player.setTrack(tracks.get(player.getNickname())));
     }
 }

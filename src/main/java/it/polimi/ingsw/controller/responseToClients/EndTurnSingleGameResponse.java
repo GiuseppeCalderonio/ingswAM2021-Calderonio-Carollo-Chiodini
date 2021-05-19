@@ -1,9 +1,9 @@
 package it.polimi.ingsw.controller.responseToClients;
 
-import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
-import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.network.ClientHandler;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.thinModelComponents.ThinTrack;
 
 /**
@@ -52,13 +52,21 @@ public class EndTurnSingleGameResponse extends ResponseToClient{
      * @param client this is the client to update
      */
     @Override
-    public void updateClient(Client client) {
+    public void updateClient(View view) {
 
+
+        /*
         client.getGame().setCardsMarket(cardsMarket5);
         client.getGame().setSoloToken(token5);
         client.getGame().getOpponents().get(0).setTrack(track5);
         client.show();
 
-        super.updateClient(client);
+         */
+
+        view.updateCardsMarket(cardsMarket5);
+        view.updateToken(token5);
+        view.showCli();
+
+        super.updateClient(view);
     }
 }

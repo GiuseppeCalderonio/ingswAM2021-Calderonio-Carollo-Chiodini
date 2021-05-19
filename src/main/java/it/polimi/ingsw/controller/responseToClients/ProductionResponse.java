@@ -1,10 +1,9 @@
 package it.polimi.ingsw.controller.responseToClients;
 
-import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.model.Resources.CollectionResources;
-import it.polimi.ingsw.network.Client;
-import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
+import it.polimi.ingsw.network.ClientHandler;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.thinModelComponents.ThinTrack;
 import it.polimi.ingsw.view.thinModelComponents.ThinWarehouse;
 
@@ -60,14 +59,22 @@ public class ProductionResponse extends ResponseToClient{
      * @param client this is the client to update
      */
     @Override
-    public void updateClient(Client client) {
+    public void updateClient(View view) {
 
+        view.updateStrongbox(strongbox2, nickname2);
+        view.updateWarehouse(warehouse2, nickname2);
+        view.updateTrack(track2, nickname2);
+        view.showCli();
+
+        /*
         ThinPlayer toChange = getPlayerToChange(client, nickname2);
         toChange.setStrongbox(strongbox2);
         toChange.setWarehouse(warehouse2);
         toChange.setTrack(track2);
         client.show();
 
-        super.updateClient(client);
+         */
+
+        super.updateClient(view);
     }
 }

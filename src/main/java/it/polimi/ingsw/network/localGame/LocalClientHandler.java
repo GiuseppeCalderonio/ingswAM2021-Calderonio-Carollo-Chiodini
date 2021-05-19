@@ -9,10 +9,9 @@ import it.polimi.ingsw.controller.responseToClients.WinnerResponse;
 import it.polimi.ingsw.model.EndGameException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.SingleGame.SingleGame;
-import it.polimi.ingsw.network.Client;
 import it.polimi.ingsw.network.ClientHandler;
+import it.polimi.ingsw.view.View;
 
-import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +32,7 @@ public class LocalClientHandler extends ClientHandler {
      * method updateClient(client) of the class ResponseToClient
      * @see ResponseToClient
      */
-    private final Client view;
+    private final View view;
 
     /**
      * this attribute represent the game of the local match.
@@ -49,7 +48,7 @@ public class LocalClientHandler extends ClientHandler {
      * the network message exchange
      * @param view this is the client to set
      */
-    public LocalClientHandler(Client view) {
+    public LocalClientHandler(View view) {
         super(null, null, null, null, null);
         this.view = view;
         setController(new Controller(this));

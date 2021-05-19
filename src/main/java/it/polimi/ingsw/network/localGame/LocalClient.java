@@ -1,64 +1,57 @@
 package it.polimi.ingsw.network.localGame;
 
 import it.polimi.ingsw.controller.commands.Command;
-import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.network.ClientHandler;
+import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.newView.ClientNetwork;
 
 import java.io.IOException;
 
-/**
- * this class represent the local client.
- * in particular, it extend the class client to handle
- * local matches. the main changes are :
- * (1) there is a reference to the controller in order to
- * simulate the exchange of messages as invocation of methods
- * (2) the method run is overridden and do nothing, and
- * the method send is overridden and invoke the method readMessage of the
- * controller
- */
-public class LocalClient extends Client {
+public class LocalClient extends ClientNetwork {
 
-    /**
-     * this attribute represent the controller
-     */
     private final ClientHandler controller;
 
+    public LocalClient(View view) throws IOException {
+
+        this.controller = new LocalClientHandler(view);
+    }
+
+
     /**
-     * this constructor create the client using the super constructor.
-     * in particular, it does not connect to any socket and create an
-     * object ClientHandler of dynamic type LocalClientHandler
-     * @see ClientHandler
-     * @see LocalClientHandler
+     * this method receive a message from the network
+     *
+     * @return the message received
+     * @throws IOException if a network error occurs
      */
-    public LocalClient(boolean cli) {
-        super(null, 0, cli, null);
-
-        this.controller = new LocalClientHandler(this);
-
-
-
-        try {
-            start();
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-            System.exit(1);
-        }
+    @Override
+    public ResponseToClient receiveMessage() throws IOException {
+        return null;
     }
 
     /**
-     * this method is not useful for the local client
+     * this method send a message to the network
+     *
+     * @param networkMessage this is the message to send
      */
     @Override
-    public void run() { }
+    public void send(Command networkMessage) {
+        controller.readMessage(networkMessage);
+    }
 
     /**
-     * this method send a message to the server, the message
-     * have to be in the format class Command
+     * When an object implementing interface {@code Runnable} is used
+     * to create a thread, starting the thread causes the object's
+     * {@code run} method to be called in that separately executing
+     * thread.
+     * <p>
+     * The general contract of the method {@code run} is that it may
+     * take any action whatsoever.
      *
-     * @param command this is the socket to send
+     * @see Thread#run()
      */
     @Override
-    public void send(Command command) {
-        controller.readMessage(command);
+    public void run() {
+
     }
 }

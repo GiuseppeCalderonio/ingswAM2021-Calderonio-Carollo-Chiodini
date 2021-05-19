@@ -1,11 +1,11 @@
 package it.polimi.ingsw.controller.responseToClients;
 
-import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
-import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.network.ClientHandler;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
 
 import java.util.ArrayList;
@@ -80,12 +80,15 @@ public class StartGameResponse extends ResponseToClient{
      * @param client this is the client to update
      */
     @Override
-    public void updateClient(Client client) {
-        client.createGame(cardsMarket1, marbleMarket1, lonelyMarble1, soloToken, actualPlayer, opponents);
-        client.show();
+    public void updateClient(View view) {
+
+        view.updateStartGame(cardsMarket1, marbleMarket1, lonelyMarble1, soloToken, actualPlayer, opponents);
+
+        //client.createGame(cardsMarket1, marbleMarket1, lonelyMarble1, soloToken, actualPlayer, opponents);
+        view.showCompleteGame();
 
 
-        super.updateClient(client);
+        super.updateClient(view);
     }
 
     /**

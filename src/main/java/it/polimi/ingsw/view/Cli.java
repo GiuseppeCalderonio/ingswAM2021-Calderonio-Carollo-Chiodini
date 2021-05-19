@@ -5,13 +5,22 @@ import it.polimi.ingsw.controller.commands.leaderCommands.LeaderCommand;
 import it.polimi.ingsw.controller.commands.normalCommands.EndTurnCommand;
 import it.polimi.ingsw.controller.commands.normalCommands.productionCommands.EndProductionCommand;
 import it.polimi.ingsw.controller.commands.normalCommands.productionCommands.ProductionCommand;
+import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.controller.responseToClients.Status;
+import it.polimi.ingsw.model.DevelopmentCards.CardColor;
+import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
-import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.model.Marble.Marble;
+import it.polimi.ingsw.model.Resources.CollectionResources;
+import it.polimi.ingsw.model.Resources.Resource;
+import it.polimi.ingsw.model.SingleGame.SoloToken;
+import it.polimi.ingsw.network.NetworkUser;
 import it.polimi.ingsw.view.graphic.CharFigure;
 import it.polimi.ingsw.view.graphic.GraphicalGame;
 import it.polimi.ingsw.view.graphic.GraphicalInitializingLeaderCard;
-import it.polimi.ingsw.view.thinModelComponents.ThinGame;
+import it.polimi.ingsw.view.newView.ClientNetwork;
+import it.polimi.ingsw.network.localGame.LocalClient;
+import it.polimi.ingsw.view.thinModelComponents.*;
 import it.polimi.ingsw.view.utilities.CharStream;
 import it.polimi.ingsw.view.utilities.colors.BackColor;
 import it.polimi.ingsw.view.utilities.colors.ForeColor;
@@ -21,6 +30,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.InvalidParameterException;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Cli implements View{
 
@@ -28,12 +39,51 @@ public class Cli implements View{
 
     private final CliCommandCreator commandCreator = new CliCommandCreator();
 
-    private final Client client;
+    private NetworkUser<Command, ResponseToClient> clientNetwork;
 
-    public Cli(Client client){
-        this.client = client;
+    private Command lastCommand;
+
+    private final ThinModel model = new ThinModel();
+
+    public Cli(String hostName, int portNumber){
+
+        try {
+            if (hostName != null || portNumber == 0){
+                clientNetwork = new ClientNetwork(hostName, portNumber, this);
+                //client.startNetwork(hostName, portNumber);
+            }
+            else {
+                clientNetwork = new LocalClient(this);
+            }
+        } catch (IOException e){
+            System.exit(1);
+        }
+        //this.client = client;
         showWelcomeMessage();
 
+        try {
+            start();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+    protected void start() throws IOException {
+
+        //Thread networkReader = new Thread(this);
+        //networkReader.start();
+        // this while true won't work forever because the thread associated with the network receiver
+        // will close the program if necessary
+        while (true) {
+            try {
+                lastCommand = createCommand();
+                clientNetwork.send(lastCommand);
+            } catch (InvalidParameterException e){
+                showErrorMessage(e);
+            }
+        }
     }
 
     @Override
@@ -43,8 +93,6 @@ public class Cli implements View{
 
         while ((command = stdIn.readLine()) != null) {
 
-            System.out.println("Choose a command, or wait if you can't do anything");
-
             switch (command){
 
                 case "help":
@@ -52,7 +100,7 @@ public class Cli implements View{
                     break;
 
                 case "show":
-                    client.show();
+                    showCli();
                     break;
                 case "setp" :
                     System.out.println("Write the number of players");
@@ -72,7 +120,7 @@ public class Cli implements View{
                     return commandCreator.initialiseLeaderCard(stdIn);
 
                 case "ir":
-                    return commandCreator.initialiseResources(stdIn, client.getPosition());
+                    return commandCreator.initialiseResources(stdIn, model.getPosition());
 
                 case "sr":
                     return commandCreator.shiftResources(stdIn);
@@ -81,12 +129,12 @@ public class Cli implements View{
 
                 case "cl":
                     try {
-                        return commandCreator.chooseLeaderCard(stdIn, client.getMarbles());
+                        return commandCreator.chooseLeaderCard(stdIn, model.getMarbles());
                     }catch (NullPointerException e){
                         throw new InvalidParameterException("you can't do this action");
                     }
                 case "iiw":
-                    return commandCreator.insertInWarehouse(stdIn, client.getGainedFromMarbleMarket());
+                    return commandCreator.insertInWarehouse(stdIn, model.getGainedFromMarbleMarket());
                 case "bc":
                     return commandCreator.buyCard(stdIn);
                 case "sp":
@@ -123,16 +171,16 @@ public class Cli implements View{
 
 
     @Override
-    public void show(ThinGame game){
+    public void showCli(){
         try {
             int height = 53;
-            if (game.getOpponents().size() <= 1)
+            if (model.getGame().getOpponents().size() <= 1)
                 height = 41;
             CharStream console = new CharStream(200, height);
             for(int i=0; i<200; i++)
                 for (int j=0; j<height; j++)
                     console.addColor(i,j, BackColor.ANSI_BRIGHT_BG_CYAN);
-                GraphicalGame graphicalGame = new GraphicalGame(console, game);
+                GraphicalGame graphicalGame = new GraphicalGame(console, model.getGame());
                 graphicalGame.draw();
                 console.print(System.out);
                 console.reset();
@@ -165,7 +213,88 @@ public class Cli implements View{
     }
 
     @Override
-    public void showContextAction(Command lastCommand, Status message) {
+    public void showCompleteGame() {
+        showCli();
+    }
+
+    @Override
+    public void updateStartGame(DevelopmentCard[][] cardsMarket, Marble[][] marbleMarket, Marble lonelyMarble, SoloToken soloToken, ThinPlayer actualPlayer, List<ThinPlayer> opponents) {
+        model.setGame(new ThinGame(cardsMarket, marbleMarket, lonelyMarble, soloToken, actualPlayer, opponents));
+    }
+
+    @Override
+    public void updateWarehouse(ThinWarehouse warehouse, String nickname) {
+        model.getGame().getPlayer(nickname).setWarehouse(warehouse);
+    }
+
+    @Override
+    public void updateStrongbox(CollectionResources strongbox, String nickname) {
+        model.getGame().getPlayer(nickname).setStrongbox(strongbox);
+    }
+
+    @Override
+    public void updateMarbleMarket(Marble[][] marbleMarket, Marble lonelyMarble) {
+        model.getGame().setMarbleMarket(marbleMarket);
+        model.getGame().setLonelyMarble(lonelyMarble);
+    }
+
+    @Override
+    public void updateCardsMarket(DevelopmentCard[][] cardsMarket) {
+        model.getGame().setCardsMarket(cardsMarket);
+    }
+
+    @Override
+    public void updateTrack(Map< String, ThinTrack > tracks) {
+        model.getGame().updateTracks(tracks);
+    }
+
+    @Override
+    public void updatePosition(int position) {
+        model.setPosition(position);
+    }
+
+    @Override
+    public void updateBufferMarbles(int marbles) {
+        model.setMarbles(marbles);
+    }
+
+    @Override
+    public void updateBufferGainedMarbles(List<Resource> gainedMarbles) {
+        model.setGainedFromMarbleMarket(gainedMarbles);
+    }
+
+    @Override
+    public void updateProductionPower(ThinProductionPower productionPower, String nickname) {
+        model.getGame().getPlayer(nickname).setProductionPower(productionPower);
+    }
+
+    @Override
+    public void updateCard(int level, CardColor color, DevelopmentCard card) {
+        model.getGame().setCard(level, color, card);
+    }
+
+    @Override
+    public void updateToken(SoloToken token) {
+        model.getGame().setSoloToken(token);
+    }
+
+    @Override
+    public void updateLeaderCards(List<ThinLeaderCard> leaderCards, String nickname) {
+
+        if (!nickname.equals(model.getGame().getMyself().getNickname()))
+            leaderCards.stream().filter(card -> !card.isActive()).forEach(ThinLeaderCard::hide);
+
+        model.getGame().getPlayer(nickname).
+                setLeaderCards(leaderCards.stream().map(ThinPlayer::recreate).collect(Collectors.toList()));
+    }
+
+    @Override
+    public void updateTrack(ThinTrack track, String nickname) {
+        model.getGame().getPlayer(nickname).setTrack(track);
+    }
+
+    @Override
+    public void showContextAction( Status message) {
 
         if (message != null){
             if(message.equals(Status.ACCEPTED))

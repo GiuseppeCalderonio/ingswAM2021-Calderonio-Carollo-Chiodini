@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller.responseToClients;
 
-import it.polimi.ingsw.network.Client;
+import it.polimi.ingsw.view.View;
 
 public class WinnerResponse extends ResponseToClient{
 
@@ -19,10 +19,10 @@ public class WinnerResponse extends ResponseToClient{
      * if the command is not of dynamic type ResponseToClient,
      * set the values that have to change after a model's change
      *
-     * @param client this is the client to update
+     * @param view this is the view to update
      */
     @Override
-    public void updateClient(Client client) {
+    public void updateClient(View view) {
         System.out.println("the winner is " + winner + ", you gained: " + victoryPoints);
     }
 }
