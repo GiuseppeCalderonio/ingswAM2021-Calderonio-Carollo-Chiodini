@@ -74,7 +74,7 @@ public class DevelopmentCard {
     }
 
     /**
-     * this constructor is equals  is equales to the other constructor, it has one more attribute, the png attribute; so we use
+     * this constructor is equals  is equals to the other constructor, it has one more attribute, the png attribute; so we use
      * this constructor in gui
      * @param color this attribute is the same as that of the other constructor
      * @param level this attribute is the same as that of the other constructor

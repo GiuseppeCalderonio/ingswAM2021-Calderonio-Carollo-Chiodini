@@ -19,13 +19,27 @@ public class CardToken implements SoloToken {
     private final CardColor color;
 
     /**
-     * this constructor create the card token starting from the color
+     * this attribute represent the png associated to each cardToken
+     */
+    private String png;
+
+    /**
+     * this constructor create the card token starting from the color; is used for cli
      * @param color this is the color to set
      */
-    public CardToken(CardColor color) {
-        this.color = color;
-    }
+    public CardToken(CardColor color) {this.color = color;}
 
+    /**
+     * this constructor is the same of cli constructor but has one more attribute; the png.
+     * This constructor is used for gui.
+     * @param color this attribute is the same as that of the other constructor
+     * @param png this attribute contains the image linked to the token
+     */
+    public CardToken(CardColor color , String png) {
+        this.color = color;
+        String pngNameConstant = "/punchboard/cerchio"; //must be 1/2/3/4
+        this.png = pngNameConstant + png + ".png";
+    }
     /**
      * this method deletes two cards of the color in the attribute from the CardsMarket starting from the lowest levels
      * @param inTrackCase contains the game
@@ -98,4 +112,11 @@ public class CardToken implements SoloToken {
         else return BackColor.ANSI_BG_YELLOW;
     }
 
+    /**
+     * this method is a development card png getter
+     * @return a string tha symbolize the png image
+     */
+    public String getPng() {
+        return png;
+    }
 }

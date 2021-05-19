@@ -26,7 +26,6 @@ public class SingleGame extends Game {
      */
     private final Player lorenzoIlMagnifico;
 
-
     /**
      * this is the constructor of the class, it initialize the three boolean of vatican report
      * at false; set the nickname of players; initialize randomly MarbleMarket and CardsMarket, create all leaderCards and assign four
@@ -38,13 +37,13 @@ public class SingleGame extends Game {
         super(nicknames);
         lorenzoIlMagnifico = new Player();
         soloTokens = new ArrayList<>();
-        soloTokens.add(new TrackToken(2, false));
-        soloTokens.add(new TrackToken(2, false));
-        soloTokens.add(new TrackToken(1, true));
-        soloTokens.add(new CardToken(CardColor.BLUE));
-        soloTokens.add(new CardToken(CardColor.YELLOW));
-        soloTokens.add(new CardToken(CardColor.GREEN));
-        soloTokens.add(new CardToken(CardColor.PURPLE));
+        soloTokens.add(new CardToken(CardColor.BLUE, "1"));
+        soloTokens.add(new CardToken(CardColor.GREEN, "2"));
+        soloTokens.add(new CardToken(CardColor.PURPLE, "3"));
+        soloTokens.add(new CardToken(CardColor.YELLOW, "4"));
+        soloTokens.add(new TrackToken(2, false, "5"));
+        soloTokens.add(new TrackToken(2, false, "6"));
+        soloTokens.add(new TrackToken(1, true, "7"));
         Collections.shuffle(soloTokens);
     }
 

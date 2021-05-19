@@ -21,6 +21,11 @@ public class TrackToken implements SoloToken {
     private final int faithPoints;
 
     /**
+     * this attribute represent the png associated to each tracKToken
+     */
+    private String png;
+
+    /**
      * this constructor create the track token setting the faith points and if
      * the token will cause a shuffle on the stack
      * @param faithPoints these are the faith points to set
@@ -29,6 +34,20 @@ public class TrackToken implements SoloToken {
     public TrackToken(int faithPoints, boolean shuffle) {
         this.faithPoints = faithPoints;
         this.shuffle = shuffle;
+    }
+
+    /**
+     * this constructor is the same of cli constructor but has one more attribute; the png.
+     * This constructor is used for gui.
+     * @param faithPoints this attribute is the same as that of the other constructor
+     * @param shuffle this attribute is the same as that of the other constructor
+     * @param png this attribute contains the image linked to the token
+     */
+    public TrackToken(int faithPoints, boolean shuffle, String png) {
+        this.faithPoints = faithPoints;
+        this.shuffle = shuffle;
+        String pngNameConstant = "/punchboard/cerchio"; //must be 5/6/7
+        this.png = pngNameConstant + png + ".png";
     }
 
     /**
@@ -64,5 +83,13 @@ public class TrackToken implements SoloToken {
      */
     public boolean getShuffle(){
         return shuffle;
+    }
+
+    /**
+     * this method is a development card png getter
+     * @return a string tha symbolize the png image
+     */
+    public String getPng() {
+        return png;
     }
 }
