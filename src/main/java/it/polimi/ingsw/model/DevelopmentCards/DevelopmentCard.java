@@ -38,12 +38,17 @@ public class DevelopmentCard {
     private final int productionPowerFaithPoints;
 
     /**
+     * this attribute represent the png associated to each development card
+     */
+    private String png;
+
+    /**
      * this attribute indicates if the production of the card has been activated during the last turn
      */
     private boolean productionActivated = false;
 
     /**
-     * this constructor create a card with all the parameters
+     * this constructor create a card with all the parameters, it is used only for cli
      * @param color this is the color to set
      * @param level this is the level to set
      * @param victoryPoints these are the victory points to set
@@ -66,6 +71,37 @@ public class DevelopmentCard {
         this.productionPowerInput = productionPowerInput;
         this.productionPowerOutput = productionPowerOutput;
         this.productionPowerFaithPoints = productionPowerFaithPoints;
+    }
+
+    /**
+     * this constructor is equals  is equales to the other constructor, it has one more attribute, the png attribute; so we use
+     * this constructor in gui
+     * @param color this attribute is the same as that of the other constructor
+     * @param level this attribute is the same as that of the other constructor
+     * @param victoryPoints this attribute is the same as that of the other constructor
+     * @param cost this attribute is the same as that of the other constructor
+     * @param productionPowerInput this attribute is the same as that of the other constructor
+     * @param productionPowerOutput this attribute is the same as that of the other constructor
+     * @param productionPowerFaithPoints this attribute is the same as that of the other constructor
+     * @param png is the image related to every single card
+     */
+    public DevelopmentCard(CardColor color,
+                           int level,
+                           int victoryPoints,
+                           CollectionResources cost,
+                           CollectionResources productionPowerInput,
+                           CollectionResources productionPowerOutput,
+                           int productionPowerFaithPoints,
+                           String png) {
+        this.color = color;
+        this.level = level;
+        this.victoryPoints = victoryPoints;
+        this.cost = cost;
+        this.productionPowerInput = productionPowerInput;
+        this.productionPowerOutput = productionPowerOutput;
+        this.productionPowerFaithPoints = productionPowerFaithPoints;
+        String pngNameConstant = "/front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-";
+        this.png = pngNameConstant + png + "-1.png";
     }
 
     /**
@@ -194,5 +230,12 @@ public class DevelopmentCard {
 
     }
 
+    /**
+     * this method is a development card png getter
+     * @return a string tha symbolize the png image
+     */
+    public String getPng() {
+        return png;
+    }
 
 }
