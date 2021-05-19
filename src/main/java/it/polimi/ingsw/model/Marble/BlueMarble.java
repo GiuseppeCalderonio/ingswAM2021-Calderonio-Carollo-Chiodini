@@ -28,6 +28,11 @@ public class BlueMarble implements Marble {
         return new Shield();
     }
 
+    @Override
+    public String getPng() {
+        return "/marbles/biglia_blu.png";
+    }
+
     /**
      * this method verify if the input is a blue marble
      * @param toCompare this is the marble to compare

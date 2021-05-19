@@ -29,6 +29,11 @@ public class WhiteMarble implements Marble{
         return null;
     }
 
+    @Override
+    public String getPng() {
+        return "/marbles/biglia_bianca.png";
+    }
+
     /**
      * this method verify if the input is a white marble
      * @param toCompare this is the marble to compare

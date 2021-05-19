@@ -28,6 +28,11 @@ public class RedMarble implements Marble {
         return null;
     }
 
+    @Override
+    public String getPng() {
+        return "/marbles/biglia_rossa.png";
+    }
+
     /**
      * this method verify if the input is a red marble
      * @param toCompare this is the marble to compare

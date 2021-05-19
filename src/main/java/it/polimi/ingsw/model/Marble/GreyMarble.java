@@ -28,6 +28,11 @@ public class GreyMarble implements Marble {
         return new Stone();
     }
 
+    @Override
+    public String getPng() {
+        return "/marbles/biglia_grigia.png";
+    }
+
     /**
      * this method verify if the input is a grey marble
      * @param toCompare this is the marble to compare

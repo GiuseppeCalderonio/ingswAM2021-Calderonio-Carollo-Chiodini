@@ -28,6 +28,11 @@ public class PurpleMarble implements Marble {
         return new Servant();
     }
 
+    @Override
+    public String getPng() {
+        return "/marbles/biglia_purple.png";
+    }
+
     /**
      * this method verify if the input is a purple marble
      * @param toCompare this is the marble to compare

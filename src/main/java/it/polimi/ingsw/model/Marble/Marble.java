@@ -18,6 +18,11 @@ public interface Marble{
      */
     Resource convert();
 
+    /**
+     * this is a getter of marbles png
+     * @return the png string linked to each marbles image
+     */
+    String getPng();
 
     boolean equals(Object toCompare);
 

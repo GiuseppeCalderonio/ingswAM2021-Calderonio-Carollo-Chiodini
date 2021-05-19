@@ -28,6 +28,11 @@ public class YellowMarble implements Marble{
         return new Coin();
     }
 
+    @Override
+    public String getPng() {
+        return "/marbles/biglia_gialla.png";
+    }
+
     /**
      * this method verify if the input is a yellow marble
      * @param toCompare this is the marble to compare
