@@ -1,7 +1,7 @@
 package it.polimi.ingsw.controller.responseToClients;
 
 import it.polimi.ingsw.view.View;
-import it.polimi.ingsw.view.newView.PingException;
+import it.polimi.ingsw.view.PingException;
 
 public class PingResponse extends ResponseToClient{
 

@@ -21,8 +21,6 @@ public interface View {
 
     void showContextAction(Status message);
 
-    void showWelcomeMessage();
-
     default void showCli(){
 
     };

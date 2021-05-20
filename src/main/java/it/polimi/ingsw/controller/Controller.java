@@ -45,8 +45,8 @@ public class Controller {
         commandInterpreter = new LoginInterpreter();
         this.client = client;
 
-        client.send(new ResponseToClient(Status.ACCEPTED));
     }
+
 
     /**
      * this method get the command interpreter associated with this object

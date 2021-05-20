@@ -109,8 +109,9 @@ public class InitialisisngController implements GuiController , Initializable {
             sendNewCommand(new InitialiseLeaderCardsCommand(discarded.get(0), discarded.get(1)));
 
             if (position == 1){
-                sendNewCommand(new InitialiseResourcesCommand(new CollectionResources()));
                 Gui.setRoot("/WaitingWindow", new WaitingController("Wait for other player to initialize..."));
+                sendNewCommand(new InitialiseResourcesCommand(new CollectionResources()));
+
             }else {
                 switchScenario();
             }
@@ -165,6 +166,7 @@ public class InitialisisngController implements GuiController , Initializable {
         addIfSelected(resourcesGained, fourth.isSelected(), new Servant());
 
         if (resourcesGained.getSize() == resourcesToChoose()){
+            Gui.setRoot("/WaitingWindow", new WaitingController("Wait for other player to initialize..."));
             sendNewCommand(new InitialiseResourcesCommand(resourcesGained));
         }else {
             errorMessage.setOpacity(1);

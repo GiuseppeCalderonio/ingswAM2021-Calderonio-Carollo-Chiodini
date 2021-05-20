@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.Resources;
 
 
 import it.polimi.ingsw.model.Marble.Marble;
-import it.polimi.ingsw.view.utilities.colors.BackColor;
+import it.polimi.ingsw.view.cli.graphic.utilities.colors.BackColor;
 
 /**
  * this class represents one single resource

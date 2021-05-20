@@ -83,10 +83,7 @@ public class StartGameResponse extends ResponseToClient{
     public void updateClient(View view) {
 
         view.updateStartGame(cardsMarket1, marbleMarket1, lonelyMarble1, soloToken, actualPlayer, opponents);
-
-        //client.createGame(cardsMarket1, marbleMarket1, lonelyMarble1, soloToken, actualPlayer, opponents);
         view.showCompleteGame();
-
 
         super.updateClient(view);
     }
@@ -153,6 +150,5 @@ public class StartGameResponse extends ResponseToClient{
             soloToken = null;
         }
     }
-
 
 }

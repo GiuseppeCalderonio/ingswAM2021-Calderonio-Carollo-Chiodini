@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.SingleGame;
 import it.polimi.ingsw.model.DevelopmentCards.CardColor;
 import it.polimi.ingsw.model.DevelopmentCards.CardsMarket;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.view.utilities.colors.BackColor;
+import it.polimi.ingsw.view.cli.graphic.utilities.colors.BackColor;
 
 /**
  * this class represent the card token

@@ -29,7 +29,7 @@ public class ThinGame {
         this.marbleMarket = marbleMarket;
         this.lonelyMarble = lonelyMarble;
         this.soloToken = soloToken;
-        this.myself = actualPlayer;
+        this.myself = new ThinPlayer(actualPlayer);
         // this part of code is used to use the constructor that recreate the leader cards from the thin ones
         this.opponents = opponents.stream().
                 map(ThinPlayer::new).

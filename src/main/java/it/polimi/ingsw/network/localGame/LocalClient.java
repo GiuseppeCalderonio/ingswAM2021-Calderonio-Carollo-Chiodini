@@ -4,7 +4,7 @@ import it.polimi.ingsw.controller.commands.Command;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.view.View;
-import it.polimi.ingsw.view.newView.ClientNetwork;
+import it.polimi.ingsw.network.ClientNetwork;
 
 import java.io.IOException;
 

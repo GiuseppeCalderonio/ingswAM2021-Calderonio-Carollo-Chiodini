@@ -41,7 +41,6 @@ public class LoginController implements GuiController{
         }
         sendNewCommand(new LoginCommand(nickname.getText()));
 
-
     }
 
     @Override

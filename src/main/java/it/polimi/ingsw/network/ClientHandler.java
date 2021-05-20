@@ -118,6 +118,8 @@ public class ClientHandler implements NetworkUser<ResponseToClient, Command>{
 
         // create a new command manager
         controller = new Controller(this);
+        // send the confirm of the size setting
+        send(new ResponseToClient(Status.ACCEPTED));
 
         while (play) {
                 play = readMessage();

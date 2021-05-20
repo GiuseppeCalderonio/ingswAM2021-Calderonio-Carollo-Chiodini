@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.SingleGame;
 
 import it.polimi.ingsw.model.DevelopmentCards.CardsMarket;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.view.utilities.colors.BackColor;
+import it.polimi.ingsw.view.cli.graphic.utilities.colors.BackColor;
 
 /**
  * this class represent the solo token of the single game.
@@ -36,4 +36,11 @@ public interface SoloToken {
     default boolean getShuffle() {
         return false;
     }
+
+    /**
+     * USEFUL ONLY FOR CLIENTS
+     * this method get the png associated with the token
+     * @return the png associated with the token
+     */
+    String getPng();
 }

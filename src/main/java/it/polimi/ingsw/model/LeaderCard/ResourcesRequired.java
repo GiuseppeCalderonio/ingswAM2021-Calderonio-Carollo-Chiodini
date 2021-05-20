@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.LeaderCard;
 
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.model.Resources.*;
-import it.polimi.ingsw.view.utilities.colors.BackColor;
+import it.polimi.ingsw.view.cli.graphic.utilities.colors.BackColor;
 
 import java.util.ArrayList;
 import java.util.Collections;

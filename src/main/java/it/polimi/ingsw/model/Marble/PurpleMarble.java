@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.Marble;
 
 import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.model.Resources.Servant;
-import it.polimi.ingsw.view.utilities.colors.BackColor;
+import it.polimi.ingsw.view.cli.graphic.utilities.colors.BackColor;
 
 /**
  * this class implements the marble interface and represent the purple marble

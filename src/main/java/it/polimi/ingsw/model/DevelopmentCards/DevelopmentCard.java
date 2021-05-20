@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.DevelopmentCards;
 
 
 import it.polimi.ingsw.model.Resources.CollectionResources;
-import it.polimi.ingsw.view.utilities.colors.BackColor;
+import it.polimi.ingsw.view.cli.graphic.utilities.colors.BackColor;
 
 /**
  * this class represent the development card

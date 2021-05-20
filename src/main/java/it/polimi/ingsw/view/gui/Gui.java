@@ -11,10 +11,10 @@ import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.Resources.CollectionResources;
 import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
+import it.polimi.ingsw.network.ClientNetwork;
 import it.polimi.ingsw.network.NetworkUser;
-import it.polimi.ingsw.view.View;
-import it.polimi.ingsw.view.newView.ClientNetwork;
 import it.polimi.ingsw.network.localGame.LocalClient;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.thinModelComponents.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -26,27 +26,72 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import static javafx.application.Platform.runLater;
+import static com.sun.javafx.application.PlatformImpl.startup;
+import static it.polimi.ingsw.view.thinModelComponents.ThinPlayer.createAllLeaderCards;
 
 
 public class Gui extends Application implements View {
 
     private static Scene scene;
-    //private static Client client;
     private static GuiController controller;
     private static NetworkUser <Command, ResponseToClient> clientNetwork;
-    private ThinModel model;
+    private final ThinModel model = new ThinModel();
     private static Command lastCommand = new UnknownCommand();
+
+
+
+    public void startGui(String hostName, int portNumber) {
+        try {
+            if (hostName != null || portNumber != 0){
+                clientNetwork = new ClientNetwork(hostName, portNumber, this);
+            }
+            else {
+                clientNetwork = new LocalClient(this);
+            }
+        } catch (IOException e){
+            System.exit(1);
+        }
+
+        launch();
+
+        /*
+        Platform.startup( () -> {
+            try {
+                start(new Stage());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+         */
+
+    }
+
 
     public static void setLastCommand(Command lastCommandToSet){
         lastCommand = lastCommandToSet;
+    }
+
+    private String getPathFirstWindow(){
+
+        if (clientNetwork instanceof LocalClient)
+            return "/LoginWindow";
+
+        return "/SetSizeWindow";
+    }
+
+    private GuiController getFirstController(){
+        if (clientNetwork instanceof LocalClient)
+            return new LoginController(clientNetwork);
+        return new SetSizeController(clientNetwork);
     }
 
 
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("/SetSizeWindow", new SetSizeController(clientNetwork)), 640, 480);
+
+        scene = new Scene(loadFXML(getPathFirstWindow(), getFirstController()), 640, 480);
         stage.setScene(scene);
         stage.show();
 
@@ -69,22 +114,7 @@ public class Gui extends Application implements View {
         return fxmlLoader.load();
     }
 
-    public void startGui(String hostName, int portNumber) {
-        try {
-            if (hostName != null || portNumber == 0){
-                clientNetwork = new ClientNetwork(hostName, portNumber, this);
-                //client.startNetwork(hostName, portNumber);
-            }
-            else {
-                clientNetwork = new LocalClient(this);
-            }
-        } catch (IOException e){
-            System.exit(1);
-        }
 
-        launch();
-
-    }
 
     @Override
     public Command createCommand() throws IOException {
@@ -93,6 +123,7 @@ public class Gui extends Application implements View {
 
     @Override
     public void showContextAction( Status message) {
+
         Runnable r;
             if (message.equals(Status.ACCEPTED))
 
@@ -101,19 +132,7 @@ public class Gui extends Application implements View {
             else
                  r = () -> controller.showErrorMessage(lastCommand.getErrorMessage());
 
-                runLater(r);
-    }
-
-    @Override
-    public void showWelcomeMessage() {
-
-    }
-
-    @Override
-    public void showCli() {
-
-
-
+                startup(r);
     }
 
     @Override
@@ -128,7 +147,7 @@ public class Gui extends Application implements View {
 
     @Override
     public void showCompleteGame() {
-        setRoot("/TurnsWindow", new TurnsController());
+        setRoot("/TurnsWindow", new TurnsController(model, model.getGame().getMyself().getNickname()));
     }
 
     @Override
@@ -194,7 +213,7 @@ public class Gui extends Application implements View {
 
     @Override
     public List<LeaderCard> getAllLeaderCards() {
-        return null;
+        return createAllLeaderCards();
     }
 
     @Override
