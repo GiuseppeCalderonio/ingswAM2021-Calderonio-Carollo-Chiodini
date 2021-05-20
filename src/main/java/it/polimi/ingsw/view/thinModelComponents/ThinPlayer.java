@@ -175,7 +175,7 @@ public class ThinPlayer {
                 return card;
             }
         }
-        return new NewWhiteMarble(null , 0 , null, "Masters of Renaissance__Cards_BACK_3mmBleed-49-1.png");
+        return new NewWhiteMarble(null , 0 , null, "/back/Masters of Renaissance__Cards_BACK_3mmBleed-49");
     }
 
 
@@ -212,6 +212,8 @@ public class ThinPlayer {
 
     public static List<LeaderCard> createAllLeaderCards(){
 
+        String pngNameConstant = "/front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-";
+
         List<LeaderCard> leaders = new ArrayList<>(); // create an arraylist of leaderCard
         LeaderCardRequirements requirements1 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.BLUE, CardColor.BLUE, CardColor.YELLOW)));
         LeaderCardRequirements requirements2 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.PURPLE, CardColor.PURPLE, CardColor.GREEN)));
@@ -219,20 +221,20 @@ public class ThinPlayer {
         LeaderCardRequirements requirements4 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.YELLOW, CardColor.BLUE)));
 
         //NewWhiteMarble leaderCards
-        leaders.add(new NewWhiteMarble(requirements2,5,new Coin(), "60"));
-        leaders.add(new NewWhiteMarble(requirements1 ,5,new Stone(), "59"));
-        leaders.add(new NewWhiteMarble(requirements4,5,new Servant(), "57"));
-        leaders.add(new NewWhiteMarble(requirements3,5,new Shield(), "58"));
+        leaders.add(new NewWhiteMarble(requirements2,5,new Coin(), pngNameConstant + "60"));
+        leaders.add(new NewWhiteMarble(requirements1 ,5,new Stone(), pngNameConstant + "59"));
+        leaders.add(new NewWhiteMarble(requirements4,5,new Servant(), pngNameConstant + "57"));
+        leaders.add(new NewWhiteMarble(requirements3,5,new Shield(), pngNameConstant + "58"));
         //NewShelf leaderCards
-        leaders.add(new NewShelf(new ResourcesRequired(new Shield()),3,new Coin(), "56"));
-        leaders.add(new NewShelf(new ResourcesRequired(new Servant()),3,new Shield(), "55"));
-        leaders.add(new NewShelf(new ResourcesRequired(new Stone()),3,new Servant(), "54"));
-        leaders.add(new NewShelf(new ResourcesRequired(new Coin()),3,new Stone(), "53"));
+        leaders.add(new NewShelf(new ResourcesRequired(new Shield()),3,new Coin(), pngNameConstant + "56"));
+        leaders.add(new NewShelf(new ResourcesRequired(new Servant()),3,new Shield(), pngNameConstant + "55"));
+        leaders.add(new NewShelf(new ResourcesRequired(new Stone()),3,new Servant(), pngNameConstant + "54"));
+        leaders.add(new NewShelf(new ResourcesRequired(new Coin()),3,new Stone(), pngNameConstant + "53"));
         //NewProduction leaderCards
-        leaders.add(new NewProduction(new LevelRequired(CardColor.GREEN) ,4 , new Coin(), "64"));
-        leaders.add(new NewProduction(new LevelRequired(CardColor.PURPLE) ,4 , new Stone(), "63"));
-        leaders.add(new NewProduction(new LevelRequired(CardColor.BLUE) ,4 , new Servant(), "62"));
-        leaders.add(new NewProduction(new LevelRequired(CardColor.YELLOW) ,4 , new Shield(), "61"));
+        leaders.add(new NewProduction(new LevelRequired(CardColor.GREEN) ,4 , new Coin(), pngNameConstant + "64"));
+        leaders.add(new NewProduction(new LevelRequired(CardColor.PURPLE) ,4 , new Stone(), pngNameConstant + "63"));
+        leaders.add(new NewProduction(new LevelRequired(CardColor.BLUE) ,4 , new Servant(), pngNameConstant + "62"));
+        leaders.add(new NewProduction(new LevelRequired(CardColor.YELLOW) ,4 , new Shield(), pngNameConstant + "61"));
 
         LeaderCardRequirements requirement1 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.PURPLE)));
         LeaderCardRequirements requirement2 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.GREEN , CardColor.BLUE)));
@@ -240,10 +242,10 @@ public class ThinPlayer {
         LeaderCardRequirements requirement4 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.GREEN)));
 
         //NewDiscount leaderCards
-        leaders.add(new NewDiscount(requirement1,2,new Coin(), "52"));
-        leaders.add(new NewDiscount(requirement2,2,new Stone(), "51"));
-        leaders.add(new NewDiscount(requirement3,2,new Shield(), "50"));
-        leaders.add(new NewDiscount(requirement4,2,new Servant(), "49"));
+        leaders.add(new NewDiscount(requirement1,2,new Coin(), pngNameConstant + "52"));
+        leaders.add(new NewDiscount(requirement2,2,new Stone(), pngNameConstant + "51"));
+        leaders.add(new NewDiscount(requirement3,2,new Shield(), pngNameConstant + "50"));
+        leaders.add(new NewDiscount(requirement4,2,new Servant(), pngNameConstant + "49"));
         return leaders;
     }
 }

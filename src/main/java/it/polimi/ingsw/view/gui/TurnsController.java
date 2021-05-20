@@ -194,13 +194,13 @@ public class TurnsController implements GuiController, Initializable {
         try {
             firstLeaderCard.setImage(new Image(leaderCards.get(0).getPng()));
         } catch (NullPointerException e){
-            firstLeaderCard = new ImageView();
+            firstLeaderCard.imageProperty().setValue(null);
         }
 
         try {
             secondLeaderCard.setImage(new Image(leaderCards.get(1).getPng()));
         } catch (NullPointerException e){
-            secondLeaderCard = new ImageView();
+            secondLeaderCard.imageProperty().setValue(null);
         }
 
     }
@@ -225,7 +225,7 @@ public class TurnsController implements GuiController, Initializable {
         try {
             firstShelfFirstResource.setImage(new Image(firstShelf.asList().get(0).getPng()));
         } catch (IndexOutOfBoundsException e){
-            firstShelfFirstResource = new ImageView();
+            firstShelfFirstResource.imageProperty().setValue(null);
         }
     }
 
@@ -233,13 +233,13 @@ public class TurnsController implements GuiController, Initializable {
         try {
             secondShelfFirstResource.setImage(new Image(secondShelf.asList().get(0).getPng()));
         } catch (IndexOutOfBoundsException e){
-            secondShelfFirstResource = new ImageView();
+            secondShelfFirstResource.imageProperty().setValue(null);
         }
 
         try {
             secondShelfSecondResource.setImage(new Image(secondShelf.asList().get(1).getPng()));
         } catch (IndexOutOfBoundsException e){
-            secondShelfSecondResource = new ImageView();
+            secondShelfSecondResource.imageProperty().setValue(null);
         }
 
     }
@@ -248,19 +248,19 @@ public class TurnsController implements GuiController, Initializable {
         try {
             thirdShelfFirstResource.setImage(new Image(thirdShelf.asList().get(0).getPng()));
         } catch (IndexOutOfBoundsException e){
-            thirdShelfFirstResource = new ImageView();
+            thirdShelfFirstResource.imageProperty().setValue(null);
         }
 
         try {
             thirdShelfFirstResource.setImage(new Image(thirdShelf.asList().get(1).getPng()));
         } catch (IndexOutOfBoundsException e){
-            thirdShelfSecondResource = new ImageView();
+            thirdShelfSecondResource.imageProperty().setValue(null);
         }
 
         try {
             thirdShelfFirstResource.setImage(new Image(thirdShelf.asList().get(2).getPng()));
         } catch (IndexOutOfBoundsException e){
-            thirdShelfThirdResource = new ImageView();
+            thirdShelfThirdResource.imageProperty().setValue(null);
         }
     }
 

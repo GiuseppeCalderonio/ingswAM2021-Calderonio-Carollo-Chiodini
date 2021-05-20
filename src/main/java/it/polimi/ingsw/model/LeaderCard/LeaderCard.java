@@ -52,8 +52,7 @@ public abstract class LeaderCard {
         this.victoryPoints = victoryPoints;
         this.resource = resource;
         this.isActive = false;
-        String pngNameConstant = "/front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-";
-        this.png = pngNameConstant + png + "-1.png";
+        this.png = png + "-1.png";
 
     }
 
