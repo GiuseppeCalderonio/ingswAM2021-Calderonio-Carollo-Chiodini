@@ -177,8 +177,10 @@ public class Cli implements View {
             int height = 53;
             if (model.getGame().getOpponents().size() <= 1)
                 height = 41;
-            CharStream console = new CharStream(200, height);
-            for(int i=0; i<200; i++)
+
+            int width = 155;
+            CharStream console = new CharStream(width, height);
+            for(int i=0; i<width; i++)
                 for (int j=0; j<height; j++)
                     console.addColor(i,j, BackColor.ANSI_BRIGHT_BG_CYAN);
                 GraphicalGame graphicalGame = new GraphicalGame(console, model.getGame());
@@ -193,16 +195,15 @@ public class Cli implements View {
     }
 
     @Override
-    public void showErrorMessage(Exception e) {
-        System.err.println(e.getMessage());
-    }
-
-    @Override
     public void showInitialisingPhase(List<LeaderCard> leaderCards, int position) {
+
+        int width = 180;
+        int height = 30;
+
         // print the leader cards with ascii art
-        CharStream console = new CharStream(200, 30);
-        for (int i = 0; i < 200; i++) {
-            for (int j = 0; j < 60; j++) {
+        CharStream console = new CharStream(width, height);
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 console.addColor(i, j, BackColor.ANSI_BRIGHT_BG_BLACK);
             }
         }
@@ -214,8 +215,53 @@ public class Cli implements View {
     }
 
     @Override
+    public void showContextAction( Status message) {
+
+        if (message != null){
+            if(message.equals(Status.ACCEPTED))
+                System.out.println(lastCommand.getConfirmMessage());
+            if (message.equals(Status.REFUSED))
+                System.out.println(lastCommand.getErrorMessage());
+            if (message.equals(Status.ERROR))
+                System.out.println("the command created an error on the server");
+            if (message.equals(Status.WRONG_TURN))
+                System.out.println("is not your turn!");
+            if (message.equals(Status.YOUR_TURN))
+                System.out.println("now is your turn! decide your action");
+            if (message.equals(Status.QUIT)){
+                System.out.println("quit the match");
+                System.exit(1);
+            }
+        }
+    }
+
+    private void showWelcomeMessage() {
+
+        int width = 95;
+        int height = 5;
+
+        CharStream console = new CharStream(width, height);
+        console.setMessage("MAESTRI DEL",0,0, ForeColor.ANSI_BRIGHT_YELLOW, BackColor.ANSI_BG_BLACK);
+        console.print(System.out);
+        console.reset();
+        console = new CharStream(width, height);
+        console.setMessage("RINASCIMENTO",0,0, ForeColor.ANSI_BRIGHT_YELLOW, BackColor.ANSI_BG_BLACK);
+        console.print(System.out);
+        console.reset();
+
+
+        System.out.println("Welcome to the game, decide the number of players[1,2,3,4]\n" +
+                "if you are playing a local single game instead, start directly with the login");
+    }
+
+    @Override
     public void showCompleteGame() {
         showCli();
+    }
+
+    @Override
+    public void showErrorMessage(Exception e) {
+        System.err.println(e.getMessage());
     }
 
     @Override
@@ -298,36 +344,5 @@ public class Cli implements View {
     public void quit() {
         System.err.println("Disconnection...");
         System.exit(1);
-    }
-
-    @Override
-    public void showContextAction( Status message) {
-
-        if (message != null){
-            if(message.equals(Status.ACCEPTED))
-                System.out.println(lastCommand.getConfirmMessage());
-            if (message.equals(Status.REFUSED))
-                System.out.println(lastCommand.getErrorMessage());
-            if (message.equals(Status.ERROR))
-                System.out.println("the command created an error on the server");
-            if (message.equals(Status.WRONG_TURN))
-                System.out.println("is not your turn!");
-            if (message.equals(Status.YOUR_TURN))
-                System.out.println("now is your turn! decide your action");
-            if (message.equals(Status.QUIT)){
-                System.out.println("quit the match");
-                System.exit(1);
-            }
-        }
-    }
-
-    private void showWelcomeMessage() {
-        CharStream console = new CharStream(200, 7);
-        console.setMessage("MAESTRI DEL RINASCIMENTO",0,0, ForeColor.ANSI_BRIGHT_YELLOW, BackColor.ANSI_BG_BLACK);
-        console.print(System.out);
-        console.reset();
-
-        System.out.println("Welcome to the game, decide the number of players[1,2,3,4]\n" +
-                "if you are playing a local single game instead, start directly with the login");
     }
 }

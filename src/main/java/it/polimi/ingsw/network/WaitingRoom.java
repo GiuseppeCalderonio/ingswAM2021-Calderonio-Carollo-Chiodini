@@ -208,7 +208,7 @@ public class WaitingRoom implements Runnable, NetworkUser<ResponseToClient, Comm
                 // set the number of players of the game
                 numberOfPlayers = command.getNumberOfPlayers();
 
-                if (command.getCmd().equals(CommandName.PONG))
+                if (command.getCmd().equals(CommandName.QUIT))
                     throw new QuitException();
 
                 // if the number of players are between 1 and 4

@@ -133,7 +133,7 @@ public class SingleGame extends Game {
     protected synchronized void handleVaticanReport() throws EndGameException{
         boolean [] singleVaticanReports = super.getVaticanReports();
         int i=0;
-        while((singleVaticanReports[i]) && (i < 3)) i++;
+        while ((i < 3) && (singleVaticanReports[i])) i++;
         if (i > 2) return;
         i++;
         if (getActualPlayer().checkVaticanReport(i) || lorenzoIlMagnifico.checkVaticanReport(i)) {
