@@ -2,13 +2,12 @@ package it.polimi.ingsw.model.Marble;
 
 import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.view.cli.graphic.utilities.colors.BackColor;
+import javafx.scene.paint.Color;
 
 /**
  * this class implements the marble interface and represent the white marble
  */
 public class WhiteMarble implements Marble{
-
-    private final MarbleColor color = MarbleColor.WHITE;
 
     /**
      * this method return zero faith point
@@ -27,11 +26,6 @@ public class WhiteMarble implements Marble{
     public Resource convert() {
 
         return null;
-    }
-
-    @Override
-    public String getPng() {
-        return "/marbles/biglia_bianca.png";
     }
 
     /**
@@ -55,8 +49,8 @@ public class WhiteMarble implements Marble{
      * @return white
      */
     @Override
-    public MarbleColor getColor() {
-        return color;
+    public Color getColor() {
+        return Color.WHITE;
     }
 
     /**

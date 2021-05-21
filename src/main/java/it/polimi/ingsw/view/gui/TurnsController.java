@@ -2,22 +2,29 @@ package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.controller.commands.Command;
 import it.polimi.ingsw.controller.commands.CommandName;
+import it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands.ChooseMarblesCommand;
+import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.PlayerAndComponents.Player;
 import it.polimi.ingsw.model.Resources.*;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
+import it.polimi.ingsw.network.NetworkUser;
 import it.polimi.ingsw.view.thinModelComponents.ThinModel;
 import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
 import it.polimi.ingsw.view.thinModelComponents.ThinWarehouse;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,9 +33,29 @@ import java.util.ResourceBundle;
 
 public class TurnsController implements GuiController, Initializable {
 
+    @FXML
+    private Circle lonelyMarble;
 
     @FXML
-    public TabPane playersTab;
+    private VBox marbleMarket;
+
+    @FXML
+    private ToolBar actions;
+
+    @FXML
+    private ImageView marbleMarketBig;
+
+    @FXML
+    private ImageView marbleMarketThin;
+
+    @FXML
+    private TabPane playersTab;
+
+    @FXML
+    private VBox leaderCards;
+
+    @FXML
+    private HBox cardsMarket;
 
     @FXML
     private Label strongboxCoins;
@@ -44,7 +71,6 @@ public class TurnsController implements GuiController, Initializable {
 
     @FXML
     private ImageView firstShelfFirstResource = new ImageView();
-
 
     @FXML
     private ImageView secondShelfFirstResource = new ImageView();
@@ -64,62 +90,21 @@ public class TurnsController implements GuiController, Initializable {
     @FXML
     private ImageView soloToken = new ImageView();
 
-
-    @FXML
-    private ImageView firstLeaderCard = new ImageView(); // first leaderCard
-
-    @FXML
-    private ImageView secondLeaderCard = new ImageView(); // second leaderCard
-
-    @FXML
-    private ImageView cardLev3ColPurple = new ImageView(); // r = 0, c = 3
-
-    @FXML
-    private ImageView cardLev2ColPurple = new ImageView(); // r = 1, c = 3
-
-    @FXML
-    private ImageView cardLev1ColPurple = new ImageView(); // r = 2, c = 3
-
-    @FXML
-    private ImageView cardLev3ColYellow = new ImageView(); // r = 0, c = 2
-
-    @FXML
-    private ImageView cardLev2ColYellow = new ImageView(); // r = 1, c = 2
-
-    @FXML
-    private ImageView cardLev1ColYellow = new ImageView(); // r = 2, c = 2
-
-    @FXML
-    private ImageView cardLev3ColBlue = new ImageView(); // r = 0, c = 1
-
-    @FXML
-    private ImageView cardLev2ColBlue = new ImageView(); // r = 1, c = 1
-
-    @FXML
-    private ImageView cardLev1ColBlue = new ImageView(); // r = 2, c = 1
-
-    @FXML
-    private ImageView cardLev3ColGreen = new ImageView(); // r = 0, c = 0
-
-    @FXML
-    private ImageView cardLev2ColGreen = new ImageView(); // r = 1, c = 0
-
-    @FXML
-    private ImageView cardLev1ColGreen = new ImageView(); // r = 2, c =
-
-
-    @FXML
-    private ImageView marketMarble = new ImageView();
-
     @FXML
     private ImageView playerBoard = new ImageView();
+
+    @FXML
+    private Button firstRowButton;
 
     private ThinModel model;
 
     private String nickname;
 
+    private NetworkUser<Command, ResponseToClient> clientNetworkUser;
 
-    public TurnsController(ThinModel model, String nickname){
+
+    public TurnsController(ThinModel model, String nickname, NetworkUser<Command, ResponseToClient> clientNetworkUser){
+        this.clientNetworkUser = clientNetworkUser;
         this.model = model;
         this.nickname = nickname;
     }
@@ -147,12 +132,13 @@ public class TurnsController implements GuiController, Initializable {
             tab.setOnSelectionChanged( (actionEvent) -> drawPlayer(tab.getText()));
         }
         playerBoard.setImage(new Image("/board/Masters of Renaissance_PlayerBoard.png"));
-        showMarbleMarket(model.getGame().getMarbleMarket());
-        marketMarble.setImage(new Image("/punchboard/plancia portabiglie.png"));
+        showMarbleMarket(model.getGame().getMarbleMarket(), model.getGame().getLonelyMarble() , 508, 86);
         showCardsMarket(model.getGame().getCardsMarket());
         showSoloToken(model.getGame().getSoloToken());
         // draw the player
         drawPlayer(nickname);
+        initializeActions(actions);
+
     }
 
     private List<ThinPlayer> getRealPlayers(){
@@ -168,39 +154,100 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    private void initializeActions(ToolBar actions){
+        actions.getItems().clear();
+        List<Button> buttonActions = new ArrayList<>();
+
+
+        buttonActions.add(setButton("choose marbles", (actionEvent) -> chooseMarbles()));
+        actions.getItems().addAll(buttonActions);
+    }
+
+    private Button setButton(String buttonName, EventHandler<ActionEvent> eventHandler){
+        Button button = new Button();
+        button.setText(buttonName);
+        button.setOnAction(eventHandler);
+        return button;
+    }
+
+    private Button setButton(String buttonName, EventHandler<ActionEvent> eventHandler, int layoutX, int layoutY){
+        Button button = setButton(buttonName, eventHandler);
+        button.setLayoutX(layoutX);
+        button.setLayoutY(layoutY);
+        return button;
+    }
+
     public void drawPlayer(String nickname){
         showLeaderCards(model.getGame().getPlayer(nickname).getLeaderCards());
         showWarehouse(model.getGame().getPlayer(nickname).getWarehouse());
         showStrongbox(model.getGame().getPlayer(nickname).getStrongbox());
     }
 
+    @FXML
+    public void chooseMarbles(){
+
+        int layoutX = 650;
+        int layoutY = 250;
+
+        showMarbleMarket(model.getGame().getMarbleMarket(),model.getGame().getLonelyMarble() , layoutX, layoutY);
+
+        firstRowButton = setButton("",
+                (actionEvent) -> {
+            sendNewCommand(new ChooseMarblesCommand("row", 1));
+            //createMarblesScenario();
+        },
+                 layoutX + (int) marbleMarketBig.getLayoutX() + 5,
+                layoutY + 5);
+
+    }
+
     public void showCardsMarket(DevelopmentCard[][] cardsMarket){
-        cardLev3ColPurple.setImage(new Image(cardsMarket[0][3].getPng()));
-        cardLev2ColPurple.setImage(new Image(cardsMarket[1][3].getPng()));
-        cardLev1ColPurple.setImage(new Image(cardsMarket[2][3].getPng()));
-        cardLev3ColYellow.setImage(new Image(cardsMarket[0][2].getPng()));
-        cardLev2ColYellow.setImage(new Image(cardsMarket[1][2].getPng()));
-        cardLev1ColYellow.setImage(new Image(cardsMarket[2][2].getPng()));
-        cardLev3ColBlue.setImage(new Image(cardsMarket[0][1].getPng()));
-        cardLev2ColBlue.setImage(new Image(cardsMarket[1][1].getPng()));
-        cardLev1ColBlue.setImage(new Image(cardsMarket[2][1].getPng()));
-        cardLev3ColGreen.setImage(new Image(cardsMarket[0][0].getPng()));
-        cardLev2ColGreen.setImage(new Image(cardsMarket[1][0].getPng()));
-        cardLev1ColGreen.setImage(new Image(cardsMarket[2][0].getPng()));
+
+        this.cardsMarket.getChildren().clear();
+
+        for (int j = 0; j < 4; j++) {
+
+            VBox cardColumn = new VBox();
+
+            for (int i = 0; i < 3; i++) {
+
+                ImageView card = new ImageView();
+                card.setFitHeight(150);
+                card.setFitWidth(100);
+
+                try {
+                    card.setImage(new Image(cardsMarket[i][j].getPng()));
+
+                } catch (NullPointerException e){
+                    card.imageProperty().setValue(null);
+                }
+
+
+                cardColumn.getChildren().add(card);
+            }
+            this.cardsMarket.getChildren().add(cardColumn);
+
+        }
 
     }
 
     public void showLeaderCards(List<LeaderCard> leaderCards){
-        try {
-            firstLeaderCard.setImage(new Image(leaderCards.get(0).getPng()));
-        } catch (NullPointerException e){
-            firstLeaderCard.imageProperty().setValue(null);
-        }
 
-        try {
-            secondLeaderCard.setImage(new Image(leaderCards.get(1).getPng()));
-        } catch (NullPointerException e){
-            secondLeaderCard.imageProperty().setValue(null);
+        this.leaderCards.getChildren().clear();
+
+        for (int i = 0; i < 2; i++) {
+
+            ImageView leaderCard = new ImageView();
+            leaderCard.setFitHeight(150);
+            leaderCard.setFitWidth(100);
+
+            try {
+                leaderCard.setImage(new Image(leaderCards.get(i).getPng()));
+            } catch (IndexOutOfBoundsException e){
+                leaderCard.imageProperty().setValue(null);
+            }
+
+            this.leaderCards.getChildren().add(leaderCard);
         }
 
     }
@@ -211,8 +258,59 @@ public class TurnsController implements GuiController, Initializable {
         } catch (NullPointerException ignored){ }
     }
 
-    public void showMarbleMarket(Marble[][] marbleMarket){
-        marketMarble.setImage(new Image("/punchboard/plancia portabiglie.png"));
+    public void showMarbleMarket(Marble[][] marbleMarket, Marble lonelyMarble ,  int layoutX, int layoutY){
+
+        int relativeLayoutMarbleMarketX = 29;
+        int relativeLayoutMarbleMarketY = 28;
+
+        Image marbleMarketBig = new Image("/punchboard/plancia portabiglie.png");
+        Image marbleMarketThin = new Image("/board/ContenitoreBiglie.png");
+
+        this.marbleMarketBig.setImage(marbleMarketBig);
+        this.marbleMarketThin.setImage(marbleMarketThin);
+
+        this.marbleMarketBig.setLayoutX(layoutX);
+        this.marbleMarketBig.setLayoutY(layoutY);
+
+        this.marbleMarketThin.setLayoutX(layoutX + relativeLayoutMarbleMarketX);
+        this.marbleMarketThin.setLayoutY(layoutY + relativeLayoutMarbleMarketY);
+
+        this.marbleMarket.getChildren().clear();
+
+        int relativeLayoutMarblesX = 55;
+        int relativeLayoutMarblesY = 55;
+
+        this.marbleMarket.setLayoutX(layoutX + relativeLayoutMarblesX);
+        this.marbleMarket.setLayoutY(layoutY + relativeLayoutMarblesY);
+
+
+        for (int i = 0; i < 3; i++) {
+
+            HBox marbleRow = new HBox();
+
+            for (int j = 0; j < 4; j++) {
+
+                Circle marble = new Circle();
+                marble.setFill(marbleMarket[i][j].getColor());
+                marble.setRadius(11);
+                marble.setStroke(Color.BLACK);
+
+                marbleRow.getChildren().add(marble);
+            }
+            this.marbleMarket.getChildren().add(marbleRow);
+
+        }
+
+        int relativeLayoutLonelyMarbleX = 150;
+        int relativeLayoutLonelyMarbleY = 45;
+
+        this.lonelyMarble.setLayoutX(layoutX + relativeLayoutLonelyMarbleX);
+        this.lonelyMarble.setLayoutY(layoutY + relativeLayoutLonelyMarbleY);
+
+        this.lonelyMarble.setFill(lonelyMarble.getColor());
+        this.lonelyMarble.setStroke(Color.BLACK);
+
+
     }
 
     public void showWarehouse(ThinWarehouse warehouse){

@@ -147,7 +147,7 @@ public class Gui extends Application implements View {
 
     @Override
     public void showCompleteGame() {
-        setRoot("/TurnsWindow", new TurnsController(model, model.getGame().getMyself().getNickname()));
+        setRoot("/TurnsWindow", new TurnsController(model, model.getGame().getMyself().getNickname(), clientNetwork));
     }
 
     @Override

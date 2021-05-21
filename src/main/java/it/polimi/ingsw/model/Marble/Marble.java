@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.Marble;
 
 import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.view.cli.graphic.utilities.colors.BackColor;
+import javafx.scene.paint.Color;
 
 /**
  * this interface represent the marble
@@ -18,12 +19,6 @@ public interface Marble{
      */
     Resource convert();
 
-    /**
-     * this is a getter of marbles png
-     * @return the png string linked to each marbles image
-     */
-    String getPng();
-
     boolean equals(Object toCompare);
 
     String toString();
@@ -32,7 +27,7 @@ public interface Marble{
      * this method get the color of the marble
      * @return the enum with the color of the marble
      */
-    MarbleColor getColor();
+    Color getColor();
 
     /**
      * USEFUL ONLY FOR CLIENTS

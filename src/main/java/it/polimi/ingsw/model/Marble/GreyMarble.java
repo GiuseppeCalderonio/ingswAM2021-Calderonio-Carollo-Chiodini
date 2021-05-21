@@ -3,13 +3,12 @@ package it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.Resources.Resource;
 import it.polimi.ingsw.model.Resources.Stone;
 import it.polimi.ingsw.view.cli.graphic.utilities.colors.BackColor;
+import javafx.scene.paint.Color;
 
 /**
  * this class implements the marble interface and represent the grey marble
  */
 public class GreyMarble implements Marble {
-
-    private final MarbleColor color = MarbleColor.GREY;
 
     /**
      * this method return zero faith point
@@ -26,11 +25,6 @@ public class GreyMarble implements Marble {
     @Override
     public Resource convert() {
         return new Stone();
-    }
-
-    @Override
-    public String getPng() {
-        return "/marbles/biglia_grigia.png";
     }
 
     /**
@@ -52,8 +46,8 @@ public class GreyMarble implements Marble {
      * this method get the color of the marble
      * @return grey
      */
-    public MarbleColor getColor() {
-        return color;
+    public Color getColor() {
+        return Color.GREY;
     }
 
     /**
