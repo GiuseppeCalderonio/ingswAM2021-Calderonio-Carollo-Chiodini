@@ -66,7 +66,7 @@ public class Stone implements Resource {
      * @return the png associated with the resource
      */
     @Override
-    public String getPng() {
-        return "/punchboard/stone.png";
+    public int getId() {
+        return 4;
     }
 }

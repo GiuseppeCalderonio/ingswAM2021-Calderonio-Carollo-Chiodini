@@ -65,7 +65,7 @@ public class Shield implements Resource {
      * @return the png associated with the resource
      */
     @Override
-    public String getPng() {
-        return "/punchboard/shield.png";
+    public int getId() {
+        return 3;
     }
 }

@@ -29,7 +29,10 @@ public abstract class LeaderCard {
      */
     private final Resource resource;
 
-    private String png;
+    /**
+     * this attribute represent the id of the leader card
+     */
+    private int id;
 
     /**
      * this constructor create a leader card from requirements,
@@ -46,13 +49,20 @@ public abstract class LeaderCard {
 
     }
 
-
-    public LeaderCard(LeaderCardRequirements requirements, int victoryPoints, Resource resource, String png){
+    /**
+     * this constructor is useful only for clients in order to recreate
+     * the card and associate him the png
+     * @param requirements these are the requirements to set
+     * @param victoryPoints these ate the victory points to set
+     * @param resource this is the resource to set
+     * @param id this is the id of the card
+     */
+    public LeaderCard(LeaderCardRequirements requirements, int victoryPoints, Resource resource, int id){
         this.requirements = requirements;
         this.victoryPoints = victoryPoints;
         this.resource = resource;
         this.isActive = false;
-        this.png = png + "-1.png";
+        this.id = id;
 
     }
 
@@ -145,7 +155,7 @@ public abstract class LeaderCard {
      */
     public abstract String identifier();
 
-    public String getPng() {
-        return png;
+    public int getId() {
+        return id;
     }
 }

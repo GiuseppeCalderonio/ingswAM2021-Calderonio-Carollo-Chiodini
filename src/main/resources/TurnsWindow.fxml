@@ -30,7 +30,7 @@
             <VBox prefHeight="48.0" prefWidth="20.0">
                <children>
                   <ImageView fitHeight="24.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
-                     <Image url="@punchboard/coin.png" />
+                     <Image url="@punchboard/Resource-1.png" />
                   </ImageView>
                   <Label fx:id="strongboxCoins" text="x0" textFill="WHITE" />
                </children>
@@ -38,7 +38,7 @@
             <VBox prefHeight="24.0" prefWidth="19.0">
                <children>
                   <ImageView fitHeight="24.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
-                     <Image url="@punchboard/stone.png" />
+                     <Image url="@punchboard/Resource-4.png" />
                   </ImageView>
                   <Label fx:id="strongboxStones" text="x0" textFill="WHITE" />
                </children>
@@ -46,7 +46,7 @@
             <VBox prefHeight="24.0" prefWidth="19.0">
                <children>
                   <ImageView fitHeight="24.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
-                     <Image url="@punchboard/servant.png" />
+                     <Image url="@punchboard/Resource-2.png" />
                   </ImageView>
                   <Label fx:id="strongboxServants" text="x0" textFill="WHITE" />
                </children>
@@ -54,7 +54,7 @@
             <VBox prefHeight="24.0" prefWidth="19.0">
                <children>
                   <ImageView fitHeight="24.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
-                     <Image url="@punchboard/shield.png" />
+                     <Image url="@punchboard/Resource-3.png" />
                   </ImageView>
                   <Label fx:id="strongboxShields" text="x0" textFill="WHITE" />
                </children>

@@ -205,6 +205,8 @@ public class TurnsController implements GuiController, Initializable {
 
         this.cardsMarket.getChildren().clear();
 
+        String pngNameConstant = "/front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-";
+
         for (int j = 0; j < 4; j++) {
 
             VBox cardColumn = new VBox();
@@ -216,7 +218,7 @@ public class TurnsController implements GuiController, Initializable {
                 card.setFitWidth(100);
 
                 try {
-                    card.setImage(new Image(cardsMarket[i][j].getPng()));
+                    card.setImage(new Image(pngNameConstant + cardsMarket[i][j].getId() + "-1.png"));
 
                 } catch (NullPointerException e){
                     card.imageProperty().setValue(null);
@@ -235,14 +237,22 @@ public class TurnsController implements GuiController, Initializable {
 
         this.leaderCards.getChildren().clear();
 
+
+
         for (int i = 0; i < 2; i++) {
+
+            String pngNameConstant = "/front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-";
 
             ImageView leaderCard = new ImageView();
             leaderCard.setFitHeight(150);
             leaderCard.setFitWidth(100);
 
             try {
-                leaderCard.setImage(new Image(leaderCards.get(i).getPng()));
+
+                if (leaderCards.get(i).getId() == 49)
+                    pngNameConstant = "/back/Masters of Renaissance__Cards_BACK_3mmBleed-";
+
+                leaderCard.setImage(new Image(pngNameConstant + leaderCards.get(i).getId() + "-1.png"));
             } catch (IndexOutOfBoundsException e){
                 leaderCard.imageProperty().setValue(null);
             }
@@ -314,49 +324,55 @@ public class TurnsController implements GuiController, Initializable {
     }
 
     public void showWarehouse(ThinWarehouse warehouse){
-        showFirstShelf(warehouse.getFirstShelf());
-        showSecondShelf(warehouse.getSecondShelf());
-        showThirdShelf(warehouse.getThirdShelf());
+
+        String pngNameConstant = "/punchboard/Resource-";
+
+        showFirstShelf(warehouse.getFirstShelf(), pngNameConstant);
+        showSecondShelf(warehouse.getSecondShelf(), pngNameConstant);
+        showThirdShelf(warehouse.getThirdShelf(), pngNameConstant);
     }
 
-    private void showFirstShelf(CollectionResources firstShelf){
+    private void showFirstShelf(CollectionResources firstShelf, String pngNameConstant){
+
+
+
         try {
-            firstShelfFirstResource.setImage(new Image(firstShelf.asList().get(0).getPng()));
+            firstShelfFirstResource.setImage(new Image(pngNameConstant + firstShelf.asList().get(0).getId() + ".png"));
         } catch (IndexOutOfBoundsException e){
             firstShelfFirstResource.imageProperty().setValue(null);
         }
     }
 
-    private void showSecondShelf(CollectionResources secondShelf){
+    private void showSecondShelf(CollectionResources secondShelf, String pngNameConstant){
         try {
-            secondShelfFirstResource.setImage(new Image(secondShelf.asList().get(0).getPng()));
+            secondShelfFirstResource.setImage(new Image(pngNameConstant + secondShelf.asList().get(0).getId() + ".png"));
         } catch (IndexOutOfBoundsException e){
             secondShelfFirstResource.imageProperty().setValue(null);
         }
 
         try {
-            secondShelfSecondResource.setImage(new Image(secondShelf.asList().get(1).getPng()));
+            secondShelfSecondResource.setImage(new Image(pngNameConstant + secondShelf.asList().get(1).getId() + ".png"));
         } catch (IndexOutOfBoundsException e){
             secondShelfSecondResource.imageProperty().setValue(null);
         }
 
     }
 
-    private void showThirdShelf(CollectionResources thirdShelf){
+    private void showThirdShelf(CollectionResources thirdShelf, String pngNameConstant){
         try {
-            thirdShelfFirstResource.setImage(new Image(thirdShelf.asList().get(0).getPng()));
+            thirdShelfFirstResource.setImage(new Image(pngNameConstant + thirdShelf.asList().get(0).getId() + ".png"));
         } catch (IndexOutOfBoundsException e){
             thirdShelfFirstResource.imageProperty().setValue(null);
         }
 
         try {
-            thirdShelfFirstResource.setImage(new Image(thirdShelf.asList().get(1).getPng()));
+            thirdShelfFirstResource.setImage(new Image(pngNameConstant + thirdShelf.asList().get(1).getId() + ".png"));
         } catch (IndexOutOfBoundsException e){
             thirdShelfSecondResource.imageProperty().setValue(null);
         }
 
         try {
-            thirdShelfFirstResource.setImage(new Image(thirdShelf.asList().get(2).getPng()));
+            thirdShelfFirstResource.setImage(new Image(pngNameConstant + thirdShelf.asList().get(2).getId() + ".png"));
         } catch (IndexOutOfBoundsException e){
             thirdShelfThirdResource.imageProperty().setValue(null);
         }

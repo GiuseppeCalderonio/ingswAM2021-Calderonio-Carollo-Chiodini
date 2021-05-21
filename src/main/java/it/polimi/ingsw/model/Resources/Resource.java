@@ -43,9 +43,9 @@ public interface Resource{
     BackColor getColor();
 
     /**
-     * this method get the png associated with the resource,
+     * this method get the id associated with the resource,
      * USEFUL ONLY FOR THE GUI
-     * @return the png associated with the resource
+     * @return the ID associated with the resource
      */
-    String getPng();
+    int getId();
 }

@@ -68,4 +68,6 @@ public interface View {
 
     void updateTrack(ThinTrack track, String nickname);
 
+    void quit();
+
 }

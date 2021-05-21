@@ -32,7 +32,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Stone())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(),new Coin(),new Coin(),new Shield())))
                 ,0
-                ,"45"));
+                ,45));
         cardMatrix[0][0].add(new DevelopmentCard(CardColor.GREEN
                 ,3
                 ,11
@@ -40,7 +40,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Servant())))
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Coin())))
                 ,3
-                ,"41"));
+                ,41));
         cardMatrix[0][0].add(new DevelopmentCard(CardColor.GREEN
                 ,3
                 ,10
@@ -48,7 +48,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(),new Servant())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Shield(),new Shield(),new Stone(),new Stone())))
                 ,1
-                ,"37"));
+                ,37));
         cardMatrix[0][0].add(new DevelopmentCard(CardColor.GREEN
                 ,3
                 ,9
@@ -56,7 +56,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(),new Coin())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Stone(),new Stone())))
                 ,2
-                ,"33"));
+                ,33));
         Collections.shuffle(cardMatrix[0][0]);
         // stack of card of third level, blue color
         cardMatrix[0][1] = new ArrayList<>();
@@ -67,7 +67,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Servant())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(),new Shield(),new Shield(),new Shield())))
                 ,0
-                ,"47"));
+                ,47));
         cardMatrix[0][1].add(new DevelopmentCard(CardColor.BLUE
                 ,3
                 ,11
@@ -75,7 +75,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Stone())))
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Shield())))
                 ,3
-                ,"43"));
+                ,43));
         cardMatrix[0][1].add(new DevelopmentCard(CardColor.BLUE
                 ,3
                 ,10
@@ -83,7 +83,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(),new Shield())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Servant(),new Servant(),new Stone(),new Stone())))
                 ,1
-                ,"39"));
+                ,39));
         cardMatrix[0][1].add(new DevelopmentCard(CardColor.BLUE
                 ,3
                 ,9
@@ -91,7 +91,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Servant(),new Servant())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Shield(),new Shield(),new Shield())))
                 ,2
-                ,"35"));
+                ,35));
         Collections.shuffle(cardMatrix[0][1]);
         // stack of card of third level, yellow color
         cardMatrix[0][2] = new ArrayList<>();
@@ -102,7 +102,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Shield())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Servant(),new Servant(),new Servant())))
                 ,0
-                ,"48"));
+                ,48));
         cardMatrix[0][2].add(new DevelopmentCard(CardColor.YELLOW
                 ,3
                 ,11
@@ -110,7 +110,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Shield())))
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Servant())))
                 ,3
-                ,"44"));
+                ,44));
         cardMatrix[0][2].add(new DevelopmentCard(CardColor.YELLOW
                 ,3
                 ,10
@@ -118,7 +118,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Servant())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(),new Coin(),new Shield(),new Shield())))
                 ,1
-                ,"40"));
+                ,40));
         cardMatrix[0][2].add(new DevelopmentCard(CardColor.YELLOW
                 ,3
                 ,9
@@ -126,7 +126,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Shield(),new Shield())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Servant(),new Servant(),new Servant())))
                 ,2
-                ,"36"));
+                ,36));
         Collections.shuffle(cardMatrix[0][2]);
         // stack of card of third level, purple color
         cardMatrix[0][3] = new ArrayList<>();
@@ -137,7 +137,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Coin())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Stone(),new Stone(),new Servant())))
                 ,0
-                ,"46"));
+                ,46));
         cardMatrix[0][3].add(new DevelopmentCard(CardColor.PURPLE
                 ,3
                 ,11
@@ -145,7 +145,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Coin())))
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Stone())))
                 ,3
-                ,"42"));
+                ,42));
         cardMatrix[0][3].add(new DevelopmentCard(CardColor.PURPLE
                 ,3
                 ,10
@@ -153,7 +153,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Shield())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(),new Coin(),new Servant(),new Servant())))
                 ,1
-                ,"38"));
+                ,38));
         cardMatrix[0][3].add(new DevelopmentCard(CardColor.PURPLE
                 ,3
                 ,9
@@ -161,7 +161,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(), new Stone())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(),new Coin(),new Coin())))
                 ,2
-                ,"34"));
+                ,34));
         Collections.shuffle(cardMatrix[0][3]);
         // stack of card of second level, green color
         cardMatrix[1][0] = new ArrayList<>();
@@ -172,7 +172,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Coin())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Shield(),new Shield())))
                 ,1
-                ,"29"));
+                ,29));
         cardMatrix[1][0].add(new DevelopmentCard(CardColor.GREEN
                 ,2
                 ,7
@@ -180,7 +180,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(),new Coin())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Stone())))
                 ,2
-                ,"25"));
+                ,25));
         cardMatrix[1][0].add(new DevelopmentCard(CardColor.GREEN
                 ,2
                 ,6
@@ -188,7 +188,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Shield(),new Servant())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Stone(),new Stone())))
                 ,0
-                ,"21"));
+                ,21));
         cardMatrix[1][0].add(new DevelopmentCard(CardColor.GREEN
                 ,2
                 ,5
@@ -196,7 +196,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Stone())))
                 ,new CollectionResources(new ArrayList<>())
                 ,2
-                ,"17"));
+                ,17));
         Collections.shuffle(cardMatrix[1][0]);
         // stack of card of second level, blue color
         cardMatrix[1][1] = new ArrayList<>();
@@ -207,7 +207,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Servant())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Stone())))
                 ,1
-                ,"31"));
+                ,31));
         cardMatrix[1][1].add(new DevelopmentCard(CardColor.BLUE
                 ,2
                 ,7
@@ -215,7 +215,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Servant(),new Servant())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Shield(),new Shield())))
                 ,2
-                ,"27"));
+                ,27));
         cardMatrix[1][1].add(new DevelopmentCard(CardColor.BLUE
                 ,2
                 ,6
@@ -223,7 +223,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Coin())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Servant(),new Servant(),new Servant())))
                 ,0
-                ,"23"));
+                ,23));
         cardMatrix[1][1].add(new DevelopmentCard(CardColor.BLUE
                 ,2
                 ,5
@@ -231,7 +231,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Servant())))
                 ,new CollectionResources(new ArrayList<>())
                 ,2
-                ,"19"));
+                ,19));
         Collections.shuffle(cardMatrix[1][1]);
         // stack of card of second level, yellow color
         cardMatrix[1][2] = new ArrayList<>();
@@ -242,7 +242,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Shield())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(),new Coin())))
                 ,1
-                ,"32"));
+                ,32));
         cardMatrix[1][2].add(new DevelopmentCard(CardColor.YELLOW
                 ,2
                 ,7
@@ -250,7 +250,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Shield(),new Shield())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Servant(),new Servant())))
                 ,2
-                ,"28"));
+                ,28));
         cardMatrix[1][2].add(new DevelopmentCard(CardColor.YELLOW
                 ,2
                 ,6
@@ -258,7 +258,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Shield())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(),new Coin(),new Coin())))
                 ,0
-                ,"24"));
+                ,24));
         cardMatrix[1][2].add(new DevelopmentCard(CardColor.YELLOW
                 ,2
                 ,5
@@ -266,7 +266,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Shield())))
                 ,new CollectionResources(new ArrayList<>())
                 ,2
-                ,"20"));
+                ,20));
         Collections.shuffle(cardMatrix[1][2]);
         // stack of card of second level, purple color
         cardMatrix[1][3] = new ArrayList<>();
@@ -277,7 +277,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Stone())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Servant(),new Servant())))
                 ,1
-                ,"30"));
+                ,30));
         cardMatrix[1][3].add(new DevelopmentCard(CardColor.PURPLE
                 ,2
                 ,7
@@ -285,7 +285,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Stone())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(),new Coin())))
                 ,2
-                ,"26"));
+                ,26));
         cardMatrix[1][3].add(new DevelopmentCard(CardColor.PURPLE
                 ,2
                 ,6
@@ -293,7 +293,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(),new Servant())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Shield(),new Shield(),new Shield())))
                 ,0
-                ,"22"));
+                ,22));
         cardMatrix[1][3].add(new DevelopmentCard(CardColor.PURPLE
                 ,2
                 ,5
@@ -301,7 +301,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Coin())))
                 ,new CollectionResources(new ArrayList<>())
                 ,2
-                ,"18"));
+                ,18));
         Collections.shuffle(cardMatrix[1][3]);
         // stack of card of first level, green color
         cardMatrix[2][0] = new ArrayList<>();
@@ -312,7 +312,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Servant())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(),new Coin())))
                 ,1
-                ,"13"));
+                ,13));
         cardMatrix[2][0].add(new DevelopmentCard(CardColor.GREEN
                 ,1
                 ,3
@@ -320,7 +320,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Servant(),new Servant())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Shield(),new Stone(),new Coin())))
                 ,0
-                ,"9"));
+                ,9));
         cardMatrix[2][0].add(new DevelopmentCard(CardColor.GREEN
                 ,1
                 ,2
@@ -328,7 +328,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Stone())))
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Servant())))
                 ,0
-                ,"5"));
+                ,5));
         cardMatrix[2][0].add(new DevelopmentCard(CardColor.GREEN
                 ,1
                 ,1
@@ -336,7 +336,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Coin())))
                 ,new CollectionResources(new ArrayList<>())
                 ,1
-                ,"1"));
+                ,1));
         Collections.shuffle(cardMatrix[2][0]);
         // stack of card of first level, blue color
         cardMatrix[2][1] = new ArrayList<>();
@@ -347,7 +347,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Shield())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Servant(),new Servant())))
                 ,1
-                ,"15"));
+                ,15));
         cardMatrix[2][1].add(new DevelopmentCard(CardColor.BLUE
                 ,1
                 ,3
@@ -355,7 +355,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Stone())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Shield(),new Servant(),new Coin())))
                 ,0
-                ,"11"));
+                ,11));
         cardMatrix[2][1].add(new DevelopmentCard(CardColor.BLUE
                 ,1
                 ,2
@@ -363,7 +363,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Servant())))
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Stone())))
                 ,0
-                ,"7"));
+                ,7));
         cardMatrix[2][1].add(new DevelopmentCard(CardColor.BLUE
                 ,1
                 ,1
@@ -371,7 +371,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Shield())))
                 ,new CollectionResources(new ArrayList<>())
                 ,1
-                ,"3"));
+                ,3));
         Collections.shuffle(cardMatrix[2][1]);
         // stack of card of first level, yellow color
         cardMatrix[2][2] = new ArrayList<>();
@@ -382,7 +382,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(), new Servant())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Shield(),new Shield())))
                 ,1
-                ,"16"));
+                ,16));
         cardMatrix[2][2].add(new DevelopmentCard(CardColor.YELLOW
                 ,1
                 ,3
@@ -390,7 +390,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Shield(),new Shield())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Coin(),new Servant())))
                 ,0
-                ,"12"));
+                ,12));
         cardMatrix[2][2].add(new DevelopmentCard(CardColor.YELLOW
                 ,1
                 ,2
@@ -398,7 +398,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Shield())))
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Coin())))
                 ,0
-                ,"8"));
+                ,8));
         cardMatrix[2][2].add(new DevelopmentCard(CardColor.YELLOW
                 ,1
                 ,1
@@ -406,7 +406,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Servant())))
                 ,new CollectionResources(new ArrayList<>())
                 ,1
-                ,"4"));
+                ,4));
         Collections.shuffle(cardMatrix[2][2]);
         // stack of card of first level, purple color
         cardMatrix[2][3] = new ArrayList<>();
@@ -417,7 +417,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Shield(),new Coin())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Stone())))
                 ,1,
-                "14"));
+                14));
         cardMatrix[2][3].add(new DevelopmentCard(CardColor.PURPLE
                 ,1
                 ,3
@@ -425,7 +425,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(),new Coin())))
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Stone(),new Shield(),new Servant())))
                 ,0
-                ,"10"));
+                ,10));
         cardMatrix[2][3].add(new DevelopmentCard(CardColor.PURPLE
                 ,1
                 ,2
@@ -433,7 +433,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Coin())))
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Shield())))
                 ,0
-                ,"6"));
+                ,6));
         cardMatrix[2][3].add(new DevelopmentCard(CardColor.PURPLE
                 ,1
                 ,1
@@ -441,7 +441,7 @@ public class CardsMarket {
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Stone())))
                 ,new CollectionResources(new ArrayList<>())
                 ,1
-                ,"2"));
+                ,2));
         Collections.shuffle(cardMatrix[2][3]);
     }
 

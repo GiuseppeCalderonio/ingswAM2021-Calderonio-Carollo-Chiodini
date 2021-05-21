@@ -132,7 +132,7 @@ class CardsMarketTest {
                 ,12
                 ,new CollectionResources(new ArrayList<>(Arrays.asList(new Shield(), new Shield(), new Shield(), new Shield(), new Coin(), new Coin(), new Coin(), new Coin())))
                 ,new CollectionResources(new ArrayList<>(Collections.singletonList(new Stone())))
-                ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(), new Shield(), new Shield(), new Shield())))
+                ,new CollectionResources(new ArrayList<>(Arrays.asList(new Coin(), new Coin(), new Coin(), new Shield())))
                 ,0));
         list.add(new DevelopmentCard(CardColor.GREEN
                 ,3

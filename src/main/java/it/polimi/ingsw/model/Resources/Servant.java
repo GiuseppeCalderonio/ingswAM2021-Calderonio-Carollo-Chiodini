@@ -66,8 +66,8 @@ public class Servant implements Resource {
      * @return the png associated with the resource
      */
     @Override
-    public String getPng() {
-        return "/punchboard/servant.png";
+    public int getId() {
+        return 2;
     }
 }
 

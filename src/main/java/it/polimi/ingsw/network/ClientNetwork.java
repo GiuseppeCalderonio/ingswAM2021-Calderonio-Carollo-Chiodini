@@ -99,12 +99,11 @@ public class ClientNetwork implements NetworkUser<Command, ResponseToClient>, Ru
 
                 }
             } catch (NullPointerException e){
-                e.printStackTrace();
+                //e.printStackTrace();
                 in.close();
                 out.close();
                 socket.close();
-                System.err.println("Disconnection...");
-                System.exit(1);
+                view.quit();
             }
 
         } catch (IOException e){

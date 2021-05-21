@@ -21,8 +21,8 @@ public class NewDiscount extends LeaderCard {
         super(requirements, victoryPoints, resource);
     }
 
-    public NewDiscount(LeaderCardRequirements requirements, int victoryPoints, Resource resource, String png) {
-        super(requirements, victoryPoints, resource, png);
+    public NewDiscount(LeaderCardRequirements requirements, int victoryPoints, Resource resource, int id) {
+        super(requirements, victoryPoints, resource, id);
     }
 
     /**

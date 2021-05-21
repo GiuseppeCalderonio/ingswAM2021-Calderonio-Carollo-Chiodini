@@ -21,8 +21,8 @@ public class NewProduction extends LeaderCard {
         super(requirements, victoryPoints, resource);
     }
 
-    public NewProduction(LeaderCardRequirements requirements, int victoryPoints, Resource resource, String png) {
-        super(requirements, victoryPoints, resource, png);
+    public NewProduction(LeaderCardRequirements requirements, int victoryPoints, Resource resource, int id) {
+        super(requirements, victoryPoints, resource, id);
     }
 
     /**

@@ -85,13 +85,15 @@ public class InitialisisngController implements GuiController , Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        firstChoice.setImage(new Image(leaderCards.get(0).getPng()));
+        String pngNameConstant = "/front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-";
 
-        secondChoice.setImage(new Image(leaderCards.get(1).getPng()));
+        firstChoice.setImage(new Image(pngNameConstant + leaderCards.get(0).getId() + "-1.png"));
 
-        thirdChoice.setImage(new Image(leaderCards.get(2).getPng()));
+        secondChoice.setImage(new Image(pngNameConstant + leaderCards.get(1).getId() + "-1.png"));
 
-        fourthChoice.setImage(new Image(leaderCards.get(3).getPng()));
+        thirdChoice.setImage(new Image(pngNameConstant + leaderCards.get(2).getId() + "-1.png"));
+
+        fourthChoice.setImage(new Image(pngNameConstant + leaderCards.get(3).getId() + "-1.png"));
 
         contextAction.setText("these are your leader cards! Choose two of them to discard");
     }
@@ -134,10 +136,13 @@ public class InitialisisngController implements GuiController , Initializable {
     }
 
     private void switchScenario(){
-        firstChoice.setImage(new Image(new Coin().getPng()));
-        secondChoice.setImage(new Image(new Stone().getPng()));
-        thirdChoice.setImage(new Image(new Shield().getPng()));
-        fourthChoice.setImage(new Image(new Servant().getPng()));
+
+        String pngNameConstant = "/punchboard/Resource-";
+
+        firstChoice.setImage(new Image(pngNameConstant + new Coin().getId() + ".png"));
+        secondChoice.setImage(new Image(pngNameConstant + new Stone().getId() + ".png"));
+        thirdChoice.setImage(new Image(pngNameConstant + new Shield().getId() + ".png"));
+        fourthChoice.setImage(new Image(pngNameConstant + new Servant().getId() + ".png"));
         contextAction.setText("choose " + resourcesToChoose() + " resources");
         errorMessage.setOpacity(0);
         errorMessage.setText("You can choose only " + resourcesToChoose() + " resources" );
@@ -148,8 +153,8 @@ public class InitialisisngController implements GuiController , Initializable {
     private int resourcesToChoose(){
         switch (position){
             case 2:
-                return 1;
             case 3:
+                return 1;
             case 4:
                 return 2;
         }

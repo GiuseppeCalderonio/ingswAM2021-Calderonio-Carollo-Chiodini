@@ -295,6 +295,12 @@ public class Cli implements View {
     }
 
     @Override
+    public void quit() {
+        System.err.println("Disconnection...");
+        System.exit(1);
+    }
+
+    @Override
     public void showContextAction( Status message) {
 
         if (message != null){

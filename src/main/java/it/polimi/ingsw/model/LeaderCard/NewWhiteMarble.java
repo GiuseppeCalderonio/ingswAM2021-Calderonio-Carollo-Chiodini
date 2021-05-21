@@ -21,8 +21,8 @@ public class NewWhiteMarble extends LeaderCard {
         super(requirements, victoryPoints, resource);
     }
 
-    public NewWhiteMarble(LeaderCardRequirements requirements, int victoryPoints, Resource resource, String png) {
-        super(requirements, victoryPoints, resource, png);
+    public NewWhiteMarble(LeaderCardRequirements requirements, int victoryPoints, Resource resource, int id) {
+        super(requirements, victoryPoints, resource, id);
     }
 
     /**

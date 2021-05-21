@@ -226,5 +226,10 @@ public class Gui extends Application implements View {
 
     }
 
+    @Override
+    public void quit() {
+        setRoot("/WaitingWindow", new WaitingController("A client disconnected, the game finish"));
+    }
+
 
 }

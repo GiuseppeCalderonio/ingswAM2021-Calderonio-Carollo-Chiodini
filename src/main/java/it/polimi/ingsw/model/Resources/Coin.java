@@ -66,7 +66,7 @@ public class Coin implements Resource {
      * @return the png associated with the resource
      */
     @Override
-    public String getPng() {
-        return "/punchboard/coin.png";
+    public int getId() {
+        return 1;
     }
 }

@@ -38,9 +38,10 @@ public class DevelopmentCard {
     private final int productionPowerFaithPoints;
 
     /**
-     * this attribute represent the png associated to each development card
+     * this attribute represent the id associated to each development card
+     * in order to convert it into a png client side
      */
-    private String png;
+    private int id;
 
     /**
      * this attribute indicates if the production of the card has been activated during the last turn
@@ -83,7 +84,7 @@ public class DevelopmentCard {
      * @param productionPowerInput this attribute is the same as that of the other constructor
      * @param productionPowerOutput this attribute is the same as that of the other constructor
      * @param productionPowerFaithPoints this attribute is the same as that of the other constructor
-     * @param png is the image related to every single card
+     * @param id is the id related to every single card
      */
     public DevelopmentCard(CardColor color,
                            int level,
@@ -92,7 +93,7 @@ public class DevelopmentCard {
                            CollectionResources productionPowerInput,
                            CollectionResources productionPowerOutput,
                            int productionPowerFaithPoints,
-                           String png) {
+                           int id) {
         this.color = color;
         this.level = level;
         this.victoryPoints = victoryPoints;
@@ -100,8 +101,7 @@ public class DevelopmentCard {
         this.productionPowerInput = productionPowerInput;
         this.productionPowerOutput = productionPowerOutput;
         this.productionPowerFaithPoints = productionPowerFaithPoints;
-        String pngNameConstant = "/front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-";
-        this.png = pngNameConstant + png + "-1.png";
+        this.id = id;
     }
 
     /**
@@ -232,10 +232,10 @@ public class DevelopmentCard {
 
     /**
      * this method is a development card png getter
-     * @return a string tha symbolize the png image
+     * @return an id tha symbolize the png image
      */
-    public String getPng() {
-        return png;
+    public int getId() {
+        return id;
     }
 
 }

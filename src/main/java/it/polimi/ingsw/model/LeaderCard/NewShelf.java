@@ -21,8 +21,8 @@ public class NewShelf extends LeaderCard {
         super(requirements, victoryPoints, resource);
     }
 
-    public NewShelf(LeaderCardRequirements requirements, int victoryPoints, Resource resource, String png) {
-        super(requirements, victoryPoints, resource, png);
+    public NewShelf(LeaderCardRequirements requirements, int victoryPoints, Resource resource, int id) {
+        super(requirements, victoryPoints, resource, id);
     }
 
     /**
