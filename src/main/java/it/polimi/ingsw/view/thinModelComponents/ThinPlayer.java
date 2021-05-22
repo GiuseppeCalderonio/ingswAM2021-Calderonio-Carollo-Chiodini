@@ -174,7 +174,7 @@ public class ThinPlayer {
                 return card;
             }
         }
-        return new NewWhiteMarble(null , 0 , null, 49);
+        return new NewWhiteMarble(null , 0 , null, 0);
     }
 
 

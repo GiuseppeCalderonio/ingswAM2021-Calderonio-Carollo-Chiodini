@@ -25,6 +25,16 @@ public class CollectionResources implements Iterable<Resource> {
     }
 
     /**
+     * this constructor create the collection resources
+     * from a single resource
+     * @param resource this is the resource to initialize
+     */
+    public CollectionResources(Resource resource){
+        resources = new ArrayList<>();
+        resources.add(new MapResources(resource, 1));
+    }
+
+    /**
      * this constructor initialise the set from a list of resources given in input
      * @param resources this is the list of resources to initialise
      */
@@ -42,6 +52,8 @@ public class CollectionResources implements Iterable<Resource> {
 
         return resources;
     }
+
+
 
     /**
      * this method return the total number of resources stored in the set

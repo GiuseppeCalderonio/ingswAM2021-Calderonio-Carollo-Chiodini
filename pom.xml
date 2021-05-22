@@ -48,7 +48,16 @@
       <version>0.2.2</version>
     </dependency>
 
-   <!-- javaFx Dependencies -->
+
+    <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-shade-plugin -->
+    <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-shade-plugin</artifactId>
+      <version>3.2.4</version>
+    </dependency>
+
+
+    <!-- javaFx Dependencies -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
@@ -110,16 +119,6 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
-
-
-
-
-
-
-        <!-- javaFX plugin -->
-
-
-
 
       </plugins>
     </pluginManagement>

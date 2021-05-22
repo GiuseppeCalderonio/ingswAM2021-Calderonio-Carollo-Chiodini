@@ -5,27 +5,18 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
-<AnchorPane prefHeight="634.0" prefWidth="1344.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.TurnsController">
+<AnchorPane fx:id="mainWindow" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="642.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.TurnsController">
    <children>
-      <ImageView fx:id="playerBoard" fitHeight="363.0" fitWidth="511.0" layoutY="279.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="playerBoard" fitHeight="1080.0" fitWidth="1980.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
          <Image url="@board/Masters of Renaissance_PlayerBoard.png" />
       </ImageView>
       <ImageView fx:id="soloToken" fitHeight="48.0" fitWidth="65.0" layoutX="288.0" layoutY="215.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="marbleMarketThin" fitHeight="121.0" fitWidth="143.0" layoutX="536.0" layoutY="113.0" pickOnBounds="true" preserveRatio="true">
-         <Image url="@board/ContenitoreBiglie.png" />
-      </ImageView>
-      <HBox fx:id="cardsMarket" layoutX="708.0" layoutY="29.0" prefHeight="512.0" prefWidth="300.0" />
-      <ImageView fx:id="marbleMarketBig" fitHeight="264.0" fitWidth="200.0" layoutX="508.0" layoutY="86.0" pickOnBounds="true" preserveRatio="true">
+      <HBox fx:id="cardsMarket" layoutX="884.0" layoutY="19.0" prefHeight="512.0" prefWidth="300.0" />
+      <ImageView fx:id="marbleMarketBig" fitHeight="264.0" fitWidth="200.0" layoutX="658.0" layoutY="190.0" pickOnBounds="true" preserveRatio="true">
          <Image url="@punchboard/plancia portabiglie.png" />
       </ImageView>
       <VBox fx:id="leaderCards" layoutX="508.0" layoutY="339.0" prefHeight="200.0" prefWidth="100.0" />
-      <ImageView fx:id="firstShelfFirstResource" fitHeight="17.0" fitWidth="20.0" layoutX="55.0" layoutY="440.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="secondShelfFirstResource" fitHeight="17.0" fitWidth="20.0" layoutX="45.0" layoutY="472.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="secondShelfSecondResource" fitHeight="17.0" fitWidth="20.0" layoutX="65.0" layoutY="472.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="thirdShelfFirstResource" fitHeight="17.0" fitWidth="20.0" layoutX="35.0" layoutY="503.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="thirdShelfSecondResource" fitHeight="17.0" fitWidth="20.0" layoutX="55.0" layoutY="503.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="thirdShelfThirdResource" fitHeight="17.0" fitWidth="20.0" layoutX="75.0" layoutY="503.0" pickOnBounds="true" preserveRatio="true" />
-      <HBox fx:id="strongbox" layoutX="15.0" layoutY="549.0" prefHeight="18.0" prefWidth="1.0">
+      <HBox fx:id="strongbox" layoutX="129.0" layoutY="844.0" prefHeight="18.0" prefWidth="1.0">
          <children>
             <VBox prefHeight="48.0" prefWidth="20.0">
                <children>
@@ -61,13 +52,13 @@
             </VBox>
          </children>
       </HBox>
-      <TabPane fx:id="playersTab" layoutY="-1.0" prefHeight="30.0" prefWidth="1320.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="playersTab" layoutY="-1.0" prefHeight="30.0" prefWidth="1431.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab closable="false" text="Untitled Tab 1" />
           <Tab closable="false" text="Untitled Tab 2" />
         </tabs>
       </TabPane>
-      <ToolBar fx:id="actions" layoutX="8.0" layoutY="48.0" prefHeight="40.0" prefWidth="497.0">
+      <ToolBar fx:id="actions" layoutY="29.0" prefHeight="40.0" prefWidth="19.0">
         <items>
           <Button mnemonicParsing="false" text="choose marbles" />
             <Button mnemonicParsing="false" text="buy card" />
@@ -75,8 +66,25 @@
             <Button mnemonicParsing="false" text="leader action" />
         </items>
       </ToolBar>
-      <HBox layoutX="565.0" layoutY="142.0" prefHeight="22.0" prefWidth="93.0" />
-      <VBox fx:id="marbleMarket" layoutX="565.0" layoutY="142.0" prefHeight="68.0" prefWidth="93.0" />
-      <Circle fx:id="lonelyMarble" fill="DODGERBLUE" layoutX="658.0" layoutY="131.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" />
+      <VBox fx:id="marbleMarket" layoutX="686.0" layoutY="215.0" prefHeight="68.0" prefWidth="93.0">
+         <children>
+            <HBox prefHeight="22.0" prefWidth="93.0">
+               <children>
+                  <ImageView fx:id="marbleMarketThin" fitHeight="140.0" fitWidth="143.0" pickOnBounds="true" preserveRatio="true">
+                     <Image url="@board/ContenitoreBiglie.png" />
+                  </ImageView>
+               </children>
+            </HBox>
+         </children></VBox>
+      <Circle fx:id="lonelyMarble" fill="DODGERBLUE" layoutX="824.0" layoutY="228.0" radius="11.0" stroke="BLACK" strokeType="INSIDE" />
+      <VBox layoutX="321.0" layoutY="234.0" prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <ToggleButton fx:id="marbleMarketButton" mnemonicParsing="false" onAction="#showMarbleMarket" text="marble market" />
+            <ToggleButton fx:id="cardsMarketButton" mnemonicParsing="false" onAction="#showCardsMarket" prefHeight="25.0" prefWidth="94.0" text="cards market" />
+         </children>
+      </VBox>
+      <HBox fx:id="firstShelf" layoutX="106.0" layoutY="470.0" prefHeight="100.0" prefWidth="200.0" />
+      <HBox fx:id="secondShelf" layoutX="99.0" layoutY="570.0" prefHeight="100.0" prefWidth="200.0" />
+      <HBox fx:id="thirdShelf" layoutX="99.0" layoutY="653.0" prefHeight="100.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

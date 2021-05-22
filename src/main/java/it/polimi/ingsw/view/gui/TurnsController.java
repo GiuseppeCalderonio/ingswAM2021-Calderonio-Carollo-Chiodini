@@ -2,7 +2,6 @@ package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.controller.commands.Command;
 import it.polimi.ingsw.controller.commands.CommandName;
-import it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands.ChooseMarblesCommand;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
@@ -21,17 +20,41 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Screen;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class TurnsController implements GuiController, Initializable {
+
+    @FXML
+    private HBox secondShelf = new HBox();
+
+    @FXML
+    private HBox thirdShelf = new HBox();
+
+    @FXML
+    private HBox firstShelf = new HBox();
+
+    @FXML
+    private ToggleButton cardsMarketButton;
+
+    @FXML
+    private ToggleButton marbleMarketButton;
+
+    @FXML
+    private AnchorPane mainWindow;
+
+    @FXML
+    private HBox strongbox = new HBox();
 
     @FXML
     private Circle lonelyMarble;
@@ -58,36 +81,6 @@ public class TurnsController implements GuiController, Initializable {
     private HBox cardsMarket;
 
     @FXML
-    private Label strongboxCoins;
-
-    @FXML
-    private Label strongboxStones;
-
-    @FXML
-    private Label strongboxShields;
-
-    @FXML
-    private Label strongboxServants;
-
-    @FXML
-    private ImageView firstShelfFirstResource = new ImageView();
-
-    @FXML
-    private ImageView secondShelfFirstResource = new ImageView();
-
-    @FXML
-    private ImageView secondShelfSecondResource = new ImageView();
-
-    @FXML
-    private ImageView thirdShelfFirstResource = new ImageView();
-
-    @FXML
-    private ImageView thirdShelfSecondResource = new ImageView();
-
-    @FXML
-    private ImageView thirdShelfThirdResource = new ImageView();
-
-    @FXML
     private ImageView soloToken = new ImageView();
 
     @FXML
@@ -109,6 +102,18 @@ public class TurnsController implements GuiController, Initializable {
         this.nickname = nickname;
     }
 
+    protected ThinModel getModel() {
+        return model;
+    }
+
+    protected String getNickname(){
+        return nickname;
+    }
+
+    protected NetworkUser<Command, ResponseToClient> getClientNetworkUser(){
+        return clientNetworkUser;
+    }
+
     @Override
     public void update(CommandName name){
 
@@ -119,9 +124,21 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    private void toDelete(){
+        model.getGame().getMyself().getWarehouse().getFirstShelf().add(new Coin());
+        model.getGame().getMyself().getWarehouse().getSecondShelf().add(new Coin());
+        model.getGame().getMyself().getWarehouse().getSecondShelf().add(new Coin());
+        model.getGame().getMyself().getWarehouse().getThirdShelf().add(new Coin());
+        model.getGame().getMyself().getWarehouse().getThirdShelf().add(new Coin());
+        model.getGame().getMyself().getWarehouse().getThirdShelf().add(new Coin());
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        toDelete();
+
+        setMainWindowSize();
         playersTab.getTabs().clear();
         for (ThinPlayer player : getRealPlayers()){
             Tab tab = new Tab(player.getNickname());
@@ -131,17 +148,26 @@ public class TurnsController implements GuiController, Initializable {
 
             tab.setOnSelectionChanged( (actionEvent) -> drawPlayer(tab.getText()));
         }
-        playerBoard.setImage(new Image("/board/Masters of Renaissance_PlayerBoard.png"));
-        showMarbleMarket(model.getGame().getMarbleMarket(), model.getGame().getLonelyMarble() , 508, 86);
-        showCardsMarket(model.getGame().getCardsMarket());
-        showSoloToken(model.getGame().getSoloToken());
+
+
         // draw the player
         drawPlayer(nickname);
+
+        showCardsMarket(model.getGame().getCardsMarket());
+        showSoloToken(model.getGame().getSoloToken());
+        showLeaderCards(model.getGame().getPlayer(nickname).getLeaderCards());
+        showMarbleMarket(model.getGame().getMarbleMarket(), model.getGame().getLonelyMarble());
         initializeActions(actions);
 
     }
 
-    private List<ThinPlayer> getRealPlayers(){
+    protected void setMainWindowSize(){
+        double width = Screen.getPrimary().getBounds().getWidth();
+        double height = Screen.getPrimary().getBounds().getHeight();
+        mainWindow.setPrefSize(width, height);
+    }
+
+    protected List<ThinPlayer> getRealPlayers(){
         List< ThinPlayer> players = new ArrayList<>();
         players.add(model.getGame().getMyself());
         if (model.getGame().getOpponents().stream().
@@ -163,41 +189,37 @@ public class TurnsController implements GuiController, Initializable {
         actions.getItems().addAll(buttonActions);
     }
 
-    private Button setButton(String buttonName, EventHandler<ActionEvent> eventHandler){
+    protected Button setButton(String buttonName, EventHandler<ActionEvent> eventHandler){
         Button button = new Button();
         button.setText(buttonName);
         button.setOnAction(eventHandler);
         return button;
     }
 
-    private Button setButton(String buttonName, EventHandler<ActionEvent> eventHandler, int layoutX, int layoutY){
-        Button button = setButton(buttonName, eventHandler);
-        button.setLayoutX(layoutX);
-        button.setLayoutY(layoutY);
-        return button;
-    }
-
     public void drawPlayer(String nickname){
-        showLeaderCards(model.getGame().getPlayer(nickname).getLeaderCards());
+        playerBoard.setImage(new Image("/board/Masters of Renaissance_PlayerBoard.png"));
+        playerBoard.setFitWidth(mainWindow.getPrefWidth());
+        playerBoard.setFitHeight(mainWindow.getPrefHeight() - 60);
+        playerBoard.setPreserveRatio(false);
+        playerBoard.setLayoutX(0);
+        playerBoard.setLayoutY(mainWindow.getHeight() + 20);
         showWarehouse(model.getGame().getPlayer(nickname).getWarehouse());
         showStrongbox(model.getGame().getPlayer(nickname).getStrongbox());
+        showLeaderCards(model.getGame().getPlayer(nickname).getLeaderCards());
+    }
+
+    protected void setPlayerOpacity(double opacity){
+        playerBoard.setOpacity(opacity);
+        setWarehouseOpacity(opacity);
+        setStrongboxOpacity(opacity);
+        setLeaderCardsOpacity(opacity);
+        setSoloTokenOpacity(opacity);
     }
 
     @FXML
     public void chooseMarbles(){
 
-        int layoutX = 650;
-        int layoutY = 250;
-
-        showMarbleMarket(model.getGame().getMarbleMarket(),model.getGame().getLonelyMarble() , layoutX, layoutY);
-
-        firstRowButton = setButton("",
-                (actionEvent) -> {
-            sendNewCommand(new ChooseMarblesCommand("row", 1));
-            //createMarblesScenario();
-        },
-                 layoutX + (int) marbleMarketBig.getLayoutX() + 5,
-                layoutY + 5);
+        Gui.setRoot("/ChooseMarblesWindow", new ChooseMarblesController(model, nickname, clientNetworkUser));
 
     }
 
@@ -224,12 +246,17 @@ public class TurnsController implements GuiController, Initializable {
                     card.imageProperty().setValue(null);
                 }
 
-
                 cardColumn.getChildren().add(card);
             }
             this.cardsMarket.getChildren().add(cardColumn);
+            centerBox(this.cardsMarket);
+            setCardsMarketOpacity(0);
 
         }
+    }
+
+    protected void setCardsMarketOpacity(double opacity){
+        this.cardsMarket.setOpacity(opacity);
 
     }
 
@@ -237,6 +264,8 @@ public class TurnsController implements GuiController, Initializable {
 
         this.leaderCards.getChildren().clear();
 
+        double cardHeight = 150;
+        double cardWidth = 100;
 
 
         for (int i = 0; i < 2; i++) {
@@ -244,12 +273,12 @@ public class TurnsController implements GuiController, Initializable {
             String pngNameConstant = "/front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-";
 
             ImageView leaderCard = new ImageView();
-            leaderCard.setFitHeight(150);
-            leaderCard.setFitWidth(100);
+            leaderCard.setFitHeight(cardHeight);
+            leaderCard.setFitWidth(cardWidth);
 
             try {
 
-                if (leaderCards.get(i).getId() == 49)
+                if (leaderCards.get(i).getId() == 0)
                     pngNameConstant = "/back/Masters of Renaissance__Cards_BACK_3mmBleed-";
 
                 leaderCard.setImage(new Image(pngNameConstant + leaderCards.get(i).getId() + "-1.png"));
@@ -260,15 +289,28 @@ public class TurnsController implements GuiController, Initializable {
             this.leaderCards.getChildren().add(leaderCard);
         }
 
+        this.leaderCards.setLayoutX(mainWindow.getPrefWidth() - cardWidth);
+        this.leaderCards.setLayoutY(mainWindow.getPrefHeight()/2 - cardHeight);
+
+    }
+
+    protected void setLeaderCardsOpacity(double opacity){
+        this.leaderCards.setOpacity(opacity);
     }
 
     public void showSoloToken(SoloToken token){
         try {
             soloToken.setImage(new Image(token.getPng()));
+            soloToken.setLayoutX(mainWindow.getPrefWidth() / 16);
+            soloToken.setLayoutY(mainWindow.getPrefHeight() / 8);
         } catch (NullPointerException ignored){ }
     }
 
-    public void showMarbleMarket(Marble[][] marbleMarket, Marble lonelyMarble ,  int layoutX, int layoutY){
+    protected void setSoloTokenOpacity(double opacity){
+        soloToken.setOpacity(opacity);
+    }
+
+    public void showMarbleMarket(Marble[][] marbleMarket, Marble lonelyMarble){
 
         int relativeLayoutMarbleMarketX = 29;
         int relativeLayoutMarbleMarketY = 28;
@@ -279,11 +321,18 @@ public class TurnsController implements GuiController, Initializable {
         this.marbleMarketBig.setImage(marbleMarketBig);
         this.marbleMarketThin.setImage(marbleMarketThin);
 
-        this.marbleMarketBig.setLayoutX(layoutX);
-        this.marbleMarketBig.setLayoutY(layoutY);
+        centerImageView(this.marbleMarketBig);
+
+        double layoutX = this.marbleMarketBig.getLayoutX();
+        double layoutY = this.marbleMarketBig.getLayoutY();
+
+        this.marbleMarketBig.setFitWidth(200);
+        this.marbleMarketBig.setFitHeight(264);
 
         this.marbleMarketThin.setLayoutX(layoutX + relativeLayoutMarbleMarketX);
         this.marbleMarketThin.setLayoutY(layoutY + relativeLayoutMarbleMarketY);
+        this.marbleMarketThin.setFitHeight(121);
+        this.marbleMarketThin.setFitWidth(143);
 
         this.marbleMarket.getChildren().clear();
 
@@ -319,72 +368,126 @@ public class TurnsController implements GuiController, Initializable {
 
         this.lonelyMarble.setFill(lonelyMarble.getColor());
         this.lonelyMarble.setStroke(Color.BLACK);
+        this.lonelyMarble.setRadius(11);
 
+        setMarbleMarketOpacity(0);
 
+    }
+
+    protected void setMarbleMarketOpacity(double opacity){
+        marbleMarket.setOpacity(opacity);
+        marbleMarketThin.setOpacity(opacity);
+        marbleMarketBig.setOpacity(opacity);
+        lonelyMarble.setOpacity(opacity);
     }
 
     public void showWarehouse(ThinWarehouse warehouse){
 
         String pngNameConstant = "/punchboard/Resource-";
 
-        showFirstShelf(warehouse.getFirstShelf(), pngNameConstant);
-        showSecondShelf(warehouse.getSecondShelf(), pngNameConstant);
-        showThirdShelf(warehouse.getThirdShelf(), pngNameConstant);
+        showShelf(firstShelf,
+                warehouse.getFirstShelf(),
+                mainWindow.getPrefWidth() * 2 / 17,
+                mainWindow.getPrefHeight() * 3 / 7);
+
+        showShelf(secondShelf,
+                warehouse.getSecondShelf(),
+                mainWindow.getPrefWidth() * 2 / 19,
+                mainWindow.getPrefHeight() * 43 / 84);
+
+        showShelf(thirdShelf,
+                warehouse.getThirdShelf(),
+                mainWindow.getPrefWidth() * 2 / 23,
+                mainWindow.getPrefHeight() * 50 / 84);
     }
 
-    private void showFirstShelf(CollectionResources firstShelf, String pngNameConstant){
+    private void showShelf(HBox shelf, CollectionResources firstShelf, double layoutX, double layoutY){
 
+        for (Resource resource : firstShelf){
 
+            ImageView resourceToDraw = new ImageView(getResourceImage(resource));
+            resourceToDraw.setFitWidth(mainWindow.getPrefWidth()/ 35);
+            resourceToDraw.setFitHeight(mainWindow.getPrefWidth()/ 35);
 
-        try {
-            firstShelfFirstResource.setImage(new Image(pngNameConstant + firstShelf.asList().get(0).getId() + ".png"));
-        } catch (IndexOutOfBoundsException e){
-            firstShelfFirstResource.imageProperty().setValue(null);
-        }
-    }
-
-    private void showSecondShelf(CollectionResources secondShelf, String pngNameConstant){
-        try {
-            secondShelfFirstResource.setImage(new Image(pngNameConstant + secondShelf.asList().get(0).getId() + ".png"));
-        } catch (IndexOutOfBoundsException e){
-            secondShelfFirstResource.imageProperty().setValue(null);
+            shelf.getChildren().add(resourceToDraw);
         }
 
-        try {
-            secondShelfSecondResource.setImage(new Image(pngNameConstant + secondShelf.asList().get(1).getId() + ".png"));
-        } catch (IndexOutOfBoundsException e){
-            secondShelfSecondResource.imageProperty().setValue(null);
-        }
+        shelf.setLayoutX(layoutX);
+        shelf.setLayoutY(layoutY);
 
     }
 
-    private void showThirdShelf(CollectionResources thirdShelf, String pngNameConstant){
-        try {
-            thirdShelfFirstResource.setImage(new Image(pngNameConstant + thirdShelf.asList().get(0).getId() + ".png"));
-        } catch (IndexOutOfBoundsException e){
-            thirdShelfFirstResource.imageProperty().setValue(null);
-        }
-
-        try {
-            thirdShelfFirstResource.setImage(new Image(pngNameConstant + thirdShelf.asList().get(1).getId() + ".png"));
-        } catch (IndexOutOfBoundsException e){
-            thirdShelfSecondResource.imageProperty().setValue(null);
-        }
-
-        try {
-            thirdShelfFirstResource.setImage(new Image(pngNameConstant + thirdShelf.asList().get(2).getId() + ".png"));
-        } catch (IndexOutOfBoundsException e){
-            thirdShelfThirdResource.imageProperty().setValue(null);
-        }
+    protected void setWarehouseOpacity(double opacity){
+        firstShelf.setOpacity(opacity);
+        secondShelf.setOpacity(opacity);
+        thirdShelf.setOpacity(opacity);
     }
 
     public void showStrongbox(CollectionResources strongbox){
 
-        strongboxCoins.setText(String.valueOf(strongbox.asList().stream().filter(resource -> resource.equals(new Coin())).count()));
-        strongboxStones.setText(String.valueOf(strongbox.asList().stream().filter(resource -> resource.equals(new Stone())).count()));
-        strongboxShields.setText(String.valueOf(strongbox.asList().stream().filter(resource -> resource.equals(new Shield())).count()));
-        strongboxServants.setText(String.valueOf(strongbox.asList().stream().filter(resource -> resource.equals(new Servant())).count()));
+        this.strongbox.getChildren().clear();
+
+        this.strongbox.setLayoutX(this.playerBoard.getFitWidth() /20);
+        this.strongbox.setLayoutY(this.playerBoard.getFitHeight() * 13 / 16);
+
+        for (Resource resource : new ArrayList<>(Arrays.asList(new Coin(), new Stone(), new Shield(), new Servant()))){
+            VBox resourcesSet = new VBox();
+            //resourcesSet.setLayoutX(20);
+            //resourcesSet.setLayoutY(48);
+
+            ImageView resourceToDraw = new ImageView(getResourceImage(resource));
+            resourceToDraw.setFitWidth(mainWindow.getPrefWidth()/ 35);
+            resourceToDraw.setFitHeight(mainWindow.getPrefWidth() / 35);
+
+            Label resourceCount = new Label("x" + strongbox.asList().stream().
+                    filter(StrongboxResource -> StrongboxResource.equals(resource)).count());
+
+            resourceCount.setTextFill(Color.WHITE);
+            resourceCount.setPrefSize(mainWindow.getPrefWidth() / 40, mainWindow.getPrefWidth() / 40);
+
+            resourcesSet.getChildren().add(resourceToDraw);
+            resourcesSet.getChildren().add(resourceCount);
+
+            this.strongbox.getChildren().add(resourcesSet);
+
+        }
     }
 
+    protected void setStrongboxOpacity(double opacity){
+        strongbox.setOpacity(opacity);
+    }
 
+    @FXML
+    public void showMarbleMarket() {
+
+        //showMarbleMarket(model.getGame().getMarbleMarket(), model.getGame().getLonelyMarble(),  mainWindow.getWidth()/2, mainWindow.getHeight()/2 );
+        setMarbleMarketOpacity(1);
+        setPlayerOpacity(0.5);
+        soloToken.setOpacity(0.5);
+        cardsMarketButton.setOnAction( actionEvent -> {});
+        marbleMarketButton.setOnAction(action -> {
+            setMarbleMarketOpacity(0);
+            setPlayerOpacity(1);
+            setSoloTokenOpacity(1);
+            marbleMarketButton.setOnAction(actionEvent -> showMarbleMarket());
+            cardsMarketButton.setOnAction( actionEvent -> showCardsMarket());
+        });
+
+    }
+
+    @FXML
+    public void showCardsMarket() {
+
+        setCardsMarketOpacity(1);
+        setSoloTokenOpacity(0.5);
+        marbleMarketButton.setOnAction(actionEvent -> {});
+        setPlayerOpacity(0.5);
+        cardsMarketButton.setOnAction(action -> {
+            setCardsMarketOpacity(0);
+            setPlayerOpacity(1);
+            setSoloTokenOpacity(1);
+            cardsMarketButton.setOnAction( actionEvent -> showCardsMarket());
+            marbleMarketButton.setOnAction(actionEvent -> showMarbleMarket());
+        });
+    }
 }

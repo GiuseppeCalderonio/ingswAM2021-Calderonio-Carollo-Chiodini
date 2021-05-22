@@ -92,6 +92,7 @@ public class Gui extends Application implements View {
     public void start(Stage stage) throws IOException {
 
         scene = new Scene(loadFXML(getPathFirstWindow(), getFirstController()), 640, 480);
+        stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
 

@@ -137,12 +137,10 @@ public class InitialisisngController implements GuiController , Initializable {
 
     private void switchScenario(){
 
-        String pngNameConstant = "/punchboard/Resource-";
-
-        firstChoice.setImage(new Image(pngNameConstant + new Coin().getId() + ".png"));
-        secondChoice.setImage(new Image(pngNameConstant + new Stone().getId() + ".png"));
-        thirdChoice.setImage(new Image(pngNameConstant + new Shield().getId() + ".png"));
-        fourthChoice.setImage(new Image(pngNameConstant + new Servant().getId() + ".png"));
+        firstChoice.setImage(getCoinImage());
+        secondChoice.setImage(getStoneImage());
+        thirdChoice.setImage(getShieldImage());
+        fourthChoice.setImage(getServantImage());
         contextAction.setText("choose " + resourcesToChoose() + " resources");
         errorMessage.setOpacity(0);
         errorMessage.setText("You can choose only " + resourcesToChoose() + " resources" );
