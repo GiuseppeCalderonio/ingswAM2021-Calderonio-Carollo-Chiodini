@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.responseToClients;
 
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
+import it.polimi.ingsw.model.PlayerAndComponents.Player;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
 import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.view.View;
@@ -49,7 +50,7 @@ public class EndTurnSingleGameResponse extends ResponseToClient{
      * if the command is not of dynamic type ResponseToClient,
      * set the values that have to change after a model's change
      *
-     * @param client this is the client to update
+     * @param view this is the view to update
      */
     @Override
     public void updateClient(View view) {
@@ -65,6 +66,7 @@ public class EndTurnSingleGameResponse extends ResponseToClient{
 
         view.updateCardsMarket(cardsMarket5);
         view.updateToken(token5);
+        view.updateTrack(track5, new Player().getNickname());
         view.showCli();
 
         super.updateClient(view);

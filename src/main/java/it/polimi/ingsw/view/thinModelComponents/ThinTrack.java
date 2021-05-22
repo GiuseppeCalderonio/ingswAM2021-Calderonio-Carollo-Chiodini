@@ -14,7 +14,7 @@ public class ThinTrack {
     /**
      * this attribute represent the position on the track
      */
-    private final int position;
+    private int position;
 
     /**
      * this attribute represent the state of every pope favour tile (true = active, false = inactive)
@@ -67,5 +67,10 @@ public class ThinTrack {
      */
     public int getPosition() {
         return position;
+    }
+
+    //TODELETE ONLT FOR TESTING
+    public void add(int a){
+        position = position + a;
     }
 }

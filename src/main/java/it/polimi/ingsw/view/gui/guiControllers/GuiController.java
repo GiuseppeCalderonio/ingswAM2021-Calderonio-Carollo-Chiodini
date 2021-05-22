@@ -1,7 +1,6 @@
-package it.polimi.ingsw.view.gui;
+package it.polimi.ingsw.view.gui.guiControllers;
 
 import it.polimi.ingsw.controller.commands.Command;
-import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.model.Resources.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,9 +11,9 @@ import javafx.stage.Screen;
 public interface GuiController {
 
 
-    void update(CommandName name);
+    void update();
 
-    default void showErrorMessage(String errorMessage){
+    default void showErrorMessage(){
 
     };
 

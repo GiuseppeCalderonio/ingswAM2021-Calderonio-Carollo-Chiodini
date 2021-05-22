@@ -245,4 +245,55 @@ public class ThinPlayer {
         leaders.add(new NewDiscount(requirement4,2,new Servant(), 49));
         return leaders;
     }
+
+    public boolean areProductionsAffordable(){
+
+        CollectionResources totalResources = getTotalResources();
+
+        try {
+            if (totalResources.containsAll(productionPower.getProductionPower1().get(productionPower.getProductionPower1().size()).getProductionPowerInput()))
+                return true;
+        } catch (NullPointerException | IndexOutOfBoundsException ignored) { }
+
+        try {
+            if (totalResources.containsAll(productionPower.getProductionPower2().get(productionPower.getProductionPower2().size()).getProductionPowerInput()))
+                return true;
+        } catch (NullPointerException | IndexOutOfBoundsException ignored) { }
+
+        try {
+            if (totalResources.containsAll(productionPower.getProductionPower3().get(productionPower.getProductionPower3().size()).getProductionPowerInput()))
+                return true;
+        } catch (NullPointerException | IndexOutOfBoundsException ignored) { }
+
+        try {
+            if (leaderCards.get(0).isActive() && leaderCards.get(0) instanceof NewProduction){
+                if (totalResources.contains(leaderCards.get(0).getResource()))
+                    return true;
+            }
+        } catch (NullPointerException | IndexOutOfBoundsException ignored){ }
+
+        try {
+            if (leaderCards.get(1).isActive() && leaderCards.get(1) instanceof NewProduction){
+                if (totalResources.contains(leaderCards.get(1).getResource()))
+                    return true;
+            }
+        } catch (NullPointerException | IndexOutOfBoundsException ignored){ }
+
+        return totalResources.getSize() >= 2;
+    }
+
+    public CollectionResources getTotalResources(){
+        CollectionResources toReturn = new CollectionResources();
+        toReturn.sum(strongbox);
+        toReturn.sum(warehouse.getFirstShelf());
+        toReturn.sum(warehouse.getSecondShelf());
+        toReturn.sum(warehouse.getThirdShelf());
+        try {
+            toReturn.sum(warehouse.getFourthShelf());
+            toReturn.sum(warehouse.getFifthShelf());
+        } catch (NullPointerException ignored){ }
+
+        return toReturn;
+
+    }
 }

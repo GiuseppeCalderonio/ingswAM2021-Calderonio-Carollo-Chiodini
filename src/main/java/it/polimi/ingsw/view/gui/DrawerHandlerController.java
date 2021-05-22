@@ -1,6 +1,8 @@
 package it.polimi.ingsw.view.gui;
 
-public abstract class DrawerHandlerController implements GuiController{
+import it.polimi.ingsw.view.gui.guiControllers.GuiController;
+
+public abstract class DrawerHandlerController implements GuiController {
 
 
 

@@ -1,13 +1,13 @@
-package it.polimi.ingsw.view.gui;
+package it.polimi.ingsw.view.gui.guiControllers;
 
 import it.polimi.ingsw.controller.commands.Command;
-import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.commands.initialisingCommands.InitialiseLeaderCardsCommand;
 import it.polimi.ingsw.controller.commands.initialisingCommands.InitialiseResourcesCommand;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.Resources.*;
 import it.polimi.ingsw.network.NetworkUser;
+import it.polimi.ingsw.view.gui.Gui;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class InitialisisngController implements GuiController , Initializable {
+public class InitialisisngController implements GuiController, Initializable {
 
     @FXML
     private Button choiceButton;
@@ -72,13 +72,12 @@ public class InitialisisngController implements GuiController , Initializable {
     }
 
     @Override
-    public void update(CommandName name) {
+    public void update() {
 
     }
 
     @Override
     public void sendNewCommand(Command toSend) {
-        Gui.setLastCommand(toSend);
         networkUser.send(toSend);
     }
 

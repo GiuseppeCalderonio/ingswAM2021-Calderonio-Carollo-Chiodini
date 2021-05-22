@@ -1,7 +1,6 @@
-package it.polimi.ingsw.view.gui;
+package it.polimi.ingsw.view.gui.guiControllers;
 
 import it.polimi.ingsw.controller.commands.Command;
-import it.polimi.ingsw.controller.commands.CommandName;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -9,7 +8,7 @@ import javafx.scene.control.Label;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class WaitingController implements Initializable , GuiController{
+public class WaitingController implements Initializable , GuiController {
 
     @FXML
     private Label waitingMessage;
@@ -28,7 +27,7 @@ public class WaitingController implements Initializable , GuiController{
     }
 
     @Override
-    public void update(CommandName name){
+    public void update(){
 
     }
 

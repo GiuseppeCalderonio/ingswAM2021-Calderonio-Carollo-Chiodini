@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller.commands.normalCommands;
 
+import it.polimi.ingsw.controller.responseToClients.EndTurnResponse;
 import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.responseToClients.EndTurnSingleGameResponse;
@@ -73,6 +74,8 @@ public class EndTurnCommand extends NormalActionCommand {
         if (client.getNumberOfPlayers() == 1){
             // send to the client the new game state
             sendEndSingleGame(client);
+        }else {
+            client.sendInBroadcast(new EndTurnResponse(client.getGame().getActualPlayer().getNickname()));
         }
         // return the response
         return acceptedMessage();

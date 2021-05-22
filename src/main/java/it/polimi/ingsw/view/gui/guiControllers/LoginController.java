@@ -1,17 +1,16 @@
-package it.polimi.ingsw.view.gui;
+package it.polimi.ingsw.view.gui.guiControllers;
 
 import it.polimi.ingsw.controller.commands.Command;
-import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.commands.LoginCommand;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.PlayerAndComponents.Player;
 import it.polimi.ingsw.network.NetworkUser;
-import javafx.event.ActionEvent;
+import it.polimi.ingsw.view.gui.Gui;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class LoginController implements GuiController{
+public class LoginController implements GuiController {
 
     @FXML
     private Label errorMessage = new Label();
@@ -28,7 +27,7 @@ public class LoginController implements GuiController{
 
 
     @FXML
-    public void sendNickname(ActionEvent actionEvent) {
+    public void sendNickname() {
 
         if (nickname.getText().equals("")){
             setEmptyNicknameErrorMessage();
@@ -44,18 +43,17 @@ public class LoginController implements GuiController{
     }
 
     @Override
-    public void update(CommandName name){
+    public void update(){
         Gui.setRoot("/WaitingWindow", new WaitingController("Now wait for other players to join"));
     }
 
     @Override
-    public void showErrorMessage(String errorMessage) {
+    public void showErrorMessage() {
         this.errorMessage.setText("nickname already taken, choose another one");
     }
 
     @Override
     public void sendNewCommand(Command toSend) {
-        Gui.setLastCommand(toSend);
         networkUser.send(toSend);
     }
 

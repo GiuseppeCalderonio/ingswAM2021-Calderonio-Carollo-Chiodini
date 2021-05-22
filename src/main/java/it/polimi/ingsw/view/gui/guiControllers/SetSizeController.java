@@ -1,13 +1,15 @@
-package it.polimi.ingsw.view.gui;
+package it.polimi.ingsw.view.gui.guiControllers;
 
 import it.polimi.ingsw.controller.commands.Command;
-import it.polimi.ingsw.controller.commands.CommandName;
 import it.polimi.ingsw.controller.commands.SetSizeCommand;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.network.NetworkUser;
+import it.polimi.ingsw.view.gui.Gui;
+import it.polimi.ingsw.view.gui.guiControllers.GuiController;
+import it.polimi.ingsw.view.gui.guiControllers.LoginController;
 import javafx.fxml.FXML;
 
-public class SetSizeController implements GuiController{
+public class SetSizeController implements GuiController {
 
     private NetworkUser<Command, ResponseToClient> networkUser;
 
@@ -46,14 +48,13 @@ public class SetSizeController implements GuiController{
     }
 
     @Override
-    public void update(CommandName name)  {
+    public void update()  {
             switchToLogin();
 
     }
 
     @Override
     public void sendNewCommand(Command toSend) {
-        Gui.setLastCommand(toSend);
         networkUser.send(toSend);
     }
 }

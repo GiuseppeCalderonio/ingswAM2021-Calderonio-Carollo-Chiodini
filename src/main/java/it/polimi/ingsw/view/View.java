@@ -70,4 +70,6 @@ public interface View {
 
     void quit();
 
+    void updateTurn(String ownerTurnNickname);
+
 }

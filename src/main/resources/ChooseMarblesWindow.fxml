@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
-<AnchorPane fx:id="mainWindow" prefHeight="559.0" prefWidth="939.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.ChooseMarblesController">
+<AnchorPane fx:id="mainWindow" prefHeight="559.0" prefWidth="939.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.guiControllers.ChooseMarblesController">
    <children>
       <ImageView fx:id="playerBoard" fitHeight="421.0" fitWidth="570.0" layoutX="26.0" layoutY="32.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -14,16 +13,14 @@
       </ImageView>
       <ImageView fx:id="marbleMarketBig" fitHeight="150.0" fitWidth="200.0" layoutX="189.0" layoutY="144.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="marbleMarketThin" fitHeight="150.0" fitWidth="200.0" layoutX="61.0" layoutY="155.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="popeFavourTile1" fitHeight="150.0" fitWidth="200.0" layoutX="61.0" layoutY="155.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="popeFavourTile2" fitHeight="150.0" fitWidth="200.0" layoutX="61.0" layoutY="155.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="popeFavourTile3" fitHeight="150.0" fitWidth="200.0" layoutX="61.0" layoutY="155.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="trackPosition" fitHeight="150.0" fitWidth="200.0" layoutX="61.0" layoutY="155.0" pickOnBounds="true" preserveRatio="true" />
+
       <VBox fx:id="marbleMarket" layoutX="189.0" layoutY="155.0" prefHeight="200.0" prefWidth="100.0" />
       <Circle fx:id="lonelyMarble" fill="DODGERBLUE" layoutX="537.0" layoutY="452.0" radius="13.0" stroke="BLACK" strokeType="INSIDE" />
       <HBox fx:id="strongbox" layoutX="61.0" layoutY="80.0" prefHeight="100.0" prefWidth="200.0" />
-      <Button layoutX="588.0" layoutY="117.0" mnemonicParsing="false" onAction="#firstRowSelection" prefHeight="10.0" prefWidth="16.0" AnchorPane.bottomAnchor="416.6666666666667" />
-      <Button layoutX="589.0" layoutY="131.0" mnemonicParsing="false" onAction="#secondRowSelection" />
-      <Button layoutX="589.0" layoutY="151.0" mnemonicParsing="false" onAction="#thirdRowSelection" />
-      <Button layoutX="511.0" layoutY="223.0" mnemonicParsing="false" onAction="#thirdColumnSelection" />
-      <Button layoutX="529.0" layoutY="223.0" mnemonicParsing="false" onAction="#fourthColumnSelection" />
-      <Button layoutX="488.0" layoutY="223.0" mnemonicParsing="false" onAction="#secondColumnSelection" />
-      <Button layoutX="462.0" layoutY="223.0" mnemonicParsing="false" onAction="#firstColumnSelection" />
       <HBox fx:id="firstShelf" layoutX="550.0" layoutY="270.0" prefHeight="100.0" prefWidth="200.0" />
       <HBox fx:id="secondShelf" layoutX="537.0" layoutY="186.0" prefHeight="100.0" prefWidth="200.0" />
       <HBox fx:id="thirdShelf" layoutX="566.0" layoutY="355.0" prefHeight="100.0" prefWidth="200.0" />

@@ -345,4 +345,9 @@ public class Cli implements View {
         System.err.println("Disconnection...");
         System.exit(1);
     }
+
+    @Override
+    public void updateTurn(String ownerTurnNickname) {
+        System.out.println("Now is the turn of " + ownerTurnNickname);
+    }
 }
