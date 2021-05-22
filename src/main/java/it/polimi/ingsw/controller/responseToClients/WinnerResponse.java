@@ -23,6 +23,7 @@ public class WinnerResponse extends ResponseToClient{
      */
     @Override
     public void updateClient(View view) {
-        System.out.println("the winner is " + winner + ", you gained: " + victoryPoints);
+        view.showWinner(winner, victoryPoints);
+
     }
 }

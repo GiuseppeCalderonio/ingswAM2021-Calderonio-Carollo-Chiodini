@@ -72,4 +72,6 @@ public interface View {
 
     void updateTurn(String ownerTurnNickname);
 
+    void showWinner(String winner, int victoryPoints);
+
 }

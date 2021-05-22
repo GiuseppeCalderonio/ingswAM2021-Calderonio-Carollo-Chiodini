@@ -350,4 +350,9 @@ public class Cli implements View {
     public void updateTurn(String ownerTurnNickname) {
         System.out.println("Now is the turn of " + ownerTurnNickname);
     }
+
+    @Override
+    public void showWinner(String winner, int victoryPoints) {
+        System.out.println("the winner is " + winner + ", you gained: " + victoryPoints);
+    }
 }

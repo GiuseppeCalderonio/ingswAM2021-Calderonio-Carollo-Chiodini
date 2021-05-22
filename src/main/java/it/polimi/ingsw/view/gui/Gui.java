@@ -229,4 +229,9 @@ public class Gui extends Application implements View {
                 actions));
     }
 
+    @Override
+    public void showWinner(String winner, int victoryPoints) {
+        setRoot("/WaitingWindow", new WaitingController("the winner is " + winner + ", you gained: " + victoryPoints));
+    }
+
 }
