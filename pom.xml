@@ -90,7 +90,7 @@
           <configuration>
             <archive>
               <manifest>
-                <mainClass>it.polimi.ingsw.view.gui.Launcher</mainClass>
+                <mainClass>it.polimi.ingsw.view.gui.MainClass</mainClass>
               </manifest>
             </archive>
           </configuration>
@@ -134,7 +134,7 @@
                     <mainClass>org.example.App</mainClass>
                      -->
 
-                    <mainClass>it.polimi.ingsw.view.gui.Launcher</mainClass>
+                    <mainClass>it.polimi.ingsw.view.gui.MainClass</mainClass>
 
                   </transformer>
                 </transformers>

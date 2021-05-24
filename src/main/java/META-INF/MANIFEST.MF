@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: it.polimi.ingsw.view.gui.Launcher
+Main-Class: it.polimi.ingsw.view.gui.MainClass
 
