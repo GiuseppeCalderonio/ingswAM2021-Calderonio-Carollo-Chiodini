@@ -116,15 +116,17 @@ public class Gui extends Application implements View {
 
     @Override
     public void showInitialisingPhase(List<LeaderCard> leaderCards, int position){
-        setRoot("/InitialisingWindow", new InitialisisngController(leaderCards, position, clientNetwork));
+        runLater( () -> setRoot("/InitialisingWindow", new InitialisisngController(leaderCards, position, clientNetwork)) );
     }
 
     @Override
     public void showCompleteGame() {
         if (model.getPosition() == 1)
-            setRoot("/TurnsWindow", new TurnsController(model, model.getGame().getMyself().getNickname(), clientNetwork));
+            runLater(() -> setRoot("/TurnsWindow", new TurnsController(model, model.getGame().getMyself().getNickname(), clientNetwork)));
+
         else
-            setRoot("/TurnsWindow", new TurnsController(model, model.getGame().getMyself().getNickname(), clientNetwork, false, false));
+            runLater( () -> setRoot("/TurnsWindow", new TurnsController(model, model.getGame().getMyself().getNickname(), clientNetwork, false, false)));
+
     }
 
     @Override
@@ -135,7 +137,8 @@ public class Gui extends Application implements View {
 
     @Override
     public void quit() {
-        setRoot("/WaitingWindow", new WaitingController("A client disconnected, the game finish"));
+        runLater( () -> setRoot("/WaitingWindow", new WaitingController("A client disconnected, the game finish")));
+
     }
 
     @Override
@@ -143,16 +146,21 @@ public class Gui extends Application implements View {
 
         boolean actions = ownerTurnNickname.equals(model.getGame().getMyself().getNickname());
 
-        setRoot("/TurnsWindow", new TurnsController(model,
+        runLater( () -> setRoot("/TurnsWindow", new TurnsController(model,
                 model.getGame().getMyself().getNickname(),
                 clientNetwork,
                 actions,
-                actions));
+                actions)));
+
+
     }
 
     @Override
     public void showWinner(String winner, int victoryPoints) {
-        setRoot("/WaitingWindow", new WaitingController("the winner is " + winner + ", you gained: " + victoryPoints));
+
+        runLater( () -> setRoot("/WaitingWindow", new WaitingController("the winner is " + winner + ", you gained: " + victoryPoints)));
+
+
     }
 
     @Override

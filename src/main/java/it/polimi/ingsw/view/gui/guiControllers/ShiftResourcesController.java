@@ -61,28 +61,21 @@ public class ShiftResourcesController extends TurnsController{
 
         buttons = new ArrayList<>();
 
-        Button firstShelf = setButton("1", actionEvent -> {
-            selectedShelf(1);
-
-        });
+        Button firstShelf = setButton("1", actionEvent -> selectedShelf(1));
 
         firstShelf.setLayoutX(getFirstShelf().getLayoutX() * 4 / 6);
         firstShelf.setLayoutY(getFirstShelf().getLayoutY());
 
         buttons.add(firstShelf);
 
-        Button secondShelf = setButton("2", actionEvent -> {
-            selectedShelf(2);
-        });
+        Button secondShelf = setButton("2", actionEvent -> selectedShelf(2));
 
         secondShelf.setLayoutX(getSecondShelf().getLayoutX() * 4 / 6);
         secondShelf.setLayoutY(getSecondShelf().getLayoutY());
 
         buttons.add(secondShelf);
 
-        Button thirdShelf = setButton("3" , actionEvent -> {
-            selectedShelf(3);
-        });
+        Button thirdShelf = setButton("3" , actionEvent -> selectedShelf(3));
 
         thirdShelf.setLayoutX(getThirdShelf().getLayoutX() * 4 / 6);
         thirdShelf.setLayoutY(getThirdShelf().getLayoutY());
@@ -94,9 +87,7 @@ public class ShiftResourcesController extends TurnsController{
             return;
         }
 
-        Button fourthShelf = setButton("4", actionEvent -> {
-            selectedShelf(4);
-        });
+        Button fourthShelf = setButton("4", actionEvent -> selectedShelf(4));
 
 
         buttons.add(fourthShelf);
@@ -104,9 +95,7 @@ public class ShiftResourcesController extends TurnsController{
         if (getModel().getGame().getMyself().getWarehouse().getFifthShelf() == null){
             return;
         }
-        Button fifthShelf = setButton("5", actionEvent -> {
-            selectedShelf(5);
-        });
+        Button fifthShelf = setButton("5", actionEvent -> selectedShelf(5));
 
         buttons.add(fifthShelf);
 
@@ -125,28 +114,21 @@ public class ShiftResourcesController extends TurnsController{
 
         buttons = new ArrayList<>();
 
-        Button firstShelf = setButton("1", actionEvent -> {
-            getClientNetworkUser().send(new ShiftResourcesCommand(firstShelfSelected, 1));
-
-        });
+        Button firstShelf = setButton("1", actionEvent -> getClientNetworkUser().send(new ShiftResourcesCommand(firstShelfSelected, 1)));
 
         firstShelf.setLayoutX(getFirstShelf().getLayoutX() * 4 / 6);
         firstShelf.setLayoutY(getFirstShelf().getLayoutY());
 
         buttons.add(firstShelf);
 
-        Button secondShelf = setButton("2", actionEvent -> {
-            getClientNetworkUser().send(new ShiftResourcesCommand(firstShelfSelected, 2));
-        });
+        Button secondShelf = setButton("2", actionEvent -> getClientNetworkUser().send(new ShiftResourcesCommand(firstShelfSelected, 2)));
 
         secondShelf.setLayoutX(getSecondShelf().getLayoutX() * 4 / 6);
         secondShelf.setLayoutY(getSecondShelf().getLayoutY());
 
         buttons.add(secondShelf);
 
-        Button thirdShelf = setButton("3" , actionEvent -> {
-            getClientNetworkUser().send(new ShiftResourcesCommand(firstShelfSelected, 3));
-        });
+        Button thirdShelf = setButton("3" , actionEvent -> getClientNetworkUser().send(new ShiftResourcesCommand(firstShelfSelected, 3)));
 
         thirdShelf.setLayoutX(getThirdShelf().getLayoutX() * 4 / 6);
         thirdShelf.setLayoutY(getThirdShelf().getLayoutY());
@@ -158,9 +140,7 @@ public class ShiftResourcesController extends TurnsController{
             return;
         }
 
-        Button fourthShelf = setButton("4", actionEvent -> {
-            getClientNetworkUser().send(new ShiftResourcesCommand(firstShelfSelected, 4));
-        });
+        Button fourthShelf = setButton("4", actionEvent -> getClientNetworkUser().send(new ShiftResourcesCommand(firstShelfSelected, 4)));
 
 
         buttons.add(fourthShelf);
@@ -168,9 +148,7 @@ public class ShiftResourcesController extends TurnsController{
         if (getModel().getGame().getMyself().getWarehouse().getFifthShelf() == null){
             return;
         }
-        Button fifthShelf = setButton("5", actionEvent -> {
-            getClientNetworkUser().send(new ShiftResourcesCommand(firstShelfSelected, 5));
-        });
+        Button fifthShelf = setButton("5", actionEvent -> getClientNetworkUser().send(new ShiftResourcesCommand(firstShelfSelected, 5)));
 
         buttons.add(fifthShelf);
 
