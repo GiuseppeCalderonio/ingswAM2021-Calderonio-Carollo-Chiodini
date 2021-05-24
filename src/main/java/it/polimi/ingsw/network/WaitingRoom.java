@@ -206,10 +206,17 @@ public class WaitingRoom implements Runnable, NetworkUser<ResponseToClient, Comm
                 // convert the message in a processable command
                 Command command = gson.fromJson(in.nextLine(), Command.class);
                 // set the number of players of the game
+
+                if (command.getCmd().equals(CommandName.QUIT)){
+                    in.close();
+                    out.close();
+                    socket.close();
+                    throw new QuitException();
+                }
+
+
                 numberOfPlayers = command.getNumberOfPlayers();
 
-                if (command.getCmd().equals(CommandName.QUIT))
-                    throw new QuitException();
 
                 // if the number of players are between 1 and 4
                 if (!(numberOfPlayers < 1 || numberOfPlayers > 4))
