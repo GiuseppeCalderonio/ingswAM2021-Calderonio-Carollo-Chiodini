@@ -225,6 +225,8 @@ public class TurnsController implements GuiController, Initializable {
 
         List<Button> possibleActions = new ArrayList<>();
 
+        possibleActions.add(setButton("shift resources", actionEvent -> shiftResources()));
+
         if (normalAction){
             possibleActions.add(setButton("choose marbles", actionEvent -> chooseMarbles()));
             if (model.getGame().getMyself().areProductionsAffordable())
@@ -289,6 +291,10 @@ public class TurnsController implements GuiController, Initializable {
 
     private void endTurn(){
         clientNetworkUser.send(new EndTurnCommand());
+    }
+
+    private void shiftResources(){
+        Gui.setRoot("/ShiftResourcesWindow", new ShiftResourcesController(model, nickname, clientNetworkUser, normalAction, leaderAction));
     }
 
 

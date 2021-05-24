@@ -126,9 +126,6 @@ public class InsertInWarehouseController extends TurnsController{
         contextAction.setPrefSize( getMainWindow().getPrefWidth() - contextAction.getText().length(), getMainWindow().getPrefHeight() / 5 );
 
 
-        //getMainWindow().getChildren().add(resource);
-        //getMainWindow().getChildren().add(contextAction);
-
         gainedFromMarbleMarket.remove(0);
 
     }
