@@ -313,5 +313,12 @@ public class ThinPlayer {
         }
     }
 
+    public boolean areLeaderCardsAvailable(){
+        if (leaderCards.isEmpty())
+            return false;
+
+        return leaderCards.stream().anyMatch(leaderCard -> !leaderCard.isActive());
+    }
+
 
 }

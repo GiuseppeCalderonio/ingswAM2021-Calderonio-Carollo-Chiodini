@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.controller.commands.Command;
+import it.polimi.ingsw.controller.commands.QuitCommand;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.controller.responseToClients.Status;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
@@ -81,6 +82,10 @@ public class Gui extends Application implements View {
         scene = new Scene(loadFXML(getPathFirstWindow(), getFirstController()), 640, 480);
         stage.setMaximized(true);
         stage.setScene(scene);
+        stage.setOnCloseRequest(windowEvent -> {
+            clientNetwork.send(new QuitCommand());
+            System.exit(1);
+        });
         stage.show();
 
     }
@@ -159,20 +164,11 @@ public class Gui extends Application implements View {
                 actions,
                 actions)));
 
-
     }
 
     @Override
     public void showWinner(String winner, int victoryPoints) {
 
         runLater( () -> setRoot("/WaitingWindow", new WaitingController("the winner is " + winner + ", you gained: " + victoryPoints)));
-
-
-    }
-
-    @Override
-    public void stop() throws Exception {
-        super.stop();
-        System.exit(1);
     }
 }

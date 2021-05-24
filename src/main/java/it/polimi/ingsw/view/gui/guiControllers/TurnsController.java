@@ -237,7 +237,7 @@ public class TurnsController implements GuiController, Initializable {
             possibleActions.add(setButton("end turn", actionEvent -> endTurn()));
         }
 
-        if (leaderAction){
+        if (leaderAction && model.getGame().getMyself().areLeaderCardsAvailable()){
             possibleActions.add(setButton("leader action", actionEvent -> leaderAction()));
         }
 
@@ -253,10 +253,14 @@ public class TurnsController implements GuiController, Initializable {
             return;
         }
 
-        leaderAction = false;
-        Gui.setRoot("/TurnsWindow", this);
+        if (!model.getGame().getMyself().areLeaderCardsAvailable()){
+            showErrorMessage();
+            return;
+        }
 
-        //Gui.setRoot("/LeaderActionWindow", new LeaderActionController(model, nickname, clientNetworkUser));
+
+
+        Gui.setRoot("/LeaderActionWindow", new LeaderActionController(model, nickname, clientNetworkUser, normalAction));
     }
 
     private void buyCard(){
@@ -749,5 +753,9 @@ public class TurnsController implements GuiController, Initializable {
 
     public void setLeaderAction(boolean leaderAction) {
         this.leaderAction = leaderAction;
+    }
+
+    public VBox getLeaderCards() {
+        return leaderCards;
     }
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:http="http://javafx.com/javafx/11.0.1 xmlns:fx=http://javafx.com/fxml/1" xmlns:fx="mainWindow"
+            fx:id="mainWindow" prefHeight="589.0" prefWidth="857.0" fx:controller="it.polimi.ingsw.view.gui.guiControllers.LeaderActionController">
+
+
+    <children>
+        <ImageView fx:id="playerBoard" fitHeight="421.0" fitWidth="570.0" layoutX="26.0" layoutY="32.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../board/Masters of Renaissance_PlayerBoard.png" />
+            </image>
+        </ImageView>
+        <ImageView fx:id="marbleMarketBig" fitHeight="150.0" fitWidth="200.0" layoutX="189.0" layoutY="144.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="marbleMarketThin" fitHeight="150.0" fitWidth="200.0" layoutX="61.0" layoutY="155.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="popeFavourTile1" fitHeight="150.0" fitWidth="200.0" layoutX="61.0" layoutY="155.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="popeFavourTile2" fitHeight="150.0" fitWidth="200.0" layoutX="61.0" layoutY="155.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="popeFavourTile3" fitHeight="150.0" fitWidth="200.0" layoutX="61.0" layoutY="155.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="trackPosition" fitHeight="150.0" fitWidth="200.0" layoutX="61.0" layoutY="155.0" pickOnBounds="true" preserveRatio="true" />
+
+
+        <HBox fx:id="strongbox" layoutX="61.0" layoutY="80.0" prefHeight="100.0" prefWidth="200.0" />
+        <HBox fx:id="firstShelf" layoutX="550.0" layoutY="270.0" prefHeight="100.0" prefWidth="200.0" />
+        <HBox fx:id="secondShelf" layoutX="537.0" layoutY="186.0" prefHeight="100.0" prefWidth="200.0" />
+        <HBox fx:id="thirdShelf" layoutX="566.0" layoutY="355.0" prefHeight="100.0" prefWidth="200.0" />
+        <VBox fx:id="leaderCards" layoutX="461.0" layoutY="265.0" prefHeight="200.0" prefWidth="100.0" />
+        <HBox prefHeight="100.0" prefWidth="200.0" />
+        <HBox fx:id="leaderCardsHBox" layoutX="242.0" layoutY="195.0" prefHeight="100.0" prefWidth="200.0" />
+    </children>
+</AnchorPane>
+
