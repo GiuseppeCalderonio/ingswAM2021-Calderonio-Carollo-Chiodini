@@ -45,6 +45,8 @@ public class Gui extends Application implements View {
             System.exit(1);
         }
 
+        launch();
+        /*
         Platform.startup( () -> {
             try {
                 start(new Stage());
@@ -52,7 +54,7 @@ public class Gui extends Application implements View {
                 System.exit(1);
             }
         });
-
+        */
     }
 
     public static Scene getScene(){

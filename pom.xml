@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>it.polimi.ingsw</groupId>
@@ -27,14 +27,13 @@
       <version>5.8.0-M1</version>
       <scope>test</scope>
     </dependency>
-      <dependency>
-          <groupId>org.jetbrains</groupId>
-          <artifactId>annotations</artifactId>
-          <version>13.0</version>
-          <scope>compile</scope>
-      </dependency>
+    <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <version>13.0</version>
+      <scope>compile</scope>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
-
 
     <dependency>
       <groupId> com.google.code.gson</groupId>
@@ -48,14 +47,12 @@
       <version>0.2.2</version>
     </dependency>
 
-
     <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-shade-plugin -->
     <dependency>
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-shade-plugin</artifactId>
       <version>3.2.4</version>
     </dependency>
-
 
     <!-- javaFx Dependencies -->
     <dependency>
@@ -71,7 +68,7 @@
   </dependencies>
 
   <build>
-    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+
       <plugins>
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
         <plugin>
@@ -84,10 +81,6 @@
           <version>3.0.2</version>
         </plugin>
         <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
-        </plugin>
-        <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.22.1</version>
         </plugin>
@@ -97,7 +90,7 @@
           <configuration>
             <archive>
               <manifest>
-                <mainClass>it.polimi.ingsw.mainClasses.LocalClientMain</mainClass>
+                <mainClass>it.polimi.ingsw.view.gui.Launcher</mainClass>
               </manifest>
             </archive>
           </configuration>
@@ -115,24 +108,54 @@
           <artifactId>maven-site-plugin</artifactId>
           <version>3.7.1</version>
         </plugin>
+
+        <!-- added SHADE plug in -->
+
         <plugin>
-          <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.0.0</version>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.2.0</version>
+
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>shade</goal>
+              </goals>
+              <configuration>
+                <shadedArtifactAttached>true</shadedArtifactAttached>
+                <shadedClassifierName>project-classifier</shadedClassifierName>
+                <outputFile>shade\${project.artifactId}.jar</outputFile>
+                <transformers>
+                  <transformer implementation=
+                                       "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+
+                    <!-- original:
+                    <mainClass>org.example.App</mainClass>
+                     -->
+
+                    <mainClass>it.polimi.ingsw.view.gui.Launcher</mainClass>
+
+                  </transformer>
+                </transformers>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- end of added shade plugin -->
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.0</version>
+          <configuration>
+            <source>10</source>
+            <target>10</target>
+          </configuration>
         </plugin>
 
       </plugins>
-    </pluginManagement>
-    <plugins>
 
-
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-                <source>10</source>
-                <target>10</target>
-            </configuration>
-        </plugin>
-    </plugins>
   </build>
 </project>
