@@ -11,6 +11,7 @@ import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.gui.guiControllers.*;
 import it.polimi.ingsw.view.thinModelComponents.ThinModel;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -43,7 +44,13 @@ public class Gui extends Application implements View {
             System.exit(1);
         }
 
-        launch();
+        Platform.startup( () -> {
+            try {
+                start(new Stage());
+            }catch (IOException e){
+                System.exit(1);
+            }
+        });
 
     }
 
