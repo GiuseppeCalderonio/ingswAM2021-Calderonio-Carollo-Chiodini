@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.gui.guiControllers;
 
 import it.polimi.ingsw.controller.commands.Command;
 import it.polimi.ingsw.controller.commands.normalCommands.EndTurnCommand;
+import it.polimi.ingsw.controller.commands.normalCommands.productionCommands.ProductionCommand;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
@@ -12,10 +13,7 @@ import it.polimi.ingsw.model.SingleGame.SoloToken;
 import it.polimi.ingsw.network.NetworkUser;
 import it.polimi.ingsw.view.gui.Gui;
 import it.polimi.ingsw.view.gui.ThinTrackGuiManager;
-import it.polimi.ingsw.view.thinModelComponents.ThinModel;
-import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
-import it.polimi.ingsw.view.thinModelComponents.ThinTrack;
-import it.polimi.ingsw.view.thinModelComponents.ThinWarehouse;
+import it.polimi.ingsw.view.thinModelComponents.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -29,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
 import java.net.URL;
@@ -39,6 +38,9 @@ import java.util.ResourceBundle;
 
 public class TurnsController implements GuiController, Initializable {
 
+
+    @FXML
+    private AnchorPane productionPower = new AnchorPane();
 
     @FXML
     private ImageView popeFavourTile1 = new ImageView();
@@ -62,40 +64,40 @@ public class TurnsController implements GuiController, Initializable {
     private HBox firstShelf = new HBox();
 
     @FXML
-    private ToggleButton cardsMarketButton;
+    private ToggleButton cardsMarketButton = new ToggleButton();
 
     @FXML
-    private ToggleButton marbleMarketButton;
+    private ToggleButton marbleMarketButton = new ToggleButton();
 
     @FXML
-    private AnchorPane mainWindow;
+    private AnchorPane mainWindow = new AnchorPane();
 
     @FXML
     private HBox strongbox = new HBox();
 
     @FXML
-    private Circle lonelyMarble;
+    private Circle lonelyMarble = new Circle();
 
     @FXML
-    private VBox marbleMarket;
+    private VBox marbleMarket = new VBox();
 
     @FXML
-    private ToolBar actions;
+    private ToolBar actions = new ToolBar();
 
     @FXML
-    private ImageView marbleMarketBig;
+    private ImageView marbleMarketBig = new ImageView();
 
     @FXML
-    private ImageView marbleMarketThin;
+    private ImageView marbleMarketThin = new ImageView();
 
     @FXML
-    private TabPane playersTab;
+    private TabPane playersTab = new TabPane();
 
     @FXML
-    private VBox leaderCards;
+    private VBox leaderCards = new VBox();
 
     @FXML
-    private HBox cardsMarket;
+    private HBox cardsMarket = new HBox();
 
     @FXML
     private ImageView soloToken = new ImageView();
@@ -111,9 +113,9 @@ public class TurnsController implements GuiController, Initializable {
 
     private ThinTrackGuiManager trackGui;
 
-    private boolean normalAction = false;
+    private boolean normalAction = true;
 
-    private boolean leaderAction = false;
+    private boolean leaderAction = true;
 
 
     public TurnsController(ThinModel model,
@@ -123,8 +125,6 @@ public class TurnsController implements GuiController, Initializable {
         this.clientNetworkUser = clientNetworkUser;
         this.model = model;
         this.nickname = nickname;
-        this.normalAction = true;
-        this.leaderAction = true;
     }
 
     public TurnsController(ThinModel model,
@@ -160,14 +160,31 @@ public class TurnsController implements GuiController, Initializable {
 
     @Override
     public void sendNewCommand(Command toSend) {
-        getClientNetworkUser().send(toSend);
+        clientNetworkUser.send(toSend);
+    }
+
+
+
+    private void toDelete(){
+
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        toDelete();
+
         setMainWindowSize();
-        drawBackGround();
+
+        // draw the player
+        drawPlayer(nickname);
+
+
+        showSoloToken(model.getGame().getSoloToken());
+        showLeaderCards(model.getGame().getPlayer(nickname).getLeaderCards());
+        showMarbleMarket(model.getGame().getMarbleMarket(), model.getGame().getLonelyMarble());
+        showCardsMarket(model.getGame().getCardsMarket());
+        initializeActions();
         trackGui = new ThinTrackGuiManager(mainWindow.getPrefWidth() / 24, mainWindow.getPrefHeight() / 5 );
 
         playersTab.getTabs().clear();
@@ -179,16 +196,6 @@ public class TurnsController implements GuiController, Initializable {
 
             tab.setOnSelectionChanged( (actionEvent) -> drawPlayer(tab.getText()));
         }
-
-
-        // draw the player
-        drawPlayer(nickname);
-
-        showCardsMarket(model.getGame().getCardsMarket());
-        showSoloToken(model.getGame().getSoloToken());
-        showLeaderCards(model.getGame().getPlayer(nickname).getLeaderCards());
-        showMarbleMarket(model.getGame().getMarbleMarket(), model.getGame().getLonelyMarble());
-        initializeActions(actions);
 
     }
 
@@ -212,7 +219,9 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
-    private void initializeActions(ToolBar actions){
+    private void initializeActions(){
+
+        actions.getItems().clear();
 
         List<Button> possibleActions = new ArrayList<>();
 
@@ -221,19 +230,13 @@ public class TurnsController implements GuiController, Initializable {
             if (model.getGame().getMyself().areProductionsAffordable())
                 possibleActions.add(setButton("start productions", actionEvent -> startProductions()));
             possibleActions.add(setButton("buy card", actionEvent -> buyCard()));
-        }
+        } else {
 
-        else {
             possibleActions.add(setButton("end turn", actionEvent -> endTurn()));
         }
 
         if (leaderAction){
             possibleActions.add(setButton("leader action", actionEvent -> leaderAction()));
-        }
-
-        if (!normalAction && !leaderAction){
-            actions.getItems().clear();
-            return;
         }
 
         actions.getItems().addAll(possibleActions);
@@ -244,39 +247,44 @@ public class TurnsController implements GuiController, Initializable {
     private void leaderAction(){
 
         if (!leaderAction){
-            showError("you already did a leader action");
+            showErrorMessage();
             return;
         }
+
+        leaderAction = false;
+        Gui.setRoot("/TurnsWindow", this);
+
         //Gui.setRoot("/LeaderActionWindow", new LeaderActionController(model, nickname, clientNetworkUser));
     }
 
     private void buyCard(){
         if (!normalAction){
-            showError("you already did a normal action");
+            showErrorMessage();
             return;
         }
 
-        //Gui.setRoot("/BuyCardWindow", new BuyCardController(model, nickname, clientNetworkUser));
+        Gui.setRoot("/BuyCardWindow", new BuyCardController(model, nickname, clientNetworkUser, leaderAction));
     }
 
     private void chooseMarbles(){
         if (!normalAction){
-            showError("you already did a normal action");
+            showErrorMessage();
             return;
         }
 
-        Gui.setRoot("/ChooseMarblesWindow", new ChooseMarblesController(model, nickname, clientNetworkUser));
+        Gui.setRoot("/ChooseMarblesWindow", new ChooseMarblesController(model, nickname, clientNetworkUser, leaderAction));
 
     }
 
     private void startProductions(){
 
         if (!normalAction){
-            showError("you already did a normal action");
+            showErrorMessage();
             return;
         }
 
-        //Gui.setRoot("/ProductionWindow", new ProductionController(model, nickname, clientNetworkUser));
+        clientNetworkUser.send(new ProductionCommand());
+        Gui.setRoot("/ProductionWindow", new ProductionController(model, nickname, clientNetworkUser,true,  leaderAction));
     }
 
     private void endTurn(){
@@ -285,10 +293,10 @@ public class TurnsController implements GuiController, Initializable {
 
 
 
+    @Override
+    public void showErrorMessage(){
 
-    private void showError(String error){
-
-        Label errorMessage = new Label(error);
+        Label errorMessage = new Label("Error");
 
         errorMessage.setPrefWidth(mainWindow.getPrefWidth() / 2);
         errorMessage.setPrefHeight(mainWindow.getPrefHeight() / 10);
@@ -299,6 +307,8 @@ public class TurnsController implements GuiController, Initializable {
         errorMessage.setLayoutY( mainWindow.getPrefHeight() / 10);
 
         errorMessage.setTextFill(Color.RED);
+        errorMessage.setFont(Font.font(31));
+
 
         mainWindow.getChildren().add(errorMessage);
 
@@ -316,6 +326,7 @@ public class TurnsController implements GuiController, Initializable {
         showStrongbox(model.getGame().getPlayer(nickname).getStrongbox());
         showLeaderCards(model.getGame().getPlayer(nickname).getLeaderCards());
         showTrack(model.getGame().getPlayer(nickname).getTrack());
+        showProductionPower(model.getGame().getPlayer(nickname).getProductionPower());
     }
 
     public void drawBackGround(){
@@ -325,6 +336,7 @@ public class TurnsController implements GuiController, Initializable {
         playerBoard.setPreserveRatio(false);
         playerBoard.setLayoutX(0);
         playerBoard.setLayoutY(mainWindow.getHeight() + 20);
+        //mainWindow.getChildren().add(playerBoard);
     }
 
     protected void setPlayerOpacity(double opacity){
@@ -334,6 +346,7 @@ public class TurnsController implements GuiController, Initializable {
         setLeaderCardsOpacity(opacity);
         setSoloTokenOpacity(opacity);
         setTrackOpacity(opacity);
+        setProductionPowerOpacity(opacity);
     }
 
     public void showTrack(ThinTrack track){
@@ -383,11 +396,49 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    private void showProductionPower(ThinProductionPower productionPower){
+
+        this.productionPower.getChildren().clear();
+
+        this.productionPower.setLayoutX(mainWindow.getPrefWidth() * 45 / 100);
+        this.productionPower.setLayoutY(mainWindow.getPrefHeight() * 58 / 100);
+
+        drawDeck(productionPower.getProductionPower1(), 1);
+        drawDeck(productionPower.getProductionPower2(), 2);
+        drawDeck(productionPower.getProductionPower3(), 3);
+    }
+
+    private void drawDeck(List<DevelopmentCard> toDraw, int position){
+
+        position--;
+
+        double offsetCardY = mainWindow.getPrefHeight() / 20;
+        double offsetCardX = mainWindow.getPrefWidth() / 5;
+
+        int i = 0;
+
+        for (DevelopmentCard card : toDraw){
+            ImageView cardToDraw = new ImageView(getCardImage(card));
+            cardToDraw.setFitHeight(150);
+            cardToDraw.setFitWidth(100);
+            cardToDraw.setLayoutX( position * offsetCardX);
+            cardToDraw.setLayoutY( - i * offsetCardY);
+
+            i ++;
+
+
+            this.productionPower.getChildren().add(cardToDraw);
+
+        }
+    }
+
+    public void setProductionPowerOpacity(double opacity){
+        productionPower.setOpacity(opacity);
+    }
+
     public void showCardsMarket(DevelopmentCard[][] cardsMarket){
 
         this.cardsMarket.getChildren().clear();
-
-        String pngNameConstant = "/front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-";
 
         for (int j = 0; j < 4; j++) {
 
@@ -400,7 +451,7 @@ public class TurnsController implements GuiController, Initializable {
                 card.setFitWidth(100);
 
                 try {
-                    card.setImage(new Image(pngNameConstant + cardsMarket[i][j].getId() + "-1.png"));
+                    card.setImage(getCardImage(cardsMarket[i][j]));
 
                 } catch (NullPointerException e){
                     card.imageProperty().setValue(null);
@@ -414,6 +465,7 @@ public class TurnsController implements GuiController, Initializable {
 
         }
     }
+
 
     protected void setCardsMarketOpacity(double opacity){
         this.cardsMarket.setOpacity(opacity);
@@ -623,8 +675,10 @@ public class TurnsController implements GuiController, Initializable {
     @FXML
     public void showMarbleMarket() {
 
+        showMarbleMarket(model.getGame().getMarbleMarket(), model.getGame().getLonelyMarble());
         setMarbleMarketOpacity(1);
         setPlayerOpacity(0.5);
+        setProductionPowerOpacity(0);
         soloToken.setOpacity(0.5);
         cardsMarketButton.setOnAction( actionEvent -> {});
         marbleMarketButton.setOnAction(action -> {
@@ -640,10 +694,12 @@ public class TurnsController implements GuiController, Initializable {
     @FXML
     public void showCardsMarket() {
 
+        showCardsMarket(model.getGame().getCardsMarket());
         setCardsMarketOpacity(1);
         setSoloTokenOpacity(0.5);
         marbleMarketButton.setOnAction(actionEvent -> {});
         setPlayerOpacity(0.5);
+        setProductionPowerOpacity(0);
         cardsMarketButton.setOnAction(action -> {
             setCardsMarketOpacity(0);
             setPlayerOpacity(1);
@@ -675,5 +731,17 @@ public class TurnsController implements GuiController, Initializable {
 
     public boolean getLeaderAction() {
         return leaderAction;
+    }
+
+    public HBox getCardsMarket() {
+        return cardsMarket;
+    }
+
+    public void setNormalAction(boolean normalAction) {
+        this.normalAction = normalAction;
+    }
+
+    public void setLeaderAction(boolean leaderAction) {
+        this.leaderAction = leaderAction;
     }
 }

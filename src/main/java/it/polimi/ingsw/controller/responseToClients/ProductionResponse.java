@@ -61,9 +61,9 @@ public class ProductionResponse extends ResponseToClient{
     @Override
     public void updateClient(View view) {
 
-        view.updateStrongbox(strongbox2, nickname2);
-        view.updateWarehouse(warehouse2, nickname2);
-        view.updateTrack(track2, nickname2);
+        view.getModel().updateStrongbox(strongbox2, nickname2);
+        view.getModel().updateWarehouse(warehouse2, nickname2);
+        view.getModel().updateTrack(track2, nickname2);
         view.showCli();
 
         /*

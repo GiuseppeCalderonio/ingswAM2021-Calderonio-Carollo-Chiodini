@@ -45,7 +45,7 @@ public class WhiteMarblesConversionResponse extends ResponseToClient{
     @Override
     public void updateClient(View view) {
 
-        view.updateBufferGainedMarbles(gainedFromMarbleMarket);
+        view.getModel().updateBufferGainedMarbles(gainedFromMarbleMarket);
 
         //client.setGainedFromMarbleMarket(gainedFromMarbleMarket);
 

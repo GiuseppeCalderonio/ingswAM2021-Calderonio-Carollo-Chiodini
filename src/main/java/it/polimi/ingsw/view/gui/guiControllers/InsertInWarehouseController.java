@@ -22,14 +22,14 @@ import java.util.ResourceBundle;
 public class InsertInWarehouseController extends TurnsController{
 
 
-    private List<Integer> shelves = new ArrayList<>();
-    private List<Resource> gainedFromMarbleMarket = new ArrayList<>(getModel().getGainedFromMarbleMarket());
+    private final List<Integer> shelves = new ArrayList<>();
+    private final List<Resource> gainedFromMarbleMarket = new ArrayList<>(getModel().getGainedFromMarbleMarket());
     private ImageView resource = new ImageView();
     private Label contextAction = new Label();
     private List<Node> buttons = new ArrayList<>();
 
-    public InsertInWarehouseController(ThinModel model, String nickname, NetworkUser<Command, ResponseToClient> clientNetworkUser) {
-        super(model, nickname, clientNetworkUser);
+    public InsertInWarehouseController(ThinModel model, String nickname, NetworkUser<Command, ResponseToClient> clientNetworkUser, boolean leaderAction) {
+        super(model, nickname, clientNetworkUser, true, leaderAction);
     }
 
     @Override
@@ -147,6 +147,8 @@ public class InsertInWarehouseController extends TurnsController{
 
     @Override
     public void update() {
-        Gui.setRoot("/TurnsWindow", new TurnsController(getModel(), getNickname(), getClientNetworkUser(), false, getLeaderAction()));
+
+        Gui.setRoot("/TurnsWindow",
+                new TurnsController(getModel(), getNickname(), getClientNetworkUser(), false, getLeaderAction()));
     }
 }

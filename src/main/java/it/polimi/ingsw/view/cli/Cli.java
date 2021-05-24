@@ -7,32 +7,24 @@ import it.polimi.ingsw.controller.commands.normalCommands.productionCommands.End
 import it.polimi.ingsw.controller.commands.normalCommands.productionCommands.ProductionCommand;
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.controller.responseToClients.Status;
-import it.polimi.ingsw.model.DevelopmentCards.CardColor;
-import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
-import it.polimi.ingsw.model.Marble.Marble;
-import it.polimi.ingsw.model.Resources.CollectionResources;
-import it.polimi.ingsw.model.Resources.Resource;
-import it.polimi.ingsw.model.SingleGame.SoloToken;
+import it.polimi.ingsw.network.ClientNetwork;
 import it.polimi.ingsw.network.NetworkUser;
+import it.polimi.ingsw.network.localGame.LocalClient;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.cli.graphic.CharFigure;
 import it.polimi.ingsw.view.cli.graphic.GraphicalGame;
 import it.polimi.ingsw.view.cli.graphic.GraphicalInitializingLeaderCard;
-import it.polimi.ingsw.network.ClientNetwork;
-import it.polimi.ingsw.network.localGame.LocalClient;
-import it.polimi.ingsw.view.thinModelComponents.*;
 import it.polimi.ingsw.view.cli.graphic.utilities.CharStream;
 import it.polimi.ingsw.view.cli.graphic.utilities.colors.BackColor;
 import it.polimi.ingsw.view.cli.graphic.utilities.colors.ForeColor;
+import it.polimi.ingsw.view.thinModelComponents.ThinModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.InvalidParameterException;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Cli implements View {
 
@@ -87,8 +79,8 @@ public class Cli implements View {
         }
     }
 
-    @Override
-    public Command createCommand() throws IOException {
+
+    private Command createCommand() throws IOException {
 
         String command;
 
@@ -265,79 +257,8 @@ public class Cli implements View {
     }
 
     @Override
-    public void updateStartGame(DevelopmentCard[][] cardsMarket, Marble[][] marbleMarket, Marble lonelyMarble, SoloToken soloToken, ThinPlayer actualPlayer, List<ThinPlayer> opponents) {
-        model.setGame(new ThinGame(cardsMarket, marbleMarket, lonelyMarble, soloToken, actualPlayer, opponents));
-    }
-
-    @Override
-    public void updateWarehouse(ThinWarehouse warehouse, String nickname) {
-        model.getGame().getPlayer(nickname).setWarehouse(warehouse);
-    }
-
-    @Override
-    public void updateStrongbox(CollectionResources strongbox, String nickname) {
-        model.getGame().getPlayer(nickname).setStrongbox(strongbox);
-    }
-
-    @Override
-    public void updateMarbleMarket(Marble[][] marbleMarket, Marble lonelyMarble) {
-        model.getGame().setMarbleMarket(marbleMarket);
-        model.getGame().setLonelyMarble(lonelyMarble);
-    }
-
-    @Override
-    public void updateCardsMarket(DevelopmentCard[][] cardsMarket) {
-        model.getGame().setCardsMarket(cardsMarket);
-    }
-
-    @Override
-    public void updateTrack(Map< String, ThinTrack > tracks) {
-        model.getGame().updateTracks(tracks);
-    }
-
-    @Override
-    public void updatePosition(int position) {
-        model.setPosition(position);
-    }
-
-    @Override
-    public void updateBufferMarbles(int marbles) {
-        model.setMarbles(marbles);
-    }
-
-    @Override
-    public void updateBufferGainedMarbles(List<Resource> gainedMarbles) {
-        model.setGainedFromMarbleMarket(gainedMarbles);
-    }
-
-    @Override
-    public void updateProductionPower(ThinProductionPower productionPower, String nickname) {
-        model.getGame().getPlayer(nickname).setProductionPower(productionPower);
-    }
-
-    @Override
-    public void updateCard(int level, CardColor color, DevelopmentCard card) {
-        model.getGame().setCard(level, color, card);
-    }
-
-    @Override
-    public void updateToken(SoloToken token) {
-        model.getGame().setSoloToken(token);
-    }
-
-    @Override
-    public void updateLeaderCards(List<ThinLeaderCard> leaderCards, String nickname) {
-
-        if (!nickname.equals(model.getGame().getMyself().getNickname()))
-            leaderCards.stream().filter(card -> !card.isActive()).forEach(ThinLeaderCard::hide);
-
-        model.getGame().getPlayer(nickname).
-                setLeaderCards(leaderCards.stream().map(ThinPlayer::recreate).collect(Collectors.toList()));
-    }
-
-    @Override
-    public void updateTrack(ThinTrack track, String nickname) {
-        model.getGame().getPlayer(nickname).setTrack(track);
+    public ThinModel getModel() {
+        return model;
     }
 
     @Override

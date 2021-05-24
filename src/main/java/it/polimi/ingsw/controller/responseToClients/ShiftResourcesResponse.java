@@ -69,8 +69,8 @@ public class ShiftResourcesResponse extends ResponseToClient{
     @Override
     public void updateClient(View view) {
 
-        view.updateTrack(tracks1);
-        view.updateWarehouse(warehouse1, nickname1);
+        view.getModel().updateTrack(tracks1);
+        view.getModel().updateWarehouse(warehouse1, nickname1);
         view.showCli();
 
         /*

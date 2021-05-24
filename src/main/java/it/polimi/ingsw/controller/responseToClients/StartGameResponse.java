@@ -82,7 +82,7 @@ public class StartGameResponse extends ResponseToClient{
     @Override
     public void updateClient(View view) {
 
-        view.updateStartGame(cardsMarket1, marbleMarket1, lonelyMarble1, soloToken, actualPlayer, opponents);
+        view.getModel().updateStartGame(cardsMarket1, marbleMarket1, lonelyMarble1, soloToken, actualPlayer, opponents);
         view.showCompleteGame();
 
         super.updateClient(view);

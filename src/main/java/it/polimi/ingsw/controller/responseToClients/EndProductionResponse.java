@@ -50,7 +50,7 @@ public class EndProductionResponse extends ResponseToClient{
     @Override
     public void updateClient(View view) {
 
-        view.updateStrongbox(strongbox3, nickname7);
+        view.getModel().updateStrongbox(strongbox3, nickname7);
 
 
         //ThinPlayer toChange = getPlayerToChange(client, nickname7);

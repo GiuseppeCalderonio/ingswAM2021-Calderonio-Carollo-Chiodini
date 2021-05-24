@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 
 public class ThinGame {
 
-    private ThinPlayer myself;
-    private List<ThinPlayer> opponents;
+    private final ThinPlayer myself;
+    private final List<ThinPlayer> opponents;
     private DevelopmentCard[][] cardsMarket;
     private Marble[][] marbleMarket;
     private Marble lonelyMarble;

@@ -62,12 +62,12 @@ public class InitialisingResponse extends ResponseToClient{
     public void updateClient(View view) {
 
         // set the position
-        view.updatePosition(position);
+        view.getModel().updatePosition(position);
 
         // set the leader cards, recreating them
         List<LeaderCard> leaderCards = this.leaderCards.
                 stream().
-                map(leaderCard -> recreate(leaderCard, view.getAllLeaderCards())).
+                map(leaderCard -> recreate(leaderCard, view.getModel().getAllLeaderCards())).
                 collect(Collectors.toList());
 
         view.showInitialisingPhase(leaderCards, position);

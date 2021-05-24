@@ -19,8 +19,8 @@ public class ChooseMarblesController extends TurnsController {
 
     private boolean marblesEmptyOfResources;
 
-    public ChooseMarblesController(ThinModel model, String nickname, NetworkUser<Command, ResponseToClient> clientNetworkUser) {
-        super(model, nickname, clientNetworkUser);
+    public ChooseMarblesController(ThinModel model, String nickname, NetworkUser<Command, ResponseToClient> clientNetworkUser, boolean leaderAction) {
+        super(model, nickname, clientNetworkUser, true , leaderAction);
     }
 
 
@@ -111,12 +111,23 @@ public class ChooseMarblesController extends TurnsController {
                         getModel().getGame().getMyself().getLeaderCards().stream().allMatch(LeaderCard::isActive) &&
                         getModel().getMarbles() > 0){
 
-                // set scenario choose leader cards
+              Gui.setRoot("/ChooseLeaderCardsWindow", new ChooseLeaderCardsController(getModel(), getNickname(), getClientNetworkUser(), getLeaderAction()));
         }
 
         else {
-            Gui.setRoot("/InsertInWarehouseWindow", new InsertInWarehouseController(getModel(), getNickname(), getClientNetworkUser()));
+            Gui.setRoot("/InsertInWarehouseWindow", new InsertInWarehouseController(getModel(), getNickname(), getClientNetworkUser(), getLeaderAction()));
             // set scenario insert in warehouse
         }
+    }
+
+
+    @Override
+    public void rollBack() {
+        Gui.setRoot("/TurnsController",
+                new TurnsController(getModel(),
+                        getNickname(),
+                        getClientNetworkUser(),
+                        getNormalAction(),
+                        getLeaderAction()));
     }
 }

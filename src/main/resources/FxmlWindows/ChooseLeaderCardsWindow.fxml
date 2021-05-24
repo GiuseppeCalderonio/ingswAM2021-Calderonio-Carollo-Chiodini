@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="it.polimi.ingsw.view.gui.guiControllers.ChooseLeaderCardsController"
+            prefHeight="400.0" prefWidth="600.0" >
+    <children>
+        <HBox fx:id="leaderWhiteMarbles" layoutX="43.0" layoutY="60.0" prefHeight="174.0" prefWidth="514.0" />
+        <Label fx:id="advice" layoutX="131.0" layoutY="279.0" prefHeight="8.0" prefWidth="326.0" text="Label" />
+    </children>
+
+
+</AnchorPane>

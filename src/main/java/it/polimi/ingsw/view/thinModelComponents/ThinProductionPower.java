@@ -73,4 +73,5 @@ public class ThinProductionPower {
     public List<DevelopmentCard> getProductionPower3() {
         return productionPower3;
     }
+
 }

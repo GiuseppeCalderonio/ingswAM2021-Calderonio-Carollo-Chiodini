@@ -80,9 +80,9 @@ public class MarbleActionResponse extends ResponseToClient{
     @Override
     public void updateClient(View view) {
 
-        view.updateTrack(tracks);
-        view.updateWarehouse(warehouse3, nickname3);
-        view.updateMarbleMarket(marbleMarket3, lonelyMarble3);
+        view.getModel().updateTrack(tracks);
+        view.getModel().updateWarehouse(warehouse3, nickname3);
+        view.getModel().updateMarbleMarket(marbleMarket3, lonelyMarble3);
         view.showCli();
 
         /*

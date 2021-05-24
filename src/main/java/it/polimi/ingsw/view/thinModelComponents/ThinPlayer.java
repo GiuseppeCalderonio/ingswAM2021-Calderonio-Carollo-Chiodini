@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.thinModelComponents;
 
 import it.polimi.ingsw.model.DevelopmentCards.CardColor;
+import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.LeaderCard.*;
 import it.polimi.ingsw.model.PlayerAndComponents.Player;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
@@ -250,36 +251,24 @@ public class ThinPlayer {
 
         CollectionResources totalResources = getTotalResources();
 
-        try {
-            if (totalResources.containsAll(productionPower.getProductionPower1().get(productionPower.getProductionPower1().size()).getProductionPowerInput()))
-                return true;
-        } catch (NullPointerException | IndexOutOfBoundsException ignored) { }
+        if (isNormalProductionAffordable(productionPower.getProductionPower1()))
+            return true;
+        if (isNormalProductionAffordable(productionPower.getProductionPower2()))
+            return true;
+        if (isNormalProductionAffordable(productionPower.getProductionPower3()))
+            return true;
 
         try {
-            if (totalResources.containsAll(productionPower.getProductionPower2().get(productionPower.getProductionPower2().size()).getProductionPowerInput()))
+            if (isLeaderProductionAffordable(leaderCards.get(0)))
                 return true;
-        } catch (NullPointerException | IndexOutOfBoundsException ignored) { }
-
-        try {
-            if (totalResources.containsAll(productionPower.getProductionPower3().get(productionPower.getProductionPower3().size()).getProductionPowerInput()))
-                return true;
-        } catch (NullPointerException | IndexOutOfBoundsException ignored) { }
-
-        try {
-            if (leaderCards.get(0).isActive() && leaderCards.get(0) instanceof NewProduction){
-                if (totalResources.contains(leaderCards.get(0).getResource()))
-                    return true;
-            }
         } catch (NullPointerException | IndexOutOfBoundsException ignored){ }
 
         try {
-            if (leaderCards.get(1).isActive() && leaderCards.get(1) instanceof NewProduction){
-                if (totalResources.contains(leaderCards.get(1).getResource()))
-                    return true;
-            }
+            if (isLeaderProductionAffordable(leaderCards.get(1)))
+                return true;
         } catch (NullPointerException | IndexOutOfBoundsException ignored){ }
 
-        return totalResources.getSize() >= 2;
+        return isBasicProductionAffordable();
     }
 
     public CollectionResources getTotalResources(){
@@ -290,10 +279,39 @@ public class ThinPlayer {
         toReturn.sum(warehouse.getThirdShelf());
         try {
             toReturn.sum(warehouse.getFourthShelf());
+        } catch (NullPointerException ignored){ }
+
+        try {
             toReturn.sum(warehouse.getFifthShelf());
         } catch (NullPointerException ignored){ }
 
         return toReturn;
 
     }
+
+    public boolean isBasicProductionAffordable(){
+        return getTotalResources().getSize() >=2;
+    }
+
+    public boolean isNormalProductionAffordable(List<DevelopmentCard> deck){
+
+        try {
+            return getTotalResources().containsAll(deck.get(deck.size() - 1).getProductionPowerInput());
+        } catch (NullPointerException | IndexOutOfBoundsException ignored) {
+            return false;
+        }
+    }
+
+    public boolean isLeaderProductionAffordable(LeaderCard toVerify){
+        try {
+            if (toVerify.isActive() && toVerify instanceof NewProduction){
+                return getTotalResources().contains(leaderCards.get(1).getResource());
+            }
+            return false;
+        } catch (NullPointerException e){
+            return false;
+        }
+    }
+
+
 }

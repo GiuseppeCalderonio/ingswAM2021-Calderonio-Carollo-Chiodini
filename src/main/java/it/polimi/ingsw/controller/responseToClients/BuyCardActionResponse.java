@@ -87,10 +87,10 @@ public class BuyCardActionResponse extends ResponseToClient{
 
 
         //ThinPlayer toChange = getPlayerToChange(client, nickname6);
-        view.updateStrongbox(strongbox6, nickname6);
-        view.updateWarehouse(warehouse6, nickname6);
-        view.updateProductionPower(productionPower, nickname6);
-        view.updateCard(level6, color6, card6);
+        view.getModel().updateStrongbox(strongbox6, nickname6);
+        view.getModel().updateWarehouse(warehouse6, nickname6);
+        view.getModel().updateProductionPower(productionPower, nickname6);
+        view.getModel().updateCard(level6, color6, card6);
 
         //toChange.setStrongbox(strongbox6);
         //toChange.setWarehouse(warehouse6);

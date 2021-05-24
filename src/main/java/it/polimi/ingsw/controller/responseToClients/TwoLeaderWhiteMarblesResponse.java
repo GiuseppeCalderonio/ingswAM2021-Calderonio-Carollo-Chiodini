@@ -38,7 +38,7 @@ public class TwoLeaderWhiteMarblesResponse extends ResponseToClient{
     @Override
     public void updateClient(View view) {
 
-        view.updateBufferMarbles(whiteMarbles);
+        view.getModel().updateBufferMarbles(whiteMarbles);
 
         //client.setMarbles(whiteMarbles);
 

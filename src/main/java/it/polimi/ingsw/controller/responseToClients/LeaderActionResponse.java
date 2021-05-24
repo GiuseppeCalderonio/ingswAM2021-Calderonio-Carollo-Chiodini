@@ -69,9 +69,9 @@ public class LeaderActionResponse extends ResponseToClient{
     @Override
     public void updateClient(View view) {
 
-        view.updateLeaderCards(cards4, nickname4);
-        view.updateTrack(track4, nickname4);
-        view.updateWarehouse(warehouse4, nickname4);
+        view.getModel().updateLeaderCards(cards4, nickname4);
+        view.getModel().updateTrack(track4, nickname4);
+        view.getModel().updateWarehouse(warehouse4, nickname4);
         view.showCli();
 
         /*
