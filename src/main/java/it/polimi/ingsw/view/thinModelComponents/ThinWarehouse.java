@@ -55,6 +55,7 @@ public class ThinWarehouse {
             this.fifthShelf = warehouse.getShelf(5).getResources();
         }catch (IndexOutOfBoundsException | NullPointerException ignored){ }
 
+
     }
 
     @Override

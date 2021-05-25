@@ -89,20 +89,20 @@ public class InsertInWarehouseController extends TurnsController{
             return buttons;
         }
 
-        Button fourthShelf = setButton("4", actionEvent -> {
-            selectedShelf(4);
-        });
+        Button fourthShelf = setButton("4", actionEvent -> selectedShelf(4));
 
+        fourthShelf.setLayoutX(getFourthDepot().getLayoutX() - getFourthDepot().getLayoutX() * 1 / 10);
+        fourthShelf.setLayoutY(getFourthDepot().getLayoutY());
 
         buttons.add(fourthShelf);
 
         if (getModel().getGame().getMyself().getWarehouse().getFifthShelf() == null){
             return buttons;
         }
-        Button fifthShelf = setButton("5", actionEvent -> {
-            selectedShelf(5);
-        });
+        Button fifthShelf = setButton("5", actionEvent -> selectedShelf(5));
 
+        fifthShelf.setLayoutX(getFifthDepot().getLayoutX() - getFourthDepot().getLayoutX() * 1 / 10);
+        fifthShelf.setLayoutY(getFifthDepot().getLayoutY());
 
 
 

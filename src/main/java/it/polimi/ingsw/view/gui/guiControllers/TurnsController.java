@@ -40,6 +40,18 @@ public class TurnsController implements GuiController, Initializable {
 
 
     @FXML
+    private HBox fourthShelf = new HBox();
+
+    @FXML
+    private HBox fifthShelf = new HBox();
+
+    @FXML
+    private ImageView fourthDepot = new ImageView();
+
+    @FXML
+    private ImageView fifthDepot = new ImageView();
+
+    @FXML
     private AnchorPane productionPower = new AnchorPane();
 
     @FXML
@@ -62,6 +74,8 @@ public class TurnsController implements GuiController, Initializable {
 
     @FXML
     private HBox firstShelf = new HBox();
+
+
 
     @FXML
     private ToggleButton cardsMarketButton = new ToggleButton();
@@ -166,7 +180,6 @@ public class TurnsController implements GuiController, Initializable {
 
 
     private void toDelete(){
-
     }
 
     @Override
@@ -626,21 +639,51 @@ public class TurnsController implements GuiController, Initializable {
                 warehouse.getThirdShelf(),
                 mainWindow.getPrefWidth() * 2 / 23,
                 mainWindow.getPrefHeight() * 50 / 84);
+
+        showLeaderShelf(warehouse.getFourthShelf(),
+                fourthShelf,
+                fourthDepot,
+                mainWindow.getPrefWidth() * 27 / 100,
+                mainWindow.getPrefHeight() * 43 / 100
+                );
+
+        showLeaderShelf(warehouse.getFifthShelf(),
+                fifthShelf,
+                fifthDepot,
+                mainWindow.getPrefWidth() * 27 / 100,
+                mainWindow.getPrefHeight() * 55 / 100);
     }
 
-    private void showShelf(HBox shelf, CollectionResources firstShelf, double layoutX, double layoutY){
+    private void showShelf(HBox shelfToDraw, CollectionResources shelf, double layoutX, double layoutY){
 
-        for (Resource resource : firstShelf){
+        for (Resource resource : shelf){
 
             ImageView resourceToDraw = new ImageView(getResourceImage(resource));
             resourceToDraw.setFitWidth(mainWindow.getPrefWidth()/ 35);
             resourceToDraw.setFitHeight(mainWindow.getPrefWidth()/ 35);
 
-            shelf.getChildren().add(resourceToDraw);
+            shelfToDraw.getChildren().add(resourceToDraw);
         }
 
-        shelf.setLayoutX(layoutX);
-        shelf.setLayoutY(layoutY);
+        shelfToDraw.setLayoutX(layoutX);
+        shelfToDraw.setLayoutY(layoutY);
+
+    }
+
+    private void showLeaderShelf(CollectionResources shelf, HBox shelfToDraw,  ImageView depotToDraw,  double layoutX, double layoutY){
+        if (shelf == null)
+            return;
+
+        depotToDraw.setImage(new Image("/board/leaderShelf.png"));
+        depotToDraw.setFitWidth(mainWindow.getPrefWidth() / 13);
+        depotToDraw.setFitHeight(mainWindow.getPrefHeight() / 18);
+        depotToDraw.setPreserveRatio(false);
+        depotToDraw.setLayoutX(layoutX);
+        depotToDraw.setLayoutY(layoutY);
+
+
+
+        showShelf(shelfToDraw, shelf, depotToDraw.getLayoutX(), depotToDraw.getLayoutY());
 
     }
 
@@ -648,6 +691,10 @@ public class TurnsController implements GuiController, Initializable {
         firstShelf.setOpacity(opacity);
         secondShelf.setOpacity(opacity);
         thirdShelf.setOpacity(opacity);
+        fourthDepot.setOpacity(opacity);
+        fourthShelf.setOpacity(opacity);
+        fifthShelf.setOpacity(opacity);
+        fifthDepot.setOpacity(opacity);
     }
 
     public void showStrongbox(CollectionResources strongbox){
@@ -757,5 +804,13 @@ public class TurnsController implements GuiController, Initializable {
 
     public VBox getLeaderCards() {
         return leaderCards;
+    }
+
+    public ImageView getFourthDepot() {
+        return fourthDepot;
+    }
+
+    public ImageView getFifthDepot() {
+        return fifthDepot;
     }
 }

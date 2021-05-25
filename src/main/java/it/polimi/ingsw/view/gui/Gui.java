@@ -12,7 +12,6 @@ import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.gui.guiControllers.*;
 import it.polimi.ingsw.view.thinModelComponents.ThinModel;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

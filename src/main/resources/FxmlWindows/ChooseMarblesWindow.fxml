@@ -26,6 +26,11 @@
       <HBox fx:id="thirdShelf" layoutX="566.0" layoutY="355.0" prefHeight="100.0" prefWidth="200.0" />
       <VBox fx:id="leaderCards" layoutX="461.0" layoutY="265.0" prefHeight="200.0" prefWidth="100.0" />
 
+      <ImageView fx:id="fourthDepot" fitHeight="150.0" fitWidth="200.0" layoutX="265.0" layoutY="381.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="fifthDepot" fitHeight="150.0" fitWidth="200.0" layoutX="239.0" layoutY="595.0" pickOnBounds="true" preserveRatio="true" />
+      <HBox fx:id="fourthShelf" layoutX="371.0" layoutY="489.0" prefHeight="100.0" prefWidth="200.0" />
+      <HBox fx:id="fifthShelf" layoutX="358.0" layoutY="603.0" prefHeight="100.0" prefWidth="200.0" />
+
       <AnchorPane fx:id="productionPower" prefHeight="200.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

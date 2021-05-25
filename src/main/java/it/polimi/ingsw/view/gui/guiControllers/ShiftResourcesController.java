@@ -80,7 +80,6 @@ public class ShiftResourcesController extends TurnsController{
         thirdShelf.setLayoutX(getThirdShelf().getLayoutX() * 4 / 6);
         thirdShelf.setLayoutY(getThirdShelf().getLayoutY());
 
-
         buttons.add(thirdShelf);
 
         if (getModel().getGame().getMyself().getWarehouse().getFourthShelf() == null){
@@ -89,6 +88,8 @@ public class ShiftResourcesController extends TurnsController{
 
         Button fourthShelf = setButton("4", actionEvent -> selectedShelf(4));
 
+        fourthShelf.setLayoutX(getFourthDepot().getLayoutX() - getFourthDepot().getLayoutX() * 1 / 10);
+        fourthShelf.setLayoutY(getFourthDepot().getLayoutY());
 
         buttons.add(fourthShelf);
 
@@ -97,8 +98,11 @@ public class ShiftResourcesController extends TurnsController{
         }
         Button fifthShelf = setButton("5", actionEvent -> selectedShelf(5));
 
-        buttons.add(fifthShelf);
+        fifthShelf.setLayoutX(getFifthDepot().getLayoutX() - getFourthDepot().getLayoutX() * 1 / 10);
+        fifthShelf.setLayoutY(getFifthDepot().getLayoutY());
 
+
+        buttons.add(fifthShelf);
     }
 
     public void selectedShelf(int shelf){
