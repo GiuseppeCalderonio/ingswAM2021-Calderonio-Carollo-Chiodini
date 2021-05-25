@@ -75,8 +75,6 @@ public class TurnsController implements GuiController, Initializable {
     @FXML
     private HBox firstShelf = new HBox();
 
-
-
     @FXML
     private ToggleButton cardsMarketButton = new ToggleButton();
 
@@ -177,15 +175,8 @@ public class TurnsController implements GuiController, Initializable {
         clientNetworkUser.send(toSend);
     }
 
-
-
-    private void toDelete(){
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        toDelete();
 
         setMainWindowSize();
 

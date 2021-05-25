@@ -62,7 +62,7 @@ public class LeaderActionController extends TurnsController {
         }
 
         if(getModel().getGame().getMyself().getLeaderCards().size()==2) {
-            if (!getModel().getGame().getMyself().getLeaderCards().get(0).isActive()) {
+            if (!getModel().getGame().getMyself().getLeaderCards().get(1).isActive()) {
                 VBox rightButtons = new VBox();
                 Button rightButtonDiscard = new Button();
                 rightButtonDiscard.setOnAction(actionEvent -> rightDiscard());
