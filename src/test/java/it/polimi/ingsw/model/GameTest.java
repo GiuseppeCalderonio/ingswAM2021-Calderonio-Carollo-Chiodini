@@ -3403,4 +3403,63 @@ class GameTest {
 
         assertEquals(game.getWinner(), game.getPlayers().get(0).getNickname());
     }
+
+    /**
+     * this test verify if the discount works well in the specific case in which, the
+     * player have one discount, like coin, and try to buy a card
+     * with a cost empty
+     */
+    @Test
+    void testCheckWarehouseResources4(){
+        // create the game with a single player
+        List<String> nicknames = new ArrayList<>(Collections.singletonList("first"));
+        game = new Game(nicknames);
+        game.initialiseGame(game.getPlayers().get(0).getNickname(), new CollectionResources(), 1, 3);
+        // add manually 1 discounts to the player
+        game.getPlayers().get(0).addDiscount(new Coin());
+        // try to buy a card with no cost
+        CollectionResources cost = new CollectionResources();
+        DevelopmentCard card = new DevelopmentCard(CardColor.BLUE, 1, 1,
+                cost,null ,null , 1);
+        // verify that the player can actually buy the card
+        assertTrue(game.checkWarehouseResources(card, cost));
+        // adding manually the card to the cardsMarket
+        game.getSetOfCard().getCardMatrix()[2][1].add(card);
+        // buying the card
+        game.buyCard(card.getLevel(), card.getColor(), 1, new CollectionResources());
+        // verify that the card got bought correctly
+        assertEquals(card, game.getActualPlayer().getPersonalDashboard().getPersonalProductionPower().getCard(1));
+
+    }
+
+    /**
+     * this test verify if the discount works well in the specific case in which, the
+     * player have two discounts, like coin and stone, and try to buy a card
+     * with a cost that contains only one of the resources of the discount
+     */
+    @Test
+    void testCheckWarehouseResources5(){
+        // create the game with a single player
+        List<String> nicknames = new ArrayList<>(Collections.singletonList("first"));
+        game = new Game(nicknames);
+        game.initialiseGame(game.getPlayers().get(0).getNickname(), new CollectionResources(), 1, 3);
+        // add manually 2 discounts to the player
+        game.getPlayers().get(0).addDiscount(new Coin());
+        game.getPlayers().get(0).addDiscount(new Stone());
+        // add to the player a coin
+        game.getActualPlayer().getPersonalDashboard().getPersonalStrongbox().addResources(new CollectionResources(new Coin()));
+        // try to buy a card with no cost
+        CollectionResources cost = new CollectionResources(new Coin());
+        DevelopmentCard card = new DevelopmentCard(CardColor.BLUE, 1, 1,
+                cost,null ,null , 1);
+        // verify that the player can actually buy the card
+        assertTrue(game.checkWarehouseResources(card, new CollectionResources()));
+        // adding manually the card to the cardsMarket
+        game.getSetOfCard().getCardMatrix()[2][1].add(card);
+        // buying the card
+        game.buyCard(card.getLevel(), card.getColor(), 1, new CollectionResources());
+        // verify that the card got bought correctly
+        assertEquals(card, game.getActualPlayer().getPersonalDashboard().getPersonalProductionPower().getCard(1));
+
+    }
 }

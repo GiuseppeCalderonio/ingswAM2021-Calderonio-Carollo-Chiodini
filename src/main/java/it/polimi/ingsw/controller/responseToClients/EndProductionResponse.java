@@ -45,17 +45,13 @@ public class EndProductionResponse extends ResponseToClient{
      * if the command is not of dynamic type ResponseToClient,
      * set the values that have to change after a model's change
      *
-     * @param client this is the client to update
+     * @param view this is the view to update
      */
     @Override
     public void updateClient(View view) {
 
         view.getModel().updateStrongbox(strongbox3, nickname7);
-
-
-        //ThinPlayer toChange = getPlayerToChange(client, nickname7);
-        //toChange.setStrongbox(strongbox3);
-        //client.show();
+        view.showCli();
 
         super.updateClient(view);
     }

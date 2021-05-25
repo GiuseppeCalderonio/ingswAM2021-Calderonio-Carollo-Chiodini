@@ -483,7 +483,12 @@ public class Game {
         // get the cost discounted of the card
         CollectionResources discountedCost = new CollectionResources();
         discountedCost.sum(card.getCost()); // sum the cost of the card
-        discountedCost.sub(getActualPlayer().getPersonalDashboard().getDiscount()); //sub the discount
+
+        discountedCost.sub(new CollectionResources(getActualPlayer().
+                getPersonalDashboard().
+                getDiscount().
+                asList().stream().filter(resource -> card.getCost().contains(resource)).
+                collect(Collectors.toList()))); //sub the discount filtered with only the resources of the cost of the card
 
         //get the resources that the player want to pay from strongbox
         // as the resources to get from warehouse minus the cost discounted of the card
@@ -528,7 +533,11 @@ public class Game {
         // get the cost discounted of the card
         CollectionResources discountedCost = new CollectionResources();
         discountedCost.sum(toBuy.getCost()); // sum the cost of the card
-        discountedCost.sub(getActualPlayer().getPersonalDashboard().getDiscount()); //sub the discount
+        discountedCost.sub(new CollectionResources(getActualPlayer().
+                getPersonalDashboard().
+                getDiscount().
+                asList().stream().filter(resource -> toBuy.getCost().contains(resource)).
+                collect(Collectors.toList()))); //sub the discount filtered with only the resources of the cost of the card
 
         //get the resources that the player want to pay from strongbox
         // as the resources to get from warehouse minus the cost discounted of the card
