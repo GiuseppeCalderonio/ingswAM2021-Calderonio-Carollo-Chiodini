@@ -16,6 +16,9 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,6 +26,15 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class InitialisisngController implements GuiController, Initializable {
+
+    @FXML
+    private Pane paneView;
+
+    @FXML
+    private AnchorPane mainWindow;
+
+    @FXML
+    private ImageView backGround = new ImageView();
 
     @FXML
     private Button choiceButton;
@@ -57,11 +69,11 @@ public class InitialisisngController implements GuiController, Initializable {
     @FXML
     private  ImageView fourthChoice = new ImageView();
 
-    private  List<LeaderCard> leaderCards;
+    private final List<LeaderCard> leaderCards;
 
     int position;
 
-    private NetworkUser<Command, ResponseToClient> networkUser;
+    private final NetworkUser<Command, ResponseToClient> networkUser;
 
 
     public InitialisisngController(List<LeaderCard> leaderCards, int position, NetworkUser<Command, ResponseToClient> networkUser){
@@ -84,6 +96,8 @@ public class InitialisisngController implements GuiController, Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        setMainWindowSize();
+
         String pngNameConstant = "/front/Masters of Renaissance_Cards_FRONT_3mmBleed_1-";
 
         firstChoice.setImage(new Image(pngNameConstant + leaderCards.get(0).getId() + "-1.png"));
@@ -95,6 +109,24 @@ public class InitialisisngController implements GuiController, Initializable {
         fourthChoice.setImage(new Image(pngNameConstant + leaderCards.get(3).getId() + "-1.png"));
 
         contextAction.setText("these are your leader cards! Choose two of them to discard");
+
+    }
+
+    private void setMainWindowSize(){
+        double width = Screen.getPrimary().getBounds().getWidth();
+        double height = Screen.getPrimary().getBounds().getHeight();
+        mainWindow.setPrefSize(width, height);
+        drawBackGround();
+    }
+
+    private void drawBackGround(){
+        backGround.setImage(new Image("/board/Masters of Renaissance_PlayerBoard.png"));
+        backGround.setFitWidth(mainWindow.getPrefWidth());
+        backGround.setFitHeight(mainWindow.getPrefHeight() - 60);
+        backGround.setPreserveRatio(false);
+        backGround.setLayoutX(0);
+        backGround.setLayoutY(mainWindow.getHeight() + 20);
+        backGround.setOpacity(0.5);
     }
 
     public void discardLeaderCards(ActionEvent actionEvent) {

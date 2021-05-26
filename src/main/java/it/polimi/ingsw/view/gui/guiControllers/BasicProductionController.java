@@ -109,7 +109,18 @@ public class BasicProductionController extends TurnsController{
             resourceToDraw.setLayoutY(layoutY);
             resourceToDraw.setOnMouseClicked( mouseEvent -> toPay.add(resource));
 
+
+            Label resourcesSelected = new Label("x0");
+            resourcesSelected.setLayoutX(resourceToDraw.getLayoutX());
+            resourcesSelected.setLayoutY(resourceToDraw.getLayoutY() + resourceToDraw.getFitHeight());
+
+            resourceToDraw.setOnMouseClicked( mouseEvent -> {
+                toPayFromWarehouse.add(resource);
+                resourcesSelected.setText("x" + toPayFromWarehouse.asList().stream().filter(resource::equals).count());
+            });
+
             getMainWindow().getChildren().add(resourceToDraw);
+            getMainWindow().getChildren().add(resourcesSelected);
 
 
             i++;

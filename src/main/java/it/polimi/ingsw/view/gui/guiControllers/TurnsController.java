@@ -350,7 +350,6 @@ public class TurnsController implements GuiController, Initializable {
         playerBoard.setPreserveRatio(false);
         playerBoard.setLayoutX(0);
         playerBoard.setLayoutY(mainWindow.getHeight() + 20);
-        //mainWindow.getChildren().add(playerBoard);
     }
 
     protected void setPlayerOpacity(double opacity){

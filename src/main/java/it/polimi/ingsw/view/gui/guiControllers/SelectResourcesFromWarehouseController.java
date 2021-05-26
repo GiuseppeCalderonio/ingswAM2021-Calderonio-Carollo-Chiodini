@@ -62,12 +62,24 @@ public class SelectResourcesFromWarehouseController extends TurnsController{
         int i = 0;
 
         for (Resource resource : new ArrayList<>(Arrays.asList(new Coin(), new Stone(), new Shield(), new Servant()))){
+
+
+
             ImageView resourceToDraw = new ImageView(getResourceImage(resource));
             resourceToDraw.setLayoutX(layoutX + i * offsetX);
             resourceToDraw.setLayoutY(layoutY);
-            resourceToDraw.setOnMouseClicked( mouseEvent -> toPayFromWarehouse.add(resource));
+
+            Label resourcesSelected = new Label("x0");
+            resourcesSelected.setLayoutX(resourceToDraw.getLayoutX());
+            resourcesSelected.setLayoutY(resourceToDraw.getLayoutY() + resourceToDraw.getFitHeight());
+
+            resourceToDraw.setOnMouseClicked( mouseEvent -> {
+                toPayFromWarehouse.add(resource);
+                resourcesSelected.setText("x" + toPayFromWarehouse.asList().stream().filter(resource::equals).count());
+            });
 
             getMainWindow().getChildren().add(resourceToDraw);
+            getMainWindow().getChildren().add(resourcesSelected);
 
 
             i++;
