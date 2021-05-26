@@ -42,6 +42,7 @@ public class BasicProductionController extends TurnsController{
         getMainWindow().getChildren().add(contextAction);
         showCard();
         showResourcesToPayFromWarehouse();
+        showRollbackButton();
 
     }
 
@@ -156,6 +157,14 @@ public class BasicProductionController extends TurnsController{
         contextAction.setAlignment(Pos.CENTER);
         contextAction.setPrefSize( getMainWindow().getPrefWidth() - contextAction.getText().length(), getMainWindow().getPrefHeight() / 5 );
 
+    }
+
+    private void showRollbackButton(){
+        Button rollback = setButton("rollback the action", (actionEvent -> rollBack()));
+        rollback.setLayoutX(getMainWindow().getPrefWidth() / 7);
+        rollback.setLayoutY( getMainWindow().getPrefHeight() / 3);
+
+        getMainWindow().getChildren().add(rollback);
     }
 
 

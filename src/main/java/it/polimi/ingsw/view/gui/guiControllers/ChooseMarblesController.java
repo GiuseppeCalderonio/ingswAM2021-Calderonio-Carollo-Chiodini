@@ -35,6 +35,10 @@ public class ChooseMarblesController extends TurnsController {
         setMarbleMarketOpacity(1);
         createButtons();
 
+        showRollbackButton();
+
+
+
     }
 
     private void createButtons(){
@@ -86,6 +90,14 @@ public class ChooseMarblesController extends TurnsController {
         getMainWindow().getChildren().add(fourthColumn);
     }
 
+    private void showRollbackButton(){
+        Button rollback = setButton("rollback the action", (actionEvent -> rollBack()));
+        rollback.setLayoutX(getMainWindow().getPrefWidth() / 5);
+        rollback.setLayoutY( getMainWindow().getPrefHeight() / 3);
+
+        getMainWindow().getChildren().add(rollback);
+    }
+
     public void selectRow(int row){
         sendNewCommand(new ChooseMarblesCommand("row", row));
         marblesEmptyOfResources = getModel().getGame().selectMarblesRow(row).
@@ -123,7 +135,7 @@ public class ChooseMarblesController extends TurnsController {
 
     @Override
     public void rollBack() {
-        Gui.setRoot("/TurnsController",
+        Gui.setRoot("/TurnsWindow",
                 new TurnsController(getModel(),
                         getNickname(),
                         getClientNetworkUser(),

@@ -47,6 +47,7 @@ public class NormalProductionController extends TurnsController{
         setPlayerOpacity(0.5);
         showCard();
         showResourcesToPay();
+        showRollbackButton();
 
     }
 
@@ -107,6 +108,14 @@ public class NormalProductionController extends TurnsController{
         contextAction.setPrefSize( getMainWindow().getPrefWidth() - contextAction.getText().length(), getMainWindow().getPrefHeight() / 5 );
 
         getMainWindow().getChildren().add(contextAction);
+    }
+
+    private void showRollbackButton(){
+        Button rollback = setButton("rollback the action", (actionEvent -> rollBack()));
+        rollback.setLayoutX(getMainWindow().getPrefWidth() / 7);
+        rollback.setLayoutY( getMainWindow().getPrefHeight() / 3);
+
+        getMainWindow().getChildren().add(rollback);
     }
 
     @Override

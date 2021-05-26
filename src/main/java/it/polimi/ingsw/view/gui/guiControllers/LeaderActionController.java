@@ -38,6 +38,7 @@ public class LeaderActionController extends TurnsController {
         drawPlayer(getNickname());
         setPlayerOpacity(0.5);
         setLeaderCardsOpacity(1);
+        showRollbackButton();
 
         if (!super.getLeaderCards().getChildren().isEmpty()){
             leftVBox.getChildren().add(super.getLeaderCards().getChildren().get(0));
@@ -81,6 +82,14 @@ public class LeaderActionController extends TurnsController {
         leaderCardsHBox.getChildren().add(leftVBox);
         leaderCardsHBox.setSpacing(getMainWindow().getPrefWidth()/7);
         leaderCardsHBox.getChildren().add(rightVBox);
+    }
+
+    private void showRollbackButton(){
+        Button rollback = setButton("rollback the action", (actionEvent -> rollBack()));
+        rollback.setLayoutX(getMainWindow().getPrefWidth() / 5);
+        rollback.setLayoutY( getMainWindow().getPrefHeight() / 3);
+
+        getMainWindow().getChildren().add(rollback);
     }
 
     public void rightDiscard() {

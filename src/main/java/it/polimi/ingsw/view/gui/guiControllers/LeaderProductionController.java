@@ -54,6 +54,7 @@ public class LeaderProductionController extends TurnsController{
         setPlayerOpacity(0.5);
         showCard();
         showButtons();
+        showRollbackButton();
 
     }
 
@@ -134,6 +135,14 @@ public class LeaderProductionController extends TurnsController{
         contextAction.setAlignment(Pos.CENTER);
         contextAction.setPrefSize( getMainWindow().getPrefWidth() - contextAction.getText().length(), getMainWindow().getPrefHeight() / 5 );
 
+    }
+
+    private void showRollbackButton(){
+        Button rollback = setButton("rollback the action", (actionEvent -> rollBack()));
+        rollback.setLayoutX(getMainWindow().getPrefWidth() / 7);
+        rollback.setLayoutY( getMainWindow().getPrefHeight() / 3);
+
+        getMainWindow().getChildren().add(rollback);
     }
 
     @Override

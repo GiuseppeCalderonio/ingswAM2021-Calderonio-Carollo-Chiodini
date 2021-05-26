@@ -37,6 +37,7 @@ public class ShiftResourcesController extends TurnsController{
         setPlayerOpacity(0.5);
         setWarehouseOpacity(1);
         drawScenario();
+        showRollbackButton();
     }
 
     public void drawScenario(){
@@ -158,6 +159,14 @@ public class ShiftResourcesController extends TurnsController{
 
     }
 
+    private void showRollbackButton(){
+        Button rollback = setButton("rollback the action", (actionEvent -> rollBack()));
+        rollback.setLayoutX(getMainWindow().getPrefWidth() / 5);
+        rollback.setLayoutY( getMainWindow().getPrefHeight() / 3);
+
+        getMainWindow().getChildren().add(rollback);
+    }
+
     @Override
     public void update() {
 
@@ -168,6 +177,11 @@ public class ShiftResourcesController extends TurnsController{
     @Override
     public void showErrorMessage() {
         super.showErrorMessage();
+        update();
+    }
+
+    @Override
+    public void rollBack() {
         update();
     }
 }
