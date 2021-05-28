@@ -26,7 +26,9 @@ public class ChooseLeaderCardsController extends TurnsController{
     private HBox leaderWhiteMarbles;
     @FXML
     private Label advice;
+
     private int whiteMarble = 1;
+
     private final List<Integer> selectedMarbles = new ArrayList<>();
 
     public ChooseLeaderCardsController(ThinModel model, String nickname, NetworkUser<Command, ResponseToClient> clientNetworkUser, boolean leaderAction) {
@@ -36,7 +38,10 @@ public class ChooseLeaderCardsController extends TurnsController{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         setMainWindowSize();
+        drawPlayer(getNickname());
+        setPlayerOpacity(0.5);
 
         leaderWhiteMarbles.setLayoutX(super.getMainWindow().getPrefWidth()/2 -getMainWindow().getPrefWidth()/7);
 
@@ -105,7 +110,11 @@ public class ChooseLeaderCardsController extends TurnsController{
 
     @Override
     public void update() {
-        Gui.setRoot("/InsertInWarehouseWindow", new InsertInWarehouseController(getModel(), getNickname(), getClientNetworkUser(), getLeaderAction()));
+        Gui.setRoot("/InsertInWarehouseWindow",
+                new InsertInWarehouseController(getModel(),
+                        getNickname(),
+                        getClientNetworkUser(),
+                        getLeaderAction()));
     }
 }
 

@@ -100,7 +100,7 @@ public class NormalProductionController extends TurnsController{
 
         getMainWindow().getChildren().add(payButton);
 
-        Label contextAction = new Label("Click in the resource that you want to pay");
+        Label contextAction = new Label("Click in the resource that you want to pay from warehouse");
 
         contextAction.setPrefWidth(10000);
         contextAction.setFont(Font.font(31));

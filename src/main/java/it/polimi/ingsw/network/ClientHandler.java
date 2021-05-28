@@ -109,7 +109,7 @@ public class ClientHandler implements NetworkUser<ResponseToClient, Command>{
 
         // set the timeout of the socket for handle remote disconnections
         try {
-                socket.setSoTimeout(3000);
+                socket.setSoTimeout(5000);
 
         } catch (SocketException e){
             e.printStackTrace();
@@ -349,7 +349,6 @@ public class ClientHandler implements NetworkUser<ResponseToClient, Command>{
     /**
      * this method receive a message from the network
      * @return the message received
-     * @throws IOException if a network error occurs
      */
     @Override
     public Command receiveMessage() throws NoSuchElementException, IllegalStateException, JsonParseException{

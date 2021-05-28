@@ -103,6 +103,8 @@ public class ChooseMarblesCommand extends NormalActionCommand {
 
         // select the marbles from the market and shift it depending on the input
         marbles = shiftMarket(game, marbles);
+        // set the marbles to the buffer of the command interpreter for the specific case in which the player have 2 leader cards white marbles conversion
+        client.getInterpreter().setMarbles(marbles);
 
         // store to a local variable all the white marbles
         List<Marble> whiteMarbles = marbles.stream().filter(marble -> marble.equals(new WhiteMarble())).collect(Collectors.toList());
@@ -231,6 +233,7 @@ public class ChooseMarblesCommand extends NormalActionCommand {
         // set the possible commands
         possibleCommands.clear();
         possibleCommands.add(CommandName.CHOOSE_LEADER_CARDS);
+        // set the marbles selected from the player
 
         return new TwoLeaderWhiteMarblesResponse(whiteMarbles);
     }

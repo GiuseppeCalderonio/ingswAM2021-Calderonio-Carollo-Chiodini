@@ -11,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 
 import java.net.URL;
@@ -24,6 +25,7 @@ public class BasicProductionController extends TurnsController{
     private final CollectionResources toPayFromStrongbox = new CollectionResources();
     private Label contextAction = new Label();
     private Button payButton = new Button();
+    private Pane resourcesScenario = new Pane();
 
 
     public BasicProductionController(ThinModel model, String nickname, NetworkUser<Command, ResponseToClient> clientNetworkUser, boolean normalActions, boolean leaderActions) {
@@ -38,6 +40,9 @@ public class BasicProductionController extends TurnsController{
 
         drawPlayer(getNickname());
         setPlayerOpacity(0.5);
+
+        getMainWindow().getChildren().add(resourcesScenario);
+
         getMainWindow().getChildren().add(payButton);
         getMainWindow().getChildren().add(contextAction);
         showCard();
@@ -59,7 +64,7 @@ public class BasicProductionController extends TurnsController{
 
     private void showResourcesToPayFromWarehouse(){
 
-        setResourcesImages(toPayFromWarehouse);
+        setResourcesImages(toPayFromWarehouse, resourcesScenario);
 
         payButton.setText("pay");
         payButton.setOnAction(actionEvent -> showResourcesToPayFromStrongbox());
@@ -78,7 +83,7 @@ public class BasicProductionController extends TurnsController{
 
     private void showResourcesToPayFromStrongbox(){
 
-        setResourcesImages(toPayFromStrongbox);
+        setResourcesImages(toPayFromStrongbox, resourcesScenario);
 
 
         payButton.setOnAction(actionEvent -> showResourcesToGainAsOutput());
@@ -96,7 +101,10 @@ public class BasicProductionController extends TurnsController{
 
     }
 
-    private void setResourcesImages(CollectionResources toPay) {
+    private void setResourcesImages(CollectionResources toPay, Pane resourcesScenario) {
+
+        resourcesScenario.getChildren().clear();
+
         double layoutX = getMainWindow().getPrefWidth() * 1 / 4;
         double layoutY = getMainWindow().getPrefHeight() / 2 - getMainWindow().getPrefHeight() / 7;
 
@@ -108,7 +116,6 @@ public class BasicProductionController extends TurnsController{
             ImageView resourceToDraw = new ImageView(getResourceImage(resource));
             resourceToDraw.setLayoutX(layoutX + i * offsetX);
             resourceToDraw.setLayoutY(layoutY);
-            resourceToDraw.setOnMouseClicked( mouseEvent -> toPay.add(resource));
 
 
             Label resourcesSelected = new Label("x0");
@@ -116,19 +123,23 @@ public class BasicProductionController extends TurnsController{
             resourcesSelected.setLayoutY(resourceToDraw.getLayoutY() + resourceToDraw.getFitHeight());
 
             resourceToDraw.setOnMouseClicked( mouseEvent -> {
-                toPayFromWarehouse.add(resource);
-                resourcesSelected.setText("x" + toPayFromWarehouse.asList().stream().filter(resource::equals).count());
+                toPay.add(resource);
+                resourcesSelected.setText("x" + toPay.asList().stream().filter(resource::equals).count());
             });
 
-            getMainWindow().getChildren().add(resourceToDraw);
-            getMainWindow().getChildren().add(resourcesSelected);
-
+            resourcesScenario.getChildren().add(resourceToDraw);
+            resourcesScenario.getChildren().add(resourcesSelected);
 
             i++;
         }
+
+
     }
 
     private void showResourcesToGainAsOutput(){
+
+        resourcesScenario.getChildren().clear();
+
         double layoutX = getMainWindow().getPrefWidth() * 1 / 4;
         double layoutY = getMainWindow().getPrefHeight() / 2 - getMainWindow().getPrefHeight() / 7;
 

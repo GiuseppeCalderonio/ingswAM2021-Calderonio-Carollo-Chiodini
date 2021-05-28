@@ -53,28 +53,10 @@ public class Game {
      * of them to each player
      */
     public Game(List<String> nicknames ){
-        List<LeaderCard> leaders = new ArrayList<>(); // create an arraylist of leaderCard
-        LeaderCardRequirements requirements1 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.BLUE, CardColor.BLUE, CardColor.YELLOW)));
-        LeaderCardRequirements requirements2 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.PURPLE, CardColor.PURPLE, CardColor.GREEN)));
-        LeaderCardRequirements requirements3 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.GREEN, CardColor.GREEN, CardColor.PURPLE)));
-        LeaderCardRequirements requirements4 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.YELLOW, CardColor.BLUE)));
 
-        //NewWhiteMarble leaderCards
-        leaders.add(new NewWhiteMarble(requirements2,5,new Coin())); leaders.add(new NewWhiteMarble(requirements1 ,5,new Stone())); leaders.add(new NewWhiteMarble(requirements4,5,new Servant())); leaders.add(new NewWhiteMarble(requirements3,5,new Shield())); //NewWhiteMarble leaderCard
-        //NewShelf leaderCards
-        leaders.add(new NewShelf(new ResourcesRequired(new Shield()),3,new Coin())); leaders.add(new NewShelf(new ResourcesRequired(new Servant()),3,new Shield())); leaders.add(new NewShelf(new ResourcesRequired(new Stone()),3,new Servant())); leaders.add(new NewShelf(new ResourcesRequired(new Coin()),3,new Stone())); //NewShelf leaderCard
-        //NewProduction leaderCards
-        leaders.add(new NewProduction(new LevelRequired(CardColor.GREEN) ,4 , new Coin())); leaders.add(new NewProduction(new LevelRequired(CardColor.PURPLE) ,4 , new Stone())); leaders.add(new NewProduction(new LevelRequired(CardColor.BLUE) ,4 , new Servant())); leaders.add(new NewProduction(new LevelRequired(CardColor.YELLOW) ,4 , new Shield())); //NewProduction leaderCard
+        // create all the leader cards
+        List<LeaderCard> leaders = createAllLeaderCards();
 
-        LeaderCardRequirements requirement1 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.PURPLE)));
-        LeaderCardRequirements requirement2 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.GREEN , CardColor.BLUE)));
-        LeaderCardRequirements requirement3 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.BLUE , CardColor.PURPLE)));
-        LeaderCardRequirements requirement4 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.GREEN)));
-
-        //NewDiscount leaderCards
-        leaders.add(new NewDiscount(requirement1,2,new Coin())); leaders.add(new NewDiscount(requirement2,2,new Stone())); leaders.add(new NewDiscount(requirement3,2,new Shield())); leaders.add(new NewDiscount(requirement4,2,new Servant())); //NewDiscount leaderCard
-
-        Collections.shuffle(leaders); //shuffle the deck of leader cards
         players = new ArrayList<>();
         Collections.shuffle(nicknames); // shuffle the order of the players
         int i = 0;
@@ -90,6 +72,50 @@ public class Game {
         setOfCards = new CardsMarket();
         vaticanReports = new boolean[]{false, false, false};
         turnManager = -nicknames.size();
+    }
+
+    /**
+     * this method create all the leader cards of the game, and returns
+     * them as an array list
+     * @return the arraylist of leader cards containing all the cards of the game
+     */
+    private List<LeaderCard> createAllLeaderCards(){
+
+
+        List<LeaderCard> leaders = new ArrayList<>(); // create an arraylist of leaderCard
+        LeaderCardRequirements requirements1 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.BLUE, CardColor.BLUE, CardColor.YELLOW)));
+        LeaderCardRequirements requirements2 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.PURPLE, CardColor.PURPLE, CardColor.GREEN)));
+        LeaderCardRequirements requirements3 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.GREEN, CardColor.GREEN, CardColor.PURPLE)));
+        LeaderCardRequirements requirements4 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.YELLOW, CardColor.BLUE)));
+
+        //NewWhiteMarble leaderCards
+        leaders.add(new NewWhiteMarble(requirements2,5,new Coin()));
+        leaders.add(new NewWhiteMarble(requirements1 ,5,new Stone()));
+        leaders.add(new NewWhiteMarble(requirements4,5,new Servant()));
+        leaders.add(new NewWhiteMarble(requirements3,5,new Shield())); //NewWhiteMarble leaderCard
+        //NewShelf leaderCards
+        leaders.add(new NewShelf(new ResourcesRequired(new Shield()),3,new Coin()));
+        leaders.add(new NewShelf(new ResourcesRequired(new Servant()),3,new Shield()));
+        leaders.add(new NewShelf(new ResourcesRequired(new Stone()),3,new Servant()));
+        leaders.add(new NewShelf(new ResourcesRequired(new Coin()),3,new Stone())); //NewShelf leaderCard
+        //NewProduction leaderCards
+        leaders.add(new NewProduction(new LevelRequired(CardColor.GREEN) ,4 , new Coin())); leaders.add(new NewProduction(new LevelRequired(CardColor.PURPLE) ,4 , new Stone())); leaders.add(new NewProduction(new LevelRequired(CardColor.BLUE) ,4 , new Servant())); leaders.add(new NewProduction(new LevelRequired(CardColor.YELLOW) ,4 , new Shield())); //NewProduction leaderCard
+
+        LeaderCardRequirements requirement1 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.PURPLE)));
+        LeaderCardRequirements requirement2 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.GREEN , CardColor.BLUE)));
+        LeaderCardRequirements requirement3 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.BLUE , CardColor.PURPLE)));
+        LeaderCardRequirements requirement4 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.GREEN)));
+
+        //NewDiscount leaderCards
+        leaders.add(new NewDiscount(requirement1,2,new Coin()));
+        leaders.add(new NewDiscount(requirement2,2,new Stone()));
+        leaders.add(new NewDiscount(requirement3,2,new Shield()));
+        leaders.add(new NewDiscount(requirement4,2,new Servant())); //NewDiscount leaderCard
+
+        Collections.shuffle(leaders); //shuffle the deck of leader cards
+
+
+        return leaders;
     }
 
     /**
@@ -473,7 +499,7 @@ public class Game {
      *                           pay from the warehouse
      * @return true if the player can buy the card, false otherwise
      */
-    public synchronized boolean checkWarehouseResources(DevelopmentCard card, CollectionResources toPayFromWarehouse){
+    public boolean checkWarehouseResources(DevelopmentCard card, CollectionResources toPayFromWarehouse){
 
         if (toPayFromWarehouse == null) return false;
 
@@ -522,7 +548,7 @@ public class Game {
      * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
      *                         or when a column of the cardsMarket is empty, only in a single game
      */
-    public synchronized void buyCard(int level, CardColor color, int position, CollectionResources toPayFromWarehouse) throws EndGameException {
+    public void buyCard(int level, CardColor color, int position, CollectionResources toPayFromWarehouse) throws EndGameException {
 
         // get and remove the card from the market with level and color selected
         DevelopmentCard toBuy = setOfCards.popCard(level, color);
@@ -569,7 +595,7 @@ public class Game {
      * @return true if the conditions to activate a production are respected,
      *         false otherwise
      */
-    public synchronized boolean checkProduction(int position){
+    public boolean checkProduction(int position){
         if (position < 0 || position > 5) return false;
 
         if (position == 0) {
@@ -616,7 +642,7 @@ public class Game {
      * @param toPayFromWarehouse these are the resources to pay from the warehouse
      * @return true if the card can be activated, false otherwise
      */
-    public synchronized boolean checkActivateProduction(int position, CollectionResources toPayFromWarehouse){
+    public boolean checkActivateProduction(int position, CollectionResources toPayFromWarehouse){
 
         if (toPayFromWarehouse == null)
             return false;
@@ -658,7 +684,7 @@ public class Game {
      * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
      *                         or when a column of the cardsMarket is empty, only in a single game
      */
-    public synchronized void activateProduction(int position, CollectionResources toPayFromWarehouse ) throws EndGameException {
+    public void activateProduction(int position, CollectionResources toPayFromWarehouse ) throws EndGameException {
         DevelopmentCard card = getActualPlayer().
                 getPersonalDashboard().
                 getPersonalProductionPower().
@@ -690,7 +716,7 @@ public class Game {
      * @param output this is the resource to get in output
      * @return true if the production can be activated, false otherwise
      */
-    public synchronized boolean checkActivateBasicProduction(CollectionResources toPayFromWarehouse, CollectionResources toPayFromStrongbox, Resource output){
+    public boolean checkActivateBasicProduction(CollectionResources toPayFromWarehouse, CollectionResources toPayFromStrongbox, Resource output){
         if (toPayFromStrongbox == null) return false;
         if (toPayFromWarehouse == null) return false;
         if (output == null) return false;
@@ -715,12 +741,9 @@ public class Game {
      *                           them require that are contained in the strongbox
      * @param output this is the resource to get as output
      */
-    public synchronized void activateBasicProduction(CollectionResources toPayFromWarehouse, CollectionResources toPayFromStrongbox, Resource output){
-        CollectionResources productionPowerOutput = new CollectionResources();
+    public void activateBasicProduction(CollectionResources toPayFromWarehouse, CollectionResources toPayFromStrongbox, Resource output){
 
-        productionPowerOutput.add(output); // add the resource chosen as output
-
-        getActualPlayer().activateProduction(toPayFromWarehouse, toPayFromStrongbox, productionPowerOutput);
+        getActualPlayer().activateProduction(toPayFromWarehouse, toPayFromStrongbox, new CollectionResources(output));
 
         getActualPlayer().getPersonalDashboard().getPersonalProductionPower().activateBasicProduction(); // set the basic production to activated
     }
@@ -735,7 +758,7 @@ public class Game {
      *                      in the warehouse or in the strongbox
      * @return true if the player contains the resource selected correctly, false otherwise
      */
-    public synchronized boolean checkActivateLeaderProduction(int toCheck, boolean fromWarehouse){
+    public boolean checkActivateLeaderProduction(int toCheck, boolean fromWarehouse){
 
         CollectionResources toVerify = new CollectionResources();
         toVerify.add(getActualPlayer().
