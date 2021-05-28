@@ -15,6 +15,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -81,8 +82,18 @@ public class Gui extends Application implements View {
     public void start(Stage stage) throws IOException {
 
         scene = new Scene(loadFXML(getPathFirstWindow(), getFirstController()), 640, 480);
+        stage.getIcons().add(new Image("/punchboard/calamaio.png"));
         stage.setMaximized(true);
         stage.setScene(scene);
+        /*
+        Scale scale = new Scale(Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight());
+        scale.setPivotX(Screen.getPrimary().getBounds().getWidth());
+        scale.setPivotY(Screen.getPrimary().getBounds().getHeight());
+        scene.getRoot().getTransforms().setAll(scale);
+
+         */
+
+
         stage.setOnCloseRequest(windowEvent -> {
             clientNetwork.send(new QuitCommand());
             System.exit(1);

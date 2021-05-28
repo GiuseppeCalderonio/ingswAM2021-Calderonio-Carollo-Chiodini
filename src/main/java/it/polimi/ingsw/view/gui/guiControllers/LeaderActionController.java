@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 public class LeaderActionController extends TurnsController {
 
@@ -25,7 +26,7 @@ public class LeaderActionController extends TurnsController {
 
     public LeaderActionController(ThinModel model, String nickname, NetworkUser<Command, ResponseToClient> clientNetworkUser, boolean normalActions) {
         super(model, nickname, clientNetworkUser, normalActions, true);
-        getClientNetworkUser().send(new LeaderCommand());
+
     }
 
     @Override
@@ -93,18 +94,42 @@ public class LeaderActionController extends TurnsController {
     }
 
     public void rightDiscard() {
+        getClientNetworkUser().send(new LeaderCommand());
+        try {
+            TimeUnit.MILLISECONDS.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         getClientNetworkUser().send(new DiscardCardCommand(2));
     }
 
     public void leftDiscard() {
+        getClientNetworkUser().send(new LeaderCommand());
+        try {
+            TimeUnit.MILLISECONDS.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         getClientNetworkUser().send(new DiscardCardCommand(1));
     }
 
     public void rightActive() {
+        getClientNetworkUser().send(new LeaderCommand());
+        try {
+            TimeUnit.MILLISECONDS.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         getClientNetworkUser().send(new ActivateCardCommand(2));
     }
 
     public void leftActive() {
+        getClientNetworkUser().send(new LeaderCommand());
+        try {
+            TimeUnit.MILLISECONDS.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         getClientNetworkUser().send(new ActivateCardCommand(1));
     }
 
@@ -126,6 +151,11 @@ public class LeaderActionController extends TurnsController {
     @Override
     public void showErrorMessage() {
         super.showErrorMessage();
+        rollBack();
+    }
+
+    @Override
+    public void rollBack() {
         Gui.setRoot("/TurnsWindow",
                 new TurnsController(getModel(),
                         getNickname(),
