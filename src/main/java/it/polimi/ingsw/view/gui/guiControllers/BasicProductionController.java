@@ -155,7 +155,6 @@ public class BasicProductionController extends TurnsController{
 
             getMainWindow().getChildren().add(resourceToDraw);
 
-
             i++;
         }
 
@@ -184,6 +183,7 @@ public class BasicProductionController extends TurnsController{
     public void showErrorMessage() {
         super.showErrorMessage();
         rollBack();
+
     }
 
     @Override

@@ -147,13 +147,19 @@ public class ShiftResourcesController extends TurnsController{
 
         Button fourthShelf = setButton("4", actionEvent -> getClientNetworkUser().send(new ShiftResourcesCommand(firstShelfSelected, 4)));
 
+        fourthShelf.setLayoutX(getFourthDepot().getLayoutX() - getFourthDepot().getLayoutX() * 1 / 10);
+        fourthShelf.setLayoutY(getFourthDepot().getLayoutY());
 
         buttons.add(fourthShelf);
 
         if (getModel().getGame().getMyself().getWarehouse().getFifthShelf() == null){
             return;
         }
+
         Button fifthShelf = setButton("5", actionEvent -> getClientNetworkUser().send(new ShiftResourcesCommand(firstShelfSelected, 5)));
+
+        fifthShelf.setLayoutX(getFifthDepot().getLayoutX() - getFourthDepot().getLayoutX() * 1 / 10);
+        fifthShelf.setLayoutY(getFifthDepot().getLayoutY());
 
         buttons.add(fifthShelf);
 

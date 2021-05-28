@@ -305,7 +305,8 @@ public class ThinPlayer {
     public boolean isLeaderProductionAffordable(LeaderCard toVerify){
         try {
             if (toVerify.isActive() && toVerify instanceof NewProduction){
-                return getTotalResources().contains(leaderCards.get(1).getResource());
+
+                return getTotalResources().contains(leaderCards.get(leaderCards.indexOf(toVerify)).getResource());
             }
             return false;
         } catch (NullPointerException e){

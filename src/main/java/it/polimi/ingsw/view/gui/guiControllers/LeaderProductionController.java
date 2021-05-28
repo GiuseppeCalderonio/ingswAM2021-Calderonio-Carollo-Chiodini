@@ -71,7 +71,7 @@ public class LeaderProductionController extends TurnsController{
 
     private void showButtons(){
 
-        double relativeXOffset = getMainWindow().getWidth() / 5;
+        double relativeXOffset = getMainWindow().getPrefWidth() / 5;
 
         yesButton.setText("yes");
         yesButton.setOnAction(actionEvent -> {
@@ -83,13 +83,13 @@ public class LeaderProductionController extends TurnsController{
         yesButton.setLayoutY(getMainWindow().getPrefHeight() * 3 / 5);
 
 
-        noButton.setText("yes");
+        noButton.setText("no");
         noButton.setOnAction(actionEvent -> {
             toPayFromWarehouse = false;
             showResourcesToPay();
         });
 
-        noButton.setLayoutX(getMainWindow().getPrefWidth() / 2 - relativeXOffset);
+        noButton.setLayoutX(getMainWindow().getPrefWidth() / 2 + relativeXOffset);
         noButton.setLayoutY(getMainWindow().getPrefHeight() * 3 / 5);
 
 

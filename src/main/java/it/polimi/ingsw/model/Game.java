@@ -81,7 +81,6 @@ public class Game {
      */
     private List<LeaderCard> createAllLeaderCards(){
 
-
         List<LeaderCard> leaders = new ArrayList<>(); // create an arraylist of leaderCard
         LeaderCardRequirements requirements1 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.BLUE, CardColor.BLUE, CardColor.YELLOW)));
         LeaderCardRequirements requirements2 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.PURPLE, CardColor.PURPLE, CardColor.GREEN)));
@@ -93,13 +92,18 @@ public class Game {
         leaders.add(new NewWhiteMarble(requirements1 ,5,new Stone()));
         leaders.add(new NewWhiteMarble(requirements4,5,new Servant()));
         leaders.add(new NewWhiteMarble(requirements3,5,new Shield())); //NewWhiteMarble leaderCard
+
         //NewShelf leaderCards
         leaders.add(new NewShelf(new ResourcesRequired(new Shield()),3,new Coin()));
         leaders.add(new NewShelf(new ResourcesRequired(new Servant()),3,new Shield()));
         leaders.add(new NewShelf(new ResourcesRequired(new Stone()),3,new Servant()));
         leaders.add(new NewShelf(new ResourcesRequired(new Coin()),3,new Stone())); //NewShelf leaderCard
+
         //NewProduction leaderCards
-        leaders.add(new NewProduction(new LevelRequired(CardColor.GREEN) ,4 , new Coin())); leaders.add(new NewProduction(new LevelRequired(CardColor.PURPLE) ,4 , new Stone())); leaders.add(new NewProduction(new LevelRequired(CardColor.BLUE) ,4 , new Servant())); leaders.add(new NewProduction(new LevelRequired(CardColor.YELLOW) ,4 , new Shield())); //NewProduction leaderCard
+        leaders.add(new NewProduction(new LevelRequired(CardColor.GREEN) ,4 , new Coin()));
+        leaders.add(new NewProduction(new LevelRequired(CardColor.PURPLE) ,4 , new Stone()));
+        leaders.add(new NewProduction(new LevelRequired(CardColor.BLUE) ,4 , new Servant()));
+        leaders.add(new NewProduction(new LevelRequired(CardColor.YELLOW) ,4 , new Shield())); //NewProduction leaderCard
 
         LeaderCardRequirements requirement1 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.YELLOW, CardColor.PURPLE)));
         LeaderCardRequirements requirement2 = new ColorRequired(new ArrayList<>(Arrays.asList(CardColor.GREEN , CardColor.BLUE)));
@@ -114,7 +118,6 @@ public class Game {
 
         Collections.shuffle(leaders); //shuffle the deck of leader cards
 
-
         return leaders;
     }
 
@@ -122,7 +125,7 @@ public class Game {
      * this method get a list of the players that are playing the game
      * @return a list of the players that are playing the game
      */
-    public synchronized List<RealPlayer> getPlayers(){
+    public List<RealPlayer> getPlayers(){
         return players;
     }
 
@@ -130,7 +133,7 @@ public class Game {
      * this method get the market board of the game
      * @return the market board of the game
      */
-    public synchronized MarbleMarket getMarketBoard() {
+    public MarbleMarket getMarketBoard() {
         return marketBoard;
     }
 
@@ -138,7 +141,7 @@ public class Game {
      * this method get the set of cards of the game
      * @return the set of cards of the game
      */
-    public synchronized CardsMarket getSetOfCard() {
+    public CardsMarket getSetOfCard() {
         return setOfCards;
     }
 
@@ -146,7 +149,7 @@ public class Game {
      * this method get the turn manager of the game, that indicates the turn
      * @return the turn manager of the game, that indicates the turn
      */
-    public synchronized int getTurnManager() {
+    public int getTurnManager() {
         return turnManager;
     }
 
@@ -154,7 +157,7 @@ public class Game {
      * this method get an array of 3 boolean representing the 3 game vatican reports
      * @return an array of 3 boolean representing the 3 game vatican reports
      */
-    public synchronized boolean[] getVaticanReports() {
+    public boolean[] getVaticanReports() {
         return vaticanReports;
     }
 
@@ -164,7 +167,7 @@ public class Game {
      * it returns null otherwise
      * @return a player representing lorenzo il magnifico
      */
-    public synchronized Player getLorenzoIlMagnifico(){ return null; }
+    public Player getLorenzoIlMagnifico(){ return null; }
 
     /**
      * this method get the list of solo tokens of the game.
@@ -172,13 +175,13 @@ public class Game {
      * it returns null otherwise
      * @return the list of solo tokens of the game
      */
-    public synchronized List<SoloToken> getSoloTokens(){ return null; }
+    public List<SoloToken> getSoloTokens(){ return null; }
 
     /**
      * this method is used to set vaticanReports vector
      * @param index is the index of the vector
      */
-    protected synchronized void setVaticanReports(int index){
+    protected void setVaticanReports(int index){
         vaticanReports[index - 1] = true;
     }
 
@@ -189,7 +192,7 @@ public class Game {
      * @param resources these are the resources to check
      * @return true if the parameters are correct, false otherwise
      */
-    public synchronized boolean checkInitialising(String nickname, CollectionResources resources){
+    public boolean checkInitialising(String nickname, CollectionResources resources){
         if(resources == null) return false;
         if(players.stream().map(RealPlayer::getNickname).noneMatch(x -> x.equals(nickname))) return false;
         try{
@@ -209,7 +212,7 @@ public class Game {
      * @param nickname this is the nickname to check
      * @return the player if the game contains it, null otherwise
      */
-    public synchronized RealPlayer findPlayer(String nickname){
+    public RealPlayer findPlayer(String nickname){
         for(RealPlayer p : players){
             if(p.getNickname().equals(nickname)) return p;
         }
@@ -242,7 +245,7 @@ public class Game {
      * @param leaderCardToReject2 this is the index of the second leader card to reject,
      *                            it requires is between 1 and 4
      */
-    public synchronized void initialiseGame(String nickname, CollectionResources toAdd, int leaderCardToReject1, int leaderCardToReject2){
+    public void initialiseGame(String nickname, CollectionResources toAdd, int leaderCardToReject1, int leaderCardToReject2){
         // adding resources
         // do nothing for the first player
         if(toAdd.getSize() == 1){ // the second and third players
@@ -305,7 +308,7 @@ public class Game {
      * @return true if the number of the shelves is more than input
      *         false otherwise
      */
-    public synchronized boolean checkShelfSelected(int numOfShelf){
+    public boolean checkShelfSelected(int numOfShelf){
         if (numOfShelf < 1 || numOfShelf > 5) return false;
         return (numOfShelf <=
                 getActualPlayer().              //get the player of the current turn
@@ -328,7 +331,7 @@ public class Game {
      * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
      *                         or when a column of the cardsMarket is empty, only in a single game
      */
-    public synchronized boolean shiftResources(int source, int destination) throws EndGameException {
+    public boolean shiftResources(int source, int destination) throws EndGameException {
         int faithPoints = getActualPlayer().shiftResources(source, destination);
         if (faithPoints == -1) return false;
         addFaithPointsExceptTo(getActualPlayer(), faithPoints);
@@ -350,7 +353,7 @@ public class Game {
      *         or if the leaderWhiteMarble selected doesn't exist
      *         true otherwise
      */
-    public synchronized boolean changeWhiteMarble(List<Marble> marbles, int leaderWhiteMarble){
+    public boolean changeWhiteMarble(List<Marble> marbles, int leaderWhiteMarble){
 
         if (marbles == null) return false;
 
@@ -378,7 +381,7 @@ public class Game {
      * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
      *                         or when a column of the cardsMarket is empty, only in a single game
      */
-    public synchronized CollectionResources convert(List<Marble> marbles) throws EndGameException {
+    public CollectionResources convert(List<Marble> marbles) throws EndGameException {
         List<Marble> temp = marbles.stream().
                 filter( marble -> !marble.equals(new WhiteMarble())). //remove all the white marbles
                 collect(Collectors.toList());
@@ -401,7 +404,7 @@ public class Game {
      * @param row this is the row to shift
      * @return the arraylist of marbles given
      */
-    public synchronized List<Marble> selectRow(int row){
+    public List<Marble> selectRow(int row){
         return marketBoard.selectRow(row - 1);
     }
 
@@ -411,7 +414,7 @@ public class Game {
      * @param column this is the column to shift
      * @return the arraylist of marbles given
      */
-    public synchronized List<Marble> selectColumn(int column){
+    public List<Marble> selectColumn(int column){
         return marketBoard.selectColumn(column - 1);
     }
 
@@ -428,7 +431,7 @@ public class Game {
      * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
      *                         or when a column of the cardsMarket is empty, only in a single game
      */
-    public synchronized void insertInWarehouse(int shelf, Resource typeRequired, CollectionResources marblesConverted) throws EndGameException {
+    public void insertInWarehouse(int shelf, Resource typeRequired, CollectionResources marblesConverted) throws EndGameException {
         CollectionResources toAdd = new ShelfCollection(typeRequired.getType());
         marblesConverted.asList().stream().
                 filter(resource -> resource.equals(typeRequired)). //remove all the resources without the type required
@@ -452,7 +455,7 @@ public class Game {
      * or if the player can't afford the card selected or if the card
      * can't be placed in the dashboard
      */
-    public synchronized boolean checkBuyCard(int level, CardColor color){
+    public boolean checkBuyCard(int level, CardColor color){
         if (!setOfCards.checkCard(level, color)) return false;
         DevelopmentCard card = setOfCards.getCard(level, color);
         boolean checkPlacement = false;
@@ -474,7 +477,7 @@ public class Game {
      *         the card in input has a level one and the deck of cards specified in input is empty, false if not,
      *         or if the position is not between 1 and 3
      */
-    public synchronized boolean checkPlacement(DevelopmentCard toCheck, int position ){
+    public boolean checkPlacement(DevelopmentCard toCheck, int position ){
         return getActualPlayer().
                 getPersonalDashboard().
                 getPersonalProductionPower().
@@ -784,7 +787,7 @@ public class Game {
      *@throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
      *                         or when a column of the cardsMarket is empty, only in a single game
      */
-    public synchronized void activateLeaderProduction(int toActivate, Resource output, boolean fromWarehouse) throws EndGameException {
+    public void activateLeaderProduction(int toActivate, Resource output, boolean fromWarehouse) throws EndGameException {
 
         Resource toPay = getActualPlayer().
                 getPersonalDashboard().
@@ -813,7 +816,7 @@ public class Game {
      * the player decides to end it, and it fill the strongbox with the
      * resources stored in the buffer during the productions
      */
-    public synchronized void endProduction(){
+    public void endProduction(){
 
         getActualPlayer().fillStrongboxWithBuffer(); // get the strongbox resources gained from the productions
 
@@ -828,7 +831,7 @@ public class Game {
      * @param toCheck this is the index of the leader card to check
      * @return true if the player own a leader card in that position, false otherwise
      */
-    public synchronized boolean checkLeaderCard(int toCheck){
+    public boolean checkLeaderCard(int toCheck){
         if (toCheck <= 0) return false;
         return getActualPlayer().getPersonalLeaderCards().size() >= toCheck;
     }
@@ -844,7 +847,7 @@ public class Game {
      * @param toActivate this is the index of the owned leader card to activate
      * @return true if the card got activated correctly, false otherwise
      */
-    public synchronized boolean activateLeaderCard(int toActivate){
+    public boolean activateLeaderCard(int toActivate){
         return getActualPlayer().activateLeaderCard(toActivate);
     }
 
@@ -859,7 +862,7 @@ public class Game {
      * @return true if the card got discarded correctly, false otherwise
      * @throws EndGameException when a player reach the final vatican report, only in a single game
      */
-    public synchronized boolean discardLeaderCard(int toDiscard) throws EndGameException {
+    public boolean discardLeaderCard(int toDiscard) throws EndGameException {
         if (getActualPlayer().discardLeaderCard(toDiscard)){
             addFaithPointsTo(getActualPlayer(), 1);
             return true;
@@ -874,7 +877,7 @@ public class Game {
      * in particular, increment the turnManager
      * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
      */
-    public synchronized void endTurn() throws EndGameException {
+    public void endTurn() throws EndGameException {
         turnManager++; //increase the turn
         if (turnManager % players.size() == 0) checkEndGame(); //if the round is ended, check if the game must finish
     }
@@ -886,7 +889,7 @@ public class Game {
      * a player bought more than 6 cards
      * @throws EndGameException when a player reach the final vatican report, or a player buy more than 6 development cards,
      */
-    public synchronized void checkEndGame() throws EndGameException {
+    public void checkEndGame() throws EndGameException {
         int cards = players.stream().
                 mapToInt(player -> player.
                         getPersonalDashboard().
@@ -901,7 +904,7 @@ public class Game {
      * must activate a popeFavorTile card in track
      * @throws EndGameException when a player reach the final vatican report, only in a single game
      */
-    protected synchronized void handleVaticanReport() throws EndGameException {
+    protected void handleVaticanReport() throws EndGameException {
         int i=0;
         while((i < 3) && (vaticanReports[i])) i++;
         if (i > 2) return;
@@ -922,7 +925,7 @@ public class Game {
      * @param toAdd is the number of faithTrack position to add to the actual player
      * @throws EndGameException when a player reach the final vatican report, only in a single game
      */
-    protected synchronized void addFaithPointsTo(RealPlayer actualPlayer , int toAdd) throws EndGameException {
+    protected void addFaithPointsTo(RealPlayer actualPlayer , int toAdd) throws EndGameException {
         actualPlayer.addFaithPoints(toAdd);
         handleVaticanReport();
     }
@@ -933,7 +936,7 @@ public class Game {
      * @param toAdd is the number of faithTrack position to add to all players except one, the actualPlayer
      * @throws EndGameException when a player reach the final vatican report, only in a single game
      */
-    public synchronized void addFaithPointsExceptTo(RealPlayer actualPlayer, int toAdd) throws EndGameException {
+    public void addFaithPointsExceptTo(RealPlayer actualPlayer, int toAdd) throws EndGameException {
         players.stream().
                 filter(player->!(actualPlayer.equals(player))).
                 forEach(player -> player.addFaithPoints(toAdd));
@@ -945,7 +948,7 @@ public class Game {
      * this method get the player of the current turn
      * @return the player of the current turn
      */
-    public synchronized RealPlayer getActualPlayer(){
+    public RealPlayer getActualPlayer(){
         return players.get(turnManager % players.size()); // the get goes from 0 to players.size()
     }
 
@@ -960,7 +963,7 @@ public class Game {
      * his number of cards is >= 7 or if his position reached the last vatican report
      * @return the nickname of the winner
      */
-    public synchronized String getWinner(){
+    public String getWinner(){
         // get the integer list of victory points of every player
         int maxVictoryPoints = players.stream().
                 mapToInt(RealPlayer::getVictoryPoints).
@@ -997,7 +1000,7 @@ public class Game {
      * @return true if the resources of the player of the current turn
      *         contains all the resources given in input
      */
-    public synchronized boolean contains(CollectionResources toVerify){
+    public boolean contains(CollectionResources toVerify){
         return getActualPlayer().
                 getTotalResources().
                 containsAll(toVerify);
@@ -1011,7 +1014,7 @@ public class Game {
      * @return true if the discounted resources of the player of the current turn
      *         contains all the resources given in input
      */
-    public synchronized boolean containsWithDiscount(CollectionResources toVerify){
+    public boolean containsWithDiscount(CollectionResources toVerify){
         return getActualPlayer().
                 getTotalDiscountedResources().
                 containsAll(toVerify);
@@ -1025,7 +1028,7 @@ public class Game {
      * @return true if the warehouse resources of the player of the current turn
      *         contains all the resources given in input
      */
-    public synchronized boolean containsInWarehouse(CollectionResources toVerify){
+    public boolean containsInWarehouse(CollectionResources toVerify){
         return getActualPlayer().
                 getPersonalDashboard().
                 getPersonalWarehouse().
@@ -1040,7 +1043,7 @@ public class Game {
      * @return true if the strongbox resources of the player of the current turn
      *         contains all the resources given in input
      */
-    public synchronized boolean containsInStrongbox(CollectionResources toVerify){
+    public boolean containsInStrongbox(CollectionResources toVerify){
         return getActualPlayer().
                 getPersonalDashboard().
                 getPersonalStrongbox().
