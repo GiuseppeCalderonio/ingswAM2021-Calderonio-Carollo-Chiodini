@@ -42,8 +42,14 @@ public class WaitingRoom implements Runnable, NetworkUser<ResponseToClient, Comm
      */
     private final static List<Lobby> lobbies = new ArrayList<>();
 
+    /**
+     * this attribute represent the print writer associated with the socket
+     */
     private PrintWriter out;
 
+    /**
+     * this attribute represent the scanner associated with the socket
+     */
     private Scanner in;
 
 

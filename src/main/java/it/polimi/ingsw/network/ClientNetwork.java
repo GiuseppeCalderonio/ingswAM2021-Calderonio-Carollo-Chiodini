@@ -15,16 +15,50 @@ import java.net.Socket;
 
 import static it.polimi.ingsw.controller.gsonManager.PersonalGsonBuilder.createPersonalGsonBuilder;
 
+/**
+ * this class represent the client network.
+ * in particular, a client network have to implement network user interface
+ * because is a class used to interact and exchange messages throughout the network,
+ * and have to implement runnable because it needs a thread to wait messages from the network
+ */
 public class ClientNetwork implements NetworkUser<Command, ResponseToClient>, Runnable {
 
-
+    /**
+     * this attribute represent the print writer associated with the socket
+     */
     private PrintWriter out = null;
+
+    /**
+     * this attribute represent the buffer reader associated with the socket
+     */
     private BufferedReader in = null;
+
+    /**
+     * this attribute represent the socket associated with the client network.
+     * it is used to send messages
+     */
     private Socket socket;
+
+    /**
+     * this attribute represent the gson used to parse messages
+     */
     private final Gson gson = createPersonalGsonBuilder();
+
+    /**
+     * this attribute represent the view to eventually update
+     */
     private View view;
 
-
+    /**
+     * this constructor create the object creating the socket and the buffer reader and
+     * the scanner associating them with the port and ip passed as input, and
+     * set the view to eventually update after a message received.
+     * it also start the thread that read messages from th network
+     * @param hostName this is the host name in which connect the socket
+     * @param portNumber this is the port number in which connect the socket
+     * @param view this is the view to eventually update after a message received
+     * @throws IOException if a network error occurs
+     */
     public ClientNetwork(String hostName, int portNumber, View view) throws IOException {
 
         this.socket = new Socket(hostName, portNumber);
@@ -36,6 +70,10 @@ public class ClientNetwork implements NetworkUser<Command, ResponseToClient>, Ru
         networkReader.start();
     }
 
+    /**
+     * this constructor is used only for the sub class localClient
+     * @see it.polimi.ingsw.network.localGame.LocalClient
+     */
     protected ClientNetwork() {
     }
 
@@ -85,8 +123,8 @@ public class ClientNetwork implements NetworkUser<Command, ResponseToClient>, Ru
             try {
                 while (true) {
 
+                    response = receiveMessage();
                     synchronized (this) {
-                        response = receiveMessage();
 
                         try {
                             response.updateClient(view);

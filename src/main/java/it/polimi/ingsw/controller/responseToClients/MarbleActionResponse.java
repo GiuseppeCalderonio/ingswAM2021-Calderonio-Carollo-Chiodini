@@ -75,7 +75,7 @@ public class MarbleActionResponse extends ResponseToClient{
      * if the command is not of dynamic type ResponseToClient,
      * set the values that have to change after a model's change
      *
-     * @param client this is the client to update
+     * @param view this is the view to update
      */
     @Override
     public void updateClient(View view) {
@@ -84,16 +84,6 @@ public class MarbleActionResponse extends ResponseToClient{
         view.getModel().updateWarehouse(warehouse3, nickname3);
         view.getModel().updateMarbleMarket(marbleMarket3, lonelyMarble3);
         view.showCli();
-
-        /*
-        ThinPlayer toChange = getPlayerToChange(client, nickname3);
-        updateTracks(client);
-        toChange.setWarehouse(warehouse3);
-        client.getGame().setLonelyMarble(lonelyMarble3);
-        client.getGame().setMarbleMarket(marbleMarket3);
-        client.show();
-
-         */
 
         super.updateClient(view);
     }

@@ -56,7 +56,7 @@ public class ProductionResponse extends ResponseToClient{
      * if the command is not of dynamic type ResponseToClient,
      * set the values that have to change after a model's change
      *
-     * @param client this is the client to update
+     * @param view this is the view to update
      */
     @Override
     public void updateClient(View view) {
@@ -65,15 +65,6 @@ public class ProductionResponse extends ResponseToClient{
         view.getModel().updateWarehouse(warehouse2, nickname2);
         view.getModel().updateTrack(track2, nickname2);
         view.showCli();
-
-        /*
-        ThinPlayer toChange = getPlayerToChange(client, nickname2);
-        toChange.setStrongbox(strongbox2);
-        toChange.setWarehouse(warehouse2);
-        toChange.setTrack(track2);
-        client.show();
-
-         */
 
         super.updateClient(view);
     }

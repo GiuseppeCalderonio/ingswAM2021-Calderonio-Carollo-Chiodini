@@ -220,7 +220,7 @@ public class Controller {
             // if the client have to play his turn
             if (client1.isYourTurn()) {
                 // send the message to the client
-                client1.send(new ResponseToClient(Status.YOUR_TURN));
+                client1.send(new ResponseToClient(Status.ACCEPTED));
             }
         }
     }

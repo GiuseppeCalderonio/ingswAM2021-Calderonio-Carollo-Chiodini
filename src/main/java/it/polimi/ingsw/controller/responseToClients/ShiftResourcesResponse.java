@@ -64,7 +64,7 @@ public class ShiftResourcesResponse extends ResponseToClient{
      * if the command is not of dynamic type ResponseToClient,
      * set the values that have to change after a model's change
      *
-     * @param client this is the client to update
+     * @param view this is the view to update
      */
     @Override
     public void updateClient(View view) {
@@ -72,14 +72,6 @@ public class ShiftResourcesResponse extends ResponseToClient{
         view.getModel().updateTrack(tracks1);
         view.getModel().updateWarehouse(warehouse1, nickname1);
         view.showCli();
-
-        /*
-        ThinPlayer toChange = getPlayerToChange(client, nickname1);
-        updateTracks(client);
-        toChange.setWarehouse(warehouse1);
-        client.show();
-
-         */
 
         super.updateClient(view);
     }

@@ -64,7 +64,7 @@ public class LeaderActionResponse extends ResponseToClient{
      * if the command is not of dynamic type ResponseToClient,
      * set the values that have to change after a model's change
      *
-     * @param client this is the client to update
+     * @param view this is the view to update
      */
     @Override
     public void updateClient(View view) {
@@ -73,22 +73,6 @@ public class LeaderActionResponse extends ResponseToClient{
         view.getModel().updateTrack(track4, nickname4);
         view.getModel().updateWarehouse(warehouse4, nickname4);
         view.showCli();
-
-        /*
-        ThinPlayer toChange = getPlayerToChange(client, nickname4);
-
-        if (!nickname4.equals(client.getGame().getMyself().getNickname()))
-            cards4.stream().filter(card -> !card.isActive()).forEach(ThinLeaderCard::hide);
-
-        toChange.setTrack(track4);
-
-        toChange.setLeaderCards(cards4.stream().map(ThinPlayer::recreate).collect(Collectors.toList()));
-
-        toChange.setWarehouse(warehouse4);
-
-        client.show();
-
-         */
 
         super.updateClient(view);
     }

@@ -77,7 +77,7 @@ public class StartGameResponse extends ResponseToClient{
      * if the command is not of dynamic type ResponseToClient,
      * set the values that have to change after a model's change
      *
-     * @param client this is the client to update
+     * @param view this is the view to update
      */
     @Override
     public void updateClient(View view) {

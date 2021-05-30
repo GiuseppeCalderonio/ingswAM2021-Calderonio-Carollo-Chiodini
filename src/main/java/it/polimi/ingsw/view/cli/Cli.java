@@ -64,9 +64,6 @@ public class Cli implements View {
 
 
     protected void start() throws IOException {
-
-        //Thread networkReader = new Thread(this);
-        //networkReader.start();
         // this while true won't work forever because the thread associated with the network receiver
         // will close the program if necessary
         while (true) {
@@ -218,8 +215,6 @@ public class Cli implements View {
                 System.out.println("the command created an error on the server");
             if (message.equals(Status.WRONG_TURN))
                 System.out.println("is not your turn!");
-            if (message.equals(Status.YOUR_TURN))
-                System.out.println("now is your turn! decide your action");
             if (message.equals(Status.QUIT)){
                 System.out.println("quit the match");
                 System.exit(1);

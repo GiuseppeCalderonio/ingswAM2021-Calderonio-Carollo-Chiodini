@@ -79,23 +79,15 @@ public class BuyCardActionResponse extends ResponseToClient{
      * if the command is not of dynamic type ResponseToClient,
      * set the values that have to change after a model's change
      *
-     * @param view
+     * @param view this is the view to update
      */
     @Override
     public void updateClient(View view) {
 
-
-
-        //ThinPlayer toChange = getPlayerToChange(client, nickname6);
         view.getModel().updateStrongbox(strongbox6, nickname6);
         view.getModel().updateWarehouse(warehouse6, nickname6);
         view.getModel().updateProductionPower(productionPower, nickname6);
         view.getModel().updateCard(level6, color6, card6);
-
-        //toChange.setStrongbox(strongbox6);
-        //toChange.setWarehouse(warehouse6);
-        //toChange.setProductionPower(productionPower);
-        //client.getGame().setCard(level6, color6, card6);
         view.showCli();
 
         super.updateClient(view);

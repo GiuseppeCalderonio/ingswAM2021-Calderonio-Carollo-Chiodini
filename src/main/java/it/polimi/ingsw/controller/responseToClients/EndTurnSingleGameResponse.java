@@ -56,20 +56,12 @@ public class EndTurnSingleGameResponse extends ResponseToClient{
     public void updateClient(View view) {
 
 
-        /*
-        client.getGame().setCardsMarket(cardsMarket5);
-        client.getGame().setSoloToken(token5);
-        client.getGame().getOpponents().get(0).setTrack(track5);
-        client.show();
-
-         */
-
         view.getModel().updateCardsMarket(cardsMarket5);
         view.getModel().updateToken(token5);
         view.getModel().updateTrack(track5, new Player().getNickname());
         view.showCli();
         view.updateTurn(view.getModel().getGame().getMyself().getNickname());
 
-        super.updateClient(view);
+        //super.updateClient(view);
     }
 }

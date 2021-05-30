@@ -48,7 +48,7 @@ public class EndTurnCommand extends NormalActionCommand {
      */
     @Override
     public String getConfirmMessage() {
-        return "turn finished, is not your turn anymore";
+        return "";
     }
 
     /**
