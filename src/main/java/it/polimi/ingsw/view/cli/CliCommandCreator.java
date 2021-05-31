@@ -25,18 +25,43 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * this class represent the cli command creator.
+ * in particular, it is a container of methods used to handle the
+ * cli commands
+ */
 public class CliCommandCreator {
 
-    protected boolean invalidResource(String toVerify){
+    /**
+     * this method verify if the string in input is associated with a resource.
+     * the string in input must be in upper case
+     * @param toVerify this is the string to verify
+     * @return true if the string in input is ["COIN", "STONE", "SHIELD", "SERVANT"], false otherwise
+     */
+    private boolean invalidResource(String toVerify){
         List<String> resources = new ArrayList<>(Arrays.asList("COIN", "STONE", "SHIELD", "SERVANT"));
         return !resources.contains(toVerify);
     }
 
-    protected Resource convertResource(String resource){
+    /**
+     * this method convert the string passed in input into the correspondent resource.
+     * it requires that the method invalidResource(resource) = false;
+     * @param resource this is the string that have to be converted into a resource
+     * @return the resource associated with the string in input
+     */
+    private Resource convertResource(String resource){
         return ResourceType.valueOf(ResourceType.class, resource).getResource();
     }
 
-    protected Command initialiseResources(BufferedReader stdIn, int position) throws IOException {
+    /**
+     * this method handle the initialization of the initial resources of the player
+     * @param stdIn this is the buffer reader
+     * @param position this is the position of the player based on the inkwell one
+     * @return the command to send to the server
+     * @throws IOException if a network error occurs
+     * @throws InvalidParameterException if the parameters chosen are not valid
+     */
+    protected Command initialiseResources(BufferedReader stdIn, int position) throws IOException, InvalidParameterException {
         String firstResource;
         String secondResource;
         CollectionResources initialisingResources = new CollectionResources();
@@ -70,7 +95,14 @@ public class CliCommandCreator {
         return new InitialiseResourcesCommand(initialisingResources);
     }
 
-    protected Command initialiseLeaderCard(BufferedReader stdIn) throws IOException {
+    /**
+     * this method handle the initialization of the initial leader cards of the player
+     * @param stdIn this is the buffer reader
+     * @return the command to send to the server
+     * @throws IOException if a network error occurs
+     * @throws InvalidParameterException if the parameters chosen are not valid
+     */
+    protected Command initialiseLeaderCard(BufferedReader stdIn) throws IOException, InvalidParameterException {
         System.out.println("Write the first leader card to discard");
         String firstCard = stdIn.readLine();
         int firstCard1;
@@ -91,7 +123,14 @@ public class CliCommandCreator {
         return (new InitialiseLeaderCardsCommand(firstCard1, secondCard1));
     }
 
-    protected Command shiftResources(BufferedReader stdIn) throws IOException {
+    /**
+     * this method handle the shift resources command creation
+     * @param stdIn this is the buffer reader
+     * @return the command to send to the server
+     * @throws IOException if a network error occurs
+     * @throws InvalidParameterException if the parameters chosen are not valid
+     */
+    protected Command shiftResources(BufferedReader stdIn) throws IOException, InvalidParameterException {
         System.out.println("Write the first shelf in which do the shift");
         String shelf = stdIn.readLine();
         int source, destination;
@@ -110,7 +149,14 @@ public class CliCommandCreator {
         return new ShiftResourcesCommand(source, destination);
     }
 
-    protected Command chooseMarbles(BufferedReader stdIn) throws IOException {
+    /**
+     * this method handle the choose marbles command creation
+     * @param stdIn this is the buffer reader
+     * @return the command to send to the server
+     * @throws IOException if a network error occurs
+     * @throws InvalidParameterException if the parameters chosen are not valid
+     */
+    protected Command chooseMarbles(BufferedReader stdIn) throws IOException, InvalidParameterException {
         System.out.println("Where do you want to get marbles? [row/column]");
         String dimension = stdIn.readLine();
         if (!dimension.equals("row") && !dimension.equals("column")){
@@ -130,6 +176,13 @@ public class CliCommandCreator {
         return (new ChooseMarblesCommand(dimension, index1));
     }
 
+    /**
+     * this method handle the choose leader card command creation
+     * @param stdIn this is the buffer reader
+     * @return the command to send to the server
+     * @throws IOException if a network error occurs
+     * @throws InvalidParameterException if the parameters chosen are not valid
+     */
     protected Command chooseLeaderCard(BufferedReader stdIn, int marbles) throws IOException {
         int[] indexes = new int[marbles];
         for (int i = 0; i < marbles; i++) {
@@ -145,6 +198,13 @@ public class CliCommandCreator {
         return (new ChooseLeaderCardsCommand(indexes));
     }
 
+    /**
+     * this method handle the insert in warehouse command creation
+     * @param stdIn this is the buffer reader
+     * @return the command to send to the server
+     * @throws IOException if a network error occurs
+     * @throws InvalidParameterException if the parameters chosen are not valid
+     */
     protected Command insertInWarehouse(BufferedReader stdIn, List<Resource> gainedFromMarbleMarket) throws IOException {
         if (gainedFromMarbleMarket == null)
             throw new InvalidParameterException("you can't do this action");
@@ -165,15 +225,36 @@ public class CliCommandCreator {
         return (new InsertInWarehouseCommand(shelves));
     }
 
-    protected boolean isValidColor(String color){
+    /**
+     * this method verify if a color chosen from the player correspond to
+     * a color of a development card
+     * @param color this is the string to verify
+     * @return true if the string is associated with a card color,
+     * ["GREEN", "YELLOW", "PURPLE", "BLUE"], false otherwise
+     */
+    private boolean isValidColor(String color){
         List<String> colors = new ArrayList<>(Arrays.asList("GREEN", "YELLOW", "PURPLE", "BLUE"));
         return colors.contains(color);
     }
 
-    protected CardColor convertColor(String color){
+    /**
+     * this method convert a string into his correspondent color.
+     * it requires that the method isValidColor(color) = true
+     * @param color this is the string to convert into a color, it must be
+     *              in upper case
+     * @return the card color associated with the string in input
+     */
+    private CardColor convertColor(String color){
         return ResourceType.valueOf(CardColor.class, color);
     }
 
+    /**
+     * this method handle the buy card command creation
+     * @param stdIn this is the buffer reader
+     * @return the command to send to the server
+     * @throws IOException if a network error occurs
+     * @throws InvalidParameterException if the parameters chosen are not valid
+     */
     protected Command buyCard(BufferedReader stdIn) throws IOException {
         System.out.println("Write the color of the card that you want to buy: [green, yellow, purple, blue]");
         String color = stdIn.readLine().toUpperCase();
@@ -191,6 +272,13 @@ public class CliCommandCreator {
         return (new BuyCardAction(convertColor(color), level1));
     }
 
+    /**
+     * this method handle the select position command creation
+     * @param stdIn this is the buffer reader
+     * @return the command to send to the server
+     * @throws IOException if a network error occurs
+     * @throws InvalidParameterException if the parameters chosen are not valid
+     */
     protected Command selectPosition(BufferedReader stdIn) throws IOException {
         System.out.println("Write where you want to place the card in your dashboard [1, 2, 3]");
         String dashboardPosition = stdIn.readLine();
@@ -203,7 +291,15 @@ public class CliCommandCreator {
         return (new SelectPositionCommand(dashboardPosition1));
     }
 
-    protected CollectionResources createCollectionResources(BufferedReader stdIn, String message) throws IOException {
+    /**
+     * this method is used to create a collection resources interacting
+     * with the player
+     * @param stdIn this is the buffer reader
+     * @param message this is the message to show to the player to guide him
+     * @return the collection resources that the player want to create
+     * @throws IOException if a file error occurs
+     */
+    private CollectionResources createCollectionResources(BufferedReader stdIn, String message) throws IOException {
         String resource;
         CollectionResources resources = new CollectionResources();
         while (true){
@@ -221,11 +317,25 @@ public class CliCommandCreator {
         return resources;
     }
 
+    /**
+     * this method handle the select resources from warehouse command creation
+     * @param stdIn this is the buffer reader
+     * @return the command to send to the server
+     * @throws IOException if a network error occurs
+     * @throws InvalidParameterException if the parameters chosen are not valid
+     */
     protected Command selectResourcesFromWarehouse(BufferedReader stdIn) throws IOException {
         CollectionResources toPayFromWarehouse = createCollectionResources( stdIn, "choose resources to get from warehouse");
         return (new SelectResourcesFromWarehouseCommand(toPayFromWarehouse));
     }
 
+    /**
+     * this method handle the basic production command creation
+     * @param stdIn this is the buffer reader
+     * @return the command to send to the server
+     * @throws IOException if a network error occurs
+     * @throws InvalidParameterException if the parameters chosen are not valid
+     */
     protected Command basicProduction(BufferedReader stdIn) throws IOException {
         String output;
         CollectionResources toPayFromWarehouse = createCollectionResources( stdIn, "choose resources to get from warehouse");
@@ -239,6 +349,13 @@ public class CliCommandCreator {
         return (new BasicProductionCommand(toPayFromWarehouse, toPayFromStrongbox, output1));
     }
 
+    /**
+     * this method handle the normal production command creation
+     * @param stdIn this is the buffer reader
+     * @return the command to send to the server
+     * @throws IOException if a network error occurs
+     * @throws InvalidParameterException if the parameters chosen are not valid
+     */
     protected Command normalProduction(BufferedReader stdIn) throws IOException {
         System.out.println("choose the production to activate from your dashboard [1, 2, 3]");
         String position = stdIn.readLine();
@@ -252,14 +369,35 @@ public class CliCommandCreator {
         return (new NormalProductionCommand(position1, toPayFromWarehouse));
     }
 
-    protected boolean isValidBoolean(String decision){
+    /**
+     * this method verify if the string in input is associated with a boolean.
+     * in particular, if the string in input is in this list :["yes", "no"] returns true,
+     * returns false otherwise
+     * @param decision this is the string to verify
+     * @return true if the string in input is in this list :["yes", "no"],
+     *         returns false otherwise
+     */
+    private boolean isValidBoolean(String decision){
         return new ArrayList<>(Arrays.asList("yes", "no")).contains(decision);
     }
 
-    protected boolean convertBoolean(String decision){
+    /**
+     * this method convert the string in input in a boolean.
+     * it requires that the method isValidBoolean(decision) = true
+     * @param decision this is the string to convert
+     * @return true if the string in input is "yes", false otherwise
+     */
+    private boolean convertBoolean(String decision){
         return decision.equals("yes");
     }
 
+    /**
+     * this method handle the leader production command creation
+     * @param stdIn this is the buffer reader
+     * @return the command to send to the server
+     * @throws IOException if a network error occurs
+     * @throws InvalidParameterException if the parameters chosen are not valid
+     */
     protected Command leaderProduction(BufferedReader stdIn) throws IOException {
         System.out.println("Decide what leader production choose [1, 2]");
         String position = stdIn.readLine();
@@ -286,6 +424,13 @@ public class CliCommandCreator {
         return (new LeaderProductionCommand(position1, fromWarehouse, output1));
     }
 
+    /**
+     * this method handle the activate card command creation
+     * @param stdIn this is the buffer reader
+     * @return the command to send to the server
+     * @throws IOException if a network error occurs
+     * @throws InvalidParameterException if the parameters chosen are not valid
+     */
     protected Command activateCard(BufferedReader stdIn) throws IOException {
         System.out.println("Decide the leader card to activate [1, 2]: ");
         String toActivate = stdIn.readLine();
@@ -298,6 +443,13 @@ public class CliCommandCreator {
         return (new ActivateCardCommand(toActivate1));
     }
 
+    /**
+     * this method handle the discard card command creation
+     * @param stdIn this is the buffer reader
+     * @return the command to send to the server
+     * @throws IOException if a network error occurs
+     * @throws InvalidParameterException if the parameters chosen are not valid
+     */
     protected Command discardCard(BufferedReader stdIn) throws IOException {
         System.out.println("Decide the leader card to discard [1, 2]: ");
         String toDiscard = stdIn.readLine();
@@ -310,6 +462,10 @@ public class CliCommandCreator {
         return (new DiscardCardCommand(toDiscard1));
     }
 
+    /**
+     * this method shows the legend of the game with all the
+     * possible commands
+     */
     public void showLegend(){
         System.out.println("Commands:");
         System.out.println(" show = show"); // show
@@ -333,14 +489,13 @@ public class CliCommandCreator {
         System.out.println(" ac = activate_card"); // ac
         System.out.println(" dc = discard_card"); // dc
         System.out.println(" et = end_turn"); // et
-        System.out.println(" q = quit");
+        System.out.println(" q = quit"); // q
         System.out.println("examples of possible commands flow");
         System.out.println("set_players -> login -> initialise_leaderCards -> initialise_resources");
         System.out.println("choose_marbles -> [choose_leaderCards] -> shift_resources -> insert_in_warehouse");
         System.out.println("buy_card -> select_position -> select_resources_from_warehouse");
         System.out.println("production -> [basic_production] -> [normal_production] -> [leader_production] -> end_production");
         System.out.println("leader_action -> activate_card / discard_card" );
-
     }
     
 }

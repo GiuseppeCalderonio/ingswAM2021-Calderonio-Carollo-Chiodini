@@ -26,18 +26,51 @@ import java.io.InputStreamReader;
 import java.security.InvalidParameterException;
 import java.util.List;
 
+/**
+ * this class represent the cli version of the gui, in fact
+ * it implements it
+ */
 public class Cli implements View {
 
+    /**
+     * this attribute represent the buffer reader used to read strings from the input
+     */
     private final BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 
+    /**
+     * this attribute represent the cli command creator, to create commands
+     * @see CliCommandCreator
+     */
     private final CliCommandCreator commandCreator = new CliCommandCreator();
 
+    /**
+     * this attribute represent the network user of the game to handle network message
+     * @see NetworkUser
+     */
     private NetworkUser<Command, ResponseToClient> clientNetwork;
 
+    /**
+     * this attribute represent the last command sent from the client to the server
+     * @see Command
+     */
     private Command lastCommand = new UnknownCommand();
 
+    /**
+     * this attribute represent the thin model of the game
+     * @see ThinModel
+     */
     private final ThinModel model = new ThinModel();
 
+    /**
+     * this constructor create the object starting from the host name
+     * and the port of the server to connect with.
+     * in particular, it verify if the game is a single one or not,
+     * then create the client network handler, and calls the method start
+     * that is the only one used to handle the game, so this is the
+     * only method to call to start a game
+     * @param hostName this is the host name of the server to connect with
+     * @param portNumber this is the port of the server to connect with
+     */
     public Cli(String hostName, int portNumber){
 
         try {
@@ -62,7 +95,13 @@ public class Cli implements View {
 
     }
 
-
+    /**
+     * this method is used to handle the cli client.
+     * in particular, is a while true in which got stored the command sent to the server,
+     * and send it to the server.
+     * will be the network thread that will update the view
+     * @throws IOException if a file/network error occurs
+     */
     protected void start() throws IOException {
         // this while true won't work forever because the thread associated with the network receiver
         // will close the program if necessary
@@ -76,7 +115,13 @@ public class Cli implements View {
         }
     }
 
-
+    /**
+     * this method is used to generate a command.
+     * in particular, the cli client have to write a command with the
+     * buffer reader, and then the command will be sent to the server
+     * @return the command to send to the server
+     * @throws IOException if a file error occurs
+     */
     private Command createCommand() throws IOException {
 
         String command;
@@ -159,7 +204,11 @@ public class Cli implements View {
         return new UnknownCommand();
     }
 
-
+    /**
+     * this method is used only in the cli version of the gui,
+     * it print all the game state.in particular, it is used
+     * after some changes
+     */
     @Override
     public void showCli(){
         try {
@@ -183,6 +232,14 @@ public class Cli implements View {
 
     }
 
+    /**
+     * this method is used to show the initialising phase.
+     * in particular, after that every player do the login, he have
+     * to select the leader cards and the initial resources
+     * @param leaderCards these are the initial leader cards
+     * @param position this is the position of the player, used
+     *                 to manage the choice of the resources
+     */
     @Override
     public void showInitialisingPhase(List<LeaderCard> leaderCards, int position) {
 
@@ -203,6 +260,11 @@ public class Cli implements View {
         console.reset();
     }
 
+    /**
+     * this method show the action associated with a specific
+     * state of the game, as a suggestion or an error message
+     * @param message this is the message to show
+     */
     @Override
     public void showContextAction( Status message) {
 
@@ -222,6 +284,11 @@ public class Cli implements View {
         }
     }
 
+    /**
+     * this method show the welcome message of the game.
+     * in particular, it print with the ascii art the
+     * string "maestri del rinascimento"
+     */
     private void showWelcomeMessage() {
 
         int width = 95;
@@ -241,16 +308,27 @@ public class Cli implements View {
                 "if you are playing a local single game instead, start directly with the login");
     }
 
+    /**
+     * this method show the game after that every player complete the initialization phase
+     */
     @Override
     public void showCompleteGame() {
         showCli();
     }
 
+    /**
+     * this method show the error message whenever is present
+     * @param e this is the exception trowed
+     */
     @Override
     public void showErrorMessage(Exception e) {
         System.err.println(e.getMessage());
     }
 
+    /**
+     * this method get the thin model associated with the game
+     * @return the thin model associated with the game
+     */
     @Override
     public ThinModel getModel() {
         return model;
@@ -262,11 +340,23 @@ public class Cli implements View {
         System.exit(1);
     }
 
+    /**
+     * this method is used to change the turn, after that a player finish it.
+     * in particular, if is the turn of the player specified by the nickname,
+     * the view will notify the player, do nothing otherwise (or eventually show the
+     * nickname of the player that own the turn)
+     * @param ownerTurnNickname this is the nickname of the player that now own the turn
+     */
     @Override
     public void updateTurn(String ownerTurnNickname) {
         System.out.println("Now is the turn of " + ownerTurnNickname);
     }
 
+    /**
+     * this method show the winner of the game.
+     * @param winner this is the nickname of the winner
+     * @param victoryPoints these are the victory points of the winner
+     */
     @Override
     public void showWinner(String winner, int victoryPoints) {
         System.out.println("the winner is " + winner + ", you gained: " + victoryPoints);
