@@ -68,9 +68,4 @@ public class ThinTrack {
     public int getPosition() {
         return position;
     }
-
-    //TODELETE ONLT FOR TESTING
-    public void add(int a){
-        position = position + a;
-    }
 }

@@ -90,6 +90,7 @@
       <ImageView fx:id="fifthDepot" fitHeight="150.0" fitWidth="200.0" layoutX="239.0" layoutY="595.0" pickOnBounds="true" preserveRatio="true" />
       <HBox fx:id="fourthShelf" layoutX="371.0" layoutY="489.0" prefHeight="100.0" prefWidth="200.0" />
       <HBox fx:id="fifthShelf" layoutX="358.0" layoutY="603.0" prefHeight="100.0" prefWidth="200.0" />
+      <ImageView fx:id="lorenzoPosition" fitHeight="150.0" fitWidth="200.0" layoutX="68.0" layoutY="159.0" pickOnBounds="true" preserveRatio="true" />
 
    </children>
 </AnchorPane>

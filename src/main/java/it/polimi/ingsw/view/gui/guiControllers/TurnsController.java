@@ -40,6 +40,9 @@ public class TurnsController implements GuiController, Initializable {
 
 
     @FXML
+    private ImageView lorenzoPosition = new ImageView();
+
+    @FXML
     private HBox fourthShelf = new HBox();
 
     @FXML
@@ -65,6 +68,8 @@ public class TurnsController implements GuiController, Initializable {
 
     @FXML
     private ImageView trackPosition = new ImageView();
+
+
 
     @FXML
     private HBox secondShelf = new HBox();
@@ -376,6 +381,9 @@ public class TurnsController implements GuiController, Initializable {
         trackPosition.setLayoutX(trackGui.getXPosition(track.getPosition()));
         trackPosition.setLayoutY(trackGui.getYPosition(track.getPosition()));
 
+        if(model.getGame().getOpponents().get(0).getNickname().equals(new Player().getNickname()))
+            drawLorenzo();
+
         showPopeFavourTile(popeFavourTile1, 1,
                 mainWindow.getPrefWidth() / 4,
                 mainWindow.getPrefHeight() / 7
@@ -392,16 +400,40 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    private void drawLorenzo(){
+
+
+        lorenzoPosition.setImage(new Image("/punchboard/retro cerchi.png"));
+
+        lorenzoPosition.setFitWidth(mainWindow.getPrefWidth() / 25);
+        lorenzoPosition.setFitHeight(mainWindow.getPrefHeight() / 16);
+
+        ThinTrackGuiManager trackGui = new ThinTrackGuiManager(
+                mainWindow.getPrefWidth() / 24,
+                mainWindow.getPrefHeight() / 5);
+
+        lorenzoPosition.setLayoutX(trackGui.getXPosition(model.getGame().getOpponents().get(0).getTrack().getPosition()));
+        lorenzoPosition.setLayoutY(trackGui.getYPosition(model.getGame().getOpponents().get(0).getTrack().getPosition()));
+    }
+
     public void setTrackOpacity(double opacity){
         trackPosition.setOpacity(opacity);
+        lorenzoPosition.setOpacity(opacity);
         popeFavourTile1.setOpacity(opacity);
         popeFavourTile2.setOpacity(opacity);
         popeFavourTile3.setOpacity(opacity);
+
     }
 
     private void showPopeFavourTile(ImageView popeFavourTile, int id , double layoutX, double layoutY){
 
-        popeFavourTile.setImage(new Image("/punchboard/PopeFavourTile" + id + ".png"));
+        String isActive = "";
+
+        if(model.getGame().getPlayer(nickname).getTrack().getPopeFavourTiles()[id - 1]){
+            isActive = "Active";
+        }
+
+        popeFavourTile.setImage(new Image("/punchboard/" + isActive +  "PopeFavourTile" + id + ".png"));
         popeFavourTile.setFitHeight(mainWindow.getPrefWidth() / 16);
         popeFavourTile.setFitWidth(mainWindow.getPrefWidth() / 16);
         popeFavourTile.setLayoutX(layoutX);
