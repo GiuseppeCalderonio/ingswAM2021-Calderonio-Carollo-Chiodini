@@ -95,7 +95,7 @@ public class SingleGame extends Game {
      */
     @Override
     public void checkEndGame() throws EndGameException{
-        if ( super.getSetOfCard().checkMissColumn()) throw new EndGameException("Game Finished");
+        if ( super.getSetOfCard().checkMissColumn()) throw new EndGameException(getWinner());
         super.checkEndGame();
     }
 

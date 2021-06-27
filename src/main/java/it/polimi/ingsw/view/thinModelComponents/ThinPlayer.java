@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
 /**
  * this class represent the thin player.
  * in particular, this class used only by client, contains
- * every information to represent the state of a client in the game
+ * every information to represent the state of a client in the game,
+ * and contains a bit of logic of the game
  */
 public class ThinPlayer {
 
@@ -104,58 +105,106 @@ public class ThinPlayer {
         this.track = new ThinTrack(lorenzo);
     }
 
-
-
-
-
+    /**
+     * this method get the leader cards of the player
+     * @return the leader cards of the player
+     */
     public List<LeaderCard> getLeaderCards() {
         return leaderCards;
     }
 
+    /**
+     * this method get the thin leader cards of the player
+     * @return the thin leader cards of the player
+     */
     public List<ThinLeaderCard> getThinLeaderCards() {
         return thinLeaderCards;
     }
 
+    /**
+     * this method get the collection resources associated with the strongbox of the player
+     * @return the collection resources associated with the strongbox of the player
+     */
     public CollectionResources getStrongbox() {
         return strongbox;
     }
 
+    /**
+     * this method get the collection resources associated with the strongbox of the player
+     * @param strongbox this is the collection resources to set
+     */
     public void setStrongbox(CollectionResources strongbox) {
         this.strongbox = strongbox;
     }
 
+    /**
+     * this method set the leader cards of the player
+     * @param leaderCards these are the leader card to set
+     */
     public void setLeaderCards(List<LeaderCard> leaderCards) {
         this.leaderCards = leaderCards;
     }
 
+    /**
+     * this method get the nickname of the player
+     * @return the nickname of the player
+     */
     public String getNickname() {
         return nickname;
     }
 
+    /**
+     * this method get the thin production power associated with the player
+     * @return the thin production power associated with the player
+     */
     public ThinProductionPower getProductionPower() {
         return productionPower;
     }
 
+    /**
+     * this method set the thin production power associated with the player
+     * @param productionPower this is the thin production power associated with the player to set
+     */
     public void setProductionPower(ThinProductionPower productionPower) {
         this.productionPower = productionPower;
     }
 
+    /**
+     * this method get the thin track associated with the player
+     * @return the thin track associated with the player
+     */
     public ThinTrack getTrack() {
         return track;
     }
 
+    /**
+     * this method get the thin warehouse associated with the player
+     * @return the thin warehouse associated with the player
+     */
     public ThinWarehouse getWarehouse() {
         return warehouse;
     }
 
+    /**
+     * this method set the thin warehouse associated with the player
+     * @param warehouse this is the thin warehouse associated with the player to set
+     */
     public void setWarehouse(ThinWarehouse warehouse) {
         this.warehouse = warehouse;
     }
 
+    /**
+     * this method set the nickname associated with the player
+     * @param nickName this is the nickname associated with the player to set
+     */
     public void setNickName(String nickName){
         this.nickname = nickName;
     }
 
+    /**
+     * this method set the thin track associated with the player
+     * @param track this is the thin track associated with the player to set
+     */
     public void setTrack(ThinTrack track) {
         this.track = track;
     }
@@ -210,6 +259,11 @@ public class ThinPlayer {
                 '}' + "\n" ;
     }
 
+    /**
+     * this method returns a list with all the leader cards of the game,
+     * with their id in order to print them
+     * @return a list with all the leader cards of the game
+     */
     public static List<LeaderCard> createAllLeaderCards(){
 
         List<LeaderCard> leaders = new ArrayList<>(); // create an arraylist of leaderCard
@@ -247,9 +301,11 @@ public class ThinPlayer {
         return leaders;
     }
 
+    /**
+     * this method verify if the player can activate one of his productions
+     * @return true if the player can activate one of the productions, false otherwise
+     */
     public boolean areProductionsAffordable(){
-
-        CollectionResources totalResources = getTotalResources();
 
         if (isNormalProductionAffordable(productionPower.getProductionPower1()))
             return true;
@@ -271,6 +327,10 @@ public class ThinPlayer {
         return isBasicProductionAffordable();
     }
 
+    /**
+     * this method get all the resources of the player
+     * @return all the resources of the player
+     */
     public CollectionResources getTotalResources(){
         CollectionResources toReturn = new CollectionResources();
         toReturn.sum(strongbox);
@@ -289,10 +349,20 @@ public class ThinPlayer {
 
     }
 
+    /**
+     * this method verify if the player can activate the basic production
+     * @return true if the player have 2 resources or more, false otherwise
+     */
     public boolean isBasicProductionAffordable(){
         return getTotalResources().getSize() >=2;
     }
 
+    /**
+     * this method verify if the player can activate the last card contained
+     * in the list of cards passed in input
+     * @param deck this is the list of cards to verify if the last one can be activated
+     * @return true if the last card of the deck can be activated
+     */
     public boolean isNormalProductionAffordable(List<DevelopmentCard> deck){
 
         try {
@@ -302,6 +372,12 @@ public class ThinPlayer {
         }
     }
 
+    /**
+     * this method verify if the leader card passed in input can be activated by the player
+     * @param toVerify this is the card to verify if the player can activate it
+     * @return true if the card passed in input isn't null, if is active and of
+     * new production type, and if the player contains the resource associated with the card
+     */
     public boolean isLeaderProductionAffordable(LeaderCard toVerify){
         try {
             if (toVerify.isActive() && toVerify instanceof NewProduction){
@@ -314,6 +390,11 @@ public class ThinPlayer {
         }
     }
 
+    /**
+     * this method verify if the player own at least one leader card not active
+     * @return true if the player own a not active leader card, false if the deck of leader cards
+     * is empty or if all the leader cards of the player are active
+     */
     public boolean areLeaderCardsAvailable(){
         if (leaderCards.isEmpty())
             return false;

@@ -5,10 +5,7 @@ import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
 import it.polimi.ingsw.model.Marble.Marble;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ThinGame {
@@ -97,21 +94,5 @@ public class ThinGame {
         players.add(myself);
 
         players.forEach(player -> player.setTrack(tracks.get(player.getNickname())));
-    }
-
-    public List<Marble> selectMarblesRow(int row){
-        List<Marble> marbles = new ArrayList<>();
-        for (int column = 0; column < 4; column++) {
-            marbles.add(marbleMarket[row - 1][column]);
-        }
-        return marbles;
-    }
-
-    public List<Marble> selectMarblesColumn(int column){
-        List<Marble> marbles = new ArrayList<>();
-        for (int row = 0; row < 3; row++){
-            marbles.add(marbleMarket[row][column - 1]);
-        }
-        return marbles;
     }
 }

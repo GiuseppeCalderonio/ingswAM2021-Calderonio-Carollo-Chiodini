@@ -1,6 +1,9 @@
 
 package it.polimi.ingsw.view.cli.graphic;
 
+/**
+ * this interface is used to draw cli elements
+ */
 public interface CharFigure {
     /**
      * This method should be implemented by classes that will eventually use CharStream to draw themselves on it.

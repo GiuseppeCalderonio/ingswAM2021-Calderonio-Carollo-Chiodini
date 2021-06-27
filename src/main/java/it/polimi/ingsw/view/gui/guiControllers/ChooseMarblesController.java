@@ -5,8 +5,6 @@ import it.polimi.ingsw.controller.commands.normalCommands.MarbleMarketCommands.C
 import it.polimi.ingsw.controller.responseToClients.ResponseToClient;
 import it.polimi.ingsw.model.LeaderCard.LeaderCard;
 import it.polimi.ingsw.model.LeaderCard.NewWhiteMarble;
-import it.polimi.ingsw.model.Marble.RedMarble;
-import it.polimi.ingsw.model.Marble.WhiteMarble;
 import it.polimi.ingsw.network.NetworkUser;
 import it.polimi.ingsw.view.gui.Gui;
 import it.polimi.ingsw.view.thinModelComponents.ThinModel;
@@ -17,7 +15,6 @@ import java.util.ResourceBundle;
 
 public class ChooseMarblesController extends TurnsController {
 
-    private boolean marblesEmptyOfResources;
 
     public ChooseMarblesController(ThinModel model, String nickname, NetworkUser<Command, ResponseToClient> clientNetworkUser, boolean leaderAction) {
         super(model, nickname, clientNetworkUser, true , leaderAction);
@@ -100,21 +97,17 @@ public class ChooseMarblesController extends TurnsController {
 
     public void selectRow(int row){
         sendNewCommand(new ChooseMarblesCommand("row", row));
-        marblesEmptyOfResources = getModel().getGame().selectMarblesRow(row).
-                stream().allMatch(marble -> marble.equals(new RedMarble()) || marble.equals(new WhiteMarble()));
 
     }
 
     public void selectColumn(int column){
         sendNewCommand(new ChooseMarblesCommand("column", column));
-        marblesEmptyOfResources = getModel().getGame().selectMarblesColumn(column).
-                stream().allMatch(marble -> marble.equals(new RedMarble()) || marble.equals(new WhiteMarble()));
     }
 
 
     @Override
     public void update() {
-        if ( marblesEmptyOfResources){
+        if ( getModel().getGainedFromMarbleMarket().isEmpty() ){
             Gui.setRoot("/TurnsWindow", new TurnsController(getModel(), getNickname(), getClientNetworkUser(), false, getLeaderAction()));
 
         }
@@ -128,7 +121,6 @@ public class ChooseMarblesController extends TurnsController {
 
         else {
             Gui.setRoot("/InsertInWarehouseWindow", new InsertInWarehouseController(getModel(), getNickname(), getClientNetworkUser(), getLeaderAction()));
-            // set scenario insert in warehouse
         }
     }
 

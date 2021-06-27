@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.gui;
+package it.polimi.ingsw.mainClasses;
 
 import it.polimi.ingsw.view.Client;
 import it.polimi.ingsw.network.WaitingRoom;

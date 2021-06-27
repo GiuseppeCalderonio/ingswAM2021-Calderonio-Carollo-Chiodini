@@ -1,10 +1,23 @@
 package it.polimi.ingsw.view.gui;
 
+/**
+ * this class represent the thin track gui manager.
+ * in particular, it is used to draw player positions on the gui
+ */
 public class ThinTrackGuiManager {
 
+    /**
+     * this attribute represent the coordinates of the position to draw as an
+     * array of coordinates
+     */
     private final BiInteger[] track;
 
-
+    /**
+     * this constructor create the object, based on the mainWindowWidth and the mainWindowHeight,
+     * setting for all the 24 positions of the game the equivalent coordinates of the gui
+     * @param mainWindowWidth this is the width of the main window
+     * @param mainWindowHeight this is the height of the main window
+     */
     public ThinTrackGuiManager(double mainWindowWidth, double mainWindowHeight){
 
         double relativeX = mainWindowWidth * 72 / 61;
@@ -40,10 +53,20 @@ public class ThinTrackGuiManager {
 
     }
 
+    /**
+     * this method get the x coordinate associated with the position in input
+     * @param position this is the position of the player
+     * @return the x coordinate associated with the position in input
+     */
     public double getXPosition(int position){
         return track[position].getX();
     }
 
+    /**
+     * this method get the y coordinate associated with the position in input
+     * @param position this is the position of the player
+     * @return the y coordinate associated with the position in input
+     */
     public double getYPosition(int position){
         return track[position].getY();
     }
