@@ -23,16 +23,42 @@ import java.util.List;
 
 import static com.sun.javafx.application.PlatformImpl.runLater;
 
-
+/**
+ * this class represent the gui
+ */
 public class Gui extends Application implements View {
 
+    /**
+     * this attribute represent the scene of the gui
+     */
     private static Scene scene;
+
+    /**
+     * this attribute represent the gui controller used to handle the scenario
+     */
     private static GuiController controller;
+
+    /**
+     * this attribute represent the network user of the client
+     */
     private static NetworkUser <Command, ResponseToClient> clientNetwork;
+
+    /**
+     * this attribute represent the thin model
+     */
     private final ThinModel model = new ThinModel();
+
+    /**
+     * this attribute represent the window path
+     */
     private static final String windowPath = "/FxmlWindows";
 
-
+    /**
+     * this method starts the gui, creating the connection with the server and
+     * launching the gui
+     * @param hostName this is the hostname of the server
+     * @param portNumber this is the port of the server
+     */
     public void startGui(String hostName, int portNumber) {
         try {
             if (hostName != null || portNumber != 0){
@@ -46,22 +72,24 @@ public class Gui extends Application implements View {
         }
 
         launch();
-        /*
-        Platform.startup( () -> {
-            try {
-                start(new Stage());
-            }catch (IOException e){
-                System.exit(1);
-            }
-        });
-        */
+
     }
 
+    /**
+     * this method get the scene
+     * @return the scene
+     */
     public static Scene getScene(){
         return scene;
     }
 
-
+    /**
+     * this method get the path of the first window.
+     * in particular, return the path for the login window if the game
+     * is a single one, the path for the set size window otherwise
+     * @return the path for the login window if the game
+     *         is a single one, the path for the set size window otherwise
+     */
     private String getPathFirstWindow(){
 
         if (clientNetwork instanceof LocalClient)
@@ -70,6 +98,13 @@ public class Gui extends Application implements View {
         return "/SetSizeWindow";
     }
 
+    /**
+     * this method get the first controller.
+     * in particular, return the login controller if the game
+     * is a single one, the set size controller otherwise
+     * @return the login controller if the game
+     *         is a single one, the set size controller otherwise
+     */
     private GuiController getFirstController(){
         if (clientNetwork instanceof LocalClient)
             return new LoginController(clientNetwork);
@@ -85,14 +120,6 @@ public class Gui extends Application implements View {
         stage.getIcons().add(new Image("/punchboard/calamaio.png"));
         stage.setMaximized(true);
         stage.setScene(scene);
-        /*
-        Scale scale = new Scale(Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight());
-        scale.setPivotX(Screen.getPrimary().getBounds().getWidth());
-        scale.setPivotY(Screen.getPrimary().getBounds().getHeight());
-        scene.getRoot().getTransforms().setAll(scale);
-
-         */
-
 
         stage.setOnCloseRequest(windowEvent -> {
             clientNetwork.send(new QuitCommand());
@@ -102,6 +129,11 @@ public class Gui extends Application implements View {
 
     }
 
+    /**
+     * this method set the root for the new controller passed in input
+     * @param fxml this is the string of the path of the new window
+     * @param controller this is the new controller to set
+     */
     public static void setRoot(String fxml, GuiController controller) {
         try {
             scene.setRoot(loadFXML( fxml, controller));
@@ -112,6 +144,13 @@ public class Gui extends Application implements View {
 
     }
 
+    /**
+     * this method load the fxml window and set the new controller
+     * @param fxml this is the string of the fxml window to set
+     * @param controllerToSet this is the controller to set
+     * @return the parent
+     * @throws IOException if a file error occurs
+     */
     private static Parent loadFXML(String fxml, GuiController controllerToSet) throws IOException {
         controller = controllerToSet;
         FXMLLoader fxmlLoader = new FXMLLoader(Gui.class.getResource(windowPath + fxml + ".fxml"));
