@@ -234,6 +234,7 @@ public class Controller {
      */
     private void sendBroadcastInitialising()  {
         int i = 1;
+        // the client are sorted with the game order, so the i represent the order of the players
         for (ClientHandler client : client.getClients()) {
             client.send(new InitialisingResponse(client, i));
             i++;
