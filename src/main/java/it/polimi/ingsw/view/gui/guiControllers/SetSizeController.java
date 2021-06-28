@@ -19,6 +19,9 @@ import javafx.stage.Screen;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * this class represent the set size controller
+ */
 public class SetSizeController implements GuiController, Initializable {
 
     private final NetworkUser<Command, ResponseToClient> networkUser;
@@ -41,6 +44,9 @@ public class SetSizeController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method set the main window size
+     */
     private void setMainWindowSize(){
         double width = Screen.getPrimary().getBounds().getWidth();
         double height = Screen.getPrimary().getBounds().getHeight();
@@ -48,6 +54,9 @@ public class SetSizeController implements GuiController, Initializable {
         drawBackGround();
     }
 
+    /**
+     * this method draw the background
+     */
     private void drawBackGround(){
         ImageView playerBoard = new ImageView(new Image("/board/Masters of Renaissance_PlayerBoard.png"));
         playerBoard.setFitWidth(mainWindow.getPrefWidth());
@@ -59,6 +68,9 @@ public class SetSizeController implements GuiController, Initializable {
         mainWindow.getChildren().add(playerBoard);
     }
 
+    /**
+     * this method shpws the useful buttons
+     */
     private void showButtons(){
 
         double layoutX = mainWindow.getPrefWidth() / 3;
@@ -98,6 +110,9 @@ public class SetSizeController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method shows the context action
+     */
     private void showContextAction(){
         Label contextAction = new Label("Welcome! Decide the number of players for your game!");
         contextAction.setPrefWidth(10000);

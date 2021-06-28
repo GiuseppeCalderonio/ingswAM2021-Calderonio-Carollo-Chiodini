@@ -13,6 +13,9 @@ import javafx.scene.image.ImageView;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * this class represent the select position controller
+ */
 public class SelectPositionController extends TurnsController{
 
     private final DevelopmentCard selected;
@@ -32,6 +35,9 @@ public class SelectPositionController extends TurnsController{
         createButtons();
     }
 
+    /**
+     * this method shows the card
+     */
     private void showCard(){
         ImageView cardSelected = new ImageView(getCardImage(selected));
         cardSelected.setFitWidth(getCardWidth());
@@ -42,6 +48,9 @@ public class SelectPositionController extends TurnsController{
         getMainWindow().getChildren().add(cardSelected);
     }
 
+    /**
+     * this method create the useful buttons
+     */
     private void createButtons(){
 
         double layoutX = getMainWindow().getPrefWidth() * 45 / 100;
@@ -49,25 +58,19 @@ public class SelectPositionController extends TurnsController{
 
         double offsetX = getMainWindow().getPrefWidth() / 5;
 
-        Button firstDeck = setButton("first deck", actionEvent -> {
-            getClientNetworkUser().send(new SelectPositionCommand(1));
-        });
+        Button firstDeck = setButton("first deck", actionEvent -> getClientNetworkUser().send(new SelectPositionCommand(1)));
         firstDeck.setLayoutX(layoutX + 0 * offsetX);
         firstDeck.setLayoutY(layoutY);
 
         getMainWindow().getChildren().add(firstDeck);
 
-        Button secondDeck = setButton("second deck", actionEvent -> {
-            getClientNetworkUser().send(new SelectPositionCommand(2));
-        });
+        Button secondDeck = setButton("second deck", actionEvent -> getClientNetworkUser().send(new SelectPositionCommand(2)));
         secondDeck.setLayoutX(layoutX + 1 * offsetX);
         secondDeck.setLayoutY(layoutY);
 
         getMainWindow().getChildren().add(secondDeck);
 
-        Button thirdDeck = setButton("third deck", actionEvent -> {
-            getClientNetworkUser().send(new SelectPositionCommand(3));
-        });
+        Button thirdDeck = setButton("third deck", actionEvent -> getClientNetworkUser().send(new SelectPositionCommand(3)));
         thirdDeck.setLayoutX(layoutX + 2 * offsetX);
         thirdDeck.setLayoutY(layoutY);
 

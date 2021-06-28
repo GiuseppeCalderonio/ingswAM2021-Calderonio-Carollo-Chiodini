@@ -23,6 +23,9 @@ import java.net.URL;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+/**
+ * this class represent the login controller
+ */
 public class LoginController implements GuiController, Initializable {
 
     @FXML
@@ -53,6 +56,9 @@ public class LoginController implements GuiController, Initializable {
         errorMessage.setTextFill(Color.RED);
     }
 
+    /**
+     * this method set the main window size
+     */
     private void setMainWindowSize(){
         double width = Screen.getPrimary().getBounds().getWidth();
         double height = Screen.getPrimary().getBounds().getHeight();
@@ -60,6 +66,9 @@ public class LoginController implements GuiController, Initializable {
         drawBackGround();
     }
 
+    /**
+     * this method draw the background
+     */
     private void drawBackGround(){
         ImageView playerBoard = new ImageView(new Image("/board/Masters of Renaissance_PlayerBoard.png"));
         playerBoard.setFitWidth(mainWindow.getPrefWidth());
@@ -71,6 +80,9 @@ public class LoginController implements GuiController, Initializable {
         mainWindow.getChildren().add(playerBoard);
     }
 
+    /**
+     * this method show the textField
+     */
     private void showTextField(){
         nickname = new TextField("Player " + (char) ('a' + new Random().nextInt(26)));
 
@@ -86,6 +98,9 @@ public class LoginController implements GuiController, Initializable {
         mainWindow.getChildren().add(login);
     }
 
+    /**
+     * this method shows the context action
+     */
     private void showContextAction(){
         Label contextAction = new Label("Choose a Nickname!");
         contextAction.setPrefWidth(10000);
@@ -126,12 +141,17 @@ public class LoginController implements GuiController, Initializable {
         networkUser.send(toSend);
     }
 
-
+    /**
+     * this method set the empty nickname error message
+     */
     private void setEmptyNicknameErrorMessage(){
         this.errorMessage.setText("choose a nickname!");
 
     }
 
+    /**
+     * this method set the lorenzo nickname chosen error message
+     */
     private void setLorenzoStringErrorMessage(){
         this.errorMessage.setText("you can't use this nickname!");
 

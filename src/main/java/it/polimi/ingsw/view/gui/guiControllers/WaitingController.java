@@ -8,15 +8,23 @@ import javafx.scene.control.Label;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * this class represent the waiting controller
+ */
 public class WaitingController implements Initializable , GuiController {
 
     @FXML
     private Label waitingMessage;
 
-
+    /**
+     * this attribute represent the message to show during the wait
+     */
     private String message;
 
-
+    /**
+     * this constructor create the object starting from the message to show
+     * @param message this is the message to show
+     */
     public WaitingController(String message){
         this.message = message;
     }

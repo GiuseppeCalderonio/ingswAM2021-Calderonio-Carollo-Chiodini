@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
+/**
+ * this class represent the basic production controller
+ */
 public class BasicProductionController extends TurnsController{
 
     private final CollectionResources toPayFromWarehouse = new CollectionResources();
@@ -51,6 +54,9 @@ public class BasicProductionController extends TurnsController{
 
     }
 
+    /**
+     * this method shows the cards
+     */
     private void showCard(){
         ImageView card = new ImageView(getBasicProductionImage());
         card.setFitWidth(getCardWidth());
@@ -62,6 +68,9 @@ public class BasicProductionController extends TurnsController{
         getMainWindow().getChildren().add(card);
     }
 
+    /**
+     * this method shows the 4 resources to pay from warehouse
+     */
     private void showResourcesToPayFromWarehouse(){
 
         setResourcesImages(toPayFromWarehouse, resourcesScenario);
@@ -81,6 +90,9 @@ public class BasicProductionController extends TurnsController{
 
     }
 
+    /**
+     * this method shows the 4 resources to pay from strongbox
+     */
     private void showResourcesToPayFromStrongbox(){
 
         setResourcesImages(toPayFromStrongbox, resourcesScenario);
@@ -101,6 +113,11 @@ public class BasicProductionController extends TurnsController{
 
     }
 
+    /**
+     * this method set the resources image
+     * @param toPay this is the collectionResources to pay
+     * @param resourcesScenario this is the pane with the resources
+     */
     private void setResourcesImages(CollectionResources toPay, Pane resourcesScenario) {
 
         resourcesScenario.getChildren().clear();
@@ -136,6 +153,9 @@ public class BasicProductionController extends TurnsController{
 
     }
 
+    /**
+     * this method shows the 4 resources to gain as output
+     */
     private void showResourcesToGainAsOutput(){
 
         resourcesScenario.getChildren().clear();
@@ -169,6 +189,9 @@ public class BasicProductionController extends TurnsController{
 
     }
 
+    /**
+     * this method shows the rollback button
+     */
     private void showRollbackButton(){
         Button rollback = setButton("rollback the action", (actionEvent -> rollBack()));
         rollback.setLayoutX(getMainWindow().getPrefWidth() / 7);

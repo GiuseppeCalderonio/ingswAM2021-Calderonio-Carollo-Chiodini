@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * this method represent the Choose Leader Cards Controller
+ */
 public class ChooseLeaderCardsController extends TurnsController{
 
     @FXML
@@ -90,7 +93,9 @@ public class ChooseLeaderCardsController extends TurnsController{
         advice.setLayoutY(super.getMainWindow().getPrefHeight()/2 + super.getMainWindow().getPrefHeight()/12);
     }
 
-
+    /**
+     * this method choose the second marble
+     */
     public void chooseSecondMarble() {
         selectedMarbles.add(2);
         whiteMarble++;
@@ -99,6 +104,9 @@ public class ChooseLeaderCardsController extends TurnsController{
             getClientNetworkUser().send(new ChooseLeaderCardsCommand( selectedMarbles.stream().mapToInt(Integer::intValue).toArray()));
     }
 
+    /**
+     * this method choose the first marble
+     */
     public void chooseFirstMarble() {
         selectedMarbles.add(1);
         whiteMarble++;

@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * this class represent the initialising controller
+ */
 public class InitialisisngController implements GuiController, Initializable {
 
     @FXML
@@ -69,10 +72,19 @@ public class InitialisisngController implements GuiController, Initializable {
     @FXML
     private  ImageView fourthChoice = new ImageView();
 
+    /**
+     * this attribute represent the 4 initial leader cards
+     */
     private final List<LeaderCard> leaderCards;
 
+    /**
+     * this attribute represent the position
+     */
     int position;
 
+    /**
+     * this attribute represent the network user
+     */
     private final NetworkUser<Command, ResponseToClient> networkUser;
 
 
@@ -112,6 +124,9 @@ public class InitialisisngController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method set the main window size
+     */
     private void setMainWindowSize(){
         double width = Screen.getPrimary().getBounds().getWidth();
         double height = Screen.getPrimary().getBounds().getHeight();
@@ -119,6 +134,9 @@ public class InitialisisngController implements GuiController, Initializable {
         drawBackGround();
     }
 
+    /**
+     * this method draw the background
+     */
     private void drawBackGround(){
         backGround.setImage(new Image("/board/Masters of Renaissance_PlayerBoard.png"));
         backGround.setFitWidth(mainWindow.getPrefWidth());
@@ -129,6 +147,10 @@ public class InitialisisngController implements GuiController, Initializable {
         backGround.setOpacity(0.5);
     }
 
+    /**
+     * this method discard the initial leader cards
+     * @param actionEvent this is the action event to handle
+     */
     public void discardLeaderCards(ActionEvent actionEvent) {
 
         List<Integer> discarded = new ArrayList<>();
@@ -156,16 +178,31 @@ public class InitialisisngController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method add the check boxes if selected
+     * @param checkBoxes this is the list of integer representing the check boxes
+     * @param checkBox this is the boolean representing if a check box got selected
+     * @param toAdd this is the integer to add
+     */
     private void addIfSelected(List<Integer> checkBoxes, boolean checkBox, int toAdd){
         if (checkBox)
             checkBoxes.add(toAdd);
     }
 
+    /**
+     * this method add the check boxes if selected
+     * @param checkBoxes this is the collection resources representing the check boxes
+     * @param checkBox this is the boolean representing if a check box got selected
+     * @param toAdd this is the integer to add
+     */
     private void addIfSelected(CollectionResources checkBoxes, boolean checkBox, Resource toAdd){
         if (checkBox)
             checkBoxes.add(toAdd);
     }
 
+    /**
+     * this method switch the scenario to the choose resources one
+     */
     private void switchScenario(){
 
         firstChoice.setImage(getCoinImage());
@@ -179,6 +216,11 @@ public class InitialisisngController implements GuiController, Initializable {
         choiceButton.setOnAction(actionEvent -> chooseResources());
     }
 
+    /**
+     * this method decide how many resources the host player can chose based on
+     * his position
+     * @return 0, 1 or 2 depending on the position
+     */
     private int resourcesToChoose(){
         switch (position){
             case 2:
@@ -190,6 +232,9 @@ public class InitialisisngController implements GuiController, Initializable {
         return 0;
     }
 
+    /**
+     * this method choose the resources and set the new root to the waiting window
+     */
     void chooseResources(){
 
         CollectionResources resourcesGained = new CollectionResources();

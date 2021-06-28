@@ -13,6 +13,9 @@ import javafx.scene.control.Button;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * this class represent the Choose Marbles Controller
+ */
 public class ChooseMarblesController extends TurnsController {
 
 
@@ -38,6 +41,9 @@ public class ChooseMarblesController extends TurnsController {
 
     }
 
+    /**
+     * this method shows the buttons
+     */
     private void createButtons(){
 
         double layoutXRow = getMainWindow().getPrefWidth() * 6 / 10;
@@ -87,6 +93,9 @@ public class ChooseMarblesController extends TurnsController {
         getMainWindow().getChildren().add(fourthColumn);
     }
 
+    /**
+     * this method shows the rollback button
+     */
     private void showRollbackButton(){
         Button rollback = setButton("rollback the action", (actionEvent -> rollBack()));
         rollback.setLayoutX(getMainWindow().getPrefWidth() / 5);

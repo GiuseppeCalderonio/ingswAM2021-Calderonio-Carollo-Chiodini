@@ -17,6 +17,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * this class represent the Leader Action Controller
+ */
 public class LeaderActionController extends TurnsController {
 
     @FXML
@@ -85,6 +88,9 @@ public class LeaderActionController extends TurnsController {
         leaderCardsHBox.getChildren().add(rightVBox);
     }
 
+    /**
+     * this method shows the rollback button
+     */
     private void showRollbackButton(){
         Button rollback = setButton("rollback the action", (actionEvent -> rollBack()));
         rollback.setLayoutX(getMainWindow().getPrefWidth() / 5);
@@ -93,6 +99,9 @@ public class LeaderActionController extends TurnsController {
         getMainWindow().getChildren().add(rollback);
     }
 
+    /**
+     * this method discard the right card
+     */
     public void rightDiscard() {
         getClientNetworkUser().send(new LeaderCommand());
         try {
@@ -103,6 +112,9 @@ public class LeaderActionController extends TurnsController {
         getClientNetworkUser().send(new DiscardCardCommand(2));
     }
 
+    /**
+     * this method discard the left card
+     */
     public void leftDiscard() {
         getClientNetworkUser().send(new LeaderCommand());
         try {
@@ -113,6 +125,9 @@ public class LeaderActionController extends TurnsController {
         getClientNetworkUser().send(new DiscardCardCommand(1));
     }
 
+    /**
+     * this method activate the right card
+     */
     public void rightActive() {
         getClientNetworkUser().send(new LeaderCommand());
         try {
@@ -123,6 +138,9 @@ public class LeaderActionController extends TurnsController {
         getClientNetworkUser().send(new ActivateCardCommand(2));
     }
 
+    /**
+     * this method activate the left card
+     */
     public void leftActive() {
         getClientNetworkUser().send(new LeaderCommand());
         try {

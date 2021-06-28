@@ -19,9 +19,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
+/**
+ * this class represent the Select Resources From Warehouse Controller
+ */
 public class SelectResourcesFromWarehouseController extends TurnsController{
 
+    /**
+     * this attribute represent the selected card
+     */
     private final DevelopmentCard selected;
+
+    /**
+     * this attribute represent the resources to pay from warehouse
+     */
     private final CollectionResources toPayFromWarehouse = new CollectionResources();
 
     public SelectResourcesFromWarehouseController(ThinModel model, String nickname, NetworkUser<Command, ResponseToClient> clientNetworkUser, DevelopmentCard selected, boolean leaderAction) {
@@ -41,6 +51,9 @@ public class SelectResourcesFromWarehouseController extends TurnsController{
 
     }
 
+    /**
+     * this method shows the card
+     */
     private void showCard(){
         ImageView card = new ImageView(getCardImage(selected));
         card.setFitWidth(getCardWidth());
@@ -52,6 +65,9 @@ public class SelectResourcesFromWarehouseController extends TurnsController{
         getMainWindow().getChildren().add(card);
     }
 
+    /**
+     * this method shows the 4 resources to decide how to pay them
+     */
     private void showResourcesToPay(){
 
         double layoutX = getMainWindow().getPrefWidth() * 1 / 4;

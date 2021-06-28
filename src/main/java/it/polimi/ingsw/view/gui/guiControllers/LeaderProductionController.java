@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
+/**
+ * this class represent the Leader Production Controller
+ */
 public class LeaderProductionController extends TurnsController{
 
     private final ImageView selected;
@@ -58,6 +61,9 @@ public class LeaderProductionController extends TurnsController{
 
     }
 
+    /**
+     * this method shows the cards
+     */
     private void showCard(){
         ImageView card = selected;
         card.setFitWidth(getCardWidth());
@@ -69,6 +75,9 @@ public class LeaderProductionController extends TurnsController{
         getMainWindow().getChildren().add(card);
     }
 
+    /**
+     * this method shows the buttons
+     */
     private void showButtons(){
 
         double relativeXOffset = getMainWindow().getPrefWidth() / 5;
@@ -102,6 +111,9 @@ public class LeaderProductionController extends TurnsController{
         contextAction.setPrefSize( getMainWindow().getPrefWidth() - contextAction.getText().length(), getMainWindow().getPrefHeight() / 5 );
     }
 
+    /**
+     * this method shows the resources to pay
+     */
     private void showResourcesToPay(){
 
         yesButton = new Button();
@@ -118,9 +130,7 @@ public class LeaderProductionController extends TurnsController{
             ImageView resourceToDraw = new ImageView(getResourceImage(resource));
             resourceToDraw.setLayoutX(layoutX + i * offsetX);
             resourceToDraw.setLayoutY(layoutY);
-            resourceToDraw.setOnMouseClicked( mouseEvent -> {
-                getClientNetworkUser().send(new LeaderProductionCommand(productionToActivate, toPayFromWarehouse, resource));
-            });
+            resourceToDraw.setOnMouseClicked( mouseEvent -> getClientNetworkUser().send(new LeaderProductionCommand(productionToActivate, toPayFromWarehouse, resource)));
 
             getMainWindow().getChildren().add(resourceToDraw);
 
@@ -137,6 +147,9 @@ public class LeaderProductionController extends TurnsController{
 
     }
 
+    /**
+     * this method shows the rollback button
+     */
     private void showRollbackButton(){
         Button rollback = setButton("rollback the action", (actionEvent -> rollBack()));
         rollback.setLayoutX(getMainWindow().getPrefWidth() / 7);

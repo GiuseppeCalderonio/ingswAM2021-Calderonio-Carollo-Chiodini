@@ -17,10 +17,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * this class represent the Shift Resources Controller
+ */
 public class ShiftResourcesController extends TurnsController{
 
+    /**
+     * this attribute represent the list of useful buttons to use
+     */
     private List<Node> buttons = new ArrayList<>();
+
+    /**
+     * this attribute represent the index of the first shelf selected
+     */
     private int firstShelfSelected;
+
+    /**
+     * this attribute represent the context action to show
+     */
     private Label contextAction = new Label();
 
 
@@ -40,6 +54,9 @@ public class ShiftResourcesController extends TurnsController{
         showRollbackButton();
     }
 
+    /**
+     * this method draw the scenario
+     */
     public void drawScenario(){
 
 
@@ -50,6 +67,10 @@ public class ShiftResourcesController extends TurnsController{
 
     }
 
+    /**
+     * this method shows the context action
+     * @param message this is the message to show
+     */
     private void showContextAction(String message){
         contextAction.setText(message);
         contextAction.setPrefWidth(10000);
@@ -58,6 +79,9 @@ public class ShiftResourcesController extends TurnsController{
         contextAction.setPrefSize( getMainWindow().getPrefWidth() - contextAction.getText().length(), getMainWindow().getPrefHeight() / 5 );
     }
 
+    /**
+     * this method shows the buttons
+     */
     private void showButtons(){
 
         buttons = new ArrayList<>();
@@ -106,6 +130,10 @@ public class ShiftResourcesController extends TurnsController{
         buttons.add(fifthShelf);
     }
 
+    /**
+     * this method handle the shelves selection
+     * @param shelf this is the shelf selected
+     */
     public void selectedShelf(int shelf){
         firstShelfSelected = shelf;
         showButtonsSecondTime();
@@ -115,6 +143,9 @@ public class ShiftResourcesController extends TurnsController{
 
     }
 
+    /**
+     * this method shows the buttons for the second time
+     */
     private void showButtonsSecondTime(){
 
         buttons = new ArrayList<>();
@@ -165,6 +196,9 @@ public class ShiftResourcesController extends TurnsController{
 
     }
 
+    /**
+     * this method shows the rollback button
+     */
     private void showRollbackButton(){
         Button rollback = setButton("rollback the action", (actionEvent -> rollBack()));
         rollback.setLayoutX(getMainWindow().getPrefWidth() / 5);

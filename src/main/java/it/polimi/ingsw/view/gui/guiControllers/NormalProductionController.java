@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
+/**
+ * this class represent the normal production controller
+ */
 public class NormalProductionController extends TurnsController{
 
 
@@ -51,6 +54,9 @@ public class NormalProductionController extends TurnsController{
 
     }
 
+    /**
+     * this method shows the cards
+     */
     private void showCard(){
         ImageView card = selected;
         card.setFitWidth(getCardWidth());
@@ -62,6 +68,9 @@ public class NormalProductionController extends TurnsController{
         getMainWindow().getChildren().add(card);
     }
 
+    /**
+     * this method shows the resources to pay
+     */
     private void showResourcesToPay(){
 
         double layoutX = getMainWindow().getPrefWidth() * 1 / 4;
@@ -110,6 +119,9 @@ public class NormalProductionController extends TurnsController{
         getMainWindow().getChildren().add(contextAction);
     }
 
+    /**
+     * this method shows the rollback button
+     */
     private void showRollbackButton(){
         Button rollback = setButton("rollback the action", (actionEvent -> rollBack()));
         rollback.setLayoutX(getMainWindow().getPrefWidth() / 7);

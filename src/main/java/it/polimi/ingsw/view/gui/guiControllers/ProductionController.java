@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+/**
+ * this class represent the production controller
+ */
 public class ProductionController extends TurnsController{
 
     public ProductionController(ThinModel model, String nickname, NetworkUser<Command, ResponseToClient> clientNetworkUser, boolean normalAction,  boolean leaderAction) {
@@ -35,6 +38,9 @@ public class ProductionController extends TurnsController{
 
     }
 
+    /**
+     * this method shows the available productions
+     */
     private void showProductionsAvailable(){
         // set the hBox in which place all the cards
         HBox productionsAvailable = new HBox();
@@ -56,6 +62,10 @@ public class ProductionController extends TurnsController{
 
     }
 
+    /**
+     * this method adds the basic production to the available ones
+     * @param graphicContainer this is the graphic container in which place the image
+     */
     private void addBasicProduction(HBox graphicContainer){
 
         if (getModel().getGame().getMyself().isBasicProductionAffordable()){
@@ -74,6 +84,11 @@ public class ProductionController extends TurnsController{
 
     }
 
+    /**
+     * this method adds the normal production to the available ones
+     * @param graphicContainer this is the graphic container in which place the image
+     * @param productionPower this is the thin production power of the player
+     */
     private void addNormalProductions(HBox graphicContainer, ThinProductionPower productionPower){
 
         addCard(graphicContainer, productionPower.getProductionPower1(), 1);
@@ -82,6 +97,12 @@ public class ProductionController extends TurnsController{
 
     }
 
+    /**
+     * this method adds the available cards to show
+     * @param graphicContainer this is the graphic container to show
+     * @param deck this is the deck of cards to show
+     * @param productionToActivate this is the production to activate
+     */
     private void addCard(HBox graphicContainer, List<DevelopmentCard> deck, int productionToActivate){
 
         if (!deck.isEmpty() && getModel().getGame().getMyself().isNormalProductionAffordable(deck)){
@@ -102,6 +123,11 @@ public class ProductionController extends TurnsController{
         }
     }
 
+    /**
+     * this method adds the leader production to the available ones
+     * @param graphicContainer this is the graphic container in which place the image
+     * @param leaderCards this is the list of leader cards
+     */
     private void addLeaderProductions(HBox graphicContainer, List<LeaderCard> leaderCards){
 
         int i = 1;
@@ -129,7 +155,9 @@ public class ProductionController extends TurnsController{
         }
     }
 
-
+    /**
+     * this method adds the end production button
+     */
     private void addEndProductionButton(){
 
         Button endProduction = setButton("end production", actionEvent ->  {

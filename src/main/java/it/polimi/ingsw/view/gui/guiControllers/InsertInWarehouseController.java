@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * tis class represent the Insert In Warehouse Controller
+ */
 public class InsertInWarehouseController extends TurnsController{
 
 
@@ -44,6 +47,9 @@ public class InsertInWarehouseController extends TurnsController{
         drawScenario();
     }
 
+    /**
+     * this method draw the scenario
+     */
     public void drawScenario(){
 
         getMainWindow().getChildren().addAll(showButtons());
@@ -53,31 +59,29 @@ public class InsertInWarehouseController extends TurnsController{
 
     }
 
+    /**
+     * this method show the buttons
+     * @return a list of buttons
+     */
     private List<Node> showButtons(){
 
         buttons = new ArrayList<>();
 
-        Button firstShelf = setButton("1", actionEvent -> {
-            selectedShelf(1);
-        });
+        Button firstShelf = setButton("1", actionEvent -> selectedShelf(1));
 
         firstShelf.setLayoutX(getFirstShelf().getLayoutX() * 4 / 6);
         firstShelf.setLayoutY(getFirstShelf().getLayoutY());
 
         buttons.add(firstShelf);
 
-        Button secondShelf = setButton("2", actionEvent -> {
-            selectedShelf(2);
-        });
+        Button secondShelf = setButton("2", actionEvent -> selectedShelf(2));
 
         secondShelf.setLayoutX(getSecondShelf().getLayoutX() * 4 / 6);
         secondShelf.setLayoutY(getSecondShelf().getLayoutY());
 
         buttons.add(secondShelf);
 
-        Button thirdShelf = setButton("3" , actionEvent -> {
-            selectedShelf(3);
-        });
+        Button thirdShelf = setButton("3" , actionEvent -> selectedShelf(3));
 
         thirdShelf.setLayoutX(getThirdShelf().getLayoutX() * 4 / 6);
         thirdShelf.setLayoutY(getThirdShelf().getLayoutY());
@@ -111,6 +115,9 @@ public class InsertInWarehouseController extends TurnsController{
 
     }
 
+    /**
+     * this method shows the resource
+     */
     private void showResource(){
 
         resource.setImage(getResourceImage(gainedFromMarbleMarket.get(0)));
@@ -130,6 +137,10 @@ public class InsertInWarehouseController extends TurnsController{
 
     }
 
+    /**
+     * this method select the shelf and send it to the server
+     * @param shelf this is the shelf selected
+     */
     public void selectedShelf(int shelf){
         shelves.add(shelf);
 

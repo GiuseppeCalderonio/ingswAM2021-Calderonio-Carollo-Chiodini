@@ -17,6 +17,9 @@ import javafx.scene.text.Font;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * this class represent the buy card controller
+ */
 public class BuyCardController extends TurnsController{
 
     private DevelopmentCard selected;
@@ -36,6 +39,9 @@ public class BuyCardController extends TurnsController{
         createScenario();
     }
 
+    /**
+     * this method draw the scenario
+     */
     private void createScenario(){
 
         Label contextAction = new Label("Click in the card that you want to buy");

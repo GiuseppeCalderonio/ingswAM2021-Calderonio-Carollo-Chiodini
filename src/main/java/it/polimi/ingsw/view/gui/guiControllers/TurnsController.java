@@ -36,6 +36,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * this class represent the turns controller
+ */
 public class TurnsController implements GuiController, Initializable {
 
 
@@ -68,8 +71,6 @@ public class TurnsController implements GuiController, Initializable {
 
     @FXML
     private ImageView trackPosition = new ImageView();
-
-
 
     @FXML
     private HBox secondShelf = new HBox();
@@ -122,16 +123,34 @@ public class TurnsController implements GuiController, Initializable {
     @FXML
     private ImageView playerBoard = new ImageView();
 
+    /**
+     * this attribute represent the thin model
+     */
     private ThinModel model;
 
+    /**
+     * this attribute represent the nickname of the host player
+     */
     private String nickname;
 
+    /**
+     * this attribute represent the client network user
+     */
     private NetworkUser<Command, ResponseToClient> clientNetworkUser;
 
+    /**
+     * this attribute represent the track gui to handle drawing positions
+     */
     private ThinTrackGuiManager trackGui;
 
+    /**
+     * this attribute represent if the host player can do a normal action
+     */
     private boolean normalAction = true;
 
+    /**
+     * this attribute represent if the host player can do a leader action
+     */
     private boolean leaderAction = true;
 
 
@@ -158,14 +177,26 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method get the model
+     * @return the model
+     */
     protected ThinModel getModel() {
         return model;
     }
 
+    /**
+     * this method get the nickname
+     * @return the nickname
+     */
     protected String getNickname(){
         return nickname;
     }
 
+    /**
+     * this method get the client network user
+     * @return the client network user
+     */
     protected NetworkUser<Command, ResponseToClient> getClientNetworkUser(){
         return clientNetworkUser;
     }
@@ -208,6 +239,9 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method set the main window size
+     */
     protected void setMainWindowSize(){
         double width = Screen.getPrimary().getBounds().getWidth();
         double height = Screen.getPrimary().getBounds().getHeight();
@@ -215,6 +249,10 @@ public class TurnsController implements GuiController, Initializable {
         drawBackGround();
     }
 
+    /**
+     * this method get the list of all the player of the game
+     * @return the list of all the player of the game
+     */
     protected List<ThinPlayer> getRealPlayers(){
         List< ThinPlayer> players = new ArrayList<>();
         players.add(model.getGame().getMyself());
@@ -228,6 +266,9 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method initialize the actions
+     */
     private void initializeActions(){
 
         actions.getItems().clear();
@@ -255,6 +296,9 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method handle the leader action
+     */
     private void leaderAction(){
 
         if (!leaderAction){
@@ -272,6 +316,9 @@ public class TurnsController implements GuiController, Initializable {
         Gui.setRoot("/LeaderActionWindow", new LeaderActionController(model, nickname, clientNetworkUser, normalAction));
     }
 
+    /**
+     * this method handle the buy card command
+     */
     private void buyCard(){
         if (!normalAction){
             showErrorMessage();
@@ -281,6 +328,9 @@ public class TurnsController implements GuiController, Initializable {
         Gui.setRoot("/BuyCardWindow", new BuyCardController(model, nickname, clientNetworkUser, leaderAction));
     }
 
+    /**
+     * this method handle the choose marbles command
+     */
     private void chooseMarbles(){
         if (!normalAction){
             showErrorMessage();
@@ -291,6 +341,9 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method handle the productions command
+     */
     private void startProductions(){
 
         if (!normalAction){
@@ -302,10 +355,16 @@ public class TurnsController implements GuiController, Initializable {
         Gui.setRoot("/ProductionWindow", new ProductionController(model, nickname, clientNetworkUser,true,  leaderAction));
     }
 
+    /**
+     * this method handle the end turn command
+     */
     private void endTurn(){
         clientNetworkUser.send(new EndTurnCommand());
     }
 
+    /**
+     * this method handle the shift resources command
+     */
     private void shiftResources(){
         Gui.setRoot("/ShiftResourcesWindow", new ShiftResourcesController(model, nickname, clientNetworkUser, normalAction, leaderAction));
     }
@@ -333,6 +392,12 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method set the useful buttons
+     * @param buttonName this is the button name
+     * @param eventHandler this is the event handler to use the button
+     * @return the button created
+     */
     protected Button setButton(String buttonName, EventHandler<ActionEvent> eventHandler){
         Button button = new Button();
         button.setText(buttonName);
@@ -340,6 +405,10 @@ public class TurnsController implements GuiController, Initializable {
         return button;
     }
 
+    /**
+     * this method draw the player with the nickname passed in input
+     * @param nickname this is the nickname of the player to draw
+     */
     public void drawPlayer(String nickname){
         showWarehouse(model.getGame().getPlayer(nickname).getWarehouse());
         showStrongbox(model.getGame().getPlayer(nickname).getStrongbox());
@@ -348,6 +417,9 @@ public class TurnsController implements GuiController, Initializable {
         showProductionPower(model.getGame().getPlayer(nickname).getProductionPower());
     }
 
+    /**
+     * this method draw the background
+     */
     public void drawBackGround(){
         playerBoard.setImage(new Image("/board/Masters of Renaissance_PlayerBoard.png"));
         playerBoard.setFitWidth(mainWindow.getPrefWidth());
@@ -357,6 +429,10 @@ public class TurnsController implements GuiController, Initializable {
         playerBoard.setLayoutY(mainWindow.getHeight() + 20);
     }
 
+    /**
+     * this method set the player opacity
+     * @param opacity this is the opacity to set
+     */
     protected void setPlayerOpacity(double opacity){
         playerBoard.setOpacity(opacity);
         setWarehouseOpacity(opacity);
@@ -367,6 +443,10 @@ public class TurnsController implements GuiController, Initializable {
         setProductionPowerOpacity(opacity);
     }
 
+    /**
+     * this method show the track passed in input
+     * @param track this is the track to draw
+     */
     public void showTrack(ThinTrack track){
 
         trackPosition.setImage(new Image("/punchboard/croce.png"));
@@ -400,6 +480,9 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method draw lorenzo il magnifico
+     */
     private void drawLorenzo(){
 
 
@@ -416,6 +499,10 @@ public class TurnsController implements GuiController, Initializable {
         lorenzoPosition.setLayoutY(trackGui.getYPosition(model.getGame().getOpponents().get(0).getTrack().getPosition()));
     }
 
+    /**
+     * this method set th track opacity
+     * @param opacity this is the opacity to set
+     */
     public void setTrackOpacity(double opacity){
         trackPosition.setOpacity(opacity);
         lorenzoPosition.setOpacity(opacity);
@@ -425,6 +512,13 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method show the pope favour tiles
+     * @param popeFavourTile this is the pope favour tile to draw
+     * @param id this is the id of the pope favour tile
+     * @param layoutX this is the x layout
+     * @param layoutY this is the y layout
+     */
     private void showPopeFavourTile(ImageView popeFavourTile, int id , double layoutX, double layoutY){
 
         String isActive = "";
@@ -441,6 +535,10 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method shows the production passed in input
+     * @param productionPower this is the production power to draw
+     */
     private void showProductionPower(ThinProductionPower productionPower){
 
         this.productionPower.getChildren().clear();
@@ -453,6 +551,11 @@ public class TurnsController implements GuiController, Initializable {
         drawDeck(productionPower.getProductionPower3(), 3);
     }
 
+    /**
+     * this method draw a deck of cards in a position
+     * @param toDraw this is the deck to draw
+     * @param position this is the position , it can be 1, 2, 3
+     */
     private void drawDeck(List<DevelopmentCard> toDraw, int position){
 
         position--;
@@ -477,10 +580,18 @@ public class TurnsController implements GuiController, Initializable {
         }
     }
 
+    /**
+     * this method set the production power opacity
+     * @param opacity this is the opacity to set
+     */
     public void setProductionPowerOpacity(double opacity){
         productionPower.setOpacity(opacity);
     }
 
+    /**
+     * this method shows the cards market
+     * @param cardsMarket this is the cards market to show
+     */
     public void showCardsMarket(DevelopmentCard[][] cardsMarket){
 
         this.cardsMarket.getChildren().clear();
@@ -511,12 +622,19 @@ public class TurnsController implements GuiController, Initializable {
         }
     }
 
-
+    /**
+     * this method set the cards market opacity
+     * @param opacity this is the opacity to set
+     */
     protected void setCardsMarketOpacity(double opacity){
         this.cardsMarket.setOpacity(opacity);
 
     }
 
+    /**
+     * this method shows the leader cards passed in input
+     * @param leaderCards these are the leader cards to show
+     */
     public void showLeaderCards(List<LeaderCard> leaderCards){
 
         this.leaderCards.getChildren().clear();
@@ -551,10 +669,18 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method set the leader cards opacity
+     * @param opacity this is the opacity to set
+     */
     protected void setLeaderCardsOpacity(double opacity){
         this.leaderCards.setOpacity(opacity);
     }
 
+    /**
+     * this method shows the solo token when it exists
+     * @param token this is the token to draw
+     */
     public void showSoloToken(SoloToken token){
         try {
             soloToken.setImage(new Image(token.getPng()));
@@ -563,10 +689,19 @@ public class TurnsController implements GuiController, Initializable {
         } catch (NullPointerException ignored){ }
     }
 
+    /**
+     * this method set the solo token opacity
+     * @param opacity this is the opacity to set
+     */
     protected void setSoloTokenOpacity(double opacity){
         soloToken.setOpacity(opacity);
     }
 
+    /**
+     * this method shows the marble market
+     * @param marbleMarket this is the marble market to draw
+     * @param lonelyMarble this is the lonely marble to draw
+     */
     public void showMarbleMarket(Marble[][] marbleMarket, Marble lonelyMarble){
 
         int relativeLayoutMarbleMarketX = 29;
@@ -634,6 +769,10 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method set the marble market opacity
+     * @param opacity this is the opacity to set
+     */
     protected void setMarbleMarketOpacity(double opacity){
         marbleMarket.setOpacity(opacity);
         marbleMarketThin.setOpacity(opacity);
@@ -641,6 +780,10 @@ public class TurnsController implements GuiController, Initializable {
         lonelyMarble.setOpacity(opacity);
     }
 
+    /**
+     * this method shows the warehouse passed in input
+     * @param warehouse this is the warehouse to draw
+     */
     public void showWarehouse(ThinWarehouse warehouse){
 
         firstShelf.getChildren().clear();
@@ -676,6 +819,13 @@ public class TurnsController implements GuiController, Initializable {
                 mainWindow.getPrefHeight() * 55 / 100);
     }
 
+    /**
+     * this method shows a shelf
+     * @param shelfToDraw this is the shelf to draw
+     * @param shelf these are the resources of the shelf to draw
+     * @param layoutX this is the x layout
+     * @param layoutY this is the y layout
+     */
     private void showShelf(HBox shelfToDraw, CollectionResources shelf, double layoutX, double layoutY){
 
         for (Resource resource : shelf){
@@ -692,6 +842,14 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method show the leader shelf
+     * @param shelf these are the resources of the shelf to draw
+     * @param shelfToDraw this is the shelf to draw
+     * @param depotToDraw this is the dept image to draw
+     * @param layoutX this is the x layout
+     * @param layoutY this is the y layout
+     */
     private void showLeaderShelf(CollectionResources shelf, HBox shelfToDraw,  ImageView depotToDraw,  double layoutX, double layoutY){
         if (shelf == null)
             return;
@@ -709,6 +867,10 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method set the warehouse opacity
+     * @param opacity this is the opacity to set
+     */
     protected void setWarehouseOpacity(double opacity){
         firstShelf.setOpacity(opacity);
         secondShelf.setOpacity(opacity);
@@ -719,6 +881,10 @@ public class TurnsController implements GuiController, Initializable {
         fifthDepot.setOpacity(opacity);
     }
 
+    /**
+     * this method shows the strongbox
+     * @param strongbox this is the strongbox to draw
+     */
     public void showStrongbox(CollectionResources strongbox){
 
         this.strongbox.getChildren().clear();
@@ -747,10 +913,17 @@ public class TurnsController implements GuiController, Initializable {
         }
     }
 
+    /**
+     * this method set the strongbox opacity
+     * @param opacity this is the opacity to set
+     */
     protected void setStrongboxOpacity(double opacity){
         strongbox.setOpacity(opacity);
     }
 
+    /**
+     * this method shows the marble market
+     */
     @FXML
     public void showMarbleMarket() {
 
@@ -770,6 +943,9 @@ public class TurnsController implements GuiController, Initializable {
 
     }
 
+    /**
+     * this method shows the cards market
+     */
     @FXML
     public void showCardsMarket() {
 
@@ -788,50 +964,98 @@ public class TurnsController implements GuiController, Initializable {
         });
     }
 
+    /**
+     * this method get the main window
+     * @return the main window
+     */
     public AnchorPane getMainWindow() {
         return mainWindow;
     }
 
+    /**
+     * this method get the first shelf
+     * @return the first shelf
+     */
     public HBox getFirstShelf() {
         return firstShelf;
     }
 
+    /**
+     * this method get the second shelf
+     * @return the second shelf
+     */
     public HBox getSecondShelf() {
         return secondShelf;
     }
 
+    /**
+     * this method get the third shelf
+     * @return the third shelf
+     */
     public HBox getThirdShelf() {
         return thirdShelf;
     }
 
+    /**
+     * this method get the normal action indicator
+     * @return the normal action indicator
+     */
     public boolean getNormalAction() {
         return normalAction;
     }
 
+    /**
+     * this method get the leader action indicator
+     * @return the leader action indicator
+     */
     public boolean getLeaderAction() {
         return leaderAction;
     }
 
+    /**
+     * this method get the cards market
+     * @return the cards market
+     */
     public HBox getCardsMarket() {
         return cardsMarket;
     }
 
+    /**
+     * this method set the normal action indicator
+     * @param normalAction this is the normal action indicator to set
+     */
     public void setNormalAction(boolean normalAction) {
         this.normalAction = normalAction;
     }
 
+    /**
+     * this method set the leader action indicator
+     * @param leaderAction this is the leader action indicator to set
+     */
     public void setLeaderAction(boolean leaderAction) {
         this.leaderAction = leaderAction;
     }
 
+    /**
+     * this method get the leader cards
+     * @return the leader cards
+     */
     public VBox getLeaderCards() {
         return leaderCards;
     }
 
+    /**
+     * this method get the fourth depot
+     * @return the fourth depot
+     */
     public ImageView getFourthDepot() {
         return fourthDepot;
     }
 
+    /**
+     * this method get the fifth depot
+     * @return the fifth depot
+     */
     public ImageView getFifthDepot() {
         return fifthDepot;
     }
