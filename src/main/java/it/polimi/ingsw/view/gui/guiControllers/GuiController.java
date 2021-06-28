@@ -73,6 +73,7 @@ public interface GuiController {
 
     /**
      * this method get the resource image
+     * @param resource this is the resource to draw
      * @return the resource image
      */
     default Image getResourceImage(Resource resource){

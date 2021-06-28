@@ -104,11 +104,19 @@ public class ChooseMarblesController extends TurnsController {
         getMainWindow().getChildren().add(rollback);
     }
 
+    /**
+     * this method select the row of the marble market
+     * @param row this is the row of the marble market
+     */
     public void selectRow(int row){
         sendNewCommand(new ChooseMarblesCommand("row", row));
 
     }
 
+    /**
+     * this method select the column of the marble market
+     * @param column this is the column of the marble market
+     */
     public void selectColumn(int column){
         sendNewCommand(new ChooseMarblesCommand("column", column));
     }

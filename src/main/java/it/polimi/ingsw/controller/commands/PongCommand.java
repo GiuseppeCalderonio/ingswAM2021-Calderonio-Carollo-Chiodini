@@ -6,6 +6,10 @@ import it.polimi.ingsw.model.EndGameException;
 
 import java.util.List;
 
+/**
+ * this class represent the pong command.
+ * in particular, when a player receive a ping, he replies with a pong
+ */
 public class PongCommand implements Command{
 
 

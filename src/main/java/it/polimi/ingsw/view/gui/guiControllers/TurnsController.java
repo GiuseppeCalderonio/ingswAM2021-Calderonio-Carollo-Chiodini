@@ -153,7 +153,13 @@ public class TurnsController implements GuiController, Initializable {
      */
     private boolean leaderAction = true;
 
-
+    /**
+     * this constructor create the object starting from the thin model,
+     * the nickname of the player to draw and the client network user
+     * @param model this is the thin model of the game
+     * @param nickname this is the nickname of the player to draw
+     * @param clientNetworkUser this is the client network user to send messages to the server
+     */
     public TurnsController(ThinModel model,
                            String nickname,
                            NetworkUser<Command, ResponseToClient> clientNetworkUser){
@@ -163,6 +169,15 @@ public class TurnsController implements GuiController, Initializable {
         this.nickname = nickname;
     }
 
+    /**
+     * this constructor create the object starting from the thin model,
+     * the nickname of the player to draw, the client network user and the game indicators
+     * @param model this is the thin model of the game
+     * @param nickname this is the nickname of the player to draw
+     * @param clientNetworkUser this is the client network user to send messages to the server
+     * @param normalAction this is the normal action indicator
+     * @param leaderAction this is the leader action indicator
+     */
     public TurnsController(ThinModel model,
                            String nickname,
                            NetworkUser<Command, ResponseToClient> clientNetworkUser,

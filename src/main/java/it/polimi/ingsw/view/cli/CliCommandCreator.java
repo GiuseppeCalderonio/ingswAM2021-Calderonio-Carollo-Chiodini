@@ -179,6 +179,7 @@ public class CliCommandCreator {
     /**
      * this method handle the choose leader card command creation
      * @param stdIn this is the buffer reader
+     * @param marbles this is the number of white marbles to convert
      * @return the command to send to the server
      * @throws IOException if a network error occurs
      * @throws InvalidParameterException if the parameters chosen are not valid
@@ -201,6 +202,8 @@ public class CliCommandCreator {
     /**
      * this method handle the insert in warehouse command creation
      * @param stdIn this is the buffer reader
+     * @param gainedFromMarbleMarket these are the resources gained from a selection
+     *                               of the marble market
      * @return the command to send to the server
      * @throws IOException if a network error occurs
      * @throws InvalidParameterException if the parameters chosen are not valid
