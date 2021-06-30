@@ -1,10 +1,12 @@
 # Prova Finale di Ingegneria del Software - AA 2020-2021
 
-Implementation of Maestri del Rinascimento board game.
+Implementation of [Maestri del Rinascimento](https://www.balenaludens.it/2020/maestri-del-rinascimento/) board game.
 
 The target of this project is to realize a distributed system where there are only one server and
 several clients that communicate with this server through sockets. We used the pattern MVC (Model-View-Controller)
-to realize the global structure of the project; in particular in our case we use........... 
+to realize the global structure of the project. In particular in our case the view send a message to the controller, then the
+controller checks the message and if it is valid we call some model methods to change the state of the game.
+When the state changes the controller notifies one or more views and then waits another message from the view.
 
 # Documentation
 ****
@@ -73,7 +75,7 @@ All the initialization parameters are in order:
 - **ip number**: it could be 127.0.0.1 or a generic public ip
 - **visualization mode**: GUI or CLI
 
-These are the five possible configurations to launch the jar from cmd (they are written with the correct syntax):
+These are the five possible configurations to launch the jar from cmd or wsl:
 
 **Server mode**
 
@@ -100,19 +102,28 @@ These are the five possible configurations to launch the jar from cmd (they are 
 1.In cmd or wsl if you want to launch the jar file you have to move in the folder where the jar is saved;
 for example _cd desktop_ if you saved the jar into desktop folder.
 
-2.If you want to play in CLI mode you have to use a **_wsl terminal_** for client and server; it isn't necessary for GUI mode.
+2.There are two ways to play in CLI mode. In the first case you have to use a **_wsl terminal_** for client and server.
+In the second case you can use a cmd terminal, but first you need to activate the ansi colors for Windows terminal with
+this key register:
 
-3.The number port could be different from 1234 but must be the same when you launch the server mode and client mode.
+`reg add hkcu\console /f /v VirtualTerminalLevel /t REG_DWORD /d 1`
 
-4.The IP number could be 127.0.0.1 if you want to play an online game on a single pc with different terminals. Instead
+You can copy this in cmd or create and open a .bat file with this code line. Now you can launch the jar file from cmd with any
+configuration.
+
+3.If you want to play in GUI mode you can use all type of terminal(cmd, wsl ecc) without any problems.
+
+4.The number port could be different from 1234 but must be the same when you launch the server mode and client mode.
+
+5.The IP number could be 127.0.0.1 if you want to play an online game on a single pc with different terminals. Instead
 if you want to play an online game using different pc you could insert your public Ip address(port forwarding) or insert
-the Ip of a remote Amazon server. For example in our project we can use both port forwarding or the ip number
+the Ip of a remote Amazon server. For example in our project we can use both port forwarding, or the ip number
 3.19.123.210 that is the ip of an amazon server. 
 
-5.The three parameters 0, randomString and null are ignored, so you could write what you want but it is important that
+6.The three parameters 0, randomString and null are ignored, so you could write what you want but it is important that
 they are not empty.
 
-To automate the launch of jar in GUI and Server mode we create some bat file.
+To automate the launch of jar we create some .bat file but they only work if the jar is in your desktop folder.
 
 # GROUP MEMBERS
 ****
