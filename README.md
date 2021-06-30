@@ -6,7 +6,7 @@ The target of this project is to realize a distributed system where there are on
 several clients that communicate with this server through sockets. We used the pattern MVC (Model-View-Controller)
 to realize the global structure of the project; in particular in our case we use........... 
 
-#Documentation
+# Documentation
 ****
 **UML**
 
@@ -40,7 +40,7 @@ Junit tool achieving excellent coverage results:
 - **Json**: it allows to send data or objects between different components of a software system.
 - **JUnit**: unit testing framework.
 
-#FUNCTIONALITY
+# FUNCTIONALITY
 ****
 **FUNCTIONALITY DEVELOPED**
 - complete rules
@@ -52,7 +52,7 @@ Junit tool achieving excellent coverage results:
 The first one allow to play a single game without server; the last one allow to play several games at the same time.
 Indeed we have created a lobby and the server manages every player to create multiple games.
 
-#COMPILATION AND PACKAGING
+# COMPILATION AND PACKAGING
 ****
 **JAR**
 
@@ -60,7 +60,7 @@ For this project we have realized only one jar and we did it with the help of Ma
 and uploaded this jar file in a specific GitHub [folder](https://github.com/gabrielecarollo/ingswAM2021-Calderonio-Carollo-Chiodini/tree/main/shade) but if you want to generate it independently you can do it with
 the command mvn -> Lifecycle -> package.
 
-#EXECUTION
+# EXECUTION
 ****
 
 We have only one jar file that can be launched in different ways: according to input parameter we can start it in 
@@ -114,7 +114,7 @@ they are not empty.
 
 To automate the launch of jar in GUI and Server mode we create some bat file.
 
-#GROUP MEMBERS
+# GROUP MEMBERS
 ****
 - Giuseppe Calderonio | giuseppe.calderonio@mail.polimi.it
 
