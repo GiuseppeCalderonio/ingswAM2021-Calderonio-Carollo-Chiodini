@@ -1049,4 +1049,22 @@ public class Game {
                 getPersonalStrongbox().
                 getStrongboxResources().containsAll(toVerify);
     }
+
+    /**
+     * this method adds 100 stones, shields, servant and coins to every player
+     * it is used just for testing and to make an easier demo
+     */
+
+    public void cheat(){
+        for (RealPlayer player : players){
+            for (int i = 0; i < 100; i++) {
+                player.getPersonalDashboard().getPersonalStrongbox().addResources(new CollectionResources(new Coin()));
+                player.getPersonalDashboard().getPersonalStrongbox().addResources(new CollectionResources(new Stone()));
+                player.getPersonalDashboard().getPersonalStrongbox().addResources(new CollectionResources(new Shield()));
+                player.getPersonalDashboard().getPersonalStrongbox().addResources(new CollectionResources(new Servant()));
+            }
+        }
+    }
+
+
 }
