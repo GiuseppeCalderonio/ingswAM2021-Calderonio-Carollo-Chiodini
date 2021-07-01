@@ -16,10 +16,23 @@ public enum Status {
      */
     WRONG_TURN,
 
-
-
+    /**
+     * this attribute represent the accepted status response
+     */
     ACCEPTED,
+
+    /**
+     * this attribute represent the quit status response
+     */
     QUIT,
+
+    /**
+     * this attribute represent the refused status response
+     */
     REFUSED,
+
+    /**
+     * this attribute represent the ping status response
+     */
     PING
 }

@@ -7,6 +7,8 @@ import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.thinModelComponents.ThinTrack;
 import it.polimi.ingsw.view.thinModelComponents.ThinWarehouse;
 
+import java.util.Map;
+
 /**
  * this class represent the production response.
  * in particular, when a player activate correctly a production,
@@ -33,7 +35,7 @@ public class ProductionResponse extends ResponseToClient{
     /**
      * this attribute represent the track of the player to update
      */
-    private final ThinTrack track2;
+    private final Map<String, ThinTrack> track2;
 
     /**
      * this constructor create the response starting from the client,
@@ -46,7 +48,7 @@ public class ProductionResponse extends ResponseToClient{
         this.nickname2 = player.getNickname();
         this.warehouse2 = new ThinWarehouse(player);
         this.strongbox2 = player.getPersonalDashboard().getPersonalStrongbox().getStrongboxResources();
-        this.track2 = new ThinTrack(player);
+        this.track2 = loadTrack(client);
 
     }
 
@@ -63,7 +65,7 @@ public class ProductionResponse extends ResponseToClient{
 
         view.getModel().updateStrongbox(strongbox2, nickname2);
         view.getModel().updateWarehouse(warehouse2, nickname2);
-        view.getModel().updateTrack(track2, nickname2);
+        view.getModel().updateTrack(track2);
         view.showCli();
 
         super.updateClient(view);
