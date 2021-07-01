@@ -9,6 +9,7 @@ import it.polimi.ingsw.view.thinModelComponents.ThinTrack;
 import it.polimi.ingsw.view.thinModelComponents.ThinWarehouse;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +28,7 @@ public class LeaderActionResponse extends ResponseToClient{
     /**
      * this attribute represent the faith track of the player to update
      */
-    private final ThinTrack track4;
+    private final Map<String, ThinTrack> track4;
 
     /**
      * this attribute represent the leader cards of the player to update
@@ -52,7 +53,7 @@ public class LeaderActionResponse extends ResponseToClient{
 
         RealPlayer player = client.getGame().getActualPlayer();
         this.nickname4 = player.getNickname();
-        this.track4 = new ThinTrack(player);
+        this.track4 = loadTrack(client);
         this.cards4 = player.getPersonalLeaderCards().stream().map(LeaderCard::getThin).collect(Collectors.toList());
         this.warehouse4 = new ThinWarehouse(player);
 
@@ -70,7 +71,7 @@ public class LeaderActionResponse extends ResponseToClient{
     public void updateClient(View view) {
 
         view.getModel().updateLeaderCards(cards4, nickname4);
-        view.getModel().updateTrack(track4, nickname4);
+        view.getModel().updateTrack(track4);
         view.getModel().updateWarehouse(warehouse4, nickname4);
         view.showCli();
 

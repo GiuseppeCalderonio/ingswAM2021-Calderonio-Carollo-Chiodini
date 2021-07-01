@@ -1,11 +1,12 @@
 package it.polimi.ingsw.controller.responseToClients;
 
 import it.polimi.ingsw.model.DevelopmentCards.DevelopmentCard;
-import it.polimi.ingsw.model.PlayerAndComponents.Player;
 import it.polimi.ingsw.model.SingleGame.SoloToken;
 import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.thinModelComponents.ThinTrack;
+
+import java.util.Map;
 
 /**
  * this class represent the end turn response.
@@ -29,7 +30,7 @@ public class EndTurnSingleGameResponse extends ResponseToClient{
     /**
      * this attribute represent the new track of lorenzo
      */
-    private final ThinTrack track5;
+    private final Map<String, ThinTrack> track5;
 
     /**
      * this constructor create the response starting from the client,
@@ -41,7 +42,8 @@ public class EndTurnSingleGameResponse extends ResponseToClient{
         token5 = client.getGame().getSoloTokens().get(
                 client.getGame().getSoloTokens().size() - 1
         );
-        track5 = new ThinTrack(client.getGame().getLorenzoIlMagnifico());
+
+        track5 = loadTrack(client);
     }
 
     /**
@@ -58,7 +60,7 @@ public class EndTurnSingleGameResponse extends ResponseToClient{
 
         view.getModel().updateCardsMarket(cardsMarket5);
         view.getModel().updateToken(token5);
-        view.getModel().updateTrack(track5, new Player().getNickname());
+        view.getModel().updateTrack(track5);
         view.showCli();
         view.updateTurn(view.getModel().getGame().getMyself().getNickname());
 

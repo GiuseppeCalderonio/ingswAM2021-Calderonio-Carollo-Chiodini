@@ -1,14 +1,12 @@
 package it.polimi.ingsw.controller.responseToClients;
 
 import it.polimi.ingsw.model.Marble.Marble;
-import it.polimi.ingsw.model.PlayerAndComponents.Player;
 import it.polimi.ingsw.model.PlayerAndComponents.RealPlayer;
 import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.thinModelComponents.ThinTrack;
 import it.polimi.ingsw.view.thinModelComponents.ThinWarehouse;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -53,6 +51,8 @@ public class MarbleActionResponse extends ResponseToClient{
     public MarbleActionResponse(ClientHandler client) {
         RealPlayer player = client.getGame().getActualPlayer();
         this.nickname3 = player.getNickname();
+
+        /*
         Map<String, ThinTrack> tracks = new HashMap<>();
 
         client.getGame().getPlayers().
@@ -64,6 +64,10 @@ public class MarbleActionResponse extends ResponseToClient{
         }catch (NullPointerException ignored){ }
 
         this.tracks = tracks;
+
+         */
+
+        this.tracks = loadTrack(client);
         this.warehouse3 = new ThinWarehouse(player);
         this.marbleMarket3 = client.getGame().getMarketBoard().getMarketTray();
         this.lonelyMarble3 = client.getGame().getMarketBoard().getLonelyMarble();

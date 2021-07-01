@@ -1,10 +1,15 @@
 package it.polimi.ingsw.controller.responseToClients;
 
+import it.polimi.ingsw.model.PlayerAndComponents.Player;
+import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.thinModelComponents.ThinLeaderCard;
 import it.polimi.ingsw.view.thinModelComponents.ThinPlayer;
+import it.polimi.ingsw.view.thinModelComponents.ThinTrack;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * this class represent the response to client.
@@ -68,6 +73,27 @@ public class ResponseToClient {
                 flatMap(player -> player.getThinLeaderCards().stream()).
                 filter(leaderCard -> !leaderCard.isActive()).
                 forEach(ThinLeaderCard::hide);
+    }
+
+    /**
+     * this method get the track info for every player and store it into a track
+     * @param client this is the client in which get the info
+     * @return a map representing the value of a track associated with the key of a nickname
+     * of a player
+     */
+    protected Map<String, ThinTrack> loadTrack(ClientHandler client){
+        Map<String, ThinTrack> tracks = new HashMap<>();
+
+        client.getGame().getPlayers().
+                forEach(player1 -> tracks.put(player1.getNickname(), new ThinTrack(player1)));
+
+        try{ // if the game is a single game
+            Player lorenzo = client.getGame().getLorenzoIlMagnifico();
+            tracks.put(lorenzo.getNickname(), new ThinTrack(lorenzo));
+        }catch (NullPointerException ignored){ }
+
+        return tracks;
+
     }
 
 }

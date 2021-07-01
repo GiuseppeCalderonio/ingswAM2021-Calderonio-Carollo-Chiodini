@@ -54,7 +54,7 @@ public class ShiftResourcesResponse extends ResponseToClient{
             tracks.put(lorenzo.getNickname(), new ThinTrack(lorenzo));
         }catch (NullPointerException ignored){ }
 
-        this.tracks1 = tracks;
+        this.tracks1 = loadTrack(client);
         this.warehouse1 = new ThinWarehouse(player);
     }
 
