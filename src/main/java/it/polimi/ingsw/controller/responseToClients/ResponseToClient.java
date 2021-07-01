@@ -75,6 +75,12 @@ public class ResponseToClient {
                 forEach(ThinLeaderCard::hide);
     }
 
+    /**
+     * this method get the track info for every player and store it into a track
+     * @param client this is the client in which get the info
+     * @return a map representing the value of a track associated with the key of a nickname
+     * of a player
+     */
     protected Map<String, ThinTrack> loadTrack(ClientHandler client){
         Map<String, ThinTrack> tracks = new HashMap<>();
 

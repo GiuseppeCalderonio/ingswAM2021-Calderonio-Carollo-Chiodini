@@ -804,6 +804,8 @@ public class TurnsController implements GuiController, Initializable {
         firstShelf.getChildren().clear();
         secondShelf.getChildren().clear();
         thirdShelf.getChildren().clear();
+        fourthShelf.getChildren().clear();
+        fifthShelf.getChildren().clear();
 
         showShelf(firstShelf,
                 warehouse.getFirstShelf(),
@@ -866,9 +868,12 @@ public class TurnsController implements GuiController, Initializable {
      * @param layoutY this is the y layout
      */
     private void showLeaderShelf(CollectionResources shelf, HBox shelfToDraw,  ImageView depotToDraw,  double layoutX, double layoutY){
-        if (shelf == null)
+        if (shelf == null){
+            depotToDraw.setOpacity(0);
             return;
+        }
 
+        depotToDraw.setOpacity(1);
         depotToDraw.setImage(new Image("/board/leaderShelf.png"));
         depotToDraw.setFitWidth(mainWindow.getPrefWidth() / 13);
         depotToDraw.setFitHeight(mainWindow.getPrefHeight() / 18);

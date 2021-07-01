@@ -198,7 +198,7 @@ public class Controller {
                 .setCommandInterpreter(new TurnsInterpreter(client)));
 
         // this command is used just in case of demo
-        //client.getGame().cheat();
+        client.getGame().cheat();
 
         // send for every player, the market of cards, the market of marbles,
         // the position on the faith track of every player, the warehouse of every player,
