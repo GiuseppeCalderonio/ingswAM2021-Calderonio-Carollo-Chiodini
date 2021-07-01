@@ -23,8 +23,8 @@ and server in all possible situation of the game. We insert for each game action
 
 **JAVADOC**
 
-We have uploaded in [javaDoc](https://github.com/gabrielecarollo/BACKUP-PROGETTO-INGSW/blob/master/Javadoc/overview-summary.html)
-folder the javadoc of all classes and methods.
+We don't have uploaded Javadoc because gitHub doesn't rendering them correctly. We have a Javadoc
+folder in our local pc and we could show them when you want. We write Javadoc of all classes and methods.
 
 **COVERAGE REPORT**
 
