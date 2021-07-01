@@ -197,6 +197,9 @@ public class Controller {
         client.getClients().forEach(client -> client
                 .setCommandInterpreter(new TurnsInterpreter(client)));
 
+        // this command is used just in case of demo
+        client.getGame().cheat();
+
         // send for every player, the market of cards, the market of marbles,
         // the position on the faith track of every player, the warehouse of every player,
         // the strongbox of every player, the leader cards of every player,
