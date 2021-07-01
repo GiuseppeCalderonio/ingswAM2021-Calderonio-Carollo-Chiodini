@@ -123,7 +123,8 @@ the Ip of a remote Amazon server. For example in our project we can use both por
 6.The three parameters 0, randomString and null are ignored, so you could write what you want but it is important that
 they are not empty.
 
-To automate the launch of jar we create some .bat file(you can find them [here](https://github.com/gabrielecarollo/ingswAM2021-Calderonio-Carollo-Chiodini/tree/main/batFiles)) but they only work if the jar is in your desktop folder. 
+To automate the launch of jar we create some .bat file(you can find them [here](https://github.com/gabrielecarollo/ingswAM2021-Calderonio-Carollo-Chiodini/tree/main/batFiles)) 
+but they only work if the jar and all bat files are in your desktop folder. 
 Sometimes could be necessary change the initialization parameters into the bat file to launch the jar correctly;
 for example you have to update the ip or the server port.
 
