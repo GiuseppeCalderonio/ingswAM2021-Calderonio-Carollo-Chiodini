@@ -111,7 +111,7 @@ this key register:
 You can copy this in cmd or create and open a .bat file with this code line. Now you can launch the jar file from cmd with any
 configuration.
 
-3.If you want to play in GUI mode you can use all type of terminal(cmd, wsl ecc) without any problems.
+3.If you want to play in GUI mode you can't use wsl terminal, you can use windows cmd without any problems.
 
 4.The number port could be different from 1234 but must be the same when you launch the server mode and client mode.
 
